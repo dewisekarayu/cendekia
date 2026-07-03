@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'program_studi_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,5 +29,37 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relasi: kelas yang diampu (kalau user ini dosen)
+     */
+    public function kelasDiampu()
+    {
+        return $this->hasMany(KelasPerkuliahan::class, 'dosen_id');
+    }
+
+    /**
+     * Relasi: kelas yang diikuti (kalau user ini mahasiswa)
+     */
+    public function kelasDiikuti()
+    {
+        return $this->belongsToMany(KelasPerkuliahan::class, 'kelas_mahasiswa', 'mahasiswa_id', 'kelas_perkuliahan_id');
+    }
+
+    /**
+     * Relasi: tugas yang dikumpulkan (kalau user ini mahasiswa)
+     */
+    public function pengumpulanTugas()
+    {
+        return $this->hasMany(PengumpulanTugas::class, 'mahasiswa_id');
+    }
+
+    /**
+     * Relasi: program studi milik user ini (kalau mahasiswa)
+     */
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'program_studi_id');
     }
 }
