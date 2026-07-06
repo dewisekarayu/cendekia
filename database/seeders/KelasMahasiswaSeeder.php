@@ -11,15 +11,23 @@ class KelasMahasiswaSeeder extends Seeder
 {
     public function run(): void
     {
-        $mahasiswa = User::where('email', 'mahasiswa@cendekia.test')->first();
+        $mahasiswa = User::role('mahasiswa')->first();
         $kelasList = KelasPerkuliahan::all();
 
+        if (! $mahasiswa) {
+            return;
+        }
+
         foreach ($kelasList as $kelas) {
-            KelasMahasiswa::create([
-                'kelas_perkuliahan_id' => $kelas->id,
-                'mahasiswa_id' => $mahasiswa->id,
-                'tanggal_daftar' => now(),
-            ]);
+            KelasMahasiswa::firstOrCreate(
+                [
+                    'kelas_perkuliahan_id' => $kelas->id,
+                    'mahasiswa_id' => $mahasiswa->id,
+                ],
+                [
+                    'tanggal_daftar' => now(),
+                ]
+            );
         }
     }
 }
