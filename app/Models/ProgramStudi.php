@@ -16,4 +16,9 @@ class ProgramStudi extends Model
         'nama_prodi',
         'jenjang',
     ];
+
+    public function mataKuliah()
+    {
+        return $this->hasMany(MataKuliah::class, 'program_studi_id');
+    }
 }

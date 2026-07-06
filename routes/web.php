@@ -1,13 +1,17 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\ProgramStudiController;
+use App\Http\Controllers\Admin\MataKuliahController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
+use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
 use App\Http\Controllers\Mahasiswa\GradebookController as MahasiswaGradebookController;
 use App\Http\Controllers\Mahasiswa\ForumController as MahasiswaForumController;
 use App\Http\Controllers\Mahasiswa\ScheduleController as MahasiswaScheduleController;
-use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
-use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,14 +35,19 @@ Route::get('/dashboard', function () {
 
 // Dashboard & halaman khusus Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        $totalMahasiswa = User::role('mahasiswa')->count();
-        $totalDosen = User::role('dosen')->count();
-        $totalMataKuliah = MataKuliah::count();
-        $totalProgramStudi = ProgramStudi::count();
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-        return view('admin.dashboard', compact('totalMahasiswa', 'totalDosen', 'totalMataKuliah', 'totalProgramStudi'));
-    })->name('admin.dashboard');
+    Route::resource('admin/program-studi', ProgramStudiController::class)
+        ->names('admin.program-studi')
+        ->parameters(['program-studi' => 'programStudi']);
+
+    Route::resource('admin/mata-kuliah', MataKuliahController::class)
+        ->names('admin.mata-kuliah')
+        ->parameters(['mata-kuliah' => 'mataKuliah']);
+
+    Route::resource('admin/kelas', KelasController::class)
+        ->names('admin.kelas')
+        ->parameters(['kelas' => 'kelas']);
 });
 
 // Dashboard & halaman khusus Dosen
@@ -71,4 +80,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
