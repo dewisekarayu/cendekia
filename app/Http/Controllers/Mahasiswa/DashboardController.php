@@ -75,4 +75,18 @@ class DashboardController extends Controller
         return redirect()->route('mahasiswa.dashboard')
             ->with('success', 'Berhasil bergabung ke program studi ' . $prodi->nama_prodi . '!');
     }
+
+    public function keluarProdi(Request $request)
+    {
+        $user = $request->user();
+
+        // Otomatis keluar dari semua kelas yang diikuti,
+        // karena kelas-kelas itu terikat ke prodi yang akan ditinggalkan
+        $user->kelasDiikuti()->detach();
+
+        $user->update(['program_studi_id' => null]);
+
+        return redirect()->route('mahasiswa.dashboard')
+            ->with('success', 'Kamu telah keluar dari program studi. Semua kelas yang diikuti juga ikut dihapus.');
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Mahasiswa\ForumController as MahasiswaForumController;
 use App\Http\Controllers\Mahasiswa\ScheduleController as MahasiswaScheduleController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
+use App\Http\Controllers\Admin\ProgramStudiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,11 +30,15 @@ Route::get('/dashboard', function () {
     abort(403, 'Role tidak dikenali');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Dashboard khusus Admin
+// Dashboard & halaman khusus Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+
+    Route::resource('admin/program-studi', ProgramStudiController::class)
+        ->names('admin.program-studi')
+        ->parameters(['program-studi' => 'programStudi']);
 });
 
 // Dashboard & halaman khusus Dosen
@@ -48,6 +53,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/dashboard', [MahasiswaDashboardController::class, 'index'])->name('mahasiswa.dashboard');
     Route::post('/mahasiswa/pilih-prodi/{id}', [MahasiswaDashboardController::class, 'pilihProdi'])->name('mahasiswa.pilih-prodi');
+    Route::post('/mahasiswa/keluar-prodi', [MahasiswaDashboardController::class, 'keluarProdi'])->name('mahasiswa.keluar-prodi');
 
     Route::get('/mahasiswa/kelas-saya', [MahasiswaKelasController::class, 'kelasSaya'])->name('mahasiswa.kelas-saya');
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');
