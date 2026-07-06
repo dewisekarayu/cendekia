@@ -40,21 +40,12 @@
                 </div>
             @else
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @php
-                        $gradients = ['from-slate-700 to-slate-900', 'from-blue-700 to-blue-900', 'from-indigo-600 to-indigo-800', 'from-emerald-600 to-emerald-800'];
-                    @endphp
-
                     @foreach ($prodiList as $i => $prodi)
                         <div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
-                            <div class="h-28 bg-gradient-to-br {{ $gradients[$i % count($gradients)] }} flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.42A12.02 12.02 0 0112 21.5a12.02 12.02 0 01-6.16-10.92L12 14z" />
-                                </svg>
-                            </div>
+                            <img src="https://picsum.photos/seed/prodi-{{ $prodi->id }}/400/200" alt="{{ $prodi->nama_prodi }}" class="w-full h-28 object-cover">
                             <div class="p-4">
                                 <span class="inline-block text-[10px] font-semibold tracking-wide text-blue-900 bg-blue-50 px-2 py-0.5 rounded">
-                                    S1
+                                    {{ strtoupper($prodi->jenjang) }}
                                 </span>
                                 <h3 class="mt-2 font-semibold text-gray-800">{{ $prodi->nama_prodi }}</h3>
 
@@ -71,6 +62,28 @@
             @endif
         </div>
     @else
+        <!-- INFO PRODI AKTIF + TOMBOL KELUAR -->
+        <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm mb-6 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.42A12.02 12.02 0 0112 21.5a12.02 12.02 0 01-6.16-10.92L12 14z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-wide">Program Studi Aktif</p>
+                    <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->programStudi?->nama_prodi ?? '-' }}</p>
+                </div>
+            </div>
+            <form method="POST" action="{{ route('mahasiswa.keluar-prodi') }}" onsubmit="return confirm('Yakin keluar dari program studi ini? Semua kelas yang kamu ikuti akan ikut terhapus.')">
+                @csrf
+                <button type="submit" class="text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition">
+                    Keluar Program Studi
+                </button>
+            </form>
+        </div>
+
         <!-- TAMPILAN DASHBOARD UTAMA SETELAH PUNYA PRODI -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left: Courses + Announcements -->
@@ -115,7 +128,7 @@
                                             </span>
                                         </div>
 
-                                        <!-- Info Mata Kuliah (Menggunakan Key dari Route Anda) -->
+                                        <!-- Info Mata Kuliah -->
                                         <h3 class="font-bold text-gray-800 text-base leading-snug min-h-[44px] line-clamp-2">
                                             {{ $kelas['title'] }}
                                         </h3>

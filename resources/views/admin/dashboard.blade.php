@@ -1,17 +1,30 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Dashboard Admin
-        </h2>
-    </x-slot>
+@extends('layouts.portal')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    Selamat datang, Admin! Ini halaman khusus admin.
-                </div>
-            </div>
+@section('title', 'Dashboard Admin')
+@section('activeMenu', 'Dashboard')
+
+@section('content')
+    <div class="mb-4">
+        <h1 class="text-xl font-bold text-gray-800">Dashboard Admin</h1>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+            <div class="text-sm text-gray-500">Total Mahasiswa</div>
+            <div class="text-2xl font-bold text-gray-900">{{ $totalMahasiswa ?? 0 }}</div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+            <div class="text-sm text-gray-500">Total Dosen</div>
+            <div class="text-2xl font-bold text-gray-900">{{ $totalDosen ?? 0 }}</div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+            <div class="text-sm text-gray-500">Total Mata Kuliah</div>
+            <div class="text-2xl font-bold text-gray-900">{{ $totalMataKuliah ?? 0 }}</div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+            <div class="text-sm text-gray-500">Total Program Studi</div>
+            <div class="text-2xl font-bold text-gray-900">{{ $totalProgramStudi ?? 0 }}</div>
         </div>
     </div>
-</x-app-layout>
+@endsection
+
