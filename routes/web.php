@@ -6,6 +6,7 @@ use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
 use App\Http\Controllers\Mahasiswa\GradebookController as MahasiswaGradebookController;
 use App\Http\Controllers\Mahasiswa\ForumController as MahasiswaForumController;
 use App\Http\Controllers\Mahasiswa\ScheduleController as MahasiswaScheduleController;
+use App\Http\Controllers\Mahasiswa\SettingController as MahasiswaSettingController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/gradebook', [MahasiswaGradebookController::class, 'index'])->name('mahasiswa.gradebook');
     Route::get('/mahasiswa/forums', [MahasiswaForumController::class, 'index'])->name('mahasiswa.forums');
     Route::get('/mahasiswa/schedule', [MahasiswaScheduleController::class, 'index'])->name('mahasiswa.schedule');
+    Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
 });
 
 Route::middleware('auth')->group(function () {

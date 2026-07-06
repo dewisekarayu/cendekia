@@ -5,9 +5,9 @@
 
 @section('content')
 
-    <div class="mb-6">
-        <h1 class="text-xl font-bold text-gray-800">Forum Diskusi</h1>
-        <p class="text-sm text-gray-500 mt-1">Diskusi dari semua kelas yang kamu ikuti.</p>
+    <div class="bg-blue-900 rounded-xl px-8 py-6 text-white mb-8">
+        <h1 class="text-2xl font-bold">Forum Diskusi</h1>
+        <p class="text-blue-200 text-sm mt-1">Diskusi dari semua kelas yang kamu ikuti.</p>
     </div>
 
     @if ($forumList->isEmpty())

@@ -12,30 +12,32 @@
     </div>
 
     <!-- Filter & Search Bar -->
-    <div class="flex flex-col sm:flex-row gap-4 items-center justify-between mb-8">
+    <form method="GET" action="{{ route('mahasiswa.kelas-saya') }}" class="flex flex-col sm:flex-row gap-4 items-center justify-between mb-8">
         <div class="flex gap-4 w-full sm:w-auto">
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Semester</label>
-                <select class="bg-white border border-gray-200 rounded-lg text-sm px-3 py-2 text-gray-700 focus:outline-none focus:border-blue-900">
-                    <option>Semester Ganjil 2023/2024</option>
+                <select name="semester" class="bg-white border border-gray-200 rounded-lg text-sm px-3 py-2 text-gray-700 focus:outline-none focus:border-blue-900">
+                    <option value="">Semester Ganjil 2023/2024</option>
                 </select>
             </div>
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Fakultas</label>
-                <select class="bg-white border border-gray-200 rounded-lg text-sm px-3 py-2 text-gray-700 focus:outline-none focus:border-blue-900">
-                    <option>Semua Fakultas</option>
+                <select name="fakultas" class="bg-white border border-gray-200 rounded-lg text-sm px-3 py-2 text-gray-700 focus:outline-none focus:border-blue-900">
+                    <option value="">Semua Fakultas</option>
                 </select>
             </div>
         </div>
         <div class="w-full sm:w-72 self-end">
             <div class="relative">
-                <input type="text" placeholder="Cari mata kuliah..." class="w-full bg-white border border-gray-200 rounded-lg text-sm pl-9 pr-4 py-2 text-gray-700 focus:outline-none focus:border-blue-900">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <input name="q" value="{{ request('q') }}" type="text" placeholder="Cari mata kuliah..." class="w-full bg-white border border-gray-200 rounded-lg text-sm pl-9 pr-10 py-2 text-gray-700 focus:outline-none focus:border-blue-900">
+                <button type="submit" class="absolute left-2 top-2 text-gray-400 p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- Grid Main Container -->
     @if ($kelasList->isEmpty())

@@ -27,11 +27,8 @@
         <header class="bg-white border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
                 <a href="/" class="flex items-center gap-2">
-                    <div class="w-9 h-9 rounded-full bg-[#3b82f6] flex items-center justify-center relative shadow-sm">
-                        <div class="w-4 h-4 rounded-full bg-[#10b981] absolute -bottom-0.5 -right-0.5 border-2 border-white"></div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                    <div class="w-9 h-9 rounded-full bg-[#fffff] flex items-center justify-center relative shadow-sm">
+                        <img src="{{ asset('images/logo.png') }}" alt="Ilustrasi Edukasi" class="">
                     </div>
                     <span class="text-2xl font-black text-[#0f2c59] tracking-tight">Cendekia</span>
                 </a>
@@ -42,8 +39,6 @@
                         
                         <a href="{{ route('dashboard') }}" class="nav-link text-[#0f2c59] font-bold pb-1">Dashboard</a>
                         <a href="#" class="nav-link hover:text-[#0f2c59] transition pb-1">Courses</a>
-                        <a href="#" class="nav-link hover:text-[#0f2c59] transition pb-1">Assignments</a>
-                        <a href="#" class="nav-link hover:text-[#0f2c59] transition pb-1">Calendar</a>
                     </div>
                 </div>
 
