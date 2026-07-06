@@ -10,11 +10,8 @@
         <div class="relative z-10">
             <h1 class="text-xl font-bold text-white">Welcome back, {{ auth()->user()->name }}!</h1>
             <p class="text-blue-200 text-sm mt-1 max-w-md">
-                You have {{ auth()->user()->kelasDiampu()->count() }} classes this semester and {{ $tugasPerluDinilai ?? 0 }} assignments waiting to be graded.
+                You have {{ $kelasList->count() }} classes this semester and {{ $tugasPerluDinilai }} assignments waiting to be graded.
             </p>
-            <a href="#" class="inline-block mt-4 bg-white text-blue-900 text-sm font-semibold px-5 py-2 rounded-lg hover:bg-blue-50 transition">
-                Go to Grading Center
-            </a>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" class="absolute -right-4 -bottom-6 w-32 h-32 text-blue-800 opacity-60" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 14l9-5-9-5-9 5 9 5z"/>
@@ -33,7 +30,7 @@
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Classes Teaching</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ auth()->user()->kelasDiampu()->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $kelasList->count() }}</p>
                 </div>
             </div>
         </div>
@@ -47,7 +44,7 @@
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Assignments to Grade</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ $tugasPerluDinilai ?? 0 }}</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $tugasPerluDinilai }}</p>
                 </div>
             </div>
         </div>
@@ -61,7 +58,7 @@
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Total Students</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ $totalMahasiswa ?? 0 }}</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $totalMahasiswa }}</p>
                 </div>
             </div>
         </div>
@@ -71,11 +68,10 @@
     <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-gray-800">My Classes</h2>
-            <a href="#" class="text-sm font-medium text-blue-900 hover:underline">View All →</a>
+            <a href="{{ route('dosen.kelas-saya') }}" class="text-sm font-medium text-blue-900 hover:underline">View All →</a>
         </div>
 
         @php
-            $kelasList = auth()->user()->kelasDiampu()->with(['mataKuliah', 'mahasiswa'])->get();
             $topColors = ['bg-blue-900', 'bg-amber-400', 'bg-emerald-500', 'bg-indigo-500'];
         @endphp
 
@@ -90,22 +86,19 @@
                         <div class="h-1.5 {{ $topColors[$i % count($topColors)] }}"></div>
                         <div class="p-5">
                             <span class="inline-block text-[10px] font-semibold tracking-wide text-blue-900 bg-blue-50 px-2 py-0.5 rounded mb-2">
-                                {{ $kelas->mataKuliah->programStudi->nama_prodi ?? 'Umum' }}
+                                {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Umum' }}
                             </span>
-                            <h3 class="font-semibold text-gray-800">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</h3>
+                            <h3 class="font-semibold text-gray-800">{{ $kelas->mataKuliah?->nama_mk ?? '-' }}</h3>
 
                             <div class="mt-3 space-y-1.5 text-xs text-gray-500">
                                 <div class="flex items-center gap-1.5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
-                                    </svg>
                                     {{ $kelas->kode_kelas }}
                                 </div>
                                 <div class="flex items-center gap-1.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    {{ $kelas->hari }}, {{ $kelas->jam_mulai }}
+                                    {{ $kelas->hari }}, {{ substr($kelas->jam_mulai, 0, 5) }}
                                 </div>
                                 <div class="flex items-center gap-1.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -115,7 +108,7 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="mt-4 block text-center bg-blue-900 hover:bg-blue-800 text-white text-sm font-medium py-2 rounded-lg transition">
+                            <a href="{{ route('dosen.kelas-detail', $kelas->id) }}" class="mt-4 block text-center bg-blue-900 hover:bg-blue-800 text-white text-sm font-medium py-2 rounded-lg transition">
                                 Manage Class
                             </a>
                         </div>
@@ -130,14 +123,6 @@
         <div class="px-5 py-4 border-b border-gray-100">
             <h2 class="text-base font-bold text-gray-800">Recent Submissions</h2>
         </div>
-
-        @php
-            $submissions = \App\Models\PengumpulanTugas::with(['mahasiswa', 'tugas.kelasPerkuliahan.mataKuliah'])
-                ->whereHas('tugas.kelasPerkuliahan', fn ($q) => $q->where('dosen_id', auth()->id()))
-                ->latest('waktu_kumpul')
-                ->take(5)
-                ->get();
-        @endphp
 
         @if ($submissions->isEmpty())
             <div class="p-8 text-center">
@@ -159,16 +144,14 @@
                             <td class="px-5 py-3">
                                 <div class="flex items-center gap-2.5">
                                     <div class="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center text-white text-xs font-semibold shrink-0">
-                                        {{ substr($item->mahasiswa->name ?? '-', 0, 1) }}
+                                        {{ substr($item->mahasiswa?->name ?? '-', 0, 1) }}
                                     </div>
-                                    <div>
-                                        <p class="font-medium text-gray-800">{{ $item->mahasiswa->name ?? '-' }}</p>
-                                    </div>
+                                    <p class="font-medium text-gray-800">{{ $item->mahasiswa?->name ?? '-' }}</p>
                                 </div>
                             </td>
                             <td class="px-5 py-3">
-                                <p class="font-medium text-blue-900">{{ $item->tugas->judul ?? '-' }}</p>
-                                <p class="text-xs text-gray-400">{{ $item->tugas->kelasPerkuliahan->mataKuliah->nama_mk ?? '-' }}</p>
+                                <p class="font-medium text-blue-900">{{ $item->tugas?->judul ?? '-' }}</p>
+                                <p class="text-xs text-gray-400">{{ $item->tugas?->kelasPerkuliahan?->mataKuliah?->nama_mk ?? '-' }}</p>
                             </td>
                             <td class="px-5 py-3 text-gray-500">
                                 {{ $item->waktu_kumpul?->diffForHumans() ?? '-' }}
