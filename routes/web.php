@@ -4,18 +4,17 @@ use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Admin\UserController;
+
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
+
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
 use App\Http\Controllers\Mahasiswa\GradebookController as MahasiswaGradebookController;
 use App\Http\Controllers\Mahasiswa\ForumController as MahasiswaForumController;
 use App\Http\Controllers\Mahasiswa\ScheduleController as MahasiswaScheduleController;
-
 use App\Http\Controllers\Mahasiswa\SettingController as MahasiswaSettingController;
-use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
-use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
-
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +52,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/kelas', KelasController::class)
         ->names('admin.kelas')
         ->parameters(['kelas' => 'kelas']);
+
+    Route::resource('admin/user', UserController::class)
+        ->names('admin.user')
+        ->parameters(['user' => 'user']);
 });
 
 // Dashboard & halaman khusus Dosen
@@ -87,4 +90,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
