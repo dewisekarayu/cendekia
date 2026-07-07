@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -46,12 +46,13 @@
             width: 280px;
             color: white;
             box-shadow: 4px 0 25px rgba(0, 43, 107, 0.18);
-            z-index: 1000;
+            z-index: 1050;
             overflow-y: auto;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
         }
 
         /* Custom scrollbar for sidebar */
@@ -152,11 +153,28 @@
             padding-left: 1rem;
         }
 
+        /* Overlay backdrop untuk sidebar mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1040;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
         /* Main Content */
         .admin-content {
             margin-left: 280px;
             padding: 0;
             min-height: 100vh;
+            transition: margin-left 0.3s ease;
         }
 
         .admin-topbar {
@@ -168,12 +186,37 @@
             align-items: center;
             box-shadow: 0 4px 20px rgba(0, 43, 107, 0.18);
             color: white;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
         }
 
         .admin-topbar-left {
             display: flex;
             align-items: center;
             gap: 1rem;
+            min-width: 0;
+        }
+
+        /* Tombol hamburger (khusus mobile) */
+        .sidebar-toggle-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .admin-topbar-search {
@@ -182,6 +225,7 @@
             border-radius: 0.5rem;
             padding: 0.5rem 1rem;
             width: 280px;
+            max-width: 100%;
             color: white;
             transition: all 0.3s;
         }
@@ -201,6 +245,7 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
+            flex-shrink: 0;
         }
 
         .topbar-notif {
@@ -284,6 +329,7 @@
 
         .admin-main {
             padding: 2rem;
+            min-width: 0;
         }
 
         .page-title {
@@ -331,7 +377,7 @@
             margin-bottom: 2rem;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 576px) {
             .stat-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
@@ -378,6 +424,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.35rem;
+            flex-shrink: 0;
         }
 
         .stat-card-icon.blue {
@@ -454,6 +501,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
@@ -516,6 +565,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
             border-bottom: 1px solid var(--border-light);
         }
 
@@ -525,8 +576,16 @@
             color: #002B6B;
         }
 
+        /* Wrapper agar tabel bisa di-scroll horizontal di layar kecil */
+        .table-responsive-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .table-card .table {
             margin-bottom: 0;
+            min-width: 600px;
         }
 
         .table-card .table th {
@@ -539,6 +598,7 @@
             font-size: 0.75rem;
             letter-spacing: 0.5px;
             padding: 1rem 1.5rem;
+            white-space: nowrap;
         }
 
         .table-card .table td {
@@ -655,6 +715,7 @@
         .pagination {
             margin-top: 1.5rem;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .pagination .page-link {
@@ -704,46 +765,155 @@
             background-color: #F8FAFC;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* ============ RESPONSIVE (TABLET) ============ */
+        @media (max-width: 991px) {
             .admin-sidebar {
-                width: 100%;
-                max-height: 0;
-                padding: 0;
-                transition: max-height 0.3s ease;
-                position: relative;
+                transform: translateX(-100%);
             }
 
             .admin-sidebar.show {
-                max-height: 500px;
-                padding: 2rem 1rem;
+                transform: translateX(0);
             }
 
             .admin-content {
                 margin-left: 0;
             }
 
+            .sidebar-toggle-btn {
+                display: flex;
+            }
+        }
+
+        /* ============ RESPONSIVE (MOBILE) ============ */
+        @media (max-width: 768px) {
+            .admin-topbar {
+                padding: 0.75rem 1rem;
+            }
+
+            .admin-topbar-left {
+                order: 1;
+                flex: 1 1 auto;
+            }
+
+            .admin-topbar-right {
+                order: 2;
+                gap: 0.5rem;
+            }
+
+            /* Search bar pindah ke baris sendiri di HP */
             .admin-topbar-search {
+                order: 3;
+                width: 100%;
+                flex-basis: 100%;
+            }
+
+            .admin-topbar-profile-text {
+                display: none;
+            }
+
+            .admin-main {
+                padding: 1rem;
+            }
+
+            .container-fluid {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .admin-main > .container-fluid > .d-flex:first-child,
+            .admin-main > .container-fluid > .mb-4.d-flex,
+            .admin-main > .container-fluid > .row > [class*="col-"] > .mb-4.d-flex {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 1rem;
+            }
+
+            .admin-main > .container-fluid > .d-flex:first-child .btn,
+            .admin-main > .container-fluid > .mb-4.d-flex .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .welcome-banner {
+                padding: 1.5rem;
+            }
+
+            .welcome-banner h2 {
+                font-size: 1.4rem;
+            }
+
+            .chart-card {
+                padding: 1.25rem;
+            }
+
+            .chart-toggle {
                 width: 100%;
             }
 
-            .stat-card {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .stat-card-icon {
-                margin-bottom: 1rem;
+            .chart-toggle button {
+                flex: 1;
             }
 
             .action-buttons {
+                flex-wrap: nowrap;
+            }
+
+            .table-card-header {
+                padding: 1rem;
+            }
+
+            .table-card {
+                border-radius: 0.85rem;
+                margin-top: 1rem;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table-responsive > .table {
+                min-width: 760px;
+            }
+
+            .table-card .table th,
+            .table-card .table td {
+                padding: 0.85rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .form-select,
+            .form-control {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            .pagination {
                 flex-wrap: wrap;
+                gap: 0.35rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .admin-topbar-right {
+                gap: 0.35rem;
+            }
+
+            .admin-topbar-profile {
+                padding: 0.3rem 0.5rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="d-flex" style="min-height: 100vh;">
+        <!-- Overlay gelap saat sidebar terbuka di mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Sidebar -->
         @include('admin.components.sidebar')
 
@@ -784,12 +954,46 @@
         document.addEventListener('DOMContentLoaded', function() {
             const toggleBtn = document.querySelector('[data-sidebar-toggle]');
             const sidebar = document.querySelector('.admin-sidebar');
-            
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
             if (toggleBtn) {
                 toggleBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
+                    if (sidebar.classList.contains('show')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
                 });
             }
+
+            // Klik overlay untuk menutup sidebar
+            overlay.addEventListener('click', closeSidebar);
+
+            // Tutup sidebar otomatis saat memilih menu (di mobile)
+            sidebar.addEventListener('click', function(e) {
+                if (e.target.closest('.nav-link') && window.innerWidth <= 991) {
+                    closeSidebar();
+                }
+            });
+
+            // Reset state kalau layar di-resize ke desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 991) {
+                    closeSidebar();
+                }
+            });
 
             // Listen to delete action buttons to show custom delete modal
             document.addEventListener('click', function(e) {

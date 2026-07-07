@@ -28,7 +28,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nip_nim' => ['required', 'string'],
+            'nip_nim' => ['nullable', 'string'],
+            'email' => ['nullable', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
     }
@@ -42,11 +43,14 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('nip_nim', 'password'), $this->boolean('remember'))) {
+        $identifier = $this->input('nip_nim') ?: $this->input('email');
+        $field = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'nip_nim';
+
+        if (! $identifier || ! Auth::attempt([$field => $identifier, 'password' => $this->input('password')], $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'nip_nim' => trans('auth.failed'),
+                $this->input('nip_nim') ? 'nip_nim' : 'email' => trans('auth.failed'),
             ]);
         }
 
@@ -81,6 +85,8 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('nip_nim')).'|'.$this->ip());
+        $identifier = $this->input('nip_nim') ?: $this->input('email');
+
+        return Str::transliterate(Str::lower((string) $identifier).'|'.$this->ip());
     }
 }

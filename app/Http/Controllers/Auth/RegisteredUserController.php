@@ -32,12 +32,14 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'nip_nim' => ['nullable', 'string', 'max:50', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'nip_nim' => $request->nip_nim ?: 'REG' . now()->format('YmdHis') . random_int(100, 999),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

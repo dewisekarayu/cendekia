@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
         $faker = FakerFactory::create('id_ID');
         $programStudiIds = ProgramStudi::pluck('id')->values();
 
+        // 1. SEEDER ACCOUNT ADMIN
         $admin = User::updateOrCreate(
             ['email' => 'admin@cendekia.test'],
             [
@@ -29,6 +30,7 @@ class UserSeeder extends Seeder
         );
         $admin->syncRoles('admin');
 
+        // Daftar Nama Dosen yang Bagus untuk dipakai Variasi
         $dosenNames = [
             'Dr. Ahmad Subagjo, M.Kom',
             'Siti Nurhaliza, S.Ds, M.Ds',
@@ -42,13 +44,17 @@ class UserSeeder extends Seeder
             'Agus Santoso, M.M',
         ];
 
+        // 2. SEEDER ACCOUNT DOSEN (40 Data)
         for ($i = 1; $i <= 40; $i++) {
             $baseName = $dosenNames[($i - 1) % count($dosenNames)];
+            // Memberi nomor jika nama berulang agar tetap unik
             $name = $i <= count($dosenNames) ? $baseName : $baseName . ' ' . ceil($i / count($dosenNames));
-            $email = 'dosen.' . Str::slug(str_replace(['Dr.', 'S.E', 'S.Ds', 'M.Ds', 'M.Kom', 'M.M', 'M.Pd', 'M.T', 'M.Stat', 'M.Cs'], '', $name), '.') . '@cendekia.test';
-            $name = $faker->name('male');
-            $email = Str::slug($name, '') . $i . '@cendekia.test';
-            $nip = '19' . str_pad((70 + intdiv($i, 5)), 2, '0', STR_PAD_LEFT) . str_pad($i, 6, '0', STR_PAD_LEFT);
+            
+            // Generate Email berdasarkan slug nama asli dosen agar estetik
+            $cleanName = str_replace(['Dr.', 'S.E', 'S.Ds', 'M.Ds', 'M.Kom', 'M.M', 'M.Pd', 'M.T', 'M.Stat', 'M.Cs', ',', '.'], '', $name);
+            $email = 'dosen.' . Str::slug($cleanName, '.') . $i . '@cendekia.test';
+            
+            $nip = '19' . str_pad((string)(70 + intdiv($i, 5)), 2, '0', STR_PAD_LEFT) . str_pad((string)$i, 6, '0', STR_PAD_LEFT);
 
             $dosen = User::updateOrCreate(
                 ['email' => $email],
@@ -62,13 +68,11 @@ class UserSeeder extends Seeder
             $dosen->syncRoles('dosen');
         }
 
+        // 3. SEEDER ACCOUNT MAHASISWA (200 Data)
         for ($i = 1; $i <= 200; $i++) {
-            $name = $faker->unique()->name();
-            $email = 'mahasiswa.' . Str::slug($name, '.') . '.' . str_pad((string) $i, 3, '0', STR_PAD_LEFT) . '@cendekia.test';
-        for ($i = 1; $i <= 100; $i++) {
             $name = $faker->name();
-            $email = Str::slug($name, '') . $i . '@cendekia.test';
-            $nim = '2024' . str_pad($i, 6, '0', STR_PAD_LEFT);
+            $email = 'mahasiswa.' . Str::slug($name, '.') . $i . '@cendekia.test';
+            $nim = '2024' . str_pad((string)$i, 6, '0', STR_PAD_LEFT);
 
             $mahasiswa = User::updateOrCreate(
                 ['email' => $email],
