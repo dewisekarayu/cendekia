@@ -7,21 +7,19 @@
     </div>
 
     <div class="admin-topbar-right">
+
+        <div class="topbar-notif">
+            <i class="bi bi-bell-fill"></i>
+            <span class="dot"></span>
+        </div>
+
         <div class="dropdown">
             <div class="admin-topbar-profile" data-bs-toggle="dropdown">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ auth()->user()->name }}" 
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ auth()->user()->name }}"
                      alt="{{ auth()->user()->name }}">
                 <div class="admin-topbar-profile-text d-none d-sm-block">
+                    <div class="role text-uppercase">Admin Profile</div>
                     <div class="name">{{ auth()->user()->name }}</div>
-                    <div class="role text-uppercase">
-                        @if(auth()->user()->hasRole('admin'))
-                            Admin
-                        @elseif(auth()->user()->hasRole('dosen'))
-                            Dosen
-                        @else
-                            Mahasiswa
-                        @endif
-                    </div>
                 </div>
                 <i class="bi bi-chevron-down"></i>
             </div>

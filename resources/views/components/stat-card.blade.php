@@ -22,11 +22,16 @@
 
         @if(!is_null($change))
             <span class="stat-card-badge {{ $trend }}">
-                {{ $trend === 'up' ? '~' : ($trend === 'down' ? '~' : '') }}{{ $change }}
+                @if($trend === 'up')
+                    <i class="bi bi-arrow-up-short"></i>
+                @elseif($trend === 'down')
+                    <i class="bi bi-arrow-down-short"></i>
+                @endif
+                {{ $change }}
             </span>
         @endif
     </div>
 
-    <div class="number">{{ $value }}</div>
     <div class="label">{{ $label }}</div>
+    <div class="number">{{ $value }}</div>
 </div>

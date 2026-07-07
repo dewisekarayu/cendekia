@@ -15,19 +15,11 @@ class DashboardController extends Controller
     {
         $totalDosen = User::role('dosen')->count();
         $totalMahasiswa = User::role('mahasiswa')->count();
-        $totalProdi = ProgramStudi::count();
+        $totalProgramStudi = ProgramStudi::count();
         $totalMataKuliah = MataKuliah::count();
         $totalKelasAktif = KelasPerkuliahan::where('is_active', true)->count();
 
-        $prodiList = ProgramStudi::withCount([
-                'mataKuliah',
-            ])
-            ->withCount([
-                'mataKuliah as jumlah_mahasiswa' => function ($query) {
-                    $query->join('users', 'users.program_studi_id', '=', 'program_studi.id');
-                },
-            ])
-            ->get();
+        $prodiList = ProgramStudi::withCount('mataKuliah')->get();
 
         // Hitung jumlah mahasiswa per prodi secara terpisah (lebih akurat)
         $mahasiswaPerProdi = User::role('mahasiswa')
@@ -41,7 +33,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'totalDosen',
             'totalMahasiswa',
-            'totalProdi',
+            'totalProgramStudi',
             'totalMataKuliah',
             'totalKelasAktif',
             'prodiList',

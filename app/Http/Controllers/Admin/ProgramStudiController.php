@@ -10,7 +10,7 @@ class ProgramStudiController extends Controller
 {
     public function index()
     {
-        $prodiList = ProgramStudi::latest()->get();
+        $prodiList = ProgramStudi::latest()->paginate(10);
         return view('admin.program-studi.index', compact('prodiList'));
     }
 

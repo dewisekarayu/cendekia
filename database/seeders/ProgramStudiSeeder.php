@@ -24,5 +24,13 @@ class ProgramStudiSeeder extends Seeder
                 'jenjang' => 'S1',
             ]
         );
+
+        ProgramStudi::updateOrCreate(
+            ['kode_prodi' => 'DKV'],
+            [
+                'nama_prodi' => 'Desain Komunikasi Visual',
+                'jenjang' => 'S1',
+            ]
+        );
     }
 }

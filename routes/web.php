@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Admin\DosenController as AdminDosenController;
+use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
+use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
@@ -38,16 +40,28 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     Route::resource('admin/program-studi', ProgramStudiController::class)
+        ->except(['show'])
         ->names('admin.program-studi')
         ->parameters(['program-studi' => 'programStudi']);
 
     Route::resource('admin/mata-kuliah', MataKuliahController::class)
+        ->except(['show'])
         ->names('admin.mata-kuliah')
         ->parameters(['mata-kuliah' => 'mataKuliah']);
 
-    Route::resource('admin/kelas', KelasController::class)
-        ->names('admin.kelas')
-        ->parameters(['kelas' => 'kelas']);
+    Route::resource('admin/dosen', AdminDosenController::class)
+        ->only(['index', 'create', 'store', 'destroy'])
+        ->names('admin.dosen')
+        ->parameters(['dosen' => 'dosen']);
+
+    Route::resource('admin/mahasiswa', AdminMahasiswaController::class)
+        ->only(['index', 'create', 'store', 'destroy'])
+        ->names('admin.mahasiswa')
+        ->parameters(['mahasiswa' => 'mahasiswa']);
+
+    Route::resource('admin/pengumuman', AdminPengumumanController::class)
+        ->only(['index', 'store', 'destroy'])
+        ->names('admin.pengumuman');
 });
 
 // Dashboard & halaman khusus Dosen
@@ -81,4 +95,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-

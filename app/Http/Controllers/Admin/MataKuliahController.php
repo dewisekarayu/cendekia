@@ -11,8 +11,11 @@ class MataKuliahController extends Controller
 {
     public function index()
     {
-        $mataKuliahList = MataKuliah::with('programStudi')->latest()->get();
-        return view('admin.mata-kuliah.index', compact('mataKuliahList'));
+        $mataKuliah = MataKuliah::with(['programStudi', 'kelasPerkuliahan.dosen'])
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.mata-kuliah.index', compact('mataKuliah'));
     }
 
     public function create()

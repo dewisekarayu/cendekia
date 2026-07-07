@@ -21,13 +21,13 @@
         <aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-screen">
             <div class="px-6 py-5 border-b border-gray-100">
                 <a href="/" class="flex items-center gap-2">
-                    <div class="w-9 h-9 rounded-lg bg-blue-900 flex items-center justify-center shrink-0">
+                    <div class="w-9 h-9 rounded-lg bg-[#002B6B] flex items-center justify-center shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 3L1 9l11 6l9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
                         </svg>
                     </div>
                     <div>
-                        <div class="text-base font-bold text-blue-900 leading-tight">Cendekia</div>
+                        <div class="text-base font-bold text-[#002B6B] leading-tight">Cendekia</div>
                         <div class="text-[11px] text-gray-400 leading-tight">Academic Portal</div>
                     </div>
                 </a>
@@ -46,10 +46,11 @@
                 } elseif (auth()->user()->hasRole('admin')) {
                     $menu = [
                         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                        ['label' => 'Dosen & Mahasiswa', 'route' => '#', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
+                        ['label' => 'Data Dosen', 'route' => 'admin.dosen.index', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
+                        ['label' => 'Data Mahasiswa', 'route' => 'admin.mahasiswa.index', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
                         ['label' => 'Program Studi', 'route' => 'admin.program-studi.index', 'icon' => 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.42A12.02 12.02 0 0112 21.5a12.02 12.02 0 01-6.16-10.92L12 14z'],
                         ['label' => 'Mata Kuliah', 'route' => 'admin.mata-kuliah.index', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                        ['label' => 'Kelas Perkuliahan', 'route' => 'admin.kelas.index', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
+                        ['label' => 'Pengumuman', 'route' => 'admin.pengumuman.index', 'icon' => 'M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 4v-4z'],
                         ['label' => 'Laporan', 'route' => '#', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
                     ];
                 } else {
@@ -75,7 +76,7 @@
                 @foreach ($menu as $item)
                 <a href="{{ $item['route'] === '#' ? '#' : route($item['route']) }}"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition
-                                 {{ $item['label'] === (View::yieldContent('activeMenu') ?: '') ? 'bg-blue-900 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
+                                 {{ $item['label'] === (View::yieldContent('activeMenu') ?: '') ? 'bg-[#002B6B] text-white' : 'text-gray-600 hover:bg-gray-100' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
                     </svg>
@@ -124,7 +125,7 @@
                 </button>
 
                 <div class="flex items-center gap-2 bg-gray-50 rounded-full pl-1 pr-4 py-1">
-                    <div class="w-7 h-7 rounded-full bg-blue-900 flex items-center justify-center text-white text-xs font-semibold">
+                    <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
                         {{ substr(auth()->user()->name, 0, 1) }}
                     </div>
                     <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>

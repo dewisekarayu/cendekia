@@ -69,9 +69,9 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ str_pad((string) $item->id, 8, '0', STR_PAD_LEFT) }}</td>
-                                <td><span class="badge" style="background-color: #dbeafe; color: #0284c7;">Program Studi</span></td>
-                                <td>+62-8{{ $item->id }}{{ $item->id % 10 }}</td>
+                                <td>{{ '04' . str_pad((string) $item->id, 8, '0', STR_PAD_LEFT) }}</td>
+                                <td><span class="badge" style="background-color: #dbeafe; color: #0284c7;">{{ $item->programStudi?->nama_prodi ?? 'Lintas Prodi' }}</span></td>
+                                <td>+62 812-{{ str_pad((string) $item->id, 4, '0', STR_PAD_LEFT) }}-{{ str_pad((string) (($item->id * 73) % 10000), 4, '0', STR_PAD_LEFT) }}</td>
                                 <td><span class="badge badge-status badge-aktif">Aktif</span></td>
                                 <td>
                                     <div class="action-buttons">
@@ -81,9 +81,13 @@
                                         <button class="action-btn action-btn-edit" title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </button>
-                                        <button class="action-btn action-btn-delete" title="Hapus">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        <form method="POST" action="{{ route('admin.dosen.destroy', $item->id) }}" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="action-btn action-btn-delete" title="Hapus">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

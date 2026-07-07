@@ -16,7 +16,7 @@
 
         <!-- Form Card -->
         <div class="table-card" style="max-width: 800px;">
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.dosen.store') }}" enctype="multipart/form-data">
                 @csrf
                 
                 <div style="padding: 2rem;">
@@ -61,12 +61,11 @@
                     <!-- Program Studi -->
                     <div class="mb-4">
                         <label class="form-label">Program Studi <span style="color: #dc2626;">*</span></label>
-                        <select class="form-select" name="program_studi" required>
+                        <select class="form-select" name="program_studi_id">
                             <option value="">-- Pilih Program Studi --</option>
-                            <option value="Teknik Informatika">Teknik Informatika</option>
-                            <option value="Sistem Informasi">Sistem Informasi</option>
-                            <option value="Desain Komunikasi Visual">Desain Komunikasi Visual</option>
-                            <option value="Teknik Mesin">Teknik Mesin</option>
+                            @foreach ($programStudiList as $programStudi)
+                                <option value="{{ $programStudi->id }}">{{ $programStudi->nama_prodi }}</option>
+                            @endforeach
                         </select>
                     </div>
 
