@@ -106,8 +106,9 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
 // Dashboard & halaman khusus Mahasiswa
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/dashboard', [MahasiswaDashboardController::class, 'index'])->name('mahasiswa.dashboard');
-    Route::post('/mahasiswa/pilih-prodi/{id}', [MahasiswaDashboardController::class, 'pilihProdi'])->name('mahasiswa.pilih-prodi');
-    Route::post('/mahasiswa/keluar-prodi', [MahasiswaDashboardController::class, 'keluarProdi'])->name('mahasiswa.keluar-prodi');
+    
+    // Route::post('/mahasiswa/pilih-prodi/{id}', [MahasiswaDashboardController::class, 'pilihProdi'])->name('mahasiswa.pilih-prodi');
+    // Route::post('/mahasiswa/keluar-prodi', [MahasiswaDashboardController::class, 'keluarProdi'])->name('mahasiswa.keluar-prodi');
 
     Route::get('/mahasiswa/kelas-saya', [MahasiswaKelasController::class, 'kelasSaya'])->name('mahasiswa.kelas-saya');
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');

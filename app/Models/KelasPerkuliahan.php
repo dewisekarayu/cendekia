@@ -58,4 +58,9 @@ class KelasPerkuliahan extends Model
     {
         return $this->belongsToMany(User::class, 'kelas_mahasiswa', 'kelas_perkuliahan_id', 'mahasiswa_id');
     }
+
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'kelas_perkuliahan_id');
+    }
 }

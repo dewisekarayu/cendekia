@@ -3,31 +3,19 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\AbsensiMahasiswa;
 use App\Models\KelasMahasiswa;
 use App\Models\KelasPerkuliahan;
+use App\Models\Materi;
+use App\Models\PengumpulanTugas;
+use App\Models\Tugas;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
     public function kelasSaya(Request $request)
     {
-        $search = trim($request->query('q', ''));
-
-        $query = $request->user()->kelasDiikuti()->with(['mataKuliah.programStudi', 'dosen']);
-
-        if ($search !== '') {
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('mataKuliah', function ($q2) use ($search) {
-                    $q2->where('nama_mk', 'like', "%{$search}%")
-                        ->orWhere('kode_mk', 'like', "%{$search}%");
-                })
-                ->orWhereHas('dosen', function ($q3) use ($search) {
-                    $q3->where('name', 'like', "%{$search}%");
-                });
-            });
-        }
-
-        $kelasList = $query->get();
+        $kelasList = $request->user()->kelasDiikuti()->with(['mataKuliah.programStudi', 'dosen'])->get();
 
         return view('mahasiswa.kelas-saya', compact('kelasList'));
     }
@@ -42,7 +30,35 @@ class KelasController extends Controller
 
         abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
 
-        return view('mahasiswa.kelas-detail', compact('kelas'));
+        $materiList = Materi::where('kelas_perkuliahan_id', $kelas->id)
+            ->orderBy('pertemuan_ke')
+            ->get();
+
+        $tugasList = Tugas::where('kelas_perkuliahan_id', $kelas->id)
+            ->orderBy('deadline')
+            ->get();
+
+        $totalTugas = $tugasList->count();
+        $submitted = PengumpulanTugas::whereIn('tugas_id', $tugasList->pluck('id'))
+            ->where('mahasiswa_id', $request->user()->id)
+            ->where('status', '!=', 'belum_dikumpulkan')
+            ->count();
+        $progress = $totalTugas > 0 ? round(($submitted / $totalTugas) * 100) : 0;
+
+        $rekapAbsen = AbsensiMahasiswa::with('absensi')
+            ->whereHas('absensi', fn ($q) => $q->where('kelas_perkuliahan_id', $kelas->id))
+            ->where('mahasiswa_id', $request->user()->id)
+            ->get()
+            ->sortBy(fn ($item) => $item->absensi->pertemuan_ke)
+            ->values();
+
+        $totalHadir = $rekapAbsen->where('status', 'hadir')->count();
+        $totalPertemuan = $rekapAbsen->count();
+
+        return view('mahasiswa.kelas-detail', compact(
+            'kelas', 'materiList', 'tugasList', 'rekapAbsen',
+            'progress', 'totalHadir', 'totalPertemuan', 'submitted', 'totalTugas'
+        ));
     }
 
     public function jelajahi(Request $request)
