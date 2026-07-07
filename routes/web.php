@@ -56,10 +56,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.mata-kuliah')
         ->parameters(['mata-kuliah' => 'mataKuliah']);
 
+    // Ganti bagian admin/dosen menjadi seperti ini:
     Route::resource('admin/dosen', AdminDosenController::class)
-        ->only(['index', 'create', 'store', 'destroy'])
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']) // Tambahkan edit & update
         ->names('admin.dosen')
         ->parameters(['dosen' => 'dosen']);
+
+    // Ganti bagian admin/mahasiswa menjadi seperti ini:
+    Route::resource('admin/mahasiswa', AdminMahasiswaController::class)
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']) // Tambahkan edit & update
+        ->names('admin.mahasiswa')
+        ->parameters(['mahasiswa' => 'mahasiswa']);
 
     Route::resource('admin/mahasiswa', AdminMahasiswaController::class)
         ->only(['index', 'create', 'store', 'destroy'])
