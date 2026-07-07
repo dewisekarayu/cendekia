@@ -48,20 +48,43 @@
         }
     @endphp
 
-    <div class="min-h-screen flex">
+    <div x-data="{ sidebarOpen: false }" class="min-h-screen flex overflow-x-hidden">
+        <div
+            x-cloak
+            x-show="sidebarOpen"
+            x-transition.opacity
+            @click="sidebarOpen = false"
+            class="fixed inset-0 z-40 bg-gray-900/45 lg:hidden"
+            aria-hidden="true"></div>
 
         <!-- Sidebar -->
-        <aside class="w-64 flex flex-col fixed h-screen" style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
+        <aside
+            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+            style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
             <div class="px-6 py-5" style="border-bottom: 1px solid {{ $sidebarBorder }};">
-                <a href="/" class="flex items-center gap-2">
-                    <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
-                        <img src="{{ asset('images/logo.png') }}" alt="Ilustrasi Edukasi" class="">
-                    </div>
-                    <div>
-                        <div class="text-base font-bold leading-tight" style="color: {{ $sidebarTitle }};">Cendekia</div>
-                        <div class="text-[11px] leading-tight" style="color: {{ $sidebarMuted }};">Academic Portal</div>
-                    </div>
-                </a>
+                <div class="flex items-center justify-between gap-3">
+                    <a href="/" class="flex min-w-0 items-center gap-2">
+                        <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
+                            <img src="{{ asset('images/logo.png') }}" alt="Ilustrasi Edukasi" class="">
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-base font-bold leading-tight truncate" style="color: {{ $sidebarTitle }};">Cendekia</div>
+                            <div class="text-[11px] leading-tight truncate" style="color: {{ $sidebarMuted }};">Academic Portal</div>
+                        </div>
+                    </a>
+
+                    <button
+                        type="button"
+                        @click="sidebarOpen = false"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-lg lg:hidden"
+                        style="color: {{ $sidebarText }};"
+                        aria-label="Tutup menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <nav class="flex-1 px-3 py-4 space-y-1">
@@ -149,9 +172,26 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 ml-64">
+        <div class="flex-1 min-w-0 w-full lg:ml-64">
             <!-- Topbar -->
-            <header class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-end gap-4">
+            <header class="sticky top-0 z-30 bg-white border-b border-gray-100 px-4 py-3 sm:px-6 lg:px-8 lg:py-4 flex items-center justify-between gap-3">
+                <button
+                    type="button"
+                    @click="sidebarOpen = true"
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 lg:hidden"
+                    aria-label="Buka menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <div class="min-w-0 flex-1 lg:hidden">
+                    <p class="truncate text-sm font-bold text-gray-800">@yield('title', 'Dashboard')</p>
+                </div>
+
+                <div class="hidden lg:block flex-1"></div>
+
+                <div class="flex items-center justify-end gap-2 sm:gap-4">
                 <button class="relative w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -159,22 +199,27 @@
                     <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
 
-                <div class="flex items-center gap-2 bg-gray-50 rounded-full pl-1 pr-4 py-1">
+                <div class="min-w-0 flex items-center gap-2 bg-gray-50 rounded-full pl-1 pr-2 sm:pr-4 py-1">
                     <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
                         {{ substr(auth()->user()->name, 0, 1) }}
                     </div>
-                    <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
+                    <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 sm:inline">{{ auth()->user()->name }}</span>
+                </div>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main class="p-8">
+            <main class="w-full min-w-0 overflow-x-hidden p-4 sm:p-6 lg:p-8">
                 @yield('content')
             </main>
         </div>
     </div>
 
     <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
         .sidebar-link:hover {
             background-color: var(--hover-bg) !important;
         }

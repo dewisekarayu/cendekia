@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    img,
+    video,
+    canvas,
+    svg {
+        max-width: 100%;
+    }
+}
+
+@layer components {
+    @media (max-width: 767px) {
+        main table {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        main thead,
+        main tbody,
+        main tr {
+            width: max-content;
+            min-width: 100%;
+        }
+
+        main input,
+        main select,
+        main textarea,
+        main button {
+            max-width: 100%;
+        }
+    }
+}
