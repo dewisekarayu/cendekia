@@ -17,6 +17,9 @@ use App\Http\Controllers\Mahasiswa\SettingController as MahasiswaSettingControll
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Http\Request;
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -24,6 +27,9 @@ Route::get('/', function () {
 // Dashboard umum -> redirect otomatis sesuai role
 Route::get('/dashboard', function () {
     $user = auth()->user();
+    if (!$user) {
+        abort(401);
+    }
 
     if ($user->hasRole('admin')) {
         return redirect()->route('admin.dashboard');

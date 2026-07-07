@@ -1,65 +1,116 @@
-@extends('layouts.portal')
+@extends('layouts.admin')
 
 @section('title', 'Tambah Mata Kuliah')
-@section('activeMenu', 'Mata Kuliah')
 
 @section('content')
+    <!-- Header Section -->
+    <div class="mb-4">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mb-1">
+            <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Master Data</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.mata-kuliah.index') }}" class="text-decoration-none text-muted">Mata Kuliah</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tambah Mata Kuliah</li>
+            </ol>
+        </nav>
+        <h1 class="page-title h3 fw-bold mb-1">Tambah Mata Kuliah</h1>
+        <p class="text-muted mb-0" style="font-size: 0.9rem;">Tambahkan data mata kuliah baru ke dalam sistem kurikulum.</p>
+    </div>
 
-    <h1 class="text-xl font-bold text-gray-800 mb-6">Tambah Mata Kuliah</h1>
+    <!-- Form Card -->
+    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; max-width: 800px;">
+        <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
+            <i class="bi bi-plus-circle-fill text-primary fs-5"></i>
+            <h5 class="m-0 fw-bold">Formulir Mata Kuliah Baru</h5>
+        </div>
 
-    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 max-w-xl">
-        <form action="{{ route('admin.mata-kuliah.store') }}" method="POST" class="space-y-4">
+        <form action="{{ route('admin.mata-kuliah.store') }}" method="POST">
             @csrf
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Program Studi</label>
-                <select name="program_studi_id" class="w-full border-gray-300 rounded-lg text-sm">
-                    <option value="">-- Pilih Program Studi --</option>
-                    @foreach ($prodiList as $prodi)
-                        <option value="{{ $prodi->id }}" {{ old('program_studi_id') == $prodi->id ? 'selected' : '' }}>
-                            {{ $prodi->nama_prodi }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('program_studi_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Kode Mata Kuliah</label>
-                <input type="text" name="kode_mk" value="{{ old('kode_mk') }}" class="w-full border-gray-300 rounded-lg text-sm" placeholder="CS-201">
-                @error('kode_mk') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Mata Kuliah</label>
-                <input type="text" name="nama_mk" value="{{ old('nama_mk') }}" class="w-full border-gray-300 rounded-lg text-sm" placeholder="Struktur Data & Algoritma">
-                @error('nama_mk') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">SKS</label>
-                    <input type="number" name="sks" value="{{ old('sks', 3) }}" min="1" max="6" class="w-full border-gray-300 rounded-lg text-sm">
-                    @error('sks') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            <div class="row g-3">
+                <!-- Kode MK -->
+                <div class="col-md-4">
+                    <label for="kode_mk" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kode MK <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('kode_mk') is-invalid @enderror" id="kode_mk" name="kode_mk" value="{{ old('kode_mk') }}" placeholder="Contoh: INF201" required style="border-radius: 8px; padding: 0.6rem 0.75rem;">
+                    @error('kode_mk')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Semester Ke</label>
-                    <input type="number" name="semester_ke" value="{{ old('semester_ke', 1) }}" min="1" max="8" class="w-full border-gray-300 rounded-lg text-sm">
-                    @error('semester_ke') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+
+                <!-- Nama MK -->
+                <div class="col-md-8">
+                    <label for="nama_mk" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Nama Mata Kuliah <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('nama_mk') is-invalid @enderror" id="nama_mk" name="nama_mk" value="{{ old('nama_mk') }}" placeholder="Contoh: Algoritma & Struktur Data" required style="border-radius: 8px; padding: 0.6rem 0.75rem;">
+                    @error('nama_mk')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- SKS -->
+                <div class="col-md-6">
+                    <label for="sks" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Jumlah SKS <span class="text-danger">*</span></label>
+                    <select class="form-select @error('sks') is-invalid @enderror" id="sks" name="sks" required style="border-radius: 8px; padding: 0.6rem 0.75rem;">
+                        <option value="" disabled selected>Pilih SKS</option>
+                        @for ($i = 1; $i <= 6; $i++)
+                            <option value="{{ $i }}" {{ old('sks') == $i ? 'selected' : '' }}>{{ $i }} SKS</option>
+                        @endfor
+                    </select>
+                    @error('sks')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Semester -->
+                <div class="col-md-6">
+                    <label for="semester" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Semester <span class="text-danger">*</span></label>
+                    <select class="form-select @error('semester') is-invalid @enderror" id="semester" name="semester" required style="border-radius: 8px; padding: 0.6rem 0.75rem;">
+                        <option value="" disabled selected>Pilih Semester</option>
+                        @for ($i = 1; $i <= 8; $i++)
+                            <option value="{{ $i }}" {{ old('semester') == $i ? 'selected' : '' }}>Semester {{ $i }}</option>
+                        @endfor
+                    </select>
+                    @error('semester')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Program Studi -->
+                <div class="col-md-12">
+                    <label for="program_studi_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Program Studi <span class="text-danger">*</span></label>
+                    <select class="form-select @error('program_studi_id') is-invalid @enderror" id="program_studi_id" name="program_studi_id" required style="border-radius: 8px; padding: 0.6rem 0.75rem;">
+                        <option value="" disabled selected>Pilih Program Studi</option>
+                        @foreach($programStudis ?? [] as $prodi)
+                            <option value="{{ $prodi->id }}" {{ old('program_studi_id') == $prodi->id ? 'selected' : '' }}>{{ $prodi->nama_prodi }}</option>
+                        @endforeach
+                    </select>
+                    @error('program_studi_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Dosen Pengampu -->
+                <div class="col-md-12">
+                    <label for="dosen_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Dosen Pengampu <span class="text-muted">(Opsional)</span></label>
+                    <select class="form-select @error('dosen_id') is-invalid @enderror" id="dosen_id" name="dosen_id" style="border-radius: 8px; padding: 0.6rem 0.75rem;">
+                        <option value="" selected>Belum ditentukan / Pilih Dosen Pengampu</option>
+                        @foreach($dosens ?? [] as $dosen)
+                            <option value="{{ $dosen->id }}" {{ old('dosen_id') == $dosen->id ? 'selected' : '' }}>{{ $dosen->nama }}</option>
+                        @endforeach
+                    </select>
+                    @error('dosen_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi (Opsional)</label>
-                <textarea name="deskripsi" rows="3" class="w-full border-gray-300 rounded-lg text-sm">{{ old('deskripsi') }}</textarea>
-                @error('deskripsi') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div class="flex gap-3 pt-2">
-                <button type="submit" class="bg-blue-900 text-white text-sm font-medium px-5 py-2 rounded-lg">Simpan</button>
-                <a href="{{ route('admin.mata-kuliah.index') }}" class="text-gray-500 text-sm font-medium px-5 py-2">Batal</a>
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                <a href="{{ route('admin.mata-kuliah.index') }}" class="btn btn-light border px-4 py-2 fw-semibold text-secondary" style="border-radius: 8px;">
+                    Batal
+                </a>
+                <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold" style="background-color: #0d6efd; border-radius: 8px;">
+                    Simpan Data
+                </button>
             </div>
         </form>
     </div>
-
 @endsection
