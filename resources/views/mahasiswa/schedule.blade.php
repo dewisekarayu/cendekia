@@ -5,9 +5,9 @@
 
 @section('content')
 
-    <div class="mb-6">
-        <h1 class="text-xl font-bold text-gray-800">Jadwal Kuliah</h1>
-        <p class="text-sm text-gray-500 mt-1">Jadwal dari semua kelas yang kamu ikuti minggu ini.</p>
+    <div class="bg-blue-900 rounded-xl px-8 py-6 text-white mb-8">
+        <h1 class="text-2xl font-bold">Jadwal Kuliah</h1>
+        <p class="text-blue-200 text-sm mt-1">Jadwal dari semua kelas yang kamu ikuti minggu ini.</p>
     </div>
 
     @if ($kelasList->isEmpty())
@@ -18,16 +18,66 @@
             <p class="text-gray-500 text-sm">Belum ada jadwal. Gabung ke kelas dulu untuk melihat jadwalmu.</p>
         </div>
     @else
-        <div class="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
-            @foreach ($kelasList as $kelas)
-                <div class="p-4 flex items-center justify-between">
-                    <div>
-                        <p class="font-semibold text-gray-800">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</p>
-                        <p class="text-xs text-gray-400">{{ $kelas->ruangan }}</p>
+        @php
+            $startHour = 7;
+            $endHour = 20;
+            $hourHeight = 80; // pixels per hour
+            $headerHeight = 48; // px spacer for header (matches time column spacer)
+            $totalMinutes = ($endHour - $startHour) * 60; // total minutes in view
+            $totalHeight = ($endHour - $startHour) * $hourHeight; // total px height (hours area)
+            $containerHeight = $headerHeight + $totalHeight; // include header
+            $days = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+            $eventsByDay = [];
+            foreach ($kelasList as $k) {
+                $eventsByDay[$k->hari ?? 'Senin'][] = $k;
+            }
+        @endphp
+
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 overflow-auto">
+            <div class="flex">
+                <!-- Days grid -->
+                <div class="flex-1">
+                    <div class="grid grid-cols-6 gap-3 min-w-full">
+                        @foreach ($days as $day)
+
+                            <div class="border-l border-gray-100 bg-white">
+                                <div class="sticky top-0 bg-blue-50 text-xs text-blue-700 text-center border-b border-blue-100 font-semibold" style="height:{{$headerHeight}}px; line-height:{{$headerHeight}}px;">
+                                    {{ $day }}
+                                </div>
+
+                                <div class="relative" style="height:{{$totalHeight}}px">
+                                    {{-- background hour rows for grid lines --}}
+                                    @for ($h = $startHour; $h < $endHour; $h++)
+                                        <div style="height:{{$hourHeight}}px" class="border-b border-gray-100"></div>
+                                    @endfor
+
+                                    @php $events = $eventsByDay[$day] ?? []; @endphp
+                                    @foreach ($events as $idx => $ev)
+                                        @php
+                                            [$sh, $sm] = explode(':', $ev->jam_mulai ?? '07:00');
+                                            [$eh, $em] = explode(':', $ev->jam_selesai ?? '08:00');
+                                            $startMin = intval($sh) * 60 + intval($sm);
+                                            $endMin = intval($eh) * 60 + intval($em);
+                                            $offset = max(0, $startMin - ($startHour * 60));
+                                            $duration = max(15, $endMin - $startMin);
+                                            $topPx = $offset * ($hourHeight / 60);
+                                            $heightPx = max(24, $duration * ($hourHeight / 60));
+                                        @endphp
+
+                                        <div class="absolute left-2 right-2 rounded-md shadow-sm overflow-hidden" style="top:{{ $topPx }}px; height:{{ $heightPx }}px; background-color: rgba(59,130,246,0.08); border-left:4px solid rgba(59,130,246,1);">
+                                            <div class="p-2 text-xs text-gray-800">
+                                                <div class="font-semibold">{{ $ev->mataKuliah->nama_mk ?? '-' }}</div>
+                                                <div class="text-[11px] text-gray-600">{{ $ev->ruangan ?? '' }}</div>
+                                                <div class="text-[11px] text-gray-500 mt-1">{{ $ev->jam_mulai }} - {{ $ev->jam_selesai }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                    <span class="text-sm text-gray-500">{{ $kelas->hari }}, {{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }}</span>
                 </div>
-            @endforeach
+            </div>
         </div>
     @endif
 

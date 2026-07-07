@@ -11,7 +11,23 @@ class KelasController extends Controller
 {
     public function kelasSaya(Request $request)
     {
-        $kelasList = $request->user()->kelasDiikuti()->with(['mataKuliah.programStudi', 'dosen'])->get();
+        $search = trim($request->query('q', ''));
+
+        $query = $request->user()->kelasDiikuti()->with(['mataKuliah.programStudi', 'dosen']);
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('mataKuliah', function ($q2) use ($search) {
+                    $q2->where('nama_mk', 'like', "%{$search}%")
+                        ->orWhere('kode_mk', 'like', "%{$search}%");
+                })
+                ->orWhereHas('dosen', function ($q3) use ($search) {
+                    $q3->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $kelasList = $query->get();
 
         return view('mahasiswa.kelas-saya', compact('kelasList'));
     }
