@@ -6,18 +6,11 @@
 @section('content')
 <div class="max-w-7xl mx-auto">
     <!-- Header -->
-    <div class="bg-blue-900 rounded-xl px-8 py-6 text-white mb-8">
-        <div class="flex items-center justify-between">
+    <div class="bg-blue-900 rounded-xl px-5 sm:px-8 py-6 text-white mb-6 sm:mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold">Profil Pengguna</h1>
+                <h1 class="text-xl sm:text-2xl font-bold">Profil Pengguna</h1>
                 <p class="text-blue-200 text-sm mt-1">Perbarui informasi akun dan preferensi Anda.</p>
-            </div>
-
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-3 bg-white/10 px-3 py-1 rounded-full">
-                    <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-semibold">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
-                    <div class="text-sm">{{ auth()->user()->name }}</div>
-                </div>
             </div>
         </div>
     </div>
@@ -26,20 +19,20 @@
         <!-- Left: Profile & Details -->
         <div class="lg:col-span-2 space-y-6">
             <div class="bg-white rounded-lg shadow">
-                <div class="h-28 bg-blue-800 rounded-t-lg"></div>
-                <div class="px-6 pb-6 -mt-5">
-                    <div class="flex items-end gap-6">
-                        <div class="w-28 h-28 rounded-lg overflow-hidden border-4 border-white shadow-lg bg-gray-100">
+                <div class="h-20 sm:h-28 bg-blue-800 rounded-t-lg"></div>
+                <div class="px-4 sm:px-6 pb-6 -mt-5">
+                    <div class="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
+                        <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-lg overflow-hidden border-4 border-white shadow-lg bg-gray-100 shrink-0">
                             <img src="{{ asset('images/profil.jpg') }}" alt="avatar" class="w-full h-full object-cover">
                         </div>
-                        <div class="flex-1 mt-15">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h2 class="text-lg font-semibold text-black-">{{ auth()->user()->name }}</h2>
-                                    <div class="text-sm text-black-700">NIM: {{ auth()->user()->nim ?? '210401xxxx' }} • <span class="text-blue-600">Aktif</span></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="min-w-0">
+                                    <h2 class="text-lg font-semibold text-gray-900 truncate">{{ auth()->user()->name }}</h2>
+                                    <div class="text-sm text-gray-700">NIM: {{ auth()->user()->nim ?? '210401xxxx' }} • <span class="text-blue-600">Aktif</span></div>
                                 </div>
                                 <div>
-                                    <a href="#" class="inline-flex items-center px-3 py-1.5 bg-blue-700 text-white rounded-md shadow">Edit Profil</a>
+                                    <button type="button" onclick="openEditProfilModal()" class="inline-flex items-center px-3 py-1.5 bg-blue-700 text-white rounded-md shadow text-sm">Edit Profil</button>
                                 </div>
                             </div>
                             <p class="mt-3 text-sm text-gray-600">Halo {{ auth()->user()->name }}, perbarui informasi profil kamu di sini.</p>
@@ -49,41 +42,41 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white rounded-lg shadow p-5">
+                <div class="bg-white rounded-lg shadow p-4 sm:p-5">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="text-sm font-semibold text-gray-700">Info Kontak</h3>
                     </div>
                     <ul class="space-y-3 text-sm text-gray-600">
                         <li class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5h12M9 3v2m-6 4h18M5 21h14a2 2 0 002-2V7H3v12a2 2 0 002 2z"/></svg>
-                            <div>
+                            <div class="min-w-0">
                                 <div class="text-gray-800">Email Institusi</div>
-                                <div class="text-xs">{{ auth()->user()->email ?? 'ahmad.fauzi@student.com' }}</div>
+                                <div class="text-xs break-all">{{ auth()->user()->email ?? 'ahmad.fauzi@student.com' }}</div>
                             </div>
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2 8.5C2 6.57 3.57 5 5.5 5h13c1.93 0 3.5 1.57 3.5 3.5v7c0 1.93-1.57 3.5-3.5 3.5H5.5C3.57 19 2 17.43 2 15.5v-7z"/></svg>
-                            <div>
+                            <div class="min-w-0">
                                 <div class="text-gray-800">Nomor WhatsApp</div>
                                 <div class="text-xs">{{ auth()->user()->phone ?? '+62 812-3456-7890' }}</div>
                             </div>
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.418 0-8 2-8 4.5V21h16v-2.5c0-2.5-3.582-4.5-8-4.5z"/></svg>
-                            <div>
+                            <div class="min-w-0">
                                 <div class="text-gray-800">Email Personal</div>
-                                <div class="text-xs">{{ auth()->user()->personal_email ?? 'fauzi.ahmad@gmail.com' }}</div>
+                                <div class="text-xs break-all">{{ auth()->user()->personal_email ?? 'fauzi.ahmad@gmail.com' }}</div>
                             </div>
                         </li>
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-lg shadow p-5">
+                <div class="bg-white rounded-lg shadow p-4 sm:p-5">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="text-sm font-semibold text-gray-700">Status Akademik</h3>
                     </div>
                     <div class="text-sm text-gray-600 mb-4">
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between gap-4">
                             <div>
                                 <div class="text-xs text-gray-500">Fakultas</div>
                                 <div class="text-sm font-medium text-gray-800">Teknik</div>
@@ -107,9 +100,9 @@
 
         <!-- Right: Notifications -->
         <div class="space-y-4">
-            <div class="bg-white rounded-lg shadow p-5">
+            <div class="bg-white rounded-lg shadow p-4 sm:p-5">
                 <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-lg font-semibold text-gray-800">Notification</h3>
+                    <h3 class="text-base sm:text-lg font-semibold text-gray-800">Notification</h3>
                     <div class="text-sm text-gray-500">Terbaru</div>
                 </div>
 
@@ -119,8 +112,8 @@
                     <div class="space-y-3">
                         @foreach ($announcements as $announcement)
                             <div class="border-l-4 border-[#321270]/20 pl-3 py-3 bg-[#321270]/5 rounded-md">
-                                <div class="flex items-start justify-between gap-3">
-                                    <div>
+                                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-3">
+                                    <div class="min-w-0">
                                         <div class="text-sm font-medium text-gray-800">{{ $announcement->judul }}</div>
                                         <div class="text-xs text-gray-600">{{ $announcement->isi }}</div>
                                     </div>
@@ -138,11 +131,122 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow p-5 text-center text-sm text-gray-600">
+            <div class="bg-white rounded-lg shadow p-4 sm:p-5 text-center text-sm text-gray-600">
                 {{ $announcements->isEmpty() ? 'Belum ada notifikasi' : 'Lihat semua pengumuman' }}
             </div>
         </div>
     </div>
 </div>
+
+<!-- ================= MODAL EDIT PROFIL ================= -->
+<div id="editProfilModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onclick="if(event.target===this) closeEditProfilModal()">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <form action="{{ route('profile.update') ?? '#' }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <!-- Header modal -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h3 class="text-base font-semibold text-gray-800">Edit Profil</h3>
+                <button type="button" onclick="closeEditProfilModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <div class="px-6 py-5 space-y-6">
+                <!-- Informasi Pribadi -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-800 mb-4">Informasi Pribadi</h4>
+
+                    <div class="flex flex-col sm:flex-row gap-5">
+                        <div class="shrink-0">
+                            <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-blue-500 bg-gray-100">
+                                <img src="{{ asset('images/profil.jpg') }}" alt="avatar" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+
+                        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">Nama Lengkap</label>
+                                <input type="text" name="name" value="{{ auth()->user()->name }}"
+                                    class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">NIM (Nomor Induk Mahasiswa)</label>
+                                <input type="text" name="nim" value="{{ auth()->user()->nim ?? '' }}" readonly
+                                    class="w-full text-sm rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-gray-700 cursor-not-allowed">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">Email Institusi</label>
+                                <input type="email" name="email" value="{{ auth()->user()->email ?? '' }}"
+                                    class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1.5">Nomor Telepon</label>
+                                <input type="text" name="phone" value="{{ auth()->user()->phone ?? '' }}"
+                                    class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100"></div>
+
+                <!-- Data Akademik -->
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-800 mb-4">Data Akademik</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Fakultas</label>
+                            <select name="fakultas" class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="Fakultas Teknik" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Teknik' ? 'selected' : '' }}>Fakultas Teknik</option>
+                                <option value="Fakultas Ekonomi" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Ekonomi' ? 'selected' : '' }}>Fakultas Ekonomi</option>
+                                <option value="Fakultas Hukum" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Hukum' ? 'selected' : '' }}>Fakultas Hukum</option>
+                                <option value="Fakultas Ilmu Komputer" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Ilmu Komputer' ? 'selected' : '' }}>Fakultas Ilmu Komputer</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Program Studi</label>
+                            <select name="program_studi" class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="Teknik Sipil" {{ (auth()->user()->program_studi ?? '') == 'Teknik Sipil' ? 'selected' : '' }}>Teknik Sipil</option>
+                                <option value="Teknik Elektro" {{ (auth()->user()->program_studi ?? '') == 'Teknik Elektro' ? 'selected' : '' }}>Teknik Elektro</option>
+                                <option value="Teknik Mesin" {{ (auth()->user()->program_studi ?? '') == 'Teknik Mesin' ? 'selected' : '' }}>Teknik Mesin</option>
+                                <option value="Informatika" {{ (auth()->user()->program_studi ?? '') == 'Informatika' ? 'selected' : '' }}>Informatika</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Semester</label>
+                            <input type="number" name="semester" min="1" max="14" value="{{ auth()->user()->semester ?? 1 }}"
+                                class="w-full sm:w-1/2 text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer modal -->
+            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl">
+                <button type="button" onclick="closeEditProfilModal()" class="px-4 py-2 text-sm rounded-md border border-gray-200 text-gray-700 hover:bg-gray-100">Batal</button>
+                <button type="submit" class="px-4 py-2 text-sm rounded-md bg-blue-700 text-white shadow hover:bg-blue-800">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditProfilModal() {
+        document.getElementById('editProfilModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeEditProfilModal() {
+        document.getElementById('editProfilModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeEditProfilModal();
+    });
+</script>
 
 @endsection

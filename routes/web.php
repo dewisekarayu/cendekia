@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DosenController as AdminDosenController;
 use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
 use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController;
+use App\Http\Controllers\Dosen\PengumumanController as DosenPengumumanController;
 use App\Http\Controllers\Admin\UserController;
 
 use App\Http\Controllers\Admin\KelasController;
@@ -95,13 +96,19 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'tugas'])->name('dosen.kelas-tugas');
     Route::get('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'materi'])->name('dosen.kelas-materi');
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
+
+    // Cari bagian rute pengumuman dosen, lalu ubah menjadi seperti ini:-
+    Route::get('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
+    Route::post('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
+    Route::delete('/dosen/pengumuman/{id}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
 });
 
 // Dashboard & halaman khusus Mahasiswa
 Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/dashboard', [MahasiswaDashboardController::class, 'index'])->name('mahasiswa.dashboard');
-    Route::post('/mahasiswa/pilih-prodi/{id}', [MahasiswaDashboardController::class, 'pilihProdi'])->name('mahasiswa.pilih-prodi');
-    Route::post('/mahasiswa/keluar-prodi', [MahasiswaDashboardController::class, 'keluarProdi'])->name('mahasiswa.keluar-prodi');
+    
+    // Route::post('/mahasiswa/pilih-prodi/{id}', [MahasiswaDashboardController::class, 'pilihProdi'])->name('mahasiswa.pilih-prodi');
+    // Route::post('/mahasiswa/keluar-prodi', [MahasiswaDashboardController::class, 'keluarProdi'])->name('mahasiswa.keluar-prodi');
 
     Route::get('/mahasiswa/kelas-saya', [MahasiswaKelasController::class, 'kelasSaya'])->name('mahasiswa.kelas-saya');
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');

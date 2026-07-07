@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\Pengumuman;
 use App\Models\PengumpulanTugas;
-use App\Models\ProgramStudi;
 use App\Models\Tugas;
 use Illuminate\Http\Request;
 
@@ -14,16 +13,6 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-
-        if (! $user->program_studi_id) {
-            return view('mahasiswa.dashboard', [
-                'needProdi' => true,
-                'prodiList' => ProgramStudi::all(),
-                'courses' => collect(),
-                'deadlines' => collect(),
-                'announcements' => collect(),
-            ]);
-        }
 
         $kelasDiikuti = $user->kelasDiikuti()->with(['mataKuliah.programStudi', 'dosen'])->get();
 
@@ -59,34 +48,6 @@ class DashboardController extends Controller
             ->take(2)
             ->get();
 
-        return view('mahasiswa.dashboard', [
-            'needProdi' => false,
-            'courses' => $courses,
-            'deadlines' => $deadlines,
-            'announcements' => $announcements,
-        ]);
-    }
-
-    public function pilihProdi(Request $request, $id)
-    {
-        $prodi = ProgramStudi::findOrFail($id);
-        $request->user()->update(['program_studi_id' => $prodi->id]);
-
-        return redirect()->route('mahasiswa.dashboard')
-            ->with('success', 'Berhasil bergabung ke program studi ' . $prodi->nama_prodi . '!');
-    }
-
-    public function keluarProdi(Request $request)
-    {
-        $user = $request->user();
-
-        // Otomatis keluar dari semua kelas yang diikuti,
-        // karena kelas-kelas itu terikat ke prodi yang akan ditinggalkan
-        $user->kelasDiikuti()->detach();
-
-        $user->update(['program_studi_id' => null]);
-
-        return redirect()->route('mahasiswa.dashboard')
-            ->with('success', 'Kamu telah keluar dari program studi. Semua kelas yang diikuti juga ikut dihapus.');
+        return view('mahasiswa.dashboard', compact('courses', 'deadlines', 'announcements'));
     }
 }

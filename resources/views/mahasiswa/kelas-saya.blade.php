@@ -5,13 +5,11 @@
 
 @section('content')
 
-    <!-- Header Section -->
-    <div class="bg-blue-900 rounded-xl px-8 py-6 text-white mb-8">
+    <div class="bg-blue-900 rounded-xl px-8 py-6 text-white mb-8 shadow-sm">
         <h1 class="text-2xl font-bold">Daftar Mata Kuliah</h1>
-        <p class="text-blue-200 text-sm mt-1">Kelola dan akses semua mata kuliah Anda di semester ini.</p>
+        <p class="text-blue-200 text-sm mt-1">Akses semua kelas perkuliahan aktif Anda di semester ini.</p>
     </div>
 
-    <!-- Filter & Search Bar -->
     <form method="GET" action="{{ route('mahasiswa.kelas-saya') }}" class="flex flex-col sm:flex-row gap-4 items-center justify-between mb-8">
         <div class="flex gap-4 w-full sm:w-auto">
             <div>
@@ -39,59 +37,70 @@
         </div>
     </form>
 
-    <!-- Grid Main Container -->
     @if ($kelasList->isEmpty())
-        <!-- TAMPILAN KOSONG: Benar-benar kosong / hanya info teks minimalis tanpa card action -->
         <div class="bg-white rounded-xl border border-gray-100 p-12 text-center shadow-sm flex flex-col items-center justify-center min-h-[340px]">
             <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 mb-4 border border-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                 </svg>
             </div>
-            <h3 class="font-bold text-gray-700 text-base">Belum Ada Kelas</h3>
-            <p class="text-gray-400 text-xs max-w-sm mt-1 leading-relaxed">Halaman kelas saya masih kosong karena kamu belum bergabung ke kelas mana pun semester ini. Silakan hubungi admin atau ambil KRS terlebih dahulu.</p>
+            <h3 class="font-bold text-gray-700 text-base">Belum Ada Kelas Terdaftar</h3>
+            <p class="text-gray-400 text-xs max-w-sm mt-1 leading-relaxed">Anda belum dimasukkan ke kelas mana pun oleh Admin Akademik untuk semester ini. Silakan hubungi bagian administrasi prodi Anda.</p>
         </div>
     @else
-        <!-- GRID KETIKA SUDAH ADA KELAS YANG DIIKUTI -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{-- MENGUBAH PEMBUNGKUS MENJADI LIST BARIS (flex-col) --}}
+        <div class="flex flex-col gap-4">
             @foreach ($kelasList as $kelas)
-                <div class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm flex flex-col justify-between min-h-[340px]">
-                    <div class="p-5">
-                        <!-- Header Card: Icon & Status Tag -->
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                                </svg>
-                            </div>
+                <a href="{{ route('mahasiswa.kelas-detail', $kelas->id) }}" class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md hover:border-gray-200 transition duration-200 flex flex-col md:flex-row md:items-center justify-between gap-5 group text-left">
+                    
+                    {{-- Bagian Kiri: Info Utama Kelas --}}
+                    <div class="flex-1 min-w-0 space-y-2.5">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-block text-[10px] font-bold tracking-wide text-blue-900 bg-blue-50 px-2.5 py-1 rounded-md uppercase">
+                                {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
+                            </span>
                             <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600">
                                 Aktif
                             </span>
+                            <span class="text-[11px] font-bold text-gray-500 ml-2">
+                                {{ $kelas->mataKuliah?->sks ?? '0' }} SKS
+                            </span>
                         </div>
 
-                        <!-- Info Mata Kuliah -->
-                        <h3 class="font-bold text-gray-800 text-base leading-snug min-h-[44px] line-clamp-2">
+                        <h3 class="font-bold text-gray-800 text-base group-hover:text-blue-900 transition truncate">
                             {{ $kelas->mataKuliah?->nama_mk ?? '-' }}
                         </h3>
-                        <p class="text-xs text-gray-400 mt-1">
-                            {{ $kelas->mataKuliah?->kode_mk ?? 'CS-' . $kelas->id }} • {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Umum' }}
+                        
+                        <p class="text-xs text-gray-400 flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <span class="flex items-center gap-1">
+                                🏢 Ruangan: <strong class="text-gray-600 font-semibold">{{ $kelas->ruangan ?? '-' }}</strong>
+                            </span>
+                            <span class="text-gray-300">|</span>
+                            <span>{{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Umum' }}</span>
                         </p>
+                    </div>
 
-                        <!-- Dosen Pengampu -->
-                        <div class="mt-4 flex items-center gap-2.5">
-                            <div class="w-7 h-7 rounded-full bg-gray-100 overflow-hidden shrink-0">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($kelas->dosen?->name ?? 'Dosen') }}&background=EBF4FF&color=1E3A8A" alt="Avatar">
-                            </div>
-                            <div class="overflow-hidden">
-                                <p class="text-[9px] text-gray-400 font-medium uppercase tracking-wider leading-none">Dosen Pengampu</p>
-                                <p class="text-xs font-semibold text-gray-700 mt-1 truncate">{{ $kelas->dosen?->name ?? '-' }}</p>
-                            </div>
+                    {{-- Bagian Tengah Kiri: Dosen Pengampu --}}
+                    <div class="flex items-center gap-3 md:w-56 shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-gray-50">
+                        <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden shrink-0 border border-gray-200">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($kelas->dosen?->name ?? 'Dosen') }}&background=EBF4FF&color=1E3A8A" alt="Avatar">
                         </div>
+                        <div class="overflow-hidden">
+                            <p class="text-[9px] text-gray-400 font-medium uppercase tracking-wider leading-none">Dosen Pengampu</p>
+                            <p class="text-xs font-semibold text-gray-700 mt-1 truncate" title="{{ $kelas->dosen?->name ?? '-' }}">
+                                {{ $kelas->dosen?->name ?? '-' }}
+                            </p>
+                        </div>
+                    </div>
 
-                        <!-- Progress Belajar -->
-                        <div class="mt-5">
-                            <div class="flex justify-between items-center text-[11px] font-semibold text-gray-500 mb-1">
-                                <span>Progress Belajar</span>
+                    {{-- Bagian Tengah Kanan: Jadwal & Progress Belajar --}}
+                    <div class="md:w-52 shrink-0 space-y-2">
+                        <div class="text-xs text-gray-600 flex items-center gap-1.5 font-medium">
+                            📅 <span>{{ $kelas->hari }}, {{ substr($kelas->jam_mulai, 0, 5) }} WIB</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center text-[10px] font-semibold text-gray-400 mb-0.5">
+                                <span>Progress Kelas</span>
                                 <span class="text-blue-900 font-bold">0%</span>
                             </div>
                             <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -100,16 +109,17 @@
                         </div>
                     </div>
 
-                    <!-- Footer Card / Action Button -->
-                    <div class="px-5 pb-5 pt-3 border-t border-gray-50 bg-gray-50/50">
-                        <div class="flex items-center justify-between text-xs text-gray-400 font-medium mb-3">
-                            <span>{{ $kelas->mataKuliah?->sks ?? '3' }} SKS • {{ $kelas->hari }}, {{ substr($kelas->jam_mulai, 0, 5) }}</span>
+                    {{-- Bagian Kanan: Tombol Aksi --}}
+                    <div class="shrink-0 pt-2 md:pt-0">
+                        <div class="w-full md:w-auto inline-flex items-center justify-center bg-blue-900 group-hover:bg-blue-800 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition shadow-sm gap-1">
+                            <span>Masuk Kelas</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
                         </div>
-                        <a href="{{ route('mahasiswa.kelas-detail', $kelas->id) }}" class="w-full block text-center bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold py-2 rounded-lg transition shadow-sm">
-                            Masuk Kelas
-                        </a>
                     </div>
-                </div>
+
+                </a>
             @endforeach
         </div>
     @endif
