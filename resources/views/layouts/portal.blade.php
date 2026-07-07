@@ -80,9 +80,7 @@
                         class="inline-flex h-9 w-9 items-center justify-center rounded-lg lg:hidden"
                         style="color: {{ $sidebarText }};"
                         aria-label="Tutup menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"></svg>
                     </button>
                 </div>
             </div>
@@ -93,9 +91,8 @@
                     $menu = [
                         ['label' => 'Dashboard', 'route' => 'dosen.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
                         ['label' => 'My Classes', 'route' => 'dosen.kelas-saya', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                        ['label' => 'Tugas & Materi', 'route' => '#', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
                         ['label' => 'Schedule', 'route' => '#', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                        ['label' => 'Announcements',  'route' => '#', 'icon' => 'M3 11.5l11-5v11l-11-5zm11 6.5v-13a2 2 0 012 2v9a2 2 0 01-2 2zm-8 1a2 2 0 104 0v-2H6v2z'],
+                        ['label' => 'Announcements',  'route' => 'dosen.kelas-pengumuman.index', 'param' => ['id' => 1], 'icon' => 'M3 11.5l11-5v11l-11-5zm11 6.5v-13a2 2 0 012 2v9a2 2 0 01-2 2zm-8 1a2 2 0 104 0v-2H6v2z'],
                         ['label' => 'Profile', 'route' => '#', 'icon' => 'M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z'],
                     ];
                 } elseif (auth()->user()->hasRole('admin')) {
@@ -128,15 +125,25 @@
                 @endphp
 
                 @foreach ($menu as $item)
-                @php $isActive = $item['label'] === (View::yieldContent('activeMenu') ?: ''); @endphp
-                <a href="{{ $item['route'] === '#' ? '#' : route($item['route']) }}"
-                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
-                    style="{{ $isActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
-                    </svg>
-                    {{ $item['label'] }}
-                </a>
+                    @php
+                        $isActive = $item['label'] === (View::yieldContent('activeMenu') ?: '');
+                    @endphp
+
+                    <a href="{{ $item['route'] === '#' ? '#' : route($item['route'], $item['param'] ?? []) }}"class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }}" --hover-bg: {{ $sidebarHover }};">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 shrink-0"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8">
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="{{ $item['icon'] }}" />
+                        </svg>
+
+                        <span>{{ $item['label'] }}</span>
+                    </a>
                 @endforeach
 
                 <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">

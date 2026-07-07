@@ -16,9 +16,6 @@
                 {{ $kelas->hari }}, {{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }} • {{ $kelas->ruangan }}
             </p>
         </div>
-        <a href="#" class="shrink-0 bg-white text-[#321270] text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-white/90 transition text-center">
-            Start Virtual Class
-        </a>
     </div>
 
     @php
@@ -154,7 +151,7 @@
 
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700">Deskripsi Materi</label>
-                            <textarea name="deskripsi" rows="4" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none resize-none transition placeholder-gray-300"></svg></textarea>
+                            <textarea name="deskripsi" rows="4" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none resize-none transition placeholder-gray-300"></textarea>
                         </div>
 
                         <div class="space-y-1.5">

@@ -5,9 +5,9 @@
 
 @section('content')
 
-    <div class="bg-[#321270] rounded-xl px-8 py-6 relative overflow-hidden mb-8">
-        <div class="mb-6">
-            <h1 class="text-xl font-bold text-white">Teaching Schedule</h1>
+    <div class="bg-blue-900 rounded-xl px-5 sm:px-8 py-6 relative overflow-hidden mb-6 sm:mb-8">
+        <div class="mb-2 sm:mb-6">
+            <h1 class="text-lg sm:text-xl font-bold text-white">Teaching Schedule</h1>
             <p class="text-sm text-white/80 mt-1">Jadwal dari semua kelas yang kamu ikuti minggu ini.</p>
         </div>
     </div>
@@ -24,25 +24,78 @@
             $startHour = 7;
             $endHour = 20;
             $hourHeight = 80; // pixels per hour
-            $headerHeight = 48; // px spacer for header (matches time column spacer)
-            $totalMinutes = ($endHour - $startHour) * 60; // total minutes in view
+            $headerHeight = 48; // px spacer for header row
             $totalHeight = ($endHour - $startHour) * $hourHeight; // total px height (hours area)
-            $containerHeight = $headerHeight + $totalHeight; // include header
             $days = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
             $eventsByDay = [];
             foreach ($kelasList as $k) {
                 $eventsByDay[$k->hari ?? 'Senin'][] = $k;
             }
+            // urutkan tiap hari berdasarkan jam mulai supaya rapi di tampilan mobile
+            foreach ($eventsByDay as $day => $items) {
+                usort($items, fn($a, $b) => strcmp($a->jam_mulai ?? '07:00', $b->jam_mulai ?? '07:00'));
+                $eventsByDay[$day] = $items;
+            }
         @endphp
 
-        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 overflow-auto">
-            <div class="flex">
+        {{-- ================= MOBILE / TABLET VIEW (list per hari) ================= --}}
+        <div class="md:hidden space-y-4">
+            @foreach ($days as $day)
+                @php $events = $eventsByDay[$day] ?? []; @endphp
+                @if (!empty($events))
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="bg-blue-50 text-blue-700 text-xs font-semibold px-4 py-2.5 border-b border-blue-100">
+                            {{ $day }}
+                        </div>
+                        <div class="divide-y divide-gray-50">
+                            @foreach ($events as $ev)
+                                <div class="flex gap-3 px-4 py-3">
+                                    <div class="w-16 shrink-0 text-[11px] text-gray-500 leading-tight pt-0.5">
+                                        {{ $ev->jam_mulai }}<br>{{ $ev->jam_selesai }}
+                                    </div>
+                                    <div class="flex-1 min-w-0 border-l-4 border-blue-500 bg-blue-50/60 rounded-md px-3 py-2">
+                                        <div class="text-sm font-semibold text-gray-800 truncate">
+                                            {{ $ev->mataKuliah->nama_mk ?? '-' }}
+                                        </div>
+                                        <div class="text-[11px] text-gray-600 mt-0.5">
+                                            {{ $ev->ruangan ?? '' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+
+            @if (collect($eventsByDay)->flatten()->isEmpty())
+                <div class="bg-white rounded-xl border border-gray-100 p-8 text-center shadow-sm">
+                    <p class="text-gray-500 text-sm">Tidak ada jadwal minggu ini.</p>
+                </div>
+            @endif
+        </div>
+
+        {{-- ================= DESKTOP VIEW (grid mingguan) ================= --}}
+        <div class="hidden md:block bg-white rounded-xl border border-gray-100 shadow-sm p-4 overflow-x-auto">
+            <div class="flex min-w-[820px]">
+                <!-- Time column -->
+                <div class="flex-none w-14 pr-2">
+                    <div style="height:{{ $headerHeight }}px"></div>
+                    <div class="relative" style="height:{{ $totalHeight }}px">
+                        @for ($h = $startHour; $h < $endHour; $h++)
+                            <div style="height:{{ $hourHeight }}px" class="text-[11px] text-gray-400 -mt-2 text-right pr-1">
+                                {{ sprintf('%02d:00', $h) }}
+                            </div>
+                        @endfor
+                    </div>
+                </div>
+
                 <!-- Days grid -->
                 <div class="flex-1">
-                    <div class="grid grid-cols-6 gap-3 min-w-full">
+                    <div class="grid grid-cols-6 gap-3">
                         @foreach ($days as $day)
 
-                            <div class="border-l border-gray-100 bg-white">
+                            <div class="border-l border-gray-100 bg-white min-w-[110px]">
                                 <div class="sticky top-0 bg-blue-50 text-xs text-blue-700 text-center border-b border-blue-100 font-semibold" style="height:{{$headerHeight}}px; line-height:{{$headerHeight}}px;">
                                     {{ $day }}
                                 </div>
@@ -68,8 +121,8 @@
 
                                         <div class="absolute left-2 right-2 rounded-md shadow-sm overflow-hidden" style="top:{{ $topPx }}px; height:{{ $heightPx }}px; background-color: rgba(59,130,246,0.08); border-left:4px solid rgba(59,130,246,1);">
                                             <div class="p-2 text-xs text-gray-800">
-                                                <div class="font-semibold">{{ $ev->mataKuliah->nama_mk ?? '-' }}</div>
-                                                <div class="text-[11px] text-gray-600">{{ $ev->ruangan ?? '' }}</div>
+                                                <div class="font-semibold truncate">{{ $ev->mataKuliah->nama_mk ?? '-' }}</div>
+                                                <div class="text-[11px] text-gray-600 truncate">{{ $ev->ruangan ?? '' }}</div>
                                                 <div class="text-[11px] text-gray-500 mt-1">{{ $ev->jam_mulai }} - {{ $ev->jam_selesai }}</div>
                                             </div>
                                         </div>

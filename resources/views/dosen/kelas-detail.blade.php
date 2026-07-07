@@ -17,9 +17,6 @@
                 {{ $kelas->hari }}, {{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }} • {{ $kelas->ruangan }}
             </p>
         </div>
-        <a href="#" class="shrink-0 bg-white text-blue-900 text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-50 transition text-center">
-            Start Virtual Class
-        </a>
     </div>
 
     <!-- Tabs -->
