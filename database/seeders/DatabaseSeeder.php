@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Test User',
                 'password' => bcrypt('password'),
+                'nip_nim' => '1234567890',
             ]
         );
     }

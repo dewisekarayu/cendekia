@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DosenController as AdminDosenController;
 use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
 use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController;
+use App\Http\Controllers\Admin\UserController;
 
 use App\Http\Controllers\Admin\KelasController;
 
@@ -23,6 +24,9 @@ use App\Http\Controllers\Mahasiswa\SettingController as MahasiswaSettingControll
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Http\Request;
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,6 +34,9 @@ Route::get('/', function () {
 // Dashboard umum -> redirect otomatis sesuai role
 Route::get('/dashboard', function () {
     $user = auth()->user();
+    if (!$user) {
+        abort(401);
+    }
 
     if ($user->hasRole('admin')) {
         return redirect()->route('admin.dashboard');
@@ -56,19 +63,28 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.mata-kuliah')
         ->parameters(['mata-kuliah' => 'mataKuliah']);
 
+    // Ganti bagian admin/dosen menjadi seperti ini:
     Route::resource('admin/dosen', AdminDosenController::class)
-        ->only(['index', 'create', 'store', 'destroy'])
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']) // Tambahkan edit & update
         ->names('admin.dosen')
         ->parameters(['dosen' => 'dosen']);
 
+    // Ganti bagian admin/mahasiswa menjadi seperti ini:
     Route::resource('admin/mahasiswa', AdminMahasiswaController::class)
-        ->only(['index', 'create', 'store', 'destroy'])
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']) // Tambahkan edit & update
         ->names('admin.mahasiswa')
         ->parameters(['mahasiswa' => 'mahasiswa']);
 
     Route::resource('admin/pengumuman', AdminPengumumanController::class)
         ->only(['index', 'store', 'destroy'])
         ->names('admin.pengumuman');
+    Route::resource('admin/kelas', KelasController::class)
+        ->names('admin.kelas')
+        ->parameters(['kelas' => 'kelas']);
+
+    Route::resource('admin/user', UserController::class)
+        ->names('admin.user')
+        ->parameters(['user' => 'user']);
 });
 
 // Dashboard & halaman khusus Dosen
@@ -105,4 +121,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
