@@ -121,4 +121,4 @@ class UserSeeder extends Seeder
 
         $mahasiswa->syncRoles('mahasiswa');
     }
-}
+}   
