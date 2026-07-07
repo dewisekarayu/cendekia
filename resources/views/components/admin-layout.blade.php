@@ -46,12 +46,13 @@
             width: 280px;
             color: white;
             box-shadow: 4px 0 25px rgba(0, 43, 107, 0.15);
-            z-index: 1000;
+            z-index: 1050;
             overflow-y: auto;
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
             border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
         }
 
         /* Custom scrollbar for sidebar */
@@ -157,6 +158,7 @@
             margin-left: 280px;
             padding: 0;
             min-height: 100vh;
+            transition: margin-left 0.3s ease;
         }
 
         .admin-topbar {
@@ -168,12 +170,18 @@
             align-items: center;
             box-shadow: 0 4px 20px rgba(0, 43, 107, 0.1);
             color: white;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
         }
 
         .admin-topbar-left {
             display: flex;
             align-items: center;
             gap: 1rem;
+            min-width: 0;
         }
 
         .admin-topbar-search {
@@ -182,6 +190,7 @@
             border-radius: 0.5rem;
             padding: 0.5rem 1rem;
             width: 280px;
+            max-width: 100%;
             color: white;
             transition: all 0.3s;
         }
@@ -201,6 +210,7 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
+            flex-shrink: 0;
         }
 
         .topbar-notif {
@@ -284,6 +294,22 @@
 
         .admin-main {
             padding: 2rem;
+            min-width: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 950;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
 
         .page-title {
@@ -704,32 +730,89 @@
             background-color: #F8FAFC;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 991px) {
             .admin-sidebar {
-                width: 100%;
-                max-height: 0;
-                padding: 0;
-                transition: max-height 0.3s ease;
-                position: relative;
+                transform: translateX(-100%);
             }
 
             .admin-sidebar.show {
-                max-height: 500px;
-                padding: 2rem 1rem;
+                transform: translateX(0);
             }
 
             .admin-content {
                 margin-left: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-topbar {
+                padding: 0.75rem 1rem;
+            }
+
+            .admin-topbar-right {
+                gap: 0.5rem;
             }
 
             .admin-topbar-search {
                 width: 100%;
             }
 
+            .admin-topbar-profile-text {
+                display: none;
+            }
+
+            .admin-main {
+                padding: 1rem;
+            }
+
+            .container-fluid {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .admin-main > .container-fluid > .d-flex:first-child,
+            .admin-main > .container-fluid > .mb-4.d-flex {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 1rem;
+            }
+
+            .admin-main > .container-fluid > .d-flex:first-child .btn,
+            .admin-main > .container-fluid > .mb-4.d-flex .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+                line-height: 1.25;
+            }
+
+            .table-card {
+                border-radius: 0.85rem;
+                margin-top: 1rem;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table-responsive > .table {
+                min-width: 760px;
+            }
+
+            .table-card .table th,
+            .table-card .table td {
+                padding: 0.85rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
             .stat-card {
                 flex-direction: column;
                 text-align: center;
+                min-height: 96px;
             }
 
             .stat-card-icon {
@@ -737,13 +820,26 @@
             }
 
             .action-buttons {
+                flex-wrap: nowrap;
+            }
+
+            .form-select,
+            .form-control {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            .pagination {
                 flex-wrap: wrap;
+                gap: 0.35rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="d-flex" style="min-height: 100vh;">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Sidebar -->
         @include('admin.components.sidebar')
 
@@ -784,12 +880,43 @@
         document.addEventListener('DOMContentLoaded', function() {
             const toggleBtn = document.querySelector('[data-sidebar-toggle]');
             const sidebar = document.querySelector('.admin-sidebar');
-            
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
             if (toggleBtn) {
                 toggleBtn.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
+                    if (sidebar.classList.contains('show')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
                 });
             }
+
+            overlay.addEventListener('click', closeSidebar);
+
+            sidebar.addEventListener('click', function(e) {
+                if (e.target.closest('.nav-link') && window.innerWidth <= 991) {
+                    closeSidebar();
+                }
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 991) {
+                    closeSidebar();
+                }
+            });
 
             // Listen to delete action buttons to show custom delete modal
             document.addEventListener('click', function(e) {

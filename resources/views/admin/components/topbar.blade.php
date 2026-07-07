@@ -1,6 +1,6 @@
 <div class="admin-topbar">
     <div class="admin-topbar-left">
-        <button class="btn btn-sm btn-outline-secondary d-md-none" data-sidebar-toggle>
+        <button class="btn btn-sm btn-outline-secondary d-lg-none" data-sidebar-toggle>
             <i class="bi bi-list"></i>
         </button>
         <input type="text" class="admin-topbar-search d-none d-md-block" placeholder="Cari data...">
