@@ -6,8 +6,12 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DosenController as AdminDosenController;
 use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
 use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController;
+use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\Admin\UserController;
+
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
+
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
 use App\Http\Controllers\Mahasiswa\GradebookController as MahasiswaGradebookController;
@@ -76,6 +80,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('admin/pengumuman', AdminPengumumanController::class)
         ->only(['index', 'store', 'destroy'])
         ->names('admin.pengumuman');
+    Route::resource('admin/kelas', KelasController::class)
+        ->names('admin.kelas')
+        ->parameters(['kelas' => 'kelas']);
+
+    Route::resource('admin/user', UserController::class)
+        ->names('admin.user')
+        ->parameters(['user' => 'user']);
 });
 
 // Dashboard & halaman khusus Dosen
@@ -110,4 +121,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-
