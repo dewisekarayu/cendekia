@@ -5,15 +5,33 @@ namespace App\Http\Controllers\Dosen;
 use App\Http\Controllers\Controller;
 use App\Models\KelasPerkuliahan;
 use App\Models\Tugas;
+use App\Models\Materi;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
     public function kelasSaya(Request $request)
     {
-        $kelasList = $request->user()->kelasDiampu()->with(['mataKuliah.programStudi', 'mahasiswa'])->get();
+        $search = trim($request->input('search', ''));
 
-        return view('dosen.kelas-saya', compact('kelasList'));
+        $kelasQuery = $request->user()->kelasDiampu()->with(['mataKuliah.programStudi', 'mahasiswa']);
+
+        if ($search !== '') {
+            $kelasQuery->where(function ($query) use ($search) {
+                $query->where('kode_kelas', 'like', "%{$search}%")
+                    ->orWhereHas('mataKuliah', function ($subQuery) use ($search) {
+                        $subQuery->where('nama_mk', 'like', "%{$search}%")
+                            ->orWhere('kode_mk', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('mataKuliah.programStudi', function ($subQuery) use ($search) {
+                        $subQuery->where('nama_prodi', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $kelasList = $kelasQuery->get();
+
+        return view('dosen.kelas-saya', compact('kelasList', 'search'));
     }
 
     public function show(Request $request, $id)
@@ -39,5 +57,21 @@ class KelasController extends Controller
             ->get();
 
         return view('dosen.kelas-tugas', compact('kelas', 'tugasList'));
+    }
+
+    public function materi(Request $request, $id)
+    {
+        $kelas = KelasPerkuliahan::with(['mataKuliah.programStudi', 'mahasiswa'])
+            ->where('dosen_id', $request->user()->id)
+            ->findOrFail($id);
+
+        // also provide list of classes the dosen teaches for sidebar/search consistency
+        $kelasList = $request->user()->kelasDiampu()->with(['mataKuliah.programStudi', 'mahasiswa'])->get();
+
+        $materiList = Materi::where('kelas_perkuliahan_id', $kelas->id)
+            ->orderBy('pertemuan_ke')
+            ->get();
+
+        return view('dosen.kelas-materi', compact('kelas', 'kelasList', 'materiList'));
     }
 }

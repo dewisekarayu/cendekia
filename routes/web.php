@@ -6,14 +6,20 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DosenController as AdminDosenController;
 use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
 use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController;
+
+use App\Http\Controllers\Admin\KelasController;
+
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
+use App\Http\Controllers\Dosen\GradebookController as DosenGradebookController;
+
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
 use App\Http\Controllers\Mahasiswa\GradebookController as MahasiswaGradebookController;
 use App\Http\Controllers\Mahasiswa\ForumController as MahasiswaForumController;
 use App\Http\Controllers\Mahasiswa\ScheduleController as MahasiswaScheduleController;
 use App\Http\Controllers\Mahasiswa\SettingController as MahasiswaSettingController;
+
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -71,6 +77,8 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/kelas-saya', [DosenKelasController::class, 'kelasSaya'])->name('dosen.kelas-saya');
     Route::get('/dosen/kelas/{id}', [DosenKelasController::class, 'show'])->name('dosen.kelas-detail');
     Route::get('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'tugas'])->name('dosen.kelas-tugas');
+    Route::get('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'materi'])->name('dosen.kelas-materi');
+    Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
 });
 
 // Dashboard & halaman khusus Mahasiswa

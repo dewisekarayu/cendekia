@@ -110,43 +110,37 @@
             <div class="bg-white rounded-lg shadow p-5">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-lg font-semibold text-gray-800">Notification</h3>
-                    <div class="text-sm text-gray-500">Today</div>
+                    <div class="text-sm text-gray-500">Terbaru</div>
                 </div>
 
-                <div class="space-y-3">
-                    <div class="border-l-4 border-blue-200 pl-3 py-3 bg-blue-50 rounded-md">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="text-sm font-medium text-gray-800">New Grade Released: Advanced Web Development</div>
-                                <div class="text-xs text-gray-600">Your project assignment \"UI/UX React Integration\" has been graded. You received an A-.</div>
+                @if ($announcements->isEmpty())
+                    <div class="text-sm text-gray-500">Belum ada pengumuman dari admin.</div>
+                @else
+                    <div class="space-y-3">
+                        @foreach ($announcements as $announcement)
+                            <div class="border-l-4 border-[#321270]/20 pl-3 py-3 bg-[#321270]/5 rounded-md">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-800">{{ $announcement->judul }}</div>
+                                        <div class="text-xs text-gray-600">{{ $announcement->isi }}</div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 whitespace-nowrap">
+                                        {{ $announcement->created_at->format('H:i') }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-xs text-gray-400">10:45 AM</div>
-                        </div>
-                        <div class="mt-3 flex gap-2">
-                            <button class="text-sm px-3 py-1 bg-blue-700 text-white rounded">View Grades</button>
-                            <button class="text-sm px-3 py-1 bg-white border rounded">Dismiss</button>
-                        </div>
+                        @endforeach
                     </div>
+                @endif
 
-                    <div class="border-l-4 border-green-200 pl-3 py-3 bg-green-50 rounded-md">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <div class="text-sm font-medium text-gray-800">Deadline Approaching: Database Systems Quiz</div>
-                                <div class="text-xs text-gray-600">Remember to submit your weekly quiz before 11:59 PM tonight.</div>
-                            </div>
-                            <div class="text-xs text-gray-400">08:00 AM</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4 border-t pt-4 text-sm text-gray-500">Yesterday</div>
-                <div class="mt-3 space-y-2 text-sm text-gray-700">
-                    <div class="p-3 bg-gray-50 rounded">Course Announcement: Algorithm & Data Structure — New lecture video for Chapter 7.</div>
-                    <div class="p-3 bg-gray-50 rounded">New Discussion Reply — Siti Aminah replied to your thread.</div>
+                <div class="mt-4 border-t pt-4 text-sm text-gray-500">
+                    {{ $announcements->isEmpty() ? 'Belum ada pengumuman' : 'Pengumuman terbaru dari admin' }}
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow p-5 text-center text-sm text-gray-600">Show all notifications</div>
+            <div class="bg-white rounded-lg shadow p-5 text-center text-sm text-gray-600">
+                {{ $announcements->isEmpty() ? 'Belum ada notifikasi' : 'Lihat semua pengumuman' }}
+            </div>
         </div>
     </div>
 </div>

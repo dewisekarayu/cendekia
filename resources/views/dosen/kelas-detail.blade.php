@@ -26,7 +26,7 @@
     @php
         $tabLinks = [
             'Beranda' => route('dosen.kelas-detail', $kelas->id),
-            'Materi' => '#',
+            'Materi' => route('dosen.kelas-materi', $kelas->id),
             'Tugas & Proyek' => route('dosen.kelas-tugas', $kelas->id),
             'Forum Diskusi' => '#',
             'Peserta' => '#',

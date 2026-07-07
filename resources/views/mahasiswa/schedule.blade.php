@@ -5,9 +5,11 @@
 
 @section('content')
 
-    <div class="bg-blue-900 rounded-xl px-8 py-6 text-white mb-8">
-        <h1 class="text-2xl font-bold">Jadwal Kuliah</h1>
-        <p class="text-blue-200 text-sm mt-1">Jadwal dari semua kelas yang kamu ikuti minggu ini.</p>
+    <div class="bg-[#321270] rounded-xl px-8 py-6 relative overflow-hidden mb-8">
+        <div class="mb-6">
+            <h1 class="text-xl font-bold text-white">Teaching Schedule</h1>
+            <p class="text-sm text-white/80 mt-1">Jadwal dari semua kelas yang kamu ikuti minggu ini.</p>
+        </div>
     </div>
 
     @if ($kelasList->isEmpty())

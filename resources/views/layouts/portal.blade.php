@@ -15,25 +15,51 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-50">
+    @php
+        // Warna background sidebar per role
+        if (auth()->user()->hasRole('dosen')) {
+            $sidebarBg     = '#321270';
+            $sidebarText   = 'rgba(255,255,255,0.75)';
+            $sidebarTitle  = '#FFFFFF';
+            $sidebarMuted  = 'rgba(255,255,255,0.5)';
+            $sidebarBorder = 'rgba(255,255,255,0.12)';
+            $sidebarHover  = 'rgba(255,255,255,0.08)';
+            $activeBg      = 'rgba(255,255,255,0.14)';
+            $activeText    = '#FFFFFF';
+        } elseif (auth()->user()->hasRole('admin')) {
+            $sidebarBg     = '#002B6B';
+            $sidebarText   = 'rgba(255,255,255,0.75)';
+            $sidebarTitle  = '#FFFFFF';
+            $sidebarMuted  = 'rgba(255,255,255,0.5)';
+            $sidebarBorder = 'rgba(255,255,255,0.12)';
+            $sidebarHover  = 'rgba(255,255,255,0.08)';
+            $activeBg      = 'rgba(255,255,255,0.14)';
+            $activeText    = '#FFFFFF';
+        } else {
+            // mahasiswa: sidebar terang
+            $sidebarBg     = '#F7F9FB';
+            $sidebarText   = '#4B5563';   // gray-600
+            $sidebarTitle  = '#1E3A8A';   // blue-900
+            $sidebarMuted  = '#9CA3AF';   // gray-400
+            $sidebarBorder = '#F3F4F6';   // gray-100
+            $sidebarHover  = '#EEF2F7';
+            $activeBg      = '#1E3A8A';   // blue-900
+            $activeText    = '#FFFFFF';
+        }
+    @endphp
+
     <div class="min-h-screen flex">
 
         <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-screen">
-            <div class="px-6 py-5 border-b border-gray-100">
+        <aside class="w-64 flex flex-col fixed h-screen" style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
+            <div class="px-6 py-5" style="border-bottom: 1px solid {{ $sidebarBorder }};">
                 <a href="/" class="flex items-center gap-2">
-<<<<<<< HEAD
-                    <div class="w-9 h-9 rounded-lg bg-[#002B6B] flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 3L1 9l11 6l9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
-                        </svg>
-=======
                     <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
                         <img src="{{ asset('images/logo.png') }}" alt="Ilustrasi Edukasi" class="">
->>>>>>> c35177e26145e0b74b7116d78cd1ed7cf6a83cb9
                     </div>
                     <div>
-                        <div class="text-base font-bold text-[#002B6B] leading-tight">Cendekia</div>
-                        <div class="text-[11px] text-gray-400 leading-tight">Academic Portal</div>
+                        <div class="text-base font-bold leading-tight" style="color: {{ $sidebarTitle }};">Cendekia</div>
+                        <div class="text-[11px] leading-tight" style="color: {{ $sidebarMuted }};">Academic Portal</div>
                     </div>
                 </a>
             </div>
@@ -43,10 +69,11 @@
                 if (auth()->user()->hasRole('dosen')) {
                     $menu = [
                         ['label' => 'Dashboard', 'route' => 'dosen.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                        ['label' => 'Kelas Saya', 'route' => 'dosen.kelas-saya', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                        ['label' => 'Tugas & Kuis', 'route' => '#', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
-                        ['label' => 'Forum Diskusi', 'route' => '#', 'icon' => 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'],
-                        ['label' => 'Jadwal', 'route' => '#', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
+                        ['label' => 'My Classes', 'route' => 'dosen.kelas-saya', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
+                        ['label' => 'Tugas & Materi', 'route' => '#', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
+                        ['label' => 'Schedule', 'route' => '#', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
+                        ['label' => 'Announcements',  'route' => '#', 'icon' => 'M3 11.5l11-5v11l-11-5zm11 6.5v-13a2 2 0 012 2v9a2 2 0 01-2 2zm-8 1a2 2 0 104 0v-2H6v2z'],
+                        ['label' => 'Profile', 'route' => '#', 'icon' => 'M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z'],
                     ];
                 } elseif (auth()->user()->hasRole('admin')) {
                     $menu = [
@@ -78,9 +105,10 @@
                 @endphp
 
                 @foreach ($menu as $item)
+                @php $isActive = $item['label'] === (View::yieldContent('activeMenu') ?: ''); @endphp
                 <a href="{{ $item['route'] === '#' ? '#' : route($item['route']) }}"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition
-                                 {{ $item['label'] === (View::yieldContent('activeMenu') ?: '') ? 'bg-[#002B6B] text-white' : 'text-gray-600 hover:bg-gray-100' }}">
+                    class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
+                    style="{{ $isActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
                     </svg>
@@ -88,8 +116,11 @@
                 </a>
                 @endforeach
 
-                <div class="pt-4 mt-4 border-t border-gray-100 space-y-1">
-                    <a href="{{ route('mahasiswa.setting') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ request()->routeIs('mahasiswa.setting') ? 'bg-blue-900 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
+                <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
+                    @php $isSettingActive = request()->routeIs('mahasiswa.setting'); @endphp
+                    <a href="{{ route('mahasiswa.setting') }}"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
+                        style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         </svg>
@@ -98,8 +129,8 @@
                 </div>
             </nav>
 
-            <div class="px-3 py-4 border-t border-gray-100 space-y-1">
-                <a href="{{ route('mahasiswa.setting') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition">
+            <div class="px-3 py-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
+                <a href="{{ route('mahasiswa.setting') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -107,7 +138,7 @@
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition">
+                    <button type="submit" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
@@ -142,6 +173,12 @@
             </main>
         </div>
     </div>
+
+    <style>
+        .sidebar-link:hover {
+            background-color: var(--hover-bg) !important;
+        }
+    </style>
 </body>
 
 </html>
