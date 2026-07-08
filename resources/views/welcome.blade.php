@@ -11,7 +11,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        
+
         <style>
             @keyframes float-slow {
                 0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -21,6 +21,7 @@
                 0%, 100% { transform: translateY(0px); }
                 50%       { transform: translateY(-8px); }
             }
+<<<<<<< HEAD
             @keyframes fade-in-up {
                 from { opacity: 0; transform: translateY(16px); }
                 to   { opacity: 1; transform: translateY(0); }
@@ -36,6 +37,16 @@
             .anim-in-2  { animation: fade-in-up .55s .2s ease both; }
             .anim-in-3  { animation: fade-in-up .55s .3s ease both; }
             .anim-header { animation: slide-in-down .6s ease both; }
+=======
+
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(14px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in-up {
+                animation: fadeInUp 0.7s ease-out both;
+            }
+>>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
         </style>
     </head>
     <body class="font-sans antialiased bg-[#f0f4fb] overflow-x-hidden">
@@ -51,6 +62,7 @@
                     <span class="text-xl font-black text-[#002B6B] tracking-tight hidden sm:inline">Cendekia</span>
                 </a>
 
+<<<<<<< HEAD
                 {{-- Nav Links (hidden on mobile) --}}
                 <div class="hidden md:flex flex-1 justify-center items-center">
                     <div id="nav-container" class="relative flex items-center gap-8 text-sm font-semibold text-gray-500">
@@ -59,6 +71,13 @@
                         <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Fitur</a>
                         <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Tentang</a>
                         <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Kontak</a>
+=======
+                <div class="hidden md:flex flex-1 justify-end items-center pr-12">
+                    <div id="nav-container" class="relative flex items-center gap-8 text-[15px] font-semibold text-gray-500 py-2">
+                        <div id="nav-indicator" class="absolute bottom-0 h-0.5 bg-[#0f2c59] transition-all duration-300 ease-out"></div>
+
+                        <a href="{{ route('dashboard') }}" class="nav-link text-[#0f2c59] font-bold pb-1">Dashboard</a>
+>>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
                     </div>
                 </div>
 
@@ -88,6 +107,7 @@
             </div>
         </header>
 
+<<<<<<< HEAD
         {{-- Main Content --}}
         <main class="pt-24 pb-12 px-6 min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
 
@@ -123,6 +143,36 @@
                         <span>Mulai Belajar Sekarang</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+=======
+        <main class="max-w-4xl mx-auto px-6 py-10 flex flex-col items-center justify-center">
+            <div class="w-full flex flex-col items-center">
+
+                <div class="inline-flex items-center gap-1.5 bg-[#0f2c59] text-white text-[11px] font-medium px-4 py-1.5 rounded-full shadow-md animate-float mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    Platform Edukasi Generasi Baru
+                </div>
+
+                <div class="w-full flex flex-col items-center text-center mb-6 animate-fade-in-up">
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-[#0f2c59] tracking-tight leading-tight">
+                        Selamat Datang di <span class="text-[#0f2c59]">Cendekia</span> 👋
+                    </h1>
+                    <p class="mt-1 text-gray-500 text-base md:text-lg max-w-xl">
+                        Tempat belajar yang terstruktur dan menyenangkan, dirancang untuk membantumu berkembang setiap hari.
+                    </p>
+                </div>
+
+                <div class="w-full max-w-xl md:max-w-4xl -mt-15 animate-fade-in-up">
+                    <img src="{{ asset('images/belajar2.png') }}" alt="Ilustrasi Edukasi" class="w-full h-auto object-contain">
+                </div>
+
+                <div class="w-full flex justify-center -mt-20 animate-fade-in-up">
+                    <a href="{{ route('login') }}" class="inline-flex items-center gap-3 bg-[#0f2c59] hover:bg-[#0a1f3f] text-white font-semibold text-base px-8 py-4 rounded-xl shadow-xl shadow-blue-900/30 transition transform hover:-translate-y-0.5">
+                        Mulai Belajar Sekarang
+                        <svg xmlns="http://www.w3.org/2000/xl" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+>>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
                         </svg>
                     </a>
                     <a href="#" class="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-gray-300 hover:border-[#002B6B] text-gray-700 hover:text-[#002B6B] font-bold py-4 px-8 rounded-xl transition-all duration-300">

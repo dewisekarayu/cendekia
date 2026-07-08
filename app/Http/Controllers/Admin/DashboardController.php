@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+<<<<<<< HEAD
     public function index(Request $request)
     {
         $totalProgramStudi = ProgramStudi::count();
@@ -34,10 +35,51 @@ class DashboardController extends Controller
         ]);
         $aktivitasMingguan = collect(range(0, 6))->map(function ($day) {
             $date = now()->startOfWeek()->addDays($day);
+=======
+    public function index()
+    {
+        // PERBAIKAN: Menggunakan method role() dari package Role agar tidak memanggil kolom 'role' secara langsung
+        $totalDosen = User::role('dosen')->count();
+        $totalMahasiswa = User::role('mahasiswa')->count();
+        
+        $totalProgramStudi = ProgramStudi::count();
+        $totalMataKuliah = MataKuliah::count();
+        $totalKelasAktif = KelasPerkuliahan::where('is_active', true)->count();
+        // $totalAktivitas = AktivitasPengguna::whereDate('terjadi_pada', today())->count();
+        // $rataNilaiAkhir = round((float) NilaiAkhir::avg('nilai_akhir'), 2);
+        
+        // $totalPresensi = Presensi::count();
+        // $persentaseHadir = $totalPresensi > 0
+        //     ? round((Presensi::where('status', 'hadir')->count() / $totalPresensi) * 100, 2)
+        //     : 0;
+
+        // Memetakan jumlah mata kuliah per program studi
+        $prodiList = ProgramStudi::withCount('mataKuliah')->get()->pluck('mata_kuliah_count', 'nama');
+
+        // PERBAIKAN: Menghitung mahasiswa per prodi yang disesuaikan dengan sistem relasi role
+        // $mahasiswaPerProdi = ProgramStudi::withCount(['users as mahasiswa_count' => function ($query) {
+        //     $query->role('mahasiswa'); // Menggunakan filter role yang benar
+        // }])->get()->pluck('mahasiswa_count', 'nama');
+
+        $recentUsers = User::latest()->take(5)->get();
+        
+        // $aktivitasBulanan = AktivitasPengguna::selectRaw('MONTH(terjadi_pada) as bulan, COUNT(*) as total')
+        //     ->whereYear('terjadi_pada', now()->year)
+        //     ->groupBy('bulan')
+        //     ->orderBy('bulan')
+        //     ->get()
+        //     ->map(fn ($row) => [
+        //         'label' => date('M', mktime(0, 0, 0, $row->bulan, 1)), 
+        //         'value' => (int) $row->total
+        //     ]);
+
+        $aktivitasMingguan = collect(range(0, 6))->map(function ($offset) {
+            $date = now()->startOfWeek()->addDays($offset);
+>>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
 
             return [
                 'label' => $date->translatedFormat('D'),
-                'value' => AktivitasPengguna::whereDate('terjadi_pada', $date)->count(),
+                // 'value' => AktivitasPengguna::whereDate('terjadi_pada', $date)->count(),
             ];
         });
 
@@ -63,13 +105,17 @@ class DashboardController extends Controller
             'totalProgramStudi',
             'totalMataKuliah',
             'totalKelasAktif',
-            'totalAktivitas',
-            'rataNilaiAkhir',
-            'persentaseHadir',
+            // 'totalAktivitas',
+            // 'rataNilaiAkhir',
+            // 'persentaseHadir',
             'prodiList',
+<<<<<<< HEAD
             'mahasiswaPerProdi',
+=======
+            // 'mahasiswaPerProdi',
+>>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
             'recentUsers',
-            'aktivitasBulanan',
+            // 'aktivitasBulanan',
             'aktivitasMingguan'
         ));
     }
