@@ -19,15 +19,16 @@
         </div>
     </div>
 
+    <x-flash-message />
+
     <!-- Tabs -->
     @php
         $tabLinks = [
             'Beranda' => route('dosen.kelas-detail', $kelas->id),
             'Materi' => route('dosen.kelas-materi', $kelas->id),
             'Tugas & Proyek' => route('dosen.kelas-tugas', $kelas->id),
-            'Forum Diskusi' => '#',
-            'Peserta' => '#',
-            'Penilaian' => '#',
+            'Pengumuman' => route('dosen.kelas-pengumuman.index', $kelas->id),
+            'Penilaian' => route('dosen.gradebook', ['kelas_id' => $kelas->id]),
         ];
         $activeTab = 'Tugas & Proyek';
     @endphp
@@ -49,7 +50,7 @@
         <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
             <p class="text-sm text-gray-500">Perlu Dinilai</p>
             <p class="text-2xl font-bold text-amber-600 mt-1">
-                {{ \App\Models\PengumpulanTugas::whereIn('tugas_id', $tugasList->pluck('id'))->where('status', 'dikumpulkan')->count() }}
+                {{ $perluDinilai ?? 0 }}
             </p>
         </div>
         <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
@@ -141,13 +142,13 @@
                         <h3 class="text-xl font-bold text-[#1e293b]">Informasi Tugas</h3>
                     </div>
 
-                    <form action="#" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('dosen.kelas-tugas.store', $kelas->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="px-8 py-6 space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-sm font-bold text-gray-700">Assignment Title</label>
-                                    <input type="text" name="judul" placeholder="Contoh: Implementasi Stack dan Queue" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                                    <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="255" placeholder="Contoh: Implementasi Stack dan Queue" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-bold text-gray-700">Subject/Class</label>
@@ -161,11 +162,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2 relative">
                                     <label class="text-sm font-bold text-gray-700">Deadline</label>
-                                    <input type="datetime-local" name="deadline" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                                    <input type="datetime-local" name="deadline" value="{{ old('deadline') }}" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-bold text-gray-700">Total Points</label>
-                                    <input type="number" name="poin" value="100" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                                    <input type="number" name="poin" value="{{ old('poin', 100) }}" required min="1" max="100" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
                                 </div>
                             </div>
 
@@ -180,7 +181,7 @@
                                         <button type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></button>
                                         <button type="button"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.587-1.587a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></button>
                                     </div>
-                                    <textarea name="instruksi" rows="5" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..." class="w-full px-4 py-3 focus:outline-none resize-none"></textarea>
+                                    <textarea name="instruksi" rows="5" required maxlength="5000" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..." class="w-full px-4 py-3 focus:outline-none resize-none">{{ old('instruksi') }}</textarea>
                                 </div>
                             </div>
 
@@ -194,7 +195,7 @@
                                     </div>
                                     <p class="text-sm font-bold text-gray-800">Klik atau seret file ke sini</p>
                                     <p class="text-xs text-gray-400 mt-1">PDF, DOCX, ZIP (Maksimal 25MB)</p>
-                                    <input type="file" id="fileInput" name="template" class="hidden">
+                                    <input type="file" id="fileInput" name="template" accept=".pdf,.doc,.docx,.zip,.ppt,.pptx,.xls,.xlsx" class="hidden">
                                 </div>
                             </div>
                         </div>

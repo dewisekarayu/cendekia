@@ -10,6 +10,7 @@ use App\Models\Materi;
 use App\Models\PengumpulanTugas;
 use App\Models\Tugas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class KelasController extends Controller
 {
@@ -59,6 +60,41 @@ class KelasController extends Controller
             'kelas', 'materiList', 'tugasList', 'rekapAbsen',
             'progress', 'totalHadir', 'totalPertemuan', 'submitted', 'totalTugas'
         ));
+    }
+
+    public function bukaMateri(Request $request, $kelasId, $materiId)
+    {
+        $kelas = KelasPerkuliahan::findOrFail($kelasId);
+
+        $sudahGabung = KelasMahasiswa::where('kelas_perkuliahan_id', $kelas->id)
+            ->where('mahasiswa_id', $request->user()->id)
+            ->exists();
+
+        abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
+
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+
+        abort_unless($materi->file_path, 404, 'File materi belum tersedia.');
+
+        if (filter_var($materi->file_path, FILTER_VALIDATE_URL)) {
+            return redirect()->away($materi->file_path);
+        }
+
+        $path = ltrim($materi->file_path, '/');
+        $path = str_starts_with($path, 'storage/') ? substr($path, strlen('storage/')) : $path;
+        $path = str_starts_with($path, 'public/') ? substr($path, strlen('public/')) : $path;
+
+        abort_if(str_contains($path, '..'), 404, 'File materi tidak ditemukan.');
+
+        if (Storage::disk('public')->exists($path)) {
+            return response()->file(Storage::disk('public')->path($path));
+        }
+
+        $publicPath = public_path($path);
+
+        abort_unless(is_file($publicPath), 404, 'File materi tidak ditemukan.');
+
+        return response()->file($publicPath);
     }
 
     public function jelajahi(Request $request)

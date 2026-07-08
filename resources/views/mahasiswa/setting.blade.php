@@ -1,252 +1,164 @@
 @extends('layouts.portal')
-
-@section('title', 'Profil Pengguna')
-@section('activeMenu', 'Settings')
-
+@section('title', 'Settings')
+@section('subtitle', 'Akun Mahasiswa')
 @section('content')
-<div class="max-w-7xl mx-auto">
-    <!-- Header -->
-    <div class="bg-blue-900 rounded-xl px-5 sm:px-8 py-6 text-white mb-6 sm:mb-8">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-xl sm:text-2xl font-bold">Profil Pengguna</h1>
-                <p class="text-blue-200 text-sm mt-1">Perbarui informasi akun dan preferensi Anda.</p>
-            </div>
-        </div>
+@php $u = auth()->user(); @endphp
+
+<x-flash-message />
+
+{{-- HERO PROFILE BANNER --}}
+<div class="mb-6 rounded-2xl relative overflow-hidden shadow-xl" style="background: linear-gradient(135deg, #001f52 0%, #002B6B 50%, #003d99 100%);">
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full opacity-10" style="background: radial-gradient(circle, #60a5fa, transparent);"></div>
+        <div class="absolute -bottom-12 -left-12 w-52 h-52 rounded-full opacity-10" style="background: radial-gradient(circle, #818cf8, transparent);"></div>
+        <div class="absolute top-0 left-0 right-0 h-px opacity-20" style="background: linear-gradient(90deg, transparent, #60a5fa, transparent);"></div>
     </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Left: Profile & Details -->
-        <div class="lg:col-span-2 space-y-6">
-            <div class="bg-white rounded-lg shadow">
-                <div class="h-20 sm:h-28 bg-blue-800 rounded-t-lg"></div>
-                <div class="px-4 sm:px-6 pb-6 -mt-5">
-                    <div class="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
-                        <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-lg overflow-hidden border-4 border-white shadow-lg bg-gray-100 shrink-0">
-                            <img src="{{ asset('images/profil.jpg') }}" alt="avatar" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <div class="min-w-0">
-                                    <h2 class="text-lg font-semibold text-gray-900 truncate">{{ auth()->user()->name }}</h2>
-                                    <div class="text-sm text-gray-700">NIM: {{ auth()->user()->nim ?? '210401xxxx' }} • <span class="text-blue-600">Aktif</span></div>
-                                </div>
-                                <div>
-                                    <button type="button" onclick="openEditProfilModal()" class="inline-flex items-center px-3 py-1.5 bg-blue-700 text-white rounded-md shadow text-sm">Edit Profil</button>
-                                </div>
-                            </div>
-                            <p class="mt-3 text-sm text-gray-600">Halo {{ auth()->user()->name }}, perbarui informasi profil kamu di sini.</p>
-                        </div>
-                    </div>
+    <div class="relative z-10 px-6 py-7 sm:px-8 sm:py-8">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+            <div class="relative shrink-0">
+                <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-extrabold text-white shadow-lg border-2 border-white/20" style="background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));">
+                    {{ strtoupper(substr($u->name, 0, 1)) }}
                 </div>
+                <span class="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-400 border-2 border-white shadow-sm"></span>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-white rounded-lg shadow p-4 sm:p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-sm font-semibold text-gray-700">Info Kontak</h3>
-                    </div>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5h12M9 3v2m-6 4h18M5 21h14a2 2 0 002-2V7H3v12a2 2 0 002 2z"/></svg>
-                            <div class="min-w-0">
-                                <div class="text-gray-800">Email Institusi</div>
-                                <div class="text-xs break-all">{{ auth()->user()->email ?? 'ahmad.fauzi@student.com' }}</div>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2 8.5C2 6.57 3.57 5 5.5 5h13c1.93 0 3.5 1.57 3.5 3.5v7c0 1.93-1.57 3.5-3.5 3.5H5.5C3.57 19 2 17.43 2 15.5v-7z"/></svg>
-                            <div class="min-w-0">
-                                <div class="text-gray-800">Nomor WhatsApp</div>
-                                <div class="text-xs">{{ auth()->user()->phone ?? '+62 812-3456-7890' }}</div>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.418 0-8 2-8 4.5V21h16v-2.5c0-2.5-3.582-4.5-8-4.5z"/></svg>
-                            <div class="min-w-0">
-                                <div class="text-gray-800">Email Personal</div>
-                                <div class="text-xs break-all">{{ auth()->user()->personal_email ?? 'fauzi.ahmad@gmail.com' }}</div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bg-white rounded-lg shadow p-4 sm:p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-sm font-semibold text-gray-700">Status Akademik</h3>
-                    </div>
-                    <div class="text-sm text-gray-600 mb-4">
-                        <div class="flex items-center justify-between gap-4">
-                            <div>
-                                <div class="text-xs text-gray-500">Fakultas</div>
-                                <div class="text-sm font-medium text-gray-800">Teknik</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-xs text-gray-500">Semester</div>
-                                <div class="text-sm font-medium text-gray-800">Semester 6</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500 mb-2">Progress Kelulusan (112 / 144 SKS)</div>
-                        <div class="w-full bg-gray-100 rounded-full h-3">
-                            <div class="h-3 rounded-full bg-blue-700" style="width:78%"></div>
-                        </div>
-                        <div class="text-xs text-right text-blue-700 mt-2">78%</div>
-                    </div>
-                </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-bold uppercase tracking-widest text-blue-200/70 mb-1">Akun Mahasiswa</p>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-white leading-tight truncate">{{ $u->name }}</h1>
+                <p class="mt-0.5 text-sm text-blue-100/70 truncate">{{ $u->email }}</p>
             </div>
-        </div>
-
-        <!-- Right: Notifications -->
-        <div class="space-y-4">
-            <div class="bg-white rounded-lg shadow p-4 sm:p-5">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-base sm:text-lg font-semibold text-gray-800">Notification</h3>
-                    <div class="text-sm text-gray-500">Terbaru</div>
-                </div>
-
-                @if ($announcements->isEmpty())
-                    <div class="text-sm text-gray-500">Belum ada pengumuman dari admin.</div>
-                @else
-                    <div class="space-y-3">
-                        @foreach ($announcements as $announcement)
-                            <div class="border-l-4 border-[#321270]/20 pl-3 py-3 bg-[#321270]/5 rounded-md">
-                                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-3">
-                                    <div class="min-w-0">
-                                        <div class="text-sm font-medium text-gray-800">{{ $announcement->judul }}</div>
-                                        <div class="text-xs text-gray-600">{{ $announcement->isi }}</div>
-                                    </div>
-                                    <div class="text-xs text-gray-400 whitespace-nowrap">
-                                        {{ $announcement->created_at->format('H:i') }}
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-
-                <div class="mt-4 border-t pt-4 text-sm text-gray-500">
-                    {{ $announcements->isEmpty() ? 'Belum ada pengumuman' : 'Pengumuman terbaru dari admin' }}
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow p-4 sm:p-5 text-center text-sm text-gray-600">
-                {{ $announcements->isEmpty() ? 'Belum ada notifikasi' : 'Lihat semua pengumuman' }}
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                <span class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>Aktif
+                </span>
+                <span class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+                    {{ $u->nip_nim ?? 'NIM belum diset' }}
+                </span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ================= MODAL EDIT PROFIL ================= -->
-<div id="editProfilModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onclick="if(event.target===this) closeEditProfilModal()">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <form action="{{ route('profile.update') ?? '#' }}" method="POST">
-            @csrf
-            @method('PUT')
+{{-- STATS STRIP --}}
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+    <div class="group rounded-2xl bg-white border border-slate-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5" style="background:#002B6B;"></div>
+        <p class="text-[28px] font-black text-[#002B6B] leading-none">{{ $totalKelas }}</p>
+        <p class="mt-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Kelas Aktif</p>
+        <div class="mt-2 w-6 h-0.5 rounded-full bg-[#002B6B]/30"></div>
+    </div>
+    <div class="group rounded-2xl bg-white border border-slate-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5 bg-emerald-500"></div>
+        <p class="text-[28px] font-black text-emerald-600 leading-none">{{ $rataRata ? number_format($rataRata, 1) : '–' }}</p>
+        <p class="mt-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Rata-rata Nilai</p>
+        <div class="mt-2 w-6 h-0.5 rounded-full bg-emerald-400/40"></div>
+    </div>
+    <div class="group rounded-2xl bg-white border border-slate-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5 bg-violet-500"></div>
+        <p class="text-[28px] font-black text-violet-600 leading-none">{{ $nilaiAkhirList->count() }}</p>
+        <p class="mt-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">MK Dinilai</p>
+        <div class="mt-2 w-6 h-0.5 rounded-full bg-violet-400/40"></div>
+    </div>
+    <div class="group rounded-2xl bg-white border border-slate-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5 bg-amber-500"></div>
+        <p class="text-[28px] font-black text-amber-500 leading-none">{{ $announcements->count() }}</p>
+        <p class="mt-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Pengumuman</p>
+        <div class="mt-2 w-6 h-0.5 rounded-full bg-amber-400/40"></div>
+    </div>
+</div>
 
-            <!-- Header modal -->
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                <h3 class="text-base font-semibold text-gray-800">Edit Profil</h3>
-                <button type="button" onclick="closeEditProfilModal()" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+{{-- MAIN GRID --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    {{-- LEFT: FORMS --}}
+    <div class="lg:col-span-2 space-y-5">
+
+        {{-- TABS --}}
+        <div x-data="{ tab: 'profile' }">
+            <div class="flex gap-1 rounded-2xl bg-white border border-slate-100 shadow-sm p-1.5 mb-5">
+                <button @click="tab='profile'"
+                    :class="tab==='profile' ? 'bg-[#002B6B] text-white shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'"
+                    class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Informasi Profil
+                </button>
+                <button @click="tab='password'"
+                    :class="tab==='password' ? 'bg-amber-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'"
+                    class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    Keamanan
                 </button>
             </div>
 
-            <div class="px-6 py-5 space-y-6">
-                <!-- Informasi Pribadi -->
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-800 mb-4">Informasi Pribadi</h4>
-
-                    <div class="flex flex-col sm:flex-row gap-5">
-                        <div class="shrink-0">
-                            <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-blue-500 bg-gray-100">
-                                <img src="{{ asset('images/profil.jpg') }}" alt="avatar" class="w-full h-full object-cover">
-                            </div>
+            {{-- PROFILE TAB --}}
+            <div x-show="tab==='profile'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
+                <div class="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-5 border-b border-gray-50 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-[#002B6B] shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
                         </div>
-
-                        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1.5">Nama Lengkap</label>
-                                <input type="text" name="name" value="{{ auth()->user()->name }}"
-                                    class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1.5">NIM (Nomor Induk Mahasiswa)</label>
-                                <input type="text" name="nim" value="{{ auth()->user()->nim ?? '' }}" readonly
-                                    class="w-full text-sm rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-gray-700 cursor-not-allowed">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1.5">Email Institusi</label>
-                                <input type="email" name="email" value="{{ auth()->user()->email ?? '' }}"
-                                    class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1.5">Nomor Telepon</label>
-                                <input type="text" name="phone" value="{{ auth()->user()->phone ?? '' }}"
-                                    class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
+                        <div>
+                            <h2 class="text-base font-bold text-slate-800">Informasi Profil</h2>
+                            <p class="text-xs text-gray-400 mt-0.5">Perbarui nama dan email yang tampil di platform</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="border-t border-gray-100"></div>
-
-                <!-- Data Akademik -->
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-800 mb-4">Data Akademik</h4>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Fakultas</label>
-                            <select name="fakultas" class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="Fakultas Teknik" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Teknik' ? 'selected' : '' }}>Fakultas Teknik</option>
-                                <option value="Fakultas Ekonomi" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Ekonomi' ? 'selected' : '' }}>Fakultas Ekonomi</option>
-                                <option value="Fakultas Hukum" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Hukum' ? 'selected' : '' }}>Fakultas Hukum</option>
-                                <option value="Fakultas Ilmu Komputer" {{ (auth()->user()->fakultas ?? '') == 'Fakultas Ilmu Komputer' ? 'selected' : '' }}>Fakultas Ilmu Komputer</option>
-                            </select>
+                    <form method="POST" action="{{ route('mahasiswa.setting.profile') }}" class="px-6 py-6">
+                        @csrf @method('PATCH')
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Nama Lengkap <span class="text-red-400 normal-case">*</span></label>
+                                <input type="text" name="name" value="{{ old('name', $u->name) }}"
+                                    class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-[#002B6B] focus:ring-2 focus:ring-[#002B6B]/10 transition-all @error('name') border-red-300 bg-red-50 @enderror"
+                                    style="border-color: {{ $errors->has('name') ? '' : '#e5e7eb' }};"
+                                    placeholder="Nama lengkap kamu" required>
+                                @error('name')<p class="mt-1.5 text-xs text-red-500 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">NIM</label>
+                                <div class="relative">
+                                    <input type="text" value="{{ $u->nip_nim ?? '–' }}" disabled
+                                        class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-400 bg-gray-100 cursor-not-allowed pr-10">
+                                    <span class="absolute inset-y-0 right-3 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                    </span>
+                                </div>
+                                <p class="mt-1.5 text-[11px] text-gray-400">NIM tidak dapat diubah sendiri</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Alamat Email <span class="text-red-400 normal-case">*</span></label>
+                                <input type="email" name="email" value="{{ old('email', $u->email) }}"
+                                    class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-[#002B6B] focus:ring-2 focus:ring-[#002B6B]/10 transition-all @error('email') border-red-300 bg-red-50 @enderror"
+                                    style="border-color: {{ $errors->has('email') ? '' : '#e5e7eb' }};"
+                                    placeholder="email@student.ac.id" required>
+                                @error('email')<p class="mt-1.5 text-xs text-red-500 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Program Studi</label>
+                                <div class="relative">
+                                    <input type="text" value="{{ $u->programStudi?->nama_prodi ?? 'Belum ditentukan' }}" disabled
+                                        class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-400 bg-gray-100 cursor-not-allowed pr-10">
+                                    <span class="absolute inset-y-0 right-3 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Program Studi</label>
-                            <select name="program_studi" class="w-full text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="Teknik Sipil" {{ (auth()->user()->program_studi ?? '') == 'Teknik Sipil' ? 'selected' : '' }}>Teknik Sipil</option>
-                                <option value="Teknik Elektro" {{ (auth()->user()->program_studi ?? '') == 'Teknik Elektro' ? 'selected' : '' }}>Teknik Elektro</option>
-                                <option value="Teknik Mesin" {{ (auth()->user()->program_studi ?? '') == 'Teknik Mesin' ? 'selected' : '' }}>Teknik Mesin</option>
-                                <option value="Informatika" {{ (auth()->user()->program_studi ?? '') == 'Informatika' ? 'selected' : '' }}>Informatika</option>
-                            </select>
+                        <div class="mt-6 pt-5 border-t border-gray-50 flex items-center justify-between">
+                            <p class="text-xs text-gray-400">Perubahan akan langsung berlaku setelah disimpan</p>
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 rounded-xl bg-[#002B6B] px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#003380] active:scale-95 transition-all duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Simpan Perubahan
+                            </button>
                         </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Semester</label>
-                            <input type="number" name="semester" min="1" max="14" value="{{ auth()->user()->semester ?? 1 }}"
-                                class="w-full sm:w-1/2 text-sm rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-
-            <!-- Footer modal -->
-            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-xl">
-                <button type="button" onclick="closeEditProfilModal()" class="px-4 py-2 text-sm rounded-md border border-gray-200 text-gray-700 hover:bg-gray-100">Batal</button>
-                <button type="submit" class="px-4 py-2 text-sm rounded-md bg-blue-700 text-white shadow hover:bg-blue-800">Simpan Perubahan</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    function openEditProfilModal() {
-        document.getElementById('editProfilModal').classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-    }
-
-    function closeEditProfilModal() {
-        document.getElementById('editProfilModal').classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-    }
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeEditProfilModal();
-    });
-</script>
-
-@endsection

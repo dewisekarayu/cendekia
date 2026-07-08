@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Dosen\GradebookController as DosenGradebookController;
+use App\Http\Controllers\Dosen\ForumController as DosenForumController;
 
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
@@ -39,11 +40,12 @@ Route::get('/dashboard', function () {
         abort(401);
     }
 
-    if ($user->hasRole('admin')) {
+    // Use the centralized user helper methods
+    if ($user->isAdmin()) {
         return redirect()->route('admin.dashboard');
-    } elseif ($user->hasRole('dosen')) {
+    } elseif ($user->isDosen()) {
         return redirect()->route('dosen.dashboard');
-    } elseif ($user->hasRole('mahasiswa')) {
+    } elseif ($user->isMahasiswa()) {
         return redirect()->route('mahasiswa.dashboard');
     }
 
@@ -64,19 +66,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.mata-kuliah')
         ->parameters(['mata-kuliah' => 'mataKuliah']);
 
-    // Ganti bagian admin/dosen menjadi seperti ini:
     Route::resource('admin/dosen', AdminDosenController::class)
-        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']) // Tambahkan edit & update
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
         ->names('admin.dosen')
         ->parameters(['dosen' => 'dosen']);
 
-    // Ganti bagian admin/mahasiswa menjadi seperti ini:
     Route::resource('admin/mahasiswa', AdminMahasiswaController::class)
-        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']) // Tambahkan edit & update
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
         ->names('admin.mahasiswa')
         ->parameters(['mahasiswa' => 'mahasiswa']);
 
-    Route::resource('admin/pengumuman', AdminPengumumanController::class)
+        Route::resource('admin/pengumuman', AdminPengumumanController::class)
         ->only(['index', 'store', 'destroy'])
         ->names('admin.pengumuman');
     Route::resource('admin/kelas', KelasController::class)
@@ -94,8 +94,13 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/kelas-saya', [DosenKelasController::class, 'kelasSaya'])->name('dosen.kelas-saya');
     Route::get('/dosen/kelas/{id}', [DosenKelasController::class, 'show'])->name('dosen.kelas-detail');
     Route::get('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'tugas'])->name('dosen.kelas-tugas');
+    Route::post('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'storeTugas'])->name('dosen.kelas-tugas.store');
     Route::get('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'materi'])->name('dosen.kelas-materi');
+    Route::post('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'storeMateri'])->name('dosen.kelas-materi.store');
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
+    Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
+    Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
+    Route::post('/dosen/forums/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.forum.pesan');
 
     // Cari bagian rute pengumuman dosen, lalu ubah menjadi seperti ini:-
     Route::get('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
@@ -112,13 +117,17 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
     Route::get('/mahasiswa/kelas-saya', [MahasiswaKelasController::class, 'kelasSaya'])->name('mahasiswa.kelas-saya');
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');
+    Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/buka', [MahasiswaKelasController::class, 'bukaMateri'])->name('mahasiswa.materi.buka');
     Route::get('/mahasiswa/jelajahi-kelas', [MahasiswaKelasController::class, 'jelajahi'])->name('mahasiswa.jelajahi-kelas');
     Route::post('/mahasiswa/kelas/{id}/join', [MahasiswaKelasController::class, 'join'])->name('mahasiswa.kelas.join');
 
     Route::get('/mahasiswa/gradebook', [MahasiswaGradebookController::class, 'index'])->name('mahasiswa.gradebook');
     Route::get('/mahasiswa/forums', [MahasiswaForumController::class, 'index'])->name('mahasiswa.forums');
+    Route::post('/mahasiswa/forums/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.forum.pesan');
     Route::get('/mahasiswa/schedule', [MahasiswaScheduleController::class, 'index'])->name('mahasiswa.schedule');
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
+    Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
+    Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
 });
 
 Route::middleware('auth')->group(function () {

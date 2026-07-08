@@ -9,28 +9,16 @@ class ProgramStudiSeeder extends Seeder
 {
     public function run(): void
     {
-        ProgramStudi::updateOrCreate(
-            ['kode_prodi' => 'TI'],
-            [
-                'nama_prodi' => 'Teknik Informatika',
-                'jenjang' => 'S1',
-            ]
-        );
-
-        ProgramStudi::updateOrCreate(
-            ['kode_prodi' => 'SI'],
-            [
-                'nama_prodi' => 'Sistem Informasi',
-                'jenjang' => 'S1',
-            ]
-        );
-
-        ProgramStudi::updateOrCreate(
-            ['kode_prodi' => 'DKV'],
-            [
-                'nama_prodi' => 'Desain Komunikasi Visual',
-                'jenjang' => 'S1',
-            ]
-        );
+        foreach ([
+            ['kode_prodi' => 'TI', 'nama_prodi' => 'Teknik Informatika', 'jenjang' => 'S1'],
+            ['kode_prodi' => 'SI', 'nama_prodi' => 'Sistem Informasi', 'jenjang' => 'S1'],
+            ['kode_prodi' => 'RPL', 'nama_prodi' => 'Rekayasa Perangkat Lunak', 'jenjang' => 'S1'],
+            ['kode_prodi' => 'DS', 'nama_prodi' => 'Sains Data', 'jenjang' => 'S1'],
+        ] as $prodi) {
+            ProgramStudi::updateOrCreate(
+                ['kode_prodi' => $prodi['kode_prodi']],
+                $prodi
+            );
+        }
     }
 }

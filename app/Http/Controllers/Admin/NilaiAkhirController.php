@@ -98,3 +98,34 @@ class NilaiAkhirController extends Controller
 
     private function hitungNilaiAkhir(array $data): float
     {
+        return round(
+            ($data['nilai_kehadiran'] * 0.10)
+            + ($data['nilai_tugas'] * 0.20)
+            + ($data['nilai_quiz'] * 0.10)
+            + ($data['nilai_project'] * 0.20)
+            + ($data['nilai_uts'] * 0.20)
+            + ($data['nilai_uas'] * 0.20),
+            2
+        );
+    }
+
+    private function gradeFor(float $nilai): string
+    {
+        return match (true) {
+            $nilai >= 85 => 'A',
+            $nilai >= 80 => 'AB',
+            $nilai >= 75 => 'B',
+            $nilai >= 70 => 'BC',
+            $nilai >= 65 => 'C',
+            $nilai >= 55 => 'D',
+            default => 'E',
+        };
+    }
+
+    private function kelasOptions()
+    {
+        return KelasPerkuliahan::with(['mataKuliah', 'dosen'])
+            ->orderBy('kode_kelas')
+            ->get();
+    }
+}

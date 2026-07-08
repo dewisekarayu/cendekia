@@ -1,221 +1,246 @@
 @extends('layouts.portal')
-
 @section('title', $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas')
-@section('activeMenu', 'My Courses')
-
 @section('content')
 
-    @php
-        $hariIni = now()->translatedFormat('l');
-        $sekarang = now()->format('H:i:s');
-        $status = 'Tidak Ada Jadwal Hari Ini';
-        $statusColor = 'bg-gray-100 text-gray-500';
-
-        if ($kelas->hari === $hariIni) {
-            if ($sekarang < $kelas->jam_mulai) {
-                $status = 'Belum Mulai';
-                $statusColor = 'bg-amber-50 text-amber-600';
-            } elseif ($sekarang >= $kelas->jam_mulai && $sekarang <= $kelas->jam_selesai) {
-                $status = 'Sedang Berlangsung';
-                $statusColor = 'bg-emerald-50 text-emerald-600';
-            } else {
-                $status = 'Selesai';
-                $statusColor = 'bg-gray-100 text-gray-500';
-            }
+@php
+    $hariIni  = now()->locale('id')->dayName;
+    $sekarang = now()->format('H:i:s');
+    if ($kelas->hari === $hariIni) {
+        if ($sekarang < $kelas->jam_mulai) {
+            $statusLabel = 'Belum Mulai'; $statusClass = 'bg-amber-50 text-amber-600 border border-amber-200';
+        } elseif ($sekarang <= $kelas->jam_selesai) {
+            $statusLabel = 'Sedang Berlangsung'; $statusClass = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+        } else {
+            $statusLabel = 'Selesai Hari Ini'; $statusClass = 'bg-gray-100 text-gray-500 border border-gray-200';
         }
+    } else {
+        $statusLabel = null;
+    }
+@endphp
+
+{{-- ===== HEADER BANNER ===== --}}
+<div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] p-6 sm:p-7 shadow-lg shadow-blue-950/15 relative">
+    <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
+    <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
+    <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0">
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="rounded-lg bg-white/15 border border-white/20 px-2.5 py-1 text-xs font-bold text-white">
+                    {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
+                </span>
+                <span class="text-xs text-blue-200/80">Kelas {{ $kelas->kode_kelas }}</span>
+                @if ($statusLabel)
+                    <span class="rounded-full {{ $statusClass }} px-2.5 py-1 text-[10px] font-bold">{{ $statusLabel }}</span>
+                @endif
+            </div>
+            <h1 class="text-xl font-extrabold leading-tight text-white sm:text-2xl">
+                {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
+            </h1>
+            <p class="mt-1.5 text-sm text-blue-100/80">
+                Bersama {{ $kelas->dosen?->name ?? 'Dosen pengampu' }}
+            </p>
+        </div>
+        <a href="{{ route('mahasiswa.kelas-saya') }}"
+           class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Kembali
+        </a>
+    </div>
+</div>
+
+{{-- ===== INFO CARDS ===== --}}
+<div class="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    @php
+        $infoCards = [
+            ['icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'label' => 'Dosen', 'value' => $kelas->dosen?->name ?? '-', 'color' => 'text-blue-600 bg-blue-50'],
+            ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => $kelas->hari, 'value' => substr($kelas->jam_mulai,0,5).' – '.substr($kelas->jam_selesai,0,5), 'color' => 'text-amber-600 bg-amber-50'],
+            ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Ruangan', 'value' => $kelas->ruangan ?? '-', 'color' => 'text-rose-600 bg-rose-50'],
+            ['icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'label' => 'SKS', 'value' => ($kelas->mataKuliah?->sks ?? 0).' SKS', 'color' => 'text-violet-600 bg-violet-50'],
+        ];
     @endphp
-
-    <!-- Info Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+    @foreach ($infoCards as $card)
+        <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $card['color'] }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $card['icon'] }}"/></svg>
             </div>
-            <div class="overflow-hidden">
-                <p class="text-sm font-semibold text-gray-800 truncate">{{ $kelas->dosen?->name ?? '-' }}</p>
-                <p class="text-[11px] text-gray-400">Dosen</p>
+            <div class="min-w-0">
+                <p class="truncate text-xs font-semibold text-slate-800 leading-tight">{{ $card['value'] }}</p>
+                <p class="text-[10px] text-gray-400">{{ $card['label'] }}</p>
             </div>
         </div>
+    @endforeach
+</div>
 
-        <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-            </div>
-            <div class="overflow-hidden">
-                <p class="text-sm font-semibold text-gray-800 truncate">{{ $kelas->mataKuliah?->nama_mk ?? '-' }}</p>
-                <p class="text-[11px] text-gray-400">Mata Kuliah</p>
-            </div>
+{{-- ===== MAIN CONTENT ===== --}}
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua' }">
+
+    {{-- Content Area --}}
+    <div class="lg:col-span-2 space-y-4">
+
+        {{-- Tab buttons --}}
+        <div class="flex gap-2 overflow-x-auto pb-1">
+            @foreach (['semua' => 'Semua', 'materi' => 'Materi', 'tugas' => 'Tugas', 'absensi' => 'Absensi'] as $key => $label)
+                <button @click="tab = '{{ $key }}'"
+                        :class="tab === '{{ $key }}'
+                            ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20'
+                            : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]'"
+                        class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition">
+                    {{ $label }}
+                </button>
+            @endforeach
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <div class="overflow-hidden">
-                <p class="text-sm font-semibold text-gray-800 truncate">{{ substr($kelas->jam_mulai, 0, 5) }} - {{ substr($kelas->jam_selesai, 0, 5) }}</p>
-                <p class="text-[11px] text-gray-400">{{ $kelas->hari }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </div>
-            <div class="overflow-hidden">
-                <p class="text-sm font-semibold text-gray-800 truncate">{{ $kelas->ruangan ?? '-' }}</p>
-                <p class="text-[11px] text-gray-400">Ruang</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-lg font-bold text-gray-800">{{ $kelas->mataKuliah?->kode_mk ?? '-' }} - Kelas {{ $kelas->kode_kelas }}</h1>
-        <span class="text-xs font-semibold px-3 py-1.5 rounded-full {{ $statusColor }}">{{ $status }}</span>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" x-data="{ tab: 'semua' }">
-
-        <!-- Main: Filter Tabs + List -->
-        <div class="lg:col-span-2">
-
-            <!-- Filter Tabs -->
-            <div class="flex items-center gap-2 mb-4 overflow-x-auto">
-                <button @click="tab = 'semua'" :class="tab === 'semua' ? 'bg-blue-900 text-white' : 'bg-white border border-gray-200 text-gray-600'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition">
-                    Semua
-                </button>
-                <button @click="tab = 'materi'" :class="tab === 'materi' ? 'bg-blue-900 text-white' : 'bg-white border border-gray-200 text-gray-600'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition">
-                    Materi
-                </button>
-                <button @click="tab = 'tugas'" :class="tab === 'tugas' ? 'bg-blue-900 text-white' : 'bg-white border border-gray-200 text-gray-600'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition">
-                    Tugas
-                </button>
-                <button @click="tab = 'absensi'" :class="tab === 'absensi' ? 'bg-blue-900 text-white' : 'bg-white border border-gray-200 text-gray-600'" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition">
-                    Absensi
-                </button>
-            </div>
-
-            <!-- List Materi -->
-            <div x-show="tab === 'semua' || tab === 'materi'" class="space-y-3 mb-4">
-                @forelse ($materiList as $materi)
-                    <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-900 flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <div class="overflow-hidden flex-1">
-                            <p class="text-sm font-semibold text-gray-800 truncate">Pertemuan {{ $materi->pertemuan_ke }}: {{ $materi->judul }}</p>
-                            <p class="text-xs text-gray-400">{{ $materi->file_path ? strtoupper($materi->tipe_file) . ' tersedia' : 'Belum ada file' }}</p>
-                        </div>
+        {{-- MATERI --}}
+        <div x-show="tab === 'semua' || tab === 'materi'" class="space-y-3">
+            @forelse ($materiList as $materi)
+                <div class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#002B6B]">
+                        @php
+                            $icons = ['pdf' => 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z', 'mp4' => 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z'];
+                            $iconPath = $icons[$materi->tipe_file ?? ''] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
+                        @endphp
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}"/></svg>
                     </div>
-                @empty
-                    @if (\Illuminate\Support\Facades\Request::segment(3) || true)
-                    <div class="bg-white rounded-xl border-2 border-dashed border-gray-200 p-6 text-center text-sm text-gray-400" x-show="tab === 'materi'">
-                        Belum ada materi untuk kelas ini.
+                    <div class="min-w-0 flex-1">
+                        <div class="mb-1 flex flex-wrap items-center gap-2">
+                            <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-600">Pertemuan {{ $materi->pertemuan_ke }}</span>
+                            @if ($materi->tipe_file)
+                                <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase text-blue-600">{{ $materi->tipe_file }}</span>
+                            @endif
+                        </div>
+                        <p class="text-sm font-bold text-slate-800">{{ $materi->judul }}</p>
+                        <p class="mt-0.5 text-xs leading-relaxed text-slate-500">
+                            {{ $materi->deskripsi ? Str::limit($materi->deskripsi, 110) : ($materi->file_path ? 'File tersedia.' : 'File belum diunggah.') }}
+                        </p>
                     </div>
+                    @if ($materi->file_path)
+                        <a href="{{ route('mahasiswa.materi.buka', [$kelas->id, $materi->id]) }}" target="_blank"
+                           class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#002B6B] px-4 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                            Buka
+                        </a>
+                    @else
+                        <span class="inline-flex shrink-0 items-center justify-center rounded-xl bg-slate-100 px-4 py-2.5 text-xs font-bold text-slate-400">Belum Ada</span>
                     @endif
-                @endforelse
-            </div>
-
-            <!-- List Tugas -->
-            <div x-show="tab === 'semua' || tab === 'tugas'" class="space-y-3 mb-4">
-                @forelse ($tugasList as $tugas)
-                    <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                        </div>
-                        <div class="overflow-hidden flex-1">
-                            <p class="text-sm font-semibold text-gray-800 truncate">{{ $tugas->judul }}</p>
-                            <p class="text-xs text-gray-400">Deadline: {{ \Carbon\Carbon::parse($tugas->deadline)->format('d M Y, H:i') }}</p>
-                        </div>
-                    </div>
-                @empty
-                    <div class="bg-white rounded-xl border-2 border-dashed border-gray-200 p-6 text-center text-sm text-gray-400" x-show="tab === 'tugas'">
-                        Belum ada tugas untuk kelas ini.
-                    </div>
-                @endforelse
-            </div>
-
-            <!-- List Absensi -->
-            <div x-show="tab === 'semua' || tab === 'absensi'" class="space-y-3">
-                @forelse ($rekapAbsen as $item)
-                    @php
-                        $statusMap = [
-                            'hadir' => ['label' => 'Hadir', 'color' => 'bg-emerald-50 text-emerald-700', 'icon' => 'M5 13l4 4L19 7'],
-                            'izin' => ['label' => 'Izin', 'color' => 'bg-blue-50 text-blue-700', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                            'sakit' => ['label' => 'Sakit', 'color' => 'bg-amber-50 text-amber-700', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                            'alpha' => ['label' => 'Tidak Hadir', 'color' => 'bg-red-50 text-red-700', 'icon' => 'M6 18L18 6M6 6l12 12'],
-                        ];
-                        $s = $statusMap[$item->status] ?? $statusMap['alpha'];
-                    @endphp
-                    <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg {{ $s['color'] }} flex items-center justify-center shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $s['icon'] }}" />
-                                </svg>
-                            </div>
-                            <div class="overflow-hidden flex-1">
-                                <p class="text-sm font-semibold text-gray-800">Pertemuan {{ $item->absensi->pertemuan_ke }} — {{ $s['label'] }}</p>
-                                <p class="text-xs text-gray-400">{{ $item->absensi->tanggal->format('d M Y') }}</p>
-                            </div>
-                        </div>
-                        @if ($item->absensi->rangkuman)
-                            <p class="text-xs text-gray-500 mt-2 pl-13">{{ Str::limit($item->absensi->rangkuman, 150) }}</p>
-                        @endif
-                    </div>
-                @empty
-                    <div class="bg-white rounded-xl border-2 border-dashed border-gray-200 p-6 text-center text-sm text-gray-400" x-show="tab === 'absensi'">
-                        Belum ada data absensi untuk kelas ini.
-                    </div>
-                @endforelse
-            </div>
+                </div>
+            @empty
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'materi'">
+                    Belum ada materi untuk kelas ini.
+                </div>
+            @endforelse
         </div>
 
-        <!-- Right: Course Progress -->
-        <div>
-            <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm sticky top-6">
-                <h2 class="text-base font-bold text-gray-800 mb-4">Course Progress</h2>
-
-                <div class="flex items-center justify-between text-sm mb-1">
-                    <span class="text-gray-500">Total Completion</span>
-                    <span class="font-bold text-blue-900">{{ $progress }}%</span>
+        {{-- TUGAS --}}
+        <div x-show="tab === 'semua' || tab === 'tugas'" class="space-y-3">
+            @forelse ($tugasList as $tugas)
+                @php
+                    $dl = \Carbon\Carbon::parse($tugas->deadline);
+                    $overdue = $dl->isPast();
+                    $daysLeft = now()->diffInDays($dl, false);
+                @endphp
+                <div class="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $overdue ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-semibold text-gray-800 truncate">{{ $tugas->judul }}</p>
+                        <p class="mt-0.5 text-xs text-gray-400">
+                            Deadline: {{ $dl->format('d M Y, H:i') }}
+                            @if ($overdue)
+                                <span class="ml-1 font-semibold text-red-500">· Sudah lewat</span>
+                            @elseif ($daysLeft <= 2)
+                                <span class="ml-1 font-semibold text-amber-600">· {{ $daysLeft === 0 ? 'Hari ini' : $daysLeft.' hari lagi' }}</span>
+                            @endif
+                        </p>
+                    </div>
+                    @if ($tugas->bobot_nilai)
+                        <span class="shrink-0 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">{{ $tugas->bobot_nilai }}%</span>
+                    @endif
                 </div>
-                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-5">
-                    <div class="h-full bg-blue-900 rounded-full" style="width: {{ $progress }}%"></div>
+            @empty
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'tugas'">
+                    Belum ada tugas untuk kelas ini.
+                </div>
+            @endforelse
+        </div>
+
+        {{-- ABSENSI --}}
+        <div x-show="tab === 'semua' || tab === 'absensi'" class="space-y-3">
+            @forelse ($rekapAbsen as $item)
+                @php
+                    $absenMap = [
+                        'hadir'  => ['label' => 'Hadir',       'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200', 'icon' => 'M5 13l4 4L19 7'],
+                        'izin'   => ['label' => 'Izin',         'class' => 'bg-blue-50 text-blue-700 border-blue-200',         'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'sakit'  => ['label' => 'Sakit',        'class' => 'bg-amber-50 text-amber-700 border-amber-200',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'alpha'  => ['label' => 'Tidak Hadir',  'class' => 'bg-red-50 text-red-700 border-red-200',            'icon' => 'M6 18L18 6M6 6l12 12'],
+                    ];
+                    $ab = $absenMap[$item->status] ?? $absenMap['alpha'];
+                @endphp
+                <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border {{ $ab['class'] }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $ab['icon'] }}"/></svg>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-semibold text-gray-800">Pertemuan {{ $item->absensi->pertemuan_ke }}</p>
+                        <p class="text-xs text-gray-400">{{ $item->absensi->tanggal->format('d M Y') }}
+                            @if ($item->absensi->rangkuman)
+                                · {{ Str::limit($item->absensi->rangkuman, 80) }}
+                            @endif
+                        </p>
+                    </div>
+                    <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
+                </div>
+            @empty
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'absensi'">
+                    Belum ada data absensi.
+                </div>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Sidebar Progress --}}
+    <div>
+        <div class="sticky top-24 space-y-4">
+            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+                <h3 class="mb-4 text-sm font-bold text-slate-800">Progress Kelas</h3>
+
+                <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
+                    <span class="text-gray-500">Penyelesaian</span>
+                    <span class="font-bold text-[#002B6B]">{{ $progress }}%</span>
+                </div>
+                <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div class="h-full rounded-full bg-[#002B6B] transition-all" style="width: {{ $progress }}%"></div>
                 </div>
 
-                <div class="flex items-center justify-between text-sm mb-1">
+                <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
                     <span class="text-gray-500">Kehadiran</span>
                     <span class="font-bold text-emerald-600">{{ $totalHadir }}/{{ $totalPertemuan }}</span>
                 </div>
-                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-5">
-                    <div class="h-full bg-emerald-500 rounded-full" style="width: {{ $totalPertemuan > 0 ? round(($totalHadir / $totalPertemuan) * 100) : 0 }}%"></div>
+                <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div class="h-full rounded-full bg-emerald-500 transition-all" style="width: {{ $totalPertemuan > 0 ? round(($totalHadir/$totalPertemuan)*100) : 0 }}%"></div>
                 </div>
 
-                <div class="border-t border-gray-100 pt-4 space-y-2 text-sm">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-500">Tugas Selesai</span>
-                        <span class="font-semibold text-gray-800">{{ $submitted }}/{{ $totalTugas }}</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-500">Total Materi</span>
-                        <span class="font-semibold text-gray-800">{{ $materiList->count() }}</span>
-                    </div>
+                <div class="space-y-2.5 border-t border-gray-100 pt-4">
+                    @foreach ([['label' => 'Tugas Selesai', 'value' => $submitted.'/'.$totalTugas], ['label' => 'Total Materi', 'value' => $materiList->count().' modul'], ['label' => 'Total Pertemuan', 'value' => $totalPertemuan.' kali']] as $row)
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-gray-500">{{ $row['label'] }}</span>
+                            <span class="font-semibold text-gray-800">{{ $row['value'] }}</span>
+                        </div>
+                    @endforeach
                 </div>
             </div>
+
+            <a href="{{ route('mahasiswa.forums') }}"
+               class="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm hover:border-[#002B6B] hover:bg-blue-50/40 transition group">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600 group-hover:bg-violet-100 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-slate-700">Forum Diskusi</p>
+                    <p class="text-xs text-gray-400">Chat langsung dengan dosen</p>
+                </div>
+            </a>
         </div>
     </div>
-
+</div>
 @endsection

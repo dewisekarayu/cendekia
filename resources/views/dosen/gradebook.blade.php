@@ -1,79 +1,289 @@
 @extends('layouts.portal')
 
 @section('title', 'Gradebook')
-@section('activeMenu', 'Gradebook')
 
 @section('content')
 
-<div class="max-w-7xl mx-auto">
-	<!-- Header (match My Classes style) -->
-	<div class="bg-[#321270] rounded-xl px-8 py-6 relative overflow-hidden mb-6">
-		<div class="mb-2">
-			<h1 class="text-xl font-bold text-white">Gradebook</h1>
-			<p class="text-sm text-white/80 mt-1">Class: {{ $kelas->kode_kelas ?? 'IF-44-01' }} | Semester Genap 2023/2024</p>
-		</div>
+@php
+    $gradeColors = [
+        'A'  => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-700', 'ring' => 'ring-emerald-200'],
+        'AB' => ['bg' => 'bg-teal-100',    'text' => 'text-teal-700',    'ring' => 'ring-teal-200'],
+        'B'  => ['bg' => 'bg-blue-100',    'text' => 'text-blue-700',    'ring' => 'ring-blue-200'],
+        'BC' => ['bg' => 'bg-sky-100',     'text' => 'text-sky-700',     'ring' => 'ring-sky-200'],
+        'C'  => ['bg' => 'bg-amber-100',   'text' => 'text-amber-700',   'ring' => 'ring-amber-200'],
+        'D'  => ['bg' => 'bg-orange-100',  'text' => 'text-orange-700',  'ring' => 'ring-orange-200'],
+        'E'  => ['bg' => 'bg-red-100',     'text' => 'text-red-700',     'ring' => 'ring-red-200'],
+    ];
+@endphp
 
-		<div class="absolute right-6 top-6 flex items-center gap-3">
-			<a href="#" class="inline-flex items-center gap-2 bg-white text-sm text-[#321270] px-3 py-2 rounded-md shadow">Export PDF</a>
-			<a href="#" class="inline-flex items-center gap-2 bg-white text-sm text-[#321270] px-3 py-2 rounded-md shadow">Export to Excel</a>
-		</div>
-	</div>
-
-	<div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-		<div class="px-6 py-4">
-			<div class="flex items-center gap-4">
-				<div class="relative">
-					<select class="text-sm border-gray-200 rounded-lg py-2 pl-3 pr-8">
-						<option>Urutkan berdasarkan...</option>
-					</select>
-				</div>
-				<div class="ml-auto text-sm text-gray-500">Nilai keseluruhan</div>
-			</div>
-		</div>
-
-		<div class="overflow-x-auto">
-			<table class="w-full text-sm">
-				<thead>
-					<tr class="text-left text-gray-500 text-xs border-t border-b border-gray-100">
-						<th class="px-6 py-3">Student</th>
-						<th class="px-6 py-3">Nilai keseluruhan</th>
-						<th class="px-6 py-3">Tugas 2 - Analisis</th>
-						<th class="px-6 py-3">Tugas 1 - Membuat</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($students as $student)
-						<tr class="border-b last:border-0">
-							<td class="px-6 py-4">
-								<div class="flex items-center gap-3">
-									<div class="w-9 h-9 rounded-full bg-gray-100 overflow-hidden">
-										<img src="{{ $student->avatar ?? asset('images/default-avatar.png') }}" alt="" class="w-full h-full object-cover">
-									</div>
-									<div>
-										<div class="font-medium text-gray-800">{{ $student->name }}</div>
-										<div class="text-xs text-gray-400">{{ $student->nim ?? '' }}</div>
-									</div>
-								</div>
-							</td>
-							<td class="px-6 py-4 font-semibold text-gray-800">{{ $student->overall ?? '-' }}</td>
-							<td class="px-6 py-4 text-gray-700">{{ $student->tugas2 ?? '-' }}</td>
-							<td class="px-6 py-4 text-gray-700">{{ $student->tugas1 ?? '-' }}</td>
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
-		</div>
-
-		<div class="px-6 py-4 border-t bg-gray-50 flex items-center justify-between">
-			<div class="text-sm text-gray-500">Showing {{ $students->count() }} of {{ $totalStudents ?? $students->count() }} students</div>
-			<div class="flex items-center gap-2">
-				<a href="#" class="px-3 py-1 bg-white border rounded">‹</a>
-				<a href="#" class="px-3 py-1 bg-[#321270] text-white rounded">1</a>
-				<a href="#" class="px-3 py-1 bg-white border rounded">2</a>
-				<a href="#" class="px-3 py-1 bg-white border rounded">›</a>
-			</div>
-		</div>
-	</div>
+{{-- ===== HEADER ===== --}}
+<div class="mb-6 rounded-2xl bg-[#321270] px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+    <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-wide text-purple-200/70">Penilaian</p>
+            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Gradebook</h1>
+            @if ($kelas)
+                <p class="mt-1 text-sm text-purple-100/70">
+                    {{ $kelas->mataKuliah?->nama_mk ?? '-' }} &middot; {{ $kelas->kode_kelas }}
+                </p>
+            @endif
+        </div>
+        @if ($kelas)
+            <div class="flex items-center gap-2 shrink-0">
+                <span class="inline-flex items-center gap-1.5 rounded-xl bg-white/15 border border-white/20 px-3 py-1.5 text-xs font-semibold text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z"/>
+                    </svg>
+                    {{ $totalStudents }} mahasiswa
+                </span>
+            </div>
+        @endif
+    </div>
+    <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/5 pointer-events-none"></div>
 </div>
 
+{{-- ===== CLASS SELECTOR ===== --}}
+@if ($kelasList->isNotEmpty())
+    <div class="mb-5 flex flex-wrap gap-2">
+        @foreach ($kelasList as $k)
+            <a href="{{ route('dosen.gradebook', ['kelas_id' => $k->id]) }}"
+               class="inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-xs font-semibold transition
+                   {{ $kelas && $kelas->id === $k->id
+                       ? 'bg-[#321270] text-white border-[#321270] shadow-sm shadow-purple-900/20'
+                       : 'bg-white text-slate-600 border-slate-200 hover:border-[#321270] hover:text-[#321270]' }}">
+                {{ $k->mataKuliah?->kode_mk ?? '-' }}
+                <span class="hidden sm:inline opacity-70">&mdash; {{ Str::limit($k->mataKuliah?->nama_mk ?? '-', 22) }}</span>
+            </a>
+        @endforeach
+    </div>
+@endif
+
+@if (!$kelas)
+    <div class="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-white p-10 text-center shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-200 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        <h3 class="font-bold text-gray-500">Belum Ada Kelas</h3>
+        <p class="mt-1 text-xs text-gray-400">Pilih kelas dari selector di atas untuk melihat gradebook.</p>
+    </div>
+
+@else
+
+    {{-- ===== STAT CARDS ===== --}}
+    @php
+        $nilaiArr  = $students instanceof \Illuminate\Pagination\LengthAwarePaginator
+            ? $students->getCollection()
+            : collect($students);
+        $avg       = $nilaiArr->avg('nilai_akhir');
+        $highest   = $nilaiArr->max('nilai_akhir');
+        $lowest    = $nilaiArr->min('nilai_akhir');
+        $gradeACount = $nilaiArr->whereIn('grade', ['A','AB'])->count();
+        $gradeDist = $nilaiArr->groupBy('grade')->map->count();
+    @endphp
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="rounded-2xl bg-white border border-slate-200/80 p-4 shadow-sm">
+            <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">Rata-rata</p>
+            <p class="mt-2 text-3xl font-extrabold text-[#321270]">{{ $avg ? number_format($avg, 1) : '-' }}</p>
+            <p class="mt-1 text-xs text-gray-400">nilai akhir kelas</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-slate-200/80 p-4 shadow-sm">
+            <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">Tertinggi</p>
+            <p class="mt-2 text-3xl font-extrabold text-emerald-600">{{ $highest ? number_format($highest, 1) : '-' }}</p>
+            <p class="mt-1 text-xs text-gray-400">nilai terbaik</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-slate-200/80 p-4 shadow-sm">
+            <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">Terendah</p>
+            <p class="mt-2 text-3xl font-extrabold text-amber-500">{{ $lowest ? number_format($lowest, 1) : '-' }}</p>
+            <p class="mt-1 text-xs text-gray-400">perlu perhatian</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-slate-200/80 p-4 shadow-sm">
+            <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">Nilai A/AB</p>
+            <p class="mt-2 text-3xl font-extrabold text-violet-600">{{ $gradeACount }}</p>
+            <p class="mt-1 text-xs text-gray-400">mahasiswa berprestasi</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        {{-- TABLE (3 cols) --}}
+        <div class="lg:col-span-3">
+            <div class="rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden">
+
+                {{-- Table toolbar --}}
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 px-5 py-4 border-b border-gray-100">
+                    <div class="relative flex-1 max-w-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input id="studentSearch" type="text" placeholder="Cari nama / NIM..."
+                               class="w-full rounded-xl border border-gray-200 bg-gray-50 pl-8 pr-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-[#321270] focus:ring-1 focus:ring-[#321270]/20">
+                    </div>
+                    <span class="text-xs text-gray-400">
+                        {{ $students->total() }} mahasiswa terdaftar
+                    </span>
+                </div>
+
+                {{-- Table --}}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm min-w-[640px]">
+                        <thead>
+                            <tr class="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                                <th class="px-5 py-3 text-left">Mahasiswa</th>
+                                <th class="px-4 py-3 text-center">Hadir</th>
+                                <th class="px-4 py-3 text-center">Tugas</th>
+                                <th class="px-4 py-3 text-center">Quiz</th>
+                                <th class="px-4 py-3 text-center">Project</th>
+                                <th class="px-4 py-3 text-center">UTS</th>
+                                <th class="px-4 py-3 text-center">UAS</th>
+                                <th class="px-4 py-3 text-center">Akhir</th>
+                                <th class="px-4 py-3 text-center">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            @forelse ($students as $s)
+                                @php
+                                    $g  = $s->grade ?? 'E';
+                                    $gc = $gradeColors[$g] ?? $gradeColors['E'];
+                                @endphp
+                                <tr class="student-row border-b border-gray-50 last:border-0 hover:bg-purple-50/30 transition"
+                                    data-search="{{ strtolower($s->mahasiswa?->name ?? '') }} {{ strtolower($s->mahasiswa?->nip_nim ?? '') }}">
+                                    <td class="px-5 py-3.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <div class="w-8 h-8 rounded-full bg-[#321270] flex items-center justify-center text-white text-xs font-bold shrink-0">
+                                                {{ strtoupper(substr($s->mahasiswa?->name ?? '?', 0, 1)) }}
+                                            </div>
+                                            <div class="min-w-0">
+                                                <p class="font-semibold text-slate-800 text-xs truncate">{{ $s->mahasiswa?->name ?? '-' }}</p>
+                                                <p class="text-[10px] text-gray-400">{{ $s->mahasiswa?->nip_nim ?? '-' }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700">{{ number_format($s->nilai_kehadiran, 0) }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700">{{ number_format($s->nilai_tugas, 0) }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700">{{ number_format($s->nilai_quiz, 0) }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700">{{ number_format($s->nilai_project, 0) }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700">{{ number_format($s->nilai_uts, 0) }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700">{{ number_format($s->nilai_uas, 0) }}</td>
+                                    <td class="px-4 py-3.5 text-center">
+                                        <span class="font-extrabold text-sm text-slate-800">{{ number_format($s->nilai_akhir, 1) }}</span>
+                                    </td>
+                                    <td class="px-4 py-3.5 text-center">
+                                        <span class="inline-flex items-center justify-center w-9 h-7 rounded-lg text-xs font-extrabold {{ $gc['bg'] }} {{ $gc['text'] }}">
+                                            {{ $g }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="py-12 text-center text-sm text-gray-400">
+                                        Belum ada data nilai akhir untuk kelas ini.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Pagination --}}
+                @if ($students instanceof \Illuminate\Pagination\LengthAwarePaginator && $students->hasPages())
+                    <div class="px-5 py-4 border-t border-gray-100 bg-gray-50/50">
+                        {{ $students->links() }}
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        {{-- SIDEBAR: Grade distribution --}}
+        <div class="space-y-5">
+            <div class="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm">
+                <h3 class="text-sm font-bold text-slate-800 mb-4">Distribusi Grade</h3>
+
+                @if ($gradeDist->isEmpty())
+                    <p class="text-xs text-gray-400 text-center py-4">Belum ada data.</p>
+                @else
+                    <div class="space-y-2.5">
+                        @foreach (['A','AB','B','BC','C','D','E'] as $g)
+                            @php
+                                $cnt = $gradeDist[$g] ?? 0;
+                                $gc2 = $gradeColors[$g] ?? $gradeColors['E'];
+                                $pct = $totalStudents > 0 ? ($cnt / $totalStudents) * 100 : 0;
+                            @endphp
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-9 h-7 rounded-lg {{ $gc2['bg'] }} {{ $gc2['text'] }} flex items-center justify-center text-[11px] font-extrabold shrink-0">
+                                    {{ $g }}
+                                </span>
+                                <div class="flex-1 min-w-0">
+                                    <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+                                        <div class="h-full rounded-full transition-all
+                                            {{ $g === 'A' || $g === 'AB' ? 'bg-emerald-500' :
+                                               ($g === 'B' || $g === 'BC' ? 'bg-blue-500' :
+                                               ($g === 'C' ? 'bg-amber-500' :
+                                               ($g === 'D' ? 'bg-orange-500' : 'bg-red-500'))) }}"
+                                             style="width: {{ $pct }}%">
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-gray-600 w-5 text-right shrink-0">{{ $cnt }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-100 text-center">
+                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wide">Lulus (≥C)</p>
+                        @php
+                            $lulus = ($gradeDist['A'] ?? 0) + ($gradeDist['AB'] ?? 0) + ($gradeDist['B'] ?? 0)
+                                   + ($gradeDist['BC'] ?? 0) + ($gradeDist['C'] ?? 0);
+                            $lulusPct = $totalStudents > 0 ? round($lulus / $totalStudents * 100) : 0;
+                        @endphp
+                        <p class="text-2xl font-extrabold text-emerald-600 mt-1">{{ $lulusPct }}%</p>
+                        <p class="text-xs text-gray-400">{{ $lulus }} dari {{ $totalStudents }} mahasiswa</p>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Kelas Info --}}
+            <div class="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm space-y-3">
+                <h3 class="text-sm font-bold text-slate-800">Info Kelas</h3>
+                <div class="space-y-2 text-xs text-gray-600">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-gray-400">Kode Kelas</span>
+                        <span class="font-semibold text-slate-700 text-right">{{ $kelas->kode_kelas }}</span>
+                    </div>
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-gray-400">Hari/Jam</span>
+                        <span class="font-semibold text-slate-700 text-right">{{ $kelas->hari }}, {{ substr($kelas->jam_mulai, 0, 5) }}</span>
+                    </div>
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-gray-400">Ruangan</span>
+                        <span class="font-semibold text-slate-700 text-right">{{ $kelas->ruangan ?? '-' }}</span>
+                    </div>
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-gray-400">SKS</span>
+                        <span class="font-semibold text-slate-700">{{ $kelas->mataKuliah?->sks ?? '-' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+@endif
+
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('studentSearch');
+    if (!input) return;
+    input.addEventListener('input', function () {
+        const q = this.value.toLowerCase().trim();
+        document.querySelectorAll('.student-row').forEach(row => {
+            const text = (row.dataset.search || '').toLowerCase();
+            row.classList.toggle('hidden', q !== '' && !text.includes(q));
+        });
+    });
+});
+</script>
+@endpush
