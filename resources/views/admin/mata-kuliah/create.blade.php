@@ -29,12 +29,30 @@
             <div class="row g-3">
                 <!-- Kode MK -->
                 <div class="col-md-4">
-                    <label for="kode_mk" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kode MK <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control @error('kode_mk') is-invalid @enderror" id="kode_mk" name="kode_mk" value="{{ old('kode_mk') }}" placeholder="Contoh: INF201" required style="border-radius: 8px; padding: 0.6rem 0.75rem;">
-                    @error('kode_mk')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <label for="kode_mk" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">
+                        Kode MK <span class="text-danger">*</span>
+                    </label>
+
+                    <div class="input-group">
+                        @php
+                            $prefix = ['CS', 'SE', 'MT', 'IF', 'TI', 'SI'];
+                            $kodeMk = $prefix[array_rand($prefix)] . '-' . rand(100,999);
+                        @endphp
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="kode_mk"
+                            value="{{ old('kode_mk', $kodeMk) }}"
+                            readonly
+                        >
+
+                        @error('kode_mk')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
+
 
                 <!-- Nama MK -->
                 <div class="col-md-8">
