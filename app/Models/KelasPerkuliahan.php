@@ -63,4 +63,12 @@ class KelasPerkuliahan extends Model
     {
         return $this->hasMany(Absensi::class, 'kelas_perkuliahan_id');
     }
+
+    /**
+     * Relasi: forum diskusi untuk kelas ini
+     */
+    public function forum()
+    {
+        return $this->hasMany(ForumDiskusi::class, 'kelas_perkuliahan_id');
+    }
 }

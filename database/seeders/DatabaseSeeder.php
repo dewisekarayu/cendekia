@@ -22,19 +22,7 @@ class DatabaseSeeder extends Seeder
             SemesterSeeder::class,
             MataKuliahSeeder::class,
             KelasPerkuliahanSeeder::class,
-            KelasMahasiswaSeeder::class,
-            PengumumanSeeder::class,
+            ComprehensiveLmsSeeder::class,
         ]);
-
-        // User::factory(10)->create();
-
-        User::updateOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name' => 'Test User',
-                'password' => bcrypt('password'),
-                'nip_nim' => '1234567890',
-            ]
-        );
     }
 }

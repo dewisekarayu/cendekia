@@ -11,15 +11,32 @@ use Illuminate\Validation\Rule;
 
 class MahasiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mahasiswa = User::role('mahasiswa')
-            ->with('programStudi')
-            ->latest()
-            ->paginate(10);
-        $totalMahasiswa = User::role('mahasiswa')->count();
+        $search = trim($request->input('search', ''));
+        $prodiFilter = $request->input('prodi');
 
-        return view('admin.mahasiswa.index', compact('mahasiswa', 'totalMahasiswa'));
+        $query = User::role('mahasiswa')
+            ->with('programStudi')
+            ->latest();
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('nip_nim', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($prodiFilter) {
+            $query->where('program_studi_id', $prodiFilter);
+        }
+
+        $mahasiswa = $query->paginate(15)->withQueryString();
+        $totalMahasiswa = User::role('mahasiswa')->count();
+        $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
+
+        return view('admin.mahasiswa.index', compact('mahasiswa', 'totalMahasiswa', 'search', 'prodiFilter', 'programStudiList'));
     }
 
     public function create()
@@ -31,18 +48,19 @@ class MahasiswaController extends Controller
 
     public function store(Request $request)
     {
-        // 1. Validasi mengambil key 'nim' sesuai dengan name="..." di file Blade kamu
         $validated = $request->validate([
             'nama'             => ['required', 'string', 'max:255'],
-            'nim'              => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')], // validasi keunikan tetap di kolom nip_nim
+            'nim'              => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')],
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
+        ], [
+            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
-        // 2. Petakan input 'nim' dari form untuk disimpan ke kolom 'nip_nim' database
         $mahasiswa = User::create([
             'name'             => $validated['nama'],
-            'nip_nim'          => $validated['nim'], // <-- Mengambil data dari $validated['nim']
+            'nip_nim'          => $validated['nim'],
             'email'            => $validated['email'],
             'password'         => Hash::make('mahasiswa123'),
             'program_studi_id' => $validated['program_studi_id'] ?? null,
@@ -51,7 +69,41 @@ class MahasiswaController extends Controller
         $mahasiswa->assignRole('mahasiswa');
 
         return redirect()->route('admin.mahasiswa.index')
-            ->with('success', 'Mahasiswa berhasil ditambahkan. Password awal: mahasiswa123');
+            ->with('success', "Mahasiswa {$mahasiswa->name} berhasil ditambahkan. Password awal: mahasiswa123");
+    }
+
+    public function edit(User $mahasiswa)
+    {
+        abort_unless($mahasiswa->hasRole('mahasiswa'), 404);
+
+        $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
+
+        return view('admin.mahasiswa.edit', compact('mahasiswa', 'programStudiList'));
+    }
+
+    public function update(Request $request, User $mahasiswa)
+    {
+        abort_unless($mahasiswa->hasRole('mahasiswa'), 404);
+
+        $validated = $request->validate([
+            'nama'             => ['required', 'string', 'max:255'],
+            'nim'              => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($mahasiswa->id)],
+            'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($mahasiswa->id)],
+            'program_studi_id' => ['nullable', 'exists:program_studi,id'],
+        ], [
+            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'email.unique' => 'Email sudah terdaftar di sistem.',
+        ]);
+
+        $mahasiswa->update([
+            'name'             => $validated['nama'],
+            'nip_nim'          => $validated['nim'],
+            'email'            => $validated['email'],
+            'program_studi_id' => $validated['program_studi_id'] ?? null,
+        ]);
+
+        return redirect()->route('admin.mahasiswa.index')
+            ->with('success', "Data mahasiswa {$mahasiswa->name} berhasil diperbarui.");
     }
 
     public function destroy(User $mahasiswa)
@@ -61,6 +113,6 @@ class MahasiswaController extends Controller
         $mahasiswa->delete();
 
         return redirect()->route('admin.mahasiswa.index')
-            ->with('success', 'Mahasiswa berhasil dihapus.');
+            ->with('success', 'Data mahasiswa berhasil dihapus.');
     }
 }

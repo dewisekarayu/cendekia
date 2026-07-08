@@ -22,7 +22,7 @@
             --primary-blue: #002B6B;
             --secondary-blue: #002B6B;
             --navy-blue: #002B6B;
-            --light-blue: #CDDCFF;
+            --light-blue: #E6EEFF;
             --border-light: rgba(0, 43, 107, 0.08);
         }
 
@@ -31,7 +31,7 @@
         }
 
         body {
-            background-color: #CDDCFF;
+            background-color: #F4F7FB;
             overflow-x: hidden;
         }
 
@@ -332,6 +332,14 @@
             min-width: 0;
         }
 
+        .admin-dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.9fr) minmax(280px, 0.9fr);
+            gap: 1.5rem;
+            align-items: stretch;
+            margin-top: 2rem;
+        }
+
         .page-title {
             font-size: 2rem;
             font-weight: 700;
@@ -489,12 +497,15 @@
 
         /* Chart Container */
         .chart-card {
-            background: white;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
             border-radius: 1rem;
-            padding: 2rem;
-            border: none;
-            box-shadow: 0 4px 20px rgba(0, 43, 107, 0.05);
-            margin-top: 2rem;
+            padding: 1.75rem;
+            border: 1px solid rgba(0, 43, 107, 0.08);
+            box-shadow: 0 16px 45px rgba(0, 43, 107, 0.08);
+            margin-top: 0;
+            position: relative;
+            overflow: hidden;
+            min-width: 0;
         }
 
         .chart-card-header {
@@ -503,7 +514,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .chart-card h3 {
@@ -519,35 +530,144 @@
             margin-bottom: 0;
         }
 
+        .chart-summary {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-left: auto;
+        }
+
+        .chart-summary-item {
+            min-width: 108px;
+            padding: 0.65rem 0.8rem;
+            border: 1px solid rgba(0, 43, 107, 0.08);
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .chart-summary-item .summary-label {
+            display: block;
+            color: #64748B;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.35px;
+            line-height: 1;
+            margin-bottom: 0.35rem;
+        }
+
+        .chart-summary-item strong {
+            display: block;
+            color: #002B6B;
+            font-size: 1.15rem;
+            line-height: 1.1;
+        }
+
         .chart-toggle {
             display: flex;
-            background-color: #F1F3F9;
+            background-color: #EAF1FF;
             padding: 0.25rem;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
             gap: 0.25rem;
+            border: 1px solid rgba(0, 43, 107, 0.08);
         }
 
         .chart-toggle button {
             border: none;
             background: transparent;
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1rem;
             font-size: 0.85rem;
             font-weight: 600;
-            color: #8A94A6;
-            border-radius: 0.375rem;
+            color: #50627D;
+            border-radius: 0.55rem;
             transition: all 0.2s;
         }
 
         .chart-toggle button.active {
             background-color: #002B6B;
             color: white;
-            box-shadow: 0 2px 6px rgba(0, 43, 107, 0.15);
+            box-shadow: 0 8px 18px rgba(0, 43, 107, 0.18);
         }
 
         .chart-canvas-wrap {
             position: relative;
-            height: 320px;
+            height: 340px;
             width: 100%;
+            padding: 0.75rem 0.25rem 0;
+        }
+
+        .insight-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 43, 107, 0.08);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06);
+            min-width: 0;
+        }
+
+        .insight-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .insight-card-header h3 {
+            color: #0F172A;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .insight-card-header p {
+            color: #64748B;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        .insight-card-header span {
+            display: inline-flex;
+            min-width: 58px;
+            justify-content: center;
+            border-radius: 0.75rem;
+            background: #EEF4FF;
+            color: #002B6B;
+            padding: 0.55rem 0.75rem;
+            font-weight: 800;
+        }
+
+        .insight-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .insight-row span {
+            color: #475569;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .insight-row strong {
+            color: #0F172A;
+            font-size: 0.9rem;
+        }
+
+        .insight-progress {
+            height: 0.55rem;
+            background: #E8EEF8;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .insight-progress div {
+            height: 100%;
+            min-width: 0.4rem;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #002B6B 0%, #0EA5E9 55%, #10B981 100%);
         }
 
         /* Table Styles */
@@ -782,6 +902,10 @@
             .sidebar-toggle-btn {
                 display: flex;
             }
+
+            .admin-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* ============ RESPONSIVE (MOBILE) ============ */
@@ -850,7 +974,23 @@
                 padding: 1.25rem;
             }
 
+            .chart-card-header {
+                align-items: stretch;
+            }
+
+            .chart-summary {
+                order: 2;
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .chart-summary-item {
+                flex: 1;
+                min-width: 0;
+            }
+
             .chart-toggle {
+                order: 3;
                 width: 100%;
             }
 

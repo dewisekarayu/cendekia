@@ -1,139 +1,148 @@
 @extends('layouts.portal')
-
-@section('title', 'Schedule')
-@section('activeMenu', 'Schedule')
-
+@section('title', 'Jadwal Kuliah')
 @section('content')
 
-    <div class="bg-blue-900 rounded-xl px-5 sm:px-8 py-6 relative overflow-hidden mb-6 sm:mb-8">
-        <div class="mb-2 sm:mb-6">
-            <h1 class="text-lg sm:text-xl font-bold text-white">Teaching Schedule</h1>
-            <p class="text-sm text-white/80 mt-1">Jadwal dari semua kelas yang kamu ikuti minggu ini.</p>
+<div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] px-6 py-6 sm:px-8 shadow-lg shadow-blue-950/15 relative">
+    <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
+    <div class="pointer-events-none absolute right-20 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
+    <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-blue-200/80">Semester Aktif</p>
+            <h1 class="mt-1 text-xl font-extrabold text-white sm:text-2xl">Jadwal Kuliah</h1>
+            <p class="mt-1 text-sm text-blue-100/80">Seluruh jadwal kelas yang kamu ikuti minggu ini.</p>
+        </div>
+        <div class="shrink-0 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-center">
+            <p class="text-xs text-blue-200/80 font-medium">Hari ini</p>
+            <p class="text-sm font-extrabold text-white">{{ now()->locale('id')->dayName }}, {{ now()->format('d M') }}</p>
         </div>
     </div>
+</div>
 
-    @if ($kelasList->isEmpty())
-        <div class="bg-white rounded-xl border border-gray-100 p-10 text-center shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <p class="text-gray-500 text-sm">Belum ada jadwal. Gabung ke kelas dulu untuk melihat jadwalmu.</p>
+@if ($kelasList->isEmpty())
+    <div class="flex min-h-[280px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-white p-10 text-center shadow-sm">
+        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         </div>
-    @else
-        @php
-            $startHour = 7;
-            $endHour = 20;
-            $hourHeight = 80; // pixels per hour
-            $headerHeight = 48; // px spacer for header row
-            $totalHeight = ($endHour - $startHour) * $hourHeight; // total px height (hours area)
-            $days = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-            $eventsByDay = [];
-            foreach ($kelasList as $k) {
-                $eventsByDay[$k->hari ?? 'Senin'][] = $k;
+        <h3 class="font-bold text-gray-700">Belum Ada Jadwal</h3>
+        <p class="mt-1 text-xs text-gray-400">Gabung ke kelas dulu untuk melihat jadwalmu.</p>
+        <a href="{{ route('mahasiswa.jelajahi-kelas') }}" class="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#002B6B] px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition">
+            Jelajahi Kelas
+        </a>
+    </div>
+@else
+    @php
+        $days = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+        $hariIni = now()->locale('id')->dayName;
+        $eventsByDay = [];
+        foreach ($kelasList as $k) {
+            $eventsByDay[$k->hari ?? 'Senin'][] = $k;
+        }
+        foreach ($eventsByDay as $day => $items) {
+            usort($items, fn($a,$b) => strcmp($a->jam_mulai ?? '07:00', $b->jam_mulai ?? '07:00'));
+            $eventsByDay[$day] = $items;
+        }
+        $colors = ['border-blue-400 bg-blue-50/80', 'border-violet-400 bg-violet-50/80', 'border-emerald-400 bg-emerald-50/80', 'border-amber-400 bg-amber-50/80', 'border-rose-400 bg-rose-50/80'];
+        $colorIdx = 0;
+        $kelasColorMap = [];
+        foreach ($kelasList as $k) {
+            if (!isset($kelasColorMap[$k->id])) {
+                $kelasColorMap[$k->id] = $colors[$colorIdx % count($colors)];
+                $colorIdx++;
             }
-            // urutkan tiap hari berdasarkan jam mulai supaya rapi di tampilan mobile
-            foreach ($eventsByDay as $day => $items) {
-                usort($items, fn($a, $b) => strcmp($a->jam_mulai ?? '07:00', $b->jam_mulai ?? '07:00'));
-                $eventsByDay[$day] = $items;
-            }
-        @endphp
+        }
+        $startHour = 7; $endHour = 20; $hourHeight = 80;
+        $totalHeight = ($endHour - $startHour) * $hourHeight;
+        $headerHeight = 44;
+    @endphp
 
-        {{-- ================= MOBILE / TABLET VIEW (list per hari) ================= --}}
-        <div class="md:hidden space-y-4">
-            @foreach ($days as $day)
-                @php $events = $eventsByDay[$day] ?? []; @endphp
-                @if (!empty($events))
-                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-                        <div class="bg-blue-50 text-blue-700 text-xs font-semibold px-4 py-2.5 border-b border-blue-100">
-                            {{ $day }}
-                        </div>
-                        <div class="divide-y divide-gray-50">
-                            @foreach ($events as $ev)
-                                <div class="flex gap-3 px-4 py-3">
-                                    <div class="w-16 shrink-0 text-[11px] text-gray-500 leading-tight pt-0.5">
-                                        {{ $ev->jam_mulai }}<br>{{ $ev->jam_selesai }}
-                                    </div>
-                                    <div class="flex-1 min-w-0 border-l-4 border-blue-500 bg-blue-50/60 rounded-md px-3 py-2">
-                                        <div class="text-sm font-semibold text-gray-800 truncate">
-                                            {{ $ev->mataKuliah->nama_mk ?? '-' }}
-                                        </div>
-                                        <div class="text-[11px] text-gray-600 mt-0.5">
-                                            {{ $ev->ruangan ?? '' }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+    {{-- MOBILE: List view --}}
+    <div class="md:hidden space-y-4">
+        @foreach ($days as $day)
+            @php $events = $eventsByDay[$day] ?? []; @endphp
+            @if (!empty($events))
+                <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+                    <div class="flex items-center justify-between px-4 py-2.5 {{ $day === $hariIni ? 'bg-[#002B6B]' : 'bg-gray-50' }} border-b border-gray-100">
+                        <span class="text-xs font-bold {{ $day === $hariIni ? 'text-white' : 'text-gray-700' }}">{{ $day }}</span>
+                        @if ($day === $hariIni)
+                            <span class="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">Hari Ini</span>
+                        @endif
                     </div>
-                @endif
-            @endforeach
-
-            @if (collect($eventsByDay)->flatten()->isEmpty())
-                <div class="bg-white rounded-xl border border-gray-100 p-8 text-center shadow-sm">
-                    <p class="text-gray-500 text-sm">Tidak ada jadwal minggu ini.</p>
-                </div>
-            @endif
-        </div>
-
-        {{-- ================= DESKTOP VIEW (grid mingguan) ================= --}}
-        <div class="hidden md:block bg-white rounded-xl border border-gray-100 shadow-sm p-4 overflow-x-auto">
-            <div class="flex min-w-[820px]">
-                <!-- Time column -->
-                <div class="flex-none w-14 pr-2">
-                    <div style="height:{{ $headerHeight }}px"></div>
-                    <div class="relative" style="height:{{ $totalHeight }}px">
-                        @for ($h = $startHour; $h < $endHour; $h++)
-                            <div style="height:{{ $hourHeight }}px" class="text-[11px] text-gray-400 -mt-2 text-right pr-1">
-                                {{ sprintf('%02d:00', $h) }}
-                            </div>
-                        @endfor
-                    </div>
-                </div>
-
-                <!-- Days grid -->
-                <div class="flex-1">
-                    <div class="grid grid-cols-6 gap-3">
-                        @foreach ($days as $day)
-
-                            <div class="border-l border-gray-100 bg-white min-w-[110px]">
-                                <div class="sticky top-0 bg-blue-50 text-xs text-blue-700 text-center border-b border-blue-100 font-semibold" style="height:{{$headerHeight}}px; line-height:{{$headerHeight}}px;">
-                                    {{ $day }}
+                    <div class="divide-y divide-gray-50">
+                        @foreach ($events as $ev)
+                            <div class="flex items-center gap-3 px-4 py-3">
+                                <div class="shrink-0 text-center w-14">
+                                    <p class="text-xs font-bold text-gray-700">{{ substr($ev->jam_mulai,0,5) }}</p>
+                                    <p class="text-[10px] text-gray-400">{{ substr($ev->jam_selesai,0,5) }}</p>
                                 </div>
-
-                                <div class="relative" style="height:{{$totalHeight}}px">
-                                    {{-- background hour rows for grid lines --}}
-                                    @for ($h = $startHour; $h < $endHour; $h++)
-                                        <div style="height:{{$hourHeight}}px" class="border-b border-gray-100"></div>
-                                    @endfor
-
-                                    @php $events = $eventsByDay[$day] ?? []; @endphp
-                                    @foreach ($events as $idx => $ev)
-                                        @php
-                                            [$sh, $sm] = explode(':', $ev->jam_mulai ?? '07:00');
-                                            [$eh, $em] = explode(':', $ev->jam_selesai ?? '08:00');
-                                            $startMin = intval($sh) * 60 + intval($sm);
-                                            $endMin = intval($eh) * 60 + intval($em);
-                                            $offset = max(0, $startMin - ($startHour * 60));
-                                            $duration = max(15, $endMin - $startMin);
-                                            $topPx = $offset * ($hourHeight / 60);
-                                            $heightPx = max(24, $duration * ($hourHeight / 60));
-                                        @endphp
-
-                                        <div class="absolute left-2 right-2 rounded-md shadow-sm overflow-hidden" style="top:{{ $topPx }}px; height:{{ $heightPx }}px; background-color: rgba(59,130,246,0.08); border-left:4px solid rgba(59,130,246,1);">
-                                            <div class="p-2 text-xs text-gray-800">
-                                                <div class="font-semibold truncate">{{ $ev->mataKuliah->nama_mk ?? '-' }}</div>
-                                                <div class="text-[11px] text-gray-600 truncate">{{ $ev->ruangan ?? '' }}</div>
-                                                <div class="text-[11px] text-gray-500 mt-1">{{ $ev->jam_mulai }} - {{ $ev->jam_selesai }}</div>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                                <div class="flex-1 min-w-0 rounded-xl border-l-4 {{ $kelasColorMap[$ev->id] ?? $colors[0] }} px-3 py-2">
+                                    <p class="text-sm font-semibold text-gray-800 truncate">{{ $ev->mataKuliah?->nama_mk ?? '-' }}</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">{{ $ev->ruangan ?? '-' }} · {{ $ev->mataKuliah?->sks ?? 0 }} SKS</p>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
+            @endif
+        @endforeach
+    </div>
+
+    {{-- DESKTOP: Grid timetable --}}
+    <div class="hidden md:block overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <div class="flex min-w-[860px]">
+                {{-- Time column --}}
+                <div class="flex-none w-16 border-r border-gray-100">
+                    <div class="h-[{{ $headerHeight }}px] border-b border-gray-100"></div>
+                    @for ($h = $startHour; $h < $endHour; $h++)
+                        <div class="h-[{{ $hourHeight }}px] border-b border-gray-50 flex items-start justify-end pr-2 pt-1.5">
+                            <span class="text-[10px] font-medium text-gray-400">{{ sprintf('%02d:00', $h) }}</span>
+                        </div>
+                    @endfor
+                </div>
+
+                {{-- Day columns --}}
+                <div class="flex flex-1 divide-x divide-gray-100">
+                    @foreach ($days as $day)
+                        @php $isToday = $day === $hariIni; @endphp
+                        <div class="flex-1 min-w-[110px] flex flex-col">
+                            {{-- Day header --}}
+                            <div class="h-[{{ $headerHeight }}px] border-b {{ $isToday ? 'bg-[#002B6B]' : 'bg-gray-50/80' }} flex items-center justify-center">
+                                <span class="text-xs font-bold {{ $isToday ? 'text-white' : 'text-gray-600' }}">{{ $day }}</span>
+                            </div>
+
+                            {{-- Hour grid + events --}}
+                            <div class="relative flex-1" style="height: {{ $totalHeight }}px">
+                                @for ($h = $startHour; $h < $endHour; $h++)
+                                    <div class="absolute w-full border-b border-gray-50" style="top: {{ ($h - $startHour) * $hourHeight }}px; height: {{ $hourHeight }}px"></div>
+                                @endfor
+
+                                @foreach ($eventsByDay[$day] ?? [] as $ev)
+                                    @php
+                                        [$sh, $sm] = array_pad(explode(':', $ev->jam_mulai ?? '07:00'), 2, '00');
+                                        [$eh, $em] = array_pad(explode(':', $ev->jam_selesai ?? '08:00'), 2, '00');
+                                        $startMin = (int)$sh * 60 + (int)$sm;
+                                        $endMin   = (int)$eh * 60 + (int)$em;
+                                        $topPx    = max(0, $startMin - $startHour * 60) * ($hourHeight / 60);
+                                        $heightPx = max(28, ($endMin - $startMin) * ($hourHeight / 60));
+                                        $evColor  = $kelasColorMap[$ev->id] ?? $colors[0];
+                                    @endphp
+                                    <div class="absolute left-1 right-1 rounded-lg border-l-4 overflow-hidden {{ $evColor }} shadow-sm"
+                                         style="top: {{ $topPx }}px; height: {{ $heightPx }}px">
+                                        <div class="p-1.5 h-full overflow-hidden">
+                                            <p class="text-[11px] font-bold text-gray-800 leading-tight truncate">{{ $ev->mataKuliah?->nama_mk ?? '-' }}</p>
+                                            @if ($heightPx > 40)
+                                                <p class="text-[10px] text-gray-500 truncate mt-0.5">{{ $ev->ruangan ?? '' }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
-    @endif
+    </div>
+@endif
 
 @endsection

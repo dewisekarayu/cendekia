@@ -3,54 +3,50 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
+use App\Models\KelasPerkuliahan;
+use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 
 class PengumumanController extends Controller
 {
-    // Menampilkan halaman pengumuman versi statis (Tampilan Saja)
-    public function index($kelas_perkuliahan_id)
+    public function index(Request $request, $kelas_perkuliahan_id)
     {
-        // Membuat data palsu (mockup) agar tampilan tidak kosong saat diuji coba
-        $pengumuman = collect([
-            (object)[
-                'id' => 1,
-                'judul' => 'Perubahan Jadwal Ujian Tengah Semester (UTS) Ganjil',
-                'isi' => 'Diberitahukan kepada seluruh mahasiswa bahwa pelaksanaan UTS Mata Kuliah Pemrograman Web yang semula dijadwalkan hari Senin, dialihkan menjadi hari Rabu dikarenakan adanya agenda rapat akreditasi fakultas.',
-                'untuk_semua' => true,
-                'kategori' => 'Academic',
-                'lampiran' => 'dokumen_uts.pdf',
-                'target' => 'All Students',
-                'created_at' => now(),
-                'pembuat' => (object)['name' => 'Prof. Dr. Ir. Budi Santoso']
-            ],
-            (object)[
-                'id' => 2,
-                'judul' => 'Pemeliharaan Rutin Server Portal Akademik',
-                'isi' => 'Kami akan melakukan maintenance sistem pada hari Sabtu mulai pukul 23:00 WIB hingga Minggu pukul 04:00 WIB. Selama jendela waktu tersebut, Portal Akademik tidak akan dapat diakses.',
-                'untuk_semua' => false,
-                'kategori' => 'System Updates',
-                'lampiran' => null,
-                'target' => 'All Faculty',
-                'created_at' => now()->subDays(2),
-                'pembuat' => (object)['name' => 'IT Support Team']
-            ]
-        ]);
+        KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelas_perkuliahan_id);
 
-        // Mockup fungsi links() agar pagination palsu di Blade tidak error jika dipanggil
-        $pengumuman->links = function() { return ''; };
+        $pengumuman = Pengumuman::with('pembuat')
+            ->where('kelas_perkuliahan_id', $kelas_perkuliahan_id)
+            ->latest()
+            ->paginate(10);
 
         return view('dosen.kelas-pengumuman', compact('pengumuman', 'kelas_perkuliahan_id'));
     }
 
-    // Simulasi menyimpan pengumuman tanpa ke database
     public function store(Request $request, $kelas_perkuliahan_id)
     {
-        return redirect()->back()->with('success', '(Simulasi) Pengumuman kelas berhasil diterbitkan.');
+        KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelas_perkuliahan_id);
+
+        $validated = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'isi' => ['required', 'string'],
+        ]);
+
+        Pengumuman::create([
+            'kelas_perkuliahan_id' => $kelas_perkuliahan_id,
+            'dibuat_oleh' => $request->user()->id,
+            'judul' => $validated['judul'],
+            'isi' => $validated['isi'],
+            'untuk_semua' => false,
+        ]);
+
+        return redirect()->back()->with('success', 'Pengumuman kelas berhasil diterbitkan.');
     }
 
-    // Simulasi menghapus pengumuman tanpa ke database
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        return redirect()->back()->with('success', '(Simulasi) Pengumuman kelas berhasil dihapus.');
+        $pengumuman = Pengumuman::whereHas('kelasPerkuliahan', fn ($query) => $query->where('dosen_id', $request->user()->id))
+            ->findOrFail($id);
+        $pengumuman->delete();
+
+        return redirect()->back()->with('success', 'Pengumuman kelas berhasil dihapus.');
     }
 }

@@ -18,14 +18,15 @@
         </div>
     </div>
 
+    <x-flash-message />
+
     @php
         $tabLinks = [
             'Beranda' => route('dosen.kelas-detail', $kelas->id),
             'Materi' => route('dosen.kelas-materi', $kelas->id),
             'Tugas & Proyek' => route('dosen.kelas-tugas', $kelas->id),
-            'Forum Diskusi' => '#',
-            'Peserta' => '#',
-            'Penilaian' => '#',
+            'Pengumuman' => route('dosen.kelas-pengumuman.index', $kelas->id),
+            'Penilaian' => route('dosen.gradebook', ['kelas_id' => $kelas->id]),
         ];
         $activeTab = 'Materi';
     @endphp
@@ -59,12 +60,12 @@
                             <li class="p-4 border rounded-lg">
                                 <div class="flex items-start justify-between gap-4">
                                     <div>
-                                        <div class="text-sm font-semibold text-gray-800">Pertemuan {{ $m->pertemuan_ke }} — {{ $m->judul }}</div>
+                                        <div class="text-sm font-semibold text-gray-800">Pertemuan {{ $m->pertemuan_ke }} - {{ $m->judul }}</div>
                                         <div class="text-xs text-gray-500 mt-1">{{ Str::limit($m->deskripsi, 200) }}</div>
                                     </div>
                                     <div class="text-right">
                                         @if($m->file_path)
-                                            <a href="{{ asset($m->file_path) }}" class="text-sm px-3 py-1 bg-[#321270] text-white rounded">Download</a>
+                                            <a href="{{ route('mahasiswa.materi.buka', [$kelas->id, $m->id]) }}" target="_blank" rel="noopener" class="text-sm px-3 py-1 bg-[#321270] text-white rounded">Buka</a>
                                         @endif
                                     </div>
                                 </div>
@@ -110,13 +111,13 @@
                     <h3 class="text-lg font-bold text-[#1e293b]">Informasi Materi</h3>
                 </div>
 
-                <form action="#" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('dosen.kelas-materi.store', $kelas->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="px-8 py-6 space-y-5">
                         
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700">Judul Materi</label>
-                            <input type="text" name="judul" placeholder="Contoh: Pengenalan Struktur Data Lanjut" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition placeholder-gray-300">
+                            <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="255" placeholder="Contoh: Pengenalan Struktur Data Lanjut" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition placeholder-gray-300">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -136,10 +137,10 @@
                             <div class="space-y-1.5">
                                 <label class="text-sm font-bold text-slate-700">Pertemuan Ke-</label>
                                 <div class="relative">
-                                    <select name="pertemuan_ke" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition text-gray-500 bg-white">
+                                    <select name="pertemuan_ke" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition text-gray-500 bg-white">
                                         <option value="">Pilih Minggu</option>
                                         @for ($i = 1; $i <= 16; $i++)
-                                            <option value="{{ $i }}">Minggu Ke-{{ $i }}</option>
+                                            <option value="{{ $i }}" @selected((int) old('pertemuan_ke') === $i)>Minggu Ke-{{ $i }}</option>
                                         @endfor
                                     </select>
                                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
@@ -151,7 +152,7 @@
 
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700">Deskripsi Materi</label>
-                            <textarea name="deskripsi" rows="4" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none resize-none transition placeholder-gray-300"></textarea>
+                            <textarea name="deskripsi" rows="4" maxlength="5000" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none resize-none transition placeholder-gray-300">{{ old('deskripsi') }}</textarea>
                         </div>
 
                         <div class="space-y-1.5">
@@ -165,7 +166,7 @@
                                 <p class="text-sm font-bold text-slate-800">Seret dan lepas file di sini</p>
                                 <p class="text-xs text-gray-400 mt-0.5">atau <span class="text-blue-600 underline font-medium">pilih file</span> dari komputer Anda</p>
                                 <p class="text-[11px] text-gray-400 mt-3">PDF, PPT, DOCX, atau MP4 (Maksimal 100MB)</p>
-                                <input type="file" id="materiFileInput" name="file_materi" class="hidden" onchange="updateFileName(this)">
+                                <input type="file" id="materiFileInput" name="file_materi" class="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.mp4,.zip" onchange="updateFileName(this)">
                                 <p id="fileNameDisplay" class="text-sm text-emerald-600 font-medium mt-2 hidden"></p>
                             </div>
                         </div>
@@ -195,7 +196,7 @@
         function updateFileName(input) {
             const display = document.getElementById('fileNameDisplay');
             if(input.files.length > 0) {
-                display.innerText = "✓ " + input.files[0].name;
+                display.innerText = "Dipilih: " + input.files[0].name;
                 display.classList.remove('hidden');
             } else {
                 display.classList.add('hidden');

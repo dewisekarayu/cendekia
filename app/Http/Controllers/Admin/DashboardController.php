@@ -1,47 +1,61 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AktivitasPengguna;
+use App\Models\AbsensiMahasiswa;
 use App\Models\KelasPerkuliahan;
 use App\Models\MataKuliah;
 use App\Models\NilaiAkhir;
-use App\Models\Presensi;
 use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
+
+class DashboardController extends Controller
+{
+    public function index(Request $request)
+    {
         $totalProgramStudi = ProgramStudi::count();
         $totalMataKuliah = MataKuliah::count();
         $totalKelasAktif = KelasPerkuliahan::where('is_active', true)->count();
-        $totalAktivitas = AktivitasPengguna::whereDate('terjadi_pada', today())->count();
         $rataNilaiAkhir = round((float) NilaiAkhir::avg('nilai_akhir'), 2);
-        $totalPresensi = Presensi::count();
+        $totalAktivitas = AktivitasPengguna::whereDate('terjadi_pada', today())->count();
+        $totalPresensi = AbsensiMahasiswa::count();
         $persentaseHadir = $totalPresensi > 0
-            ? round((Presensi::where('status', 'hadir')->count() / $totalPresensi) * 100, 2)
+            ? round((AbsensiMahasiswa::where('status', 'hadir')->count() / $totalPresensi) * 100, 1)
             : 0;
 
         $prodiList = ProgramStudi::withCount('mataKuliah')->get();
-
-            ->pluck('total', 'program_studi_id');
-
         $recentUsers = User::latest()->take(5)->get();
-        $aktivitasBulanan = AktivitasPengguna::selectRaw('MONTH(terjadi_pada) as bulan, COUNT(*) as total')
-            ->whereYear('terjadi_pada', now()->year)
-            ->groupBy('bulan')
-            ->orderBy('bulan')
-            ->get()
-            ->map(fn ($row) => ['label' => date('M', mktime(0, 0, 0, $row->bulan, 1)), 'value' => (int) $row->total]);
-
-        $aktivitasMingguan = collect(range(0, 6))->map(function ($offset) {
-            $date = now()->startOfWeek()->addDays($offset);
+        $aktivitasBulanan = collect(range(1, 12))->map(fn ($month) => [
+            'label' => now()->month($month)->translatedFormat('M'),
+            'value' => AktivitasPengguna::whereMonth('terjadi_pada', $month)->count(),
+        ]);
+        $aktivitasMingguan = collect(range(0, 6))->map(function ($day) {
+            $date = now()->startOfWeek()->addDays($day);
 
             return [
                 'label' => $date->translatedFormat('D'),
                 'value' => AktivitasPengguna::whereDate('terjadi_pada', $date)->count(),
             ];
         });
+
+        // Pastikan variabel yang dipakai di view tersedia (hindari undefined variable)
+        $totalDosen = User::whereHas('roles', function ($q) {
+            $q->where('name', 'dosen');
+        })->count();
+
+        $totalMahasiswa = User::whereHas('roles', function ($q) {
+            $q->where('name', 'mahasiswa');
+        })->count();
+
+        $mahasiswaPerProdi = ProgramStudi::withCount(['mataKuliah'])
+            ->get()
+            ->map(fn ($prodi) => [
+                'label' => $prodi->kode_prodi,
+                'value' => User::role('mahasiswa')->where('program_studi_id', $prodi->id)->count(),
+            ]);
 
         return view('admin.dashboard', compact(
             'totalDosen',
@@ -54,7 +68,6 @@ use Illuminate\Http\Request;
             'persentaseHadir',
             'prodiList',
             'mahasiswaPerProdi',
-            'recentUsers'
             'recentUsers',
             'aktivitasBulanan',
             'aktivitasMingguan'
