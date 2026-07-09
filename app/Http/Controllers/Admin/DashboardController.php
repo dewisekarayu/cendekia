@@ -39,7 +39,15 @@ class DashboardController extends Controller
             $date = now()->startOfWeek()->addDays($day);
             return [
                 'label' => $date->translatedFormat('D'),
-                // 'value' => AktivitasPengguna::whereDate('terjadi_pada', $date)->count(),
+                'value' => AktivitasPengguna::whereDate('terjadi_pada', $date)->count(),
+            ];
+        });
+
+        $aktivitasBulanan = collect(range(0, 11))->map(function ($month) {
+            $date = now()->startOfMonth()->subMonths(11 - $month);
+            return [
+                'label' => $date->translatedFormat('M'),
+                'value' => AktivitasPengguna::whereMonth('terjadi_pada', $date->month)->whereYear('terjadi_pada', $date->year)->count(),
             ];
         });
 
@@ -64,7 +72,8 @@ class DashboardController extends Controller
             'prodiList',
             'mahasiswaPerProdi',
             'recentUsers',
-            'aktivitasMingguan'
+            'aktivitasMingguan',
+            'aktivitasBulanan'
         ));
     }
 }
