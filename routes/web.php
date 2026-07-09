@@ -99,8 +99,10 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::post('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'storeMateri'])->name('dosen.kelas-materi.store');
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
-    Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
-    Route::post('/dosen/forums/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.forum.pesan');
+    
+    // Forum - akses hanya dari dalam kelas
+    Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
+    Route::post('/dosen/kelas/{id}/forum/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
 
     // Pengumuman
     Route::get('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
@@ -127,8 +129,11 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::post('/mahasiswa/kelas/{id}/join', [MahasiswaKelasController::class, 'join'])->name('mahasiswa.kelas.join');
 
     Route::get('/mahasiswa/gradebook', [MahasiswaGradebookController::class, 'index'])->name('mahasiswa.gradebook');
-    Route::get('/mahasiswa/forums', [MahasiswaForumController::class, 'index'])->name('mahasiswa.forums');
-    Route::post('/mahasiswa/forums/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.forum.pesan');
+    
+    // Forum - akses hanya dari dalam kelas
+    Route::get('/mahasiswa/kelas/{id}/forum', [MahasiswaForumController::class, 'index'])->name('mahasiswa.kelas-forum');
+    Route::post('/mahasiswa/kelas/{id}/forum/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.kelas-forum.pesan');
+    
     Route::get('/mahasiswa/schedule', [MahasiswaScheduleController::class, 'index'])->name('mahasiswa.schedule');
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');

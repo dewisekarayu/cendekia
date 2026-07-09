@@ -79,7 +79,7 @@
 
         {{-- Tab buttons --}}
         <div class="flex gap-2 overflow-x-auto pb-1">
-            @foreach (['semua' => 'Semua', 'materi' => 'Materi', 'tugas' => 'Tugas', 'absensi' => 'Absensi'] as $key => $label)
+            @foreach (['semua' => 'Semua', 'materi' => 'Materi', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'forum' => 'Forum'] as $key => $label)
                 <button @click="tab = '{{ $key }}'"
                         :class="tab === '{{ $key }}'
                             ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20'
@@ -196,6 +196,22 @@
                 </div>
             @endforelse
         </div>
+
+        {{-- FORUM --}}
+        <div x-show="tab === 'forum'" class="space-y-4">
+            <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm text-center">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600 mx-auto mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Forum Diskusi</h3>
+                <p class="text-sm text-gray-500 mb-5">Buka forum diskusi untuk chat dengan dosen dan teman sekelas</p>
+                <a href="{{ route('mahasiswa.kelas-forum', $kelas->id) }}" target="_blank"
+                   class="inline-flex items-center gap-2 rounded-xl bg-[#002B6B] px-6 py-3 text-sm font-semibold text-white hover:bg-blue-800 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    Buka Forum
+                </a>
+            </div>
+        </div>
     </div>
 
     {{-- Sidebar Progress --}}
@@ -229,17 +245,6 @@
                     @endforeach
                 </div>
             </div>
-
-            <a href="{{ route('mahasiswa.forums') }}"
-               class="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm hover:border-[#002B6B] hover:bg-blue-50/40 transition group">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600 group-hover:bg-violet-100 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-slate-700">Forum Diskusi</p>
-                    <p class="text-xs text-gray-400">Chat langsung dengan dosen</p>
-                </div>
-            </a>
         </div>
     </div>
 </div>
