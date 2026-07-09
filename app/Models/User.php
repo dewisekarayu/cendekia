@@ -11,7 +11,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+<<<<<<< HEAD
+#[Fillable(['name', 'nip_nim', 'email', 'email_verified_at', 'password', 'program_studi_id', 'status', 'telepon', 'foto'])]
+=======
 #[Fillable(['name', 'nip_nim', 'email', 'password', 'program_studi_id', 'status', 'telepon', 'foto', 'email_verified_at'])]
+>>>>>>> 0de0cef02f3af816f9dfab402c227ef6e21844ab
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -140,6 +144,7 @@ class User extends Authenticatable
 
         return false;
     }
+}
 
     /**
      * Check if user can access forum with detailed diagnostic information

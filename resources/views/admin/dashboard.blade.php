@@ -4,7 +4,6 @@
 
 @section('content')
 
-    <!-- Welcome Banner -->
     <div class="welcome-banner">
         <h2>Selamat Datang, {{ auth()->user()->name ?? 'Admin' }}</h2>
         <p>
@@ -13,7 +12,6 @@
         </p>
     </div>
 
-    <!-- Stat Cards -->
     <div class="stat-grid">
         <x-stat-card
             icon="people-fill"
@@ -49,7 +47,6 @@
     </div>
 
     <div class="admin-dashboard-grid">
-        <!-- Activity Chart -->
         <div class="chart-card">
             <div class="chart-card-header">
                 <div>
@@ -116,32 +113,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Data dari controller. Ganti dengan data asli, jangan gunakan angka acak di production.
-    const dataBulanan = {!! json_encode($aktivitasBulanan ?? [
-        ['label' => 'Jan', 'value' => 320],
-        ['label' => 'Feb', 'value' => 450],
-        ['label' => 'Mar', 'value' => 410],
-        ['label' => 'Apr', 'value' => 520],
-        ['label' => 'Mei', 'value' => 380],
-        ['label' => 'Jun', 'value' => 610],
-        ['label' => 'Jul', 'value' => 470],
-        ['label' => 'Agu', 'value' => 500],
-        ['label' => 'Sep', 'value' => 430],
-        ['label' => 'Okt', 'value' => 560],
-        ['label' => 'Nov', 'value' => 590],
-        ['label' => 'Des', 'value' => 400],
-    ]) !!};
-
-
-    const dataMingguan = {!! json_encode($aktivitasMingguan ?? [
-        ['label' => 'Sen', 'value' => 120],
-        ['label' => 'Sel', 'value' => 150],
-        ['label' => 'Rab', 'value' => 135],
-        ['label' => 'Kam', 'value' => 170],
-        ['label' => 'Jum', 'value' => 190],
-        ['label' => 'Sab', 'value' => 90],
-        ['label' => 'Min', 'value' => 60],
-    ]) !!};
+    const dataBulanan = {!! json_encode($aktivitasBulanan ?? []) !!};
+    const dataMingguan = {!! json_encode($aktivitasMingguan ?? []) !!};
 
     const ctx = document.getElementById('aktivitasChart').getContext('2d');
     const palette = ['#002B6B', '#0EA5E9', '#10B981', '#F59E0B', '#EF4444', '#7C3AED', '#14B8A6'];
@@ -158,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
         gradient.addColorStop(0, '#38BDF8');
         gradient.addColorStop(0.55, '#002B6B');
         gradient.addColorStop(1, '#0F172A');
-
         return gradient;
     }
 
@@ -191,7 +163,9 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    updateSummary(dataBulanan);
+    if (dataBulanan.length > 0) {
+        updateSummary(dataBulanan);
+    }
 
     const chart = new Chart(ctx, {
         type: 'bar',
@@ -199,14 +173,8 @@ document.addEventListener('DOMContentLoaded', function () {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: {
-                duration: 700,
-                easing: 'easeOutQuart',
-            },
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
+            animation: { duration: 700, easing: 'easeOutQuart' },
+            interaction: { mode: 'index', intersect: false },
             plugins: {
                 legend: { display: false },
                 tooltip: {
@@ -227,24 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
             scales: {
                 x: {
                     grid: { display: false },
-                    ticks: {
-                        color: '#64748B',
-                        font: { size: 12, weight: 600 },
-                    },
+                    ticks: { color: '#64748B', font: { size: 12, weight: 600 } },
                     border: { display: false },
                 },
                 y: {
                     beginAtZero: true,
                     grace: '12%',
-                    grid: {
-                        color: 'rgba(0, 43, 107, 0.08)',
-                        drawTicks: false,
-                    },
-                    ticks: {
-                        color: '#94A3B8',
-                        padding: 10,
-                        callback: value => formatNumber(value),
-                    },
+                    grid: { color: 'rgba(0, 43, 107, 0.08)', drawTicks: false },
+                    ticks: { color: '#94A3B8', padding: 10, callback: value => formatNumber(value) },
                     border: { display: false },
                 },
             },
@@ -257,13 +215,11 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('active');
 
             const rows = this.dataset.range === 'mingguan' ? dataMingguan : dataBulanan;
-            const rebuilt = buildDataset(rows);
-            chart.data = rebuilt;
+            chart.data = buildDataset(rows);
             updateSummary(rows);
             chart.update();
         });
     });
-
 });
 </script>
 @endpush

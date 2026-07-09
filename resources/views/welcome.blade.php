@@ -20,6 +20,24 @@
             .animate-float {
                 animation: float 3s ease-in-out infinite;
             }
+<<<<<<< HEAD
+            @keyframes fade-in-up {
+                from { opacity: 0; transform: translateY(16px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slide-in-down {
+                from { opacity: 0; transform: translateY(-20px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+            .float-slow { animation: float-slow 6s ease-in-out infinite; }
+            .float-med  { animation: float-med  4s ease-in-out infinite; }
+            .anim-in    { animation: fade-in-up .55s ease both; }
+            .anim-in-1  { animation: fade-in-up .55s .1s ease both; }
+            .anim-in-2  { animation: fade-in-up .55s .2s ease both; }
+            .anim-in-3  { animation: fade-in-up .55s .3s ease both; }
+            .anim-header { animation: slide-in-down .6s ease both; }
+=======
+>>>>>>> 0de0cef02f3af816f9dfab402c227ef6e21844ab
 
             @keyframes fadeInUp {
                 from { opacity: 0; transform: translateY(14px); }
@@ -41,6 +59,17 @@
                     <span class="text-2xl font-black text-[#0f2c59] tracking-tight">Cendekia</span>
                 </a>
 
+<<<<<<< HEAD
+                {{-- Nav Links (hidden on mobile) --}}
+                <div class="hidden md:flex flex-1 justify-center items-center">
+                    <div id="nav-container" class="relative flex items-center gap-8 text-sm font-semibold text-gray-500">
+                        <div id="nav-indicator" class="absolute -bottom-1 h-0.5 bg-[#002B6B] transition-all duration-300 ease-out rounded-full"></div>
+                        
+                        <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Fitur</a>
+                        <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Tentang</a>
+                        <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Kontak</a>
+=======
+>>>>>>> 0de0cef02f3af816f9dfab402c227ef6e21844ab
                 <div class="hidden md:flex flex-1 justify-end items-center pr-12">
                     <div id="nav-container" class="relative flex items-center gap-8 text-[15px] font-semibold text-gray-500 py-2">
                         <div id="nav-indicator" class="absolute bottom-0 h-0.5 bg-[#0f2c59] transition-all duration-300 ease-out"></div>
@@ -71,6 +100,41 @@
             </div>
         </header>
 
+        {{-- Main Content --}}
+        <main class="pt-24 pb-12 px-6 min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+
+            {{-- Decorative background elements --}}
+            <div class="absolute top-10 left-5 w-96 h-96 bg-[#002B6B]/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-20 right-5 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-6xl mx-auto">
+
+                {{-- Badge --}}
+                <div class="anim-in flex justify-center mb-8">
+                    <div class="float-slow inline-flex items-center gap-2 bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-200/50 rounded-full px-4 py-2 shadow-sm">
+                        <span class="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-xs font-semibold text-[#002B6B]">Platform Edukasi Generasi Baru</span>
+                    </div>
+                </div>
+
+                {{-- Main Heading --}}
+                <div class="anim-in-1 text-center mb-12">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-6">
+                        Belajar Lebih <span class="bg-gradient-to-r from-[#002B6B] to-blue-600 bg-clip-text text-transparent">Cerdas</span>,
+                        <br>
+                        Bersama <span class="bg-gradient-to-r from-blue-600 to-[#002B6B] bg-clip-text text-transparent">Cendekia.</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        Platform LMS modern untuk mahasiswa, dosen, dan akademik. Kelola kelas, materi, tugas, dan nilai dari satu dasbor terintegrasi.
+                    </p>
+                </div>
+
+                {{-- CTA Buttons --}}
+                <div class="anim-in-2 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                    <a href="{{ route('login') }}" class="group w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-[#002B6B] to-blue-700 hover:shadow-2xl hover:shadow-blue-900/30 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
+                        <span>Mulai Belajar Sekarang</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
         <main class="max-w-4xl mx-auto px-6 py-10 flex flex-col items-center justify-center">
             <div class="w-full flex flex-col items-center">
 
