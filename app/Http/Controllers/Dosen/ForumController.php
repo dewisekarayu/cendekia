@@ -88,7 +88,7 @@ class ForumController extends Controller
     /**
      * Kirim pesan ke forum kelas yang diampu dosen.
      */
-    public function kirimPesan(Request $request, ForumDiskusi $forum)
+    public function kirimPesan(Request $request, $id, ForumDiskusi $forum)
     {
         $user = $request->user();
 

@@ -104,9 +104,12 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
     
-    // Forum - akses hanya dari dalam kelas
+    // Forum - akses halaman forum umum dosen
+    Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
+    
+    // Forum - akses dari dalam kelas & kirim pesan
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
-    Route::post('/dosen/kelas/{id}/forum/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
+    Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
 
 
     // Pengumuman

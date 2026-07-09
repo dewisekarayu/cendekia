@@ -397,7 +397,7 @@
         </button>
 
         <form id="chatForm" method="POST"
-              action="{{ route('dosen.kelas-forum.pesan', $activeForum->id) }}"
+              action="{{ route('dosen.kelas-forum.pesan', [$activeForum->kelas_perkuliahan_id, $activeForum->id]) }}"
               class="forum-form">
             @csrf
             <textarea id="chatInput" name="isi" rows="1" maxlength="2000"
