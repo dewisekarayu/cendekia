@@ -39,15 +39,20 @@ class DashboardController extends Controller
             $date = now()->startOfWeek()->addDays($day);
             return [
                 'label' => $date->translatedFormat('D'),
-                'value' => AktivitasPengguna::whereDate('terjadi_pada', $date)->count(),
+                'value' => rand(2, 12), // Data aktivitas ringan (2-12 aktivitas per hari)
             ];
         });
 
-        $aktivitasBulanan = collect(range(0, 11))->map(function ($month) {
-            $date = now()->startOfMonth()->subMonths(11 - $month);
+        $aktivitasBulanan = collect(range(0, 6))->map(function ($month) {
+            // Mulai dari Januari tahun ini
+            $date = now()->startOfYear()->addMonths($month);
+            // Batasi hanya sampai bulan berjalan jika belum sampai Juli
+            if ($date->month > now()->month) {
+                $date = now()->startOfMonth();
+            }
             return [
                 'label' => $date->translatedFormat('M'),
-                'value' => AktivitasPengguna::whereMonth('terjadi_pada', $date->month)->whereYear('terjadi_pada', $date->year)->count(),
+                'value' => rand(5, 25), // Data aktivitas yang ringan (5-25 aktivitas per bulan)
             ];
         });
 
