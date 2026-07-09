@@ -13,7 +13,7 @@
             </ol>
         </nav>
         <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Tambah Program Studi</h1>
-        <p class="text-muted mb-0" style="font-size: 0.9rem;">Dafrarkan entitas program studi baru ke dalam sistem akademik.</p>
+        <p class="text-muted mb-0" style="font-size: 0.9rem;">Daftarkan entitas program studi baru ke dalam sistem akademik.</p>
     </div>
 
     <form action="{{ route('admin.program-studi.store') }}" method="POST">
@@ -66,6 +66,9 @@
                                 <option value="B" {{ old('akreditasi') == 'B' ? 'selected' : '' }}>B</option>
                                 <option value="Baik" {{ old('akreditasi', 'Baik') == 'Baik' ? 'selected' : '' }}>Baik</option>
                             </select>
+                            @error('akreditasi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>

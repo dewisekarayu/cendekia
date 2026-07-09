@@ -8,10 +8,28 @@ use Illuminate\Http\Request;
 
 class ProgramStudiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $prodiList = ProgramStudi::latest()->paginate(10);
-        return view('admin.program-studi.index', compact('prodiList'));
+        $search = trim($request->input('search', ''));
+
+        $query = ProgramStudi::query();
+
+        // Fitur Pencarian Aktif (Nama Prodi atau Kode Prodi)
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_prodi', 'like', "%{$search}%")
+                  ->orWhere('kode_prodi', 'like', "%{$search}%");
+            });
+        }
+
+        $prodiList = $query->latest()->paginate(10)->withQueryString();
+
+        // KUNCI LIVE SEARCH AJAX
+        if ($request->has('ajax')) {
+            return view('admin.program-studi.table', compact('prodiList'))->render();
+        }
+
+        return view('admin.program-studi.index', compact('prodiList', 'search'));
     }
 
     public function create()
@@ -24,7 +42,9 @@ class ProgramStudiController extends Controller
         $validated = $request->validate([
             'kode_prodi' => 'required|string|max:20|unique:program_studi,kode_prodi',
             'nama_prodi' => 'required|string|max:255',
-            'jenjang' => 'required|in:D3,S1,S2,S3',
+            'jenjang'    => 'required|in:D3,D4,S1,S2',
+            'akreditasi' => 'required|in:Unggul,A,B,Baik',
+            'status'     => 'required|in:0,1',
         ]);
 
         ProgramStudi::create($validated);
@@ -33,28 +53,34 @@ class ProgramStudiController extends Controller
             ->with('success', 'Program studi berhasil ditambahkan.');
     }
 
-    public function edit(ProgramStudi $programStudi)
+    public function edit($id)
     {
-        return view('admin.program-studi.edit', ['prodi' => $programStudi]);
+        $prodi = ProgramStudi::findOrFail($id);
+        return view('admin.program-studi.edit', compact('prodi'));
     }
 
-    public function update(Request $request, ProgramStudi $programStudi)
+    public function update(Request $request, $id)
     {
+        $prodi = ProgramStudi::findOrFail($id);
+
         $validated = $request->validate([
-            'kode_prodi' => 'required|string|max:20|unique:program_studi,kode_prodi,' . $programStudi->id,
+            'kode_prodi' => 'required|string|max:20|unique:program_studi,kode_prodi,' . $prodi->id,
             'nama_prodi' => 'required|string|max:255',
-            'jenjang' => 'required|in:D3,S1,S2,S3',
+            'jenjang'    => 'required|in:D3,D4,S1,S2',
+            'akreditasi' => 'required|in:Unggul,A,B,Baik',
+            'status'     => 'required|in:0,1',
         ]);
 
-        $programStudi->update($validated);
+        $prodi->update($validated);
 
         return redirect()->route('admin.program-studi.index')
             ->with('success', 'Program studi berhasil diperbarui.');
     }
 
-    public function destroy(ProgramStudi $programStudi)
+    public function destroy($id)
     {
-        $programStudi->delete();
+        $prodi = ProgramStudi::findOrFail($id);
+        $prodi->delete();
 
         return redirect()->route('admin.program-studi.index')
             ->with('success', 'Program studi berhasil dihapus.');

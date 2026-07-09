@@ -1,5 +1,13 @@
 <x-admin-layout>
     <div class="container-fluid py-3">
+        {{-- Flash Message Success Alert --}}
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert" style="border-radius: 8px;">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <h1 class="page-title mb-0" style="font-size: 1.75rem; font-weight: 700; color: #002B6B;">Manajemen Dosen</h1>
@@ -17,109 +25,119 @@
         </div>
 
         <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden; background: white;">
+            {{-- Bagian Form Filter & Pencarian Aktif --}}
             <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
                 <div class="row g-3">
+                    {{-- Input Pencarian Otomatis (Live Search) --}}
                     <div class="col-md-6">
                         <div style="position: relative;">
-                            <input type="text" class="form-control" placeholder="Cari Nama / NIDN..." style="border-radius: 8px; padding: 0.6rem 1rem 0.6rem 1rem;">
-                            <i class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                            <input type="text" id="liveSearchInput" name="search" class="form-control" value="{{ $search ?? '' }}" placeholder="Cari Nama / NIDN / Email..." style="border-radius: 8px; padding: 0.6rem 2.5rem 0.6rem 1rem;" autocomplete="off">
+                            
+                            {{-- Spinner Loading kecil saat mengetik --}}
+                            <div id="searchSpinner" class="spinner-border spinner-border-sm text-secondary d-none" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);" role="status"></div>
+                            <i id="searchIcon" class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
                         </div>
                     </div>
-                    <div class="col-md-6 d-flex gap-2">
-                        <select class="form-select" style="border-radius: 8px;">
-                            <option>Semua Program Studi</option>
-                            <option>Teknik Informatika</option>
-                            <option>Sistem Informasi</option>
-                        </select>
-                        <button class="btn btn-outline-secondary d-flex align-items-center gap-2" style="border-radius: 8px; white-space: nowrap; color: #475569;">
-                            <i class="bi bi-arrow-clockwise"></i> Terapkan Filter
-                        </button>
+                    
+                    {{-- Dropdown Filter Program Studi --}}
+                    <div class="col-md-6">
+                        <form method="GET" action="{{ route('admin.dosen.index') }}" id="filterForm" class="d-flex gap-2">
+                            {{-- Input hidden untuk tetap membawa value search yang sedang diketik ketika prodi diubah --}}
+                            <input type="hidden" name="search" id="hiddenSearchInput" value="{{ $search ?? '' }}">
+                            
+                            <select name="program_studi_id" id="prodiSelect" class="form-select" style="border-radius: 8px;">
+                                <option value="">Semua Program Studi</option>
+                                @foreach ($programStudiList as $prodi)
+                                    <option value="{{ $prodi->id }}" {{ ($prodiFilter ?? '') == $prodi->id ? 'selected' : '' }}>
+                                        {{ $prodi->nama_prodi }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            
+                            <button type="submit" class="btn btn-outline-secondary d-flex align-items-center gap-2" style="border-radius: 8px; white-space: nowrap; color: #475569;">
+                                <i class="bi bi-funnel"></i> Filter
+                            </button>
+                            
+                            @if(($search ?? '') || ($prodiFilter ?? ''))
+                                <a href="{{ route('admin.dosen.index') }}" class="btn btn-light border d-flex align-items-center justify-content-center" style="border-radius: 8px;" title="Reset Filter">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </a>
+                            @endif
+                        </form>
                     </div>
                 </div>
             </div>
 
-            <div class="px-4 pt-3 pb-2 text-muted" style="background-color: #f8fafc;">
-                <small class="fw-medium">Menampilkan {{ $dosen->firstItem() }}-{{ $dosen->lastItem() }} dari {{ $dosen->total() }} data dosen</small>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px; color: #64748b;">
-                        <tr>
-                            <th class="ps-4">Foto & Nama</th>
-                            <th>NIDN</th>
-                            <th>Program Studi</th>
-                            <th>Kontak</th>
-                            <th>Status</th>
-                            <th class="text-center pe-4" style="width: 140px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($dosen as $item)
-                            <tr>
-                                <td class="ps-4">
-                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode($item->name) }}" 
-                                             style="width: 40px; height: 40px; border-radius: 50%; background-color: #f1f5f9;" alt="{{ $item->name }}">
-                                        <div>
-                                            <div style="font-weight: 600; color: #1e293b;">{{ $item->name }}</div>
-                                            <small style="color: #64748b;">{{ $item->email }}</small>
-                                        </div>
-                                    </div>
-                                </td>
-                               <td class="fw-semibold text-secondary">{{ $item->nip_nim }}</td>
-                                <td>
-                                    <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #E6EEFF; color: #002B6B; border-radius: 6px;">
-                                        {{ $item->programStudi?->nama_prodi ?? 'Lintas Prodi' }}
-                                    </span>
-                                </td>
-                                <td class="text-secondary" style="font-size: 0.9rem;">+62 812-{{ str_pad((string) $item->id, 4, '0', STR_PAD_LEFT) }}-{{ str_pad((string) (($item->id * 73) % 10000), 4, '0', STR_PAD_LEFT) }}</td>
-                                <td>
-                                    @if(($item->status ?? 'aktif') == 'aktif')
-                                        <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #d1fae5; color: #065f46; border-radius: 6px;">
-                                            Aktif
-                                        </span>
-                                    @else
-                                        <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #fee2e2; color: #991b1b; border-radius: 6px;">
-                                            Non-Aktif
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="pe-4">
-                                    <div class="d-flex justify-content-center gap-1.5">
-                                        <a href="#" class="btn btn-sm btn-light border text-secondary p-1.5 px-2" title="Lihat" style="border-radius: 6px;">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        
-                                        <a href="{{ route('admin.dosen.edit', $item->id) }}" class="btn btn-sm btn-light border text-primary p-1.5 px-2" title="Edit" style="border-radius: 6px; color: #002B6B !important;">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        
-                                        <form method="POST" action="{{ route('admin.dosen.destroy', $item->id) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data dosen ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-light border text-danger p-1.5 px-2" title="Hapus" style="border-radius: 6px;">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center text-muted py-5">
-                                    <i class="bi bi-people fs-2 d-block mb-2 text-black-50"></i>
-                                    Belum ada data dosen terdaftar.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="d-flex justify-content-end p-4 border-top">
-                {{ $dosen->links() }}
+            {{-- Container Utama Tabel (Akan di-refresh otomatis oleh JavaScript) --}}
+            <div id="tableContainer">
+                @include('admin.dosen.table')
             </div>
         </div>
     </div>
 </x-admin-layout>
+
+{{-- JavaScript Ajax Live Search --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('liveSearchInput');
+        const hiddenSearchInput = document.getElementById('hiddenSearchInput');
+        const prodiSelect = document.getElementById('prodiSelect');
+        const tableContainer = document.getElementById('tableContainer');
+        const searchIcon = document.getElementById('searchIcon');
+        const spinner = document.getElementById('searchSpinner');
+        
+        let typingTimer;
+        const doneTypingInterval = 350; // Jeda waktu tunggu setelah ketikan terakhir (350 milidetik)
+
+        searchInput.addEventListener('keyup', function () {
+            clearTimeout(typingTimer);
+            
+            // Salin teks ke input tersembunyi agar form filter prodi tetap sinkron
+            hiddenSearchInput.value = searchInput.value;
+
+            typingTimer = setTimeout(performSearch, doneTypingInterval);
+        });
+
+        searchInput.addEventListener('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
+        function performSearch() {
+            // Tampilkan animasi loading spinner menggantikan icon kaca pembesar
+            searchIcon.classList.add('d-none');
+            spinner.classList.remove('d-none');
+
+            const searchValue = searchInput.value;
+            const prodiValue = prodiSelect.value;
+
+            // Susun URL query string secara dinamis
+            const url = new URL(window.location.origin + window.location.pathname);
+            url.searchParams.set('search', searchValue);
+            if (prodiValue) {
+                url.searchParams.set('program_studi_id', prodiValue);
+            }
+            url.searchParams.set('ajax', '1'); // Penanda request backend via AJAX
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    // Masukkan potongan HTML tabel baru ke dalam container
+                    tableContainer.innerHTML = data;
+
+                    // Sembunyikan loading spinner kembali
+                    spinner.classList.add('d-none');
+                    searchIcon.classList.remove('d-none');
+
+                    // Ubah URL browser tanpa reload halaman agar link pencarian bisa dibagikan/di-bookmark
+                    const browserUrl = new URL(url);
+                    browserUrl.searchParams.delete('ajax');
+                    window.history.pushState({}, '', browserUrl);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    spinner.classList.add('d-none');
+                    searchIcon.classList.remove('d-none');
+                });
+        }
+    });
+</script>

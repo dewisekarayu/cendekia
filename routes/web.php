@@ -77,7 +77,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->parameters(['mahasiswa' => 'mahasiswa']);
 
         Route::resource('admin/pengumuman', AdminPengumumanController::class)
-        ->only(['index', 'store', 'destroy'])
+        ->only(['index', 'store', 'update', 'destroy'])
         ->names('admin.pengumuman');
     Route::resource('admin/kelas', KelasController::class)
         ->names('admin.kelas')

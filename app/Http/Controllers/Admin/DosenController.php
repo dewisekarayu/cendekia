@@ -11,40 +11,62 @@ use Illuminate\Validation\Rule;
 
 class DosenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dosen = User::role('dosen')
-            ->with('programStudi')
-            ->latest()
-            ->paginate(10);
+        $search = trim($request->input('search', ''));
+        $prodiFilter = $request->input('program_studi_id');
 
-        return view('admin.dosen.index', compact('dosen'));
+        $query = User::role('dosen')->with('programStudi');
+
+        // Fitur Pencarian Berjalan (Nama, NIDN/NIP, Email)
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nip_nim', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Fitur Filter Program Studi Berjalan
+        if ($prodiFilter) {
+            $query->where('program_studi_id', $prodiFilter);
+        }
+
+        $dosen = $query->latest()->paginate(10)->withQueryString();
+        $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
+
+        // KUNCI PENCARIAN CEPAT: Jika request dikirim lewat AJAX ketikan, 
+        // kembalikan potongan HTML tabelnya saja tanpa merender layout utama.
+        if ($request->has('ajax')) {
+            return view('admin.dosen.table', compact('dosen'))->render();
+        }
+
+        return view('admin.dosen.index', compact('dosen', 'programStudiList', 'search', 'prodiFilter'));
     }
 
     public function create()
     {
         $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
-
         return view('admin.dosen.create', compact('programStudiList'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'nip_nim' => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
+            'name'             => ['required', 'string', 'max:255'],
+            'nip_nim'          => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')],
+            'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
-            'status' => ['required', 'boolean'],
+            'status'           => ['required', 'in:aktif,non_aktif'], 
         ]);
 
         $dosen = User::create([
-            'name' => $validated['name'],
-            'nip_nim' => $validated['nip_nim'],
-            'email' => $validated['email'],
-            'password' => Hash::make('dosen123'),
+            'name'             => $validated['name'],
+            'nip_nim'          => $validated['nip_nim'],
+            'email'            => $validated['email'],
+            'password'         => Hash::make('dosen123'),
             'program_studi_id' => $validated['program_studi_id'] ?? null,
-            'status' => $validated['status'],
+            'status'           => $validated['status'],
         ]);
 
         $dosen->assignRole('dosen');
@@ -56,6 +78,8 @@ class DosenController extends Controller
     public function edit($id)
     {
         $dosenMember = User::findOrFail($id);
+        abort_unless($dosenMember->hasRole('dosen'), 404);
+
         $prodiList = ProgramStudi::orderBy('nama_prodi')->get();
 
         return view('admin.dosen.edit', compact('dosenMember', 'prodiList'));
@@ -64,13 +88,14 @@ class DosenController extends Controller
     public function update(Request $request, $id)
     {
         $dosenMember = User::findOrFail($id);
+        abort_unless($dosenMember->hasRole('dosen'), 404);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'nip_nim' => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($dosenMember->id)],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($dosenMember->id)],
+            'name'             => ['required', 'string', 'max:255'],
+            'nip_nim'          => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($dosenMember->id)],
+            'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($dosenMember->id)],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
-            'status' => ['required', 'boolean'],
+            'status'           => ['required', 'in:aktif,non_aktif'],
         ]);
 
         $dosenMember->update($validated);
@@ -79,8 +104,9 @@ class DosenController extends Controller
             ->with('success', 'Data dosen berhasil diperbarui.');
     }
 
-    public function destroy(User $dosen)
+    public function destroy($id)
     {
+        $dosen = User::findOrFail($id);
         abort_unless($dosen->hasRole('dosen'), 404);
 
         $dosen->delete();
