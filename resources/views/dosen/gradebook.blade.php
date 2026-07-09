@@ -42,6 +42,27 @@
     <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/5 pointer-events-none"></div>
 </div>
 
+{{-- TABS --}}
+@php
+    $tabLinks = [
+        'Beranda'      => ['url' => route('dosen.kelas-detail', $kelas->id), 'active' => request()->routeIs('dosen.kelas-detail')],
+        'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
+        'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
+        'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
+    ];
+@endphp
+<div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 bg-white p-1.5 shadow-sm">
+    @foreach ($tabLinks as $label => $tab)
+        <a href="{{ $tab['url'] }}"
+           class="whitespace-nowrap rounded-xl px-4 py-2 text-xs font-semibold transition
+               {{ $tab['active']
+                   ? 'bg-[#321270] text-white shadow-sm shadow-purple-900/20'
+                   : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800' }}">
+            {{ $label }}
+        </a>
+    @endforeach
+</div>
+
 {{-- ===== CLASS SELECTOR ===== --}}
 @if ($kelasList->isNotEmpty())
     <div class="mb-5 flex flex-wrap gap-2">

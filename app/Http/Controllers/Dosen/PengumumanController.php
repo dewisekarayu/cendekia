@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
-
-use App\Models\KelasPerkuliahan;
-
 use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 
 class PengumumanController extends Controller
 {
+<<<<<<< HEAD
 
     // public function index(Request $request, $kelas_perkuliahan_id)
     // {
@@ -21,6 +19,8 @@ class PengumumanController extends Controller
     //         ->latest()
     //         ->paginate(10);
 
+=======
+>>>>>>> dc44be8 (Update dashboard, pengumuman crud dosen, welcome, kelas di dosen)
     // Tampilkan semua pengumuman dari semua kelas yang diampu dosen
     public function index(Request $request)
     {
@@ -47,7 +47,10 @@ class PengumumanController extends Controller
         // Pastikan kelas yang dipilih memang milik dosen ini
         $isOwner = $request->user()->kelasDiajar()->where('id', $validated['kelas_perkuliahan_id'])->exists();
         abort_unless($isOwner, 403, 'Anda tidak mengajar kelas ini.');
+<<<<<<< HEAD
 
+=======
+>>>>>>> dc44be8 (Update dashboard, pengumuman crud dosen, welcome, kelas di dosen)
 
         Pengumuman::create([
             'kelas_perkuliahan_id' => $validated['kelas_perkuliahan_id'],
@@ -72,6 +75,8 @@ class PengumumanController extends Controller
         // Pastikan pengumuman milik dosen yang sedang login
         abort_unless($pengumuman->kelasPerkuliahan->dosen_id === $request->user()->id, 403, 'Anda tidak memiliki akses untuk mengedit pengumuman ini.');
 
+    public function update(Request $request, Pengumuman $pengumuman)
+    {
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
             'isi' => ['required', 'string'],
@@ -94,4 +99,8 @@ class PengumumanController extends Controller
         return redirect()->route('dosen.kelas-pengumuman.index')
             ->with('success', 'Pengumuman kelas berhasil dihapus.');
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dc44be8 (Update dashboard, pengumuman crud dosen, welcome, kelas di dosen)

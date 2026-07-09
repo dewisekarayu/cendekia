@@ -20,20 +20,22 @@
 
     <x-flash-message />
 
+    {{-- TABS --}}
     @php
         $tabLinks = [
-            'Beranda' => route('dosen.kelas-detail', $kelas->id),
-            'Materi' => route('dosen.kelas-materi', $kelas->id),
-            'Tugas & Proyek' => route('dosen.kelas-tugas', $kelas->id),
-            'Pengumuman' => route('dosen.kelas-pengumuman.index', $kelas->id),
-            'Penilaian' => route('dosen.gradebook', ['kelas_id' => $kelas->id]),
+            'Beranda'      => ['url' => route('dosen.kelas-detail', $kelas->id), 'active' => request()->routeIs('dosen.kelas-detail')],
+            'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
+            'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
+            'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
         ];
-        $activeTab = 'Materi';
     @endphp
-    <div class="flex items-center gap-6 border-b border-gray-200 mb-6 overflow-x-auto">
-        @foreach ($tabLinks as $label => $url)
-            <a href="{{ $url }}" class="pb-3 text-sm font-medium whitespace-nowrap transition
-                {{ $label === $activeTab ? 'text-[#321270] border-b-2 border-[#321270]' : 'text-gray-500 hover:text-gray-700' }}">
+    <div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 bg-white p-1.5 shadow-sm">
+        @foreach ($tabLinks as $label => $tab)
+            <a href="{{ $tab['url'] }}"
+            class="whitespace-nowrap rounded-xl px-4 py-2 text-xs font-semibold transition
+                {{ $tab['active']
+                    ? 'bg-[#321270] text-white shadow-sm shadow-purple-900/20'
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800' }}">
                 {{ $label }}
             </a>
         @endforeach

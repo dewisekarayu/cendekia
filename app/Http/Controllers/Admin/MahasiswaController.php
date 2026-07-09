@@ -105,6 +105,11 @@ class MahasiswaController extends Controller
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
         }
 
+        ([
+            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'email.unique' => 'Email sudah terdaftar di sistem.',
+        ]);
+
         $mahasiswa = User::create([
             'name'             => $validated['nama'],
             'nip_nim'          => $validated['nim'],

@@ -82,5 +82,16 @@ class KelasPerkuliahan extends Model
     {
         return $this->hasMany(Materi::class, 'kelas_perkuliahan_id');
     }
+
+<<<<<<< HEAD
+=======
+    /**
+     * Relasi: forum diskusi untuk kelas ini
+     */
+    public function forum()
+    {
+        return $this->hasMany(ForumDiskusi::class, 'kelas_perkuliahan_id');
+    }
 }
 
+>>>>>>> dc44be8 (Update dashboard, pengumuman crud dosen, welcome, kelas di dosen)
