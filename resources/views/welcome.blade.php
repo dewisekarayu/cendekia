@@ -21,7 +21,6 @@
                 0%, 100% { transform: translateY(0px); }
                 50%       { transform: translateY(-8px); }
             }
-<<<<<<< HEAD
             @keyframes fade-in-up {
                 from { opacity: 0; transform: translateY(16px); }
                 to   { opacity: 1; transform: translateY(0); }
@@ -37,7 +36,6 @@
             .anim-in-2  { animation: fade-in-up .55s .2s ease both; }
             .anim-in-3  { animation: fade-in-up .55s .3s ease both; }
             .anim-header { animation: slide-in-down .6s ease both; }
-=======
 
             @keyframes fadeInUp {
                 from { opacity: 0; transform: translateY(14px); }
@@ -46,7 +44,6 @@
             .animate-fade-in-up {
                 animation: fadeInUp 0.7s ease-out both;
             }
->>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
         </style>
     </head>
     <body class="font-sans antialiased bg-[#f0f4fb] overflow-x-hidden">
@@ -62,7 +59,6 @@
                     <span class="text-xl font-black text-[#002B6B] tracking-tight hidden sm:inline">Cendekia</span>
                 </a>
 
-<<<<<<< HEAD
                 {{-- Nav Links (hidden on mobile) --}}
                 <div class="hidden md:flex flex-1 justify-center items-center">
                     <div id="nav-container" class="relative flex items-center gap-8 text-sm font-semibold text-gray-500">
@@ -71,13 +67,11 @@
                         <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Fitur</a>
                         <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Tentang</a>
                         <a href="#" class="nav-link hover:text-[#002B6B] transition pb-0.5">Kontak</a>
-=======
                 <div class="hidden md:flex flex-1 justify-end items-center pr-12">
                     <div id="nav-container" class="relative flex items-center gap-8 text-[15px] font-semibold text-gray-500 py-2">
                         <div id="nav-indicator" class="absolute bottom-0 h-0.5 bg-[#0f2c59] transition-all duration-300 ease-out"></div>
 
                         <a href="{{ route('dashboard') }}" class="nav-link text-[#0f2c59] font-bold pb-1">Dashboard</a>
->>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
                     </div>
                 </div>
 
@@ -107,7 +101,6 @@
             </div>
         </header>
 
-<<<<<<< HEAD
         {{-- Main Content --}}
         <main class="pt-24 pb-12 px-6 min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
 
@@ -143,7 +136,6 @@
                         <span>Mulai Belajar Sekarang</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-=======
         <main class="max-w-4xl mx-auto px-6 py-10 flex flex-col items-center justify-center">
             <div class="w-full flex flex-col items-center">
 
@@ -172,7 +164,6 @@
                         Mulai Belajar Sekarang
                         <svg xmlns="http://www.w3.org/2000/xl" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
->>>>>>> 3ecbb9aa1ea688fe4e744016f1a5a2612a5c8395
                         </svg>
                     </a>
                     <a href="#" class="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-gray-300 hover:border-[#002B6B] text-gray-700 hover:text-[#002B6B] font-bold py-4 px-8 rounded-xl transition-all duration-300">
