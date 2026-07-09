@@ -8,71 +8,84 @@ use Illuminate\Http\Request;
 
 class PengumumanController extends Controller
 {
-    // Tampilkan semua pengumuman dari semua kelas yang diampu dosen
+    /**
+     * Tampilkan semua pengumuman dari semua kelas yang diampu dosen
+     */
     public function index(Request $request)
     {
-        $kelasIds = $request->user()->kelasDiajar()->pluck('id');
+        // SINKRONISASI: Mengubah kelasDiajar() menjadi kelasDiampu() sesuai isi model User
+        $kelasIds = $request->user()->kelasDiampu()->pluck('id');
 
         $pengumuman = Pengumuman::with(['pembuat', 'kelasPerkuliahan'])
             ->whereIn('kelas_perkuliahan_id', $kelasIds)
             ->latest()
             ->paginate(6);
 
-        $kelasList = $request->user()->kelasDiajar()->orderBy('kode_kelas')->get();
+        // SINKRONISASI: Mengubah kelasDiajar() menjadi kelasDiampu()
+        $kelasList = $request->user()->kelasDiampu()->orderBy('kode_kelas')->get();
 
         return view('dosen.kelas-pengumuman', compact('pengumuman', 'kelasList'));
     }
 
+    /**
+     * Simpan pengumuman baru untuk kelas tertentu.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => ['required', 'string', 'max:255'],
-            'isi' => ['required', 'string'],
+            'judul'                => ['required', 'string', 'max:255'],
+            'isi'                  => ['required', 'string'],
             'kelas_perkuliahan_id' => ['required', 'exists:kelas_perkuliahan,id'],
         ]);
 
-        // Pastikan kelas yang dipilih memang milik dosen ini
-        $isOwner = $request->user()->kelasDiajar()->where('id', $validated['kelas_perkuliahan_id'])->exists();
+        // SINKRONISASI: Mengubah kelasDiajar() menjadi kelasDiampu()
+        $isOwner = $request->user()->kelasDiampu()->where('id', $validated['kelas_perkuliahan_id'])->exists();
         abort_unless($isOwner, 403, 'Anda tidak mengajar kelas ini.');
 
         Pengumuman::create([
             'kelas_perkuliahan_id' => $validated['kelas_perkuliahan_id'],
-            'dibuat_oleh' => $request->user()->id,
-            'judul' => $validated['judul'],
-            'isi' => $validated['isi'],
-            'untuk_semua' => $request->boolean('untuk_semua'),
+            'dibuat_oleh'          => $request->user()->id,
+            'judul'                => $validated['judul'],
+            'isi'                  => $validated['isi'],
+            'untuk_semua'          => $request->boolean('untuk_semua'),
         ]);
 
-        return redirect()->route('dosen.kelas-pengumuman.index', $validated['kelas_perkuliahan_id'])
+        // Dialihkan kembali ke halaman indeks utama pengumuman dosen
+        return redirect()->route('dosen.pengumuman.index')
             ->with('success', 'Pengumuman kelas berhasil diterbitkan.');
     }
 
+    /**
+     * Perbarui pengumuman kelas.
+     */
     public function update(Request $request, Pengumuman $pengumuman)
     {
-        // Pastikan pengumuman milik dosen yang sedang login
+        // Memastikan pengumuman tersebut memang milik dosen yang sedang aktif login
         abort_unless($pengumuman->kelasPerkuliahan->dosen_id === $request->user()->id, 403, 'Anda tidak memiliki akses untuk mengedit pengumuman ini.');
 
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
-            'isi' => ['required', 'string'],
+            'isi'   => ['required', 'string'],
         ]);
 
         $pengumuman->update([
-            'judul' => $validated['judul'],
-            'isi' => $validated['isi'],
+            'judul'       => $validated['judul'],
+            'isi'         => $validated['isi'],
             'untuk_semua' => $request->boolean('untuk_semua'),
         ]);
 
-        return redirect()->route('dosen.kelas-pengumuman.index', $pengumuman->kelas_perkuliahan_id)
+        return redirect()->route('dosen.pengumuman.index')
             ->with('success', 'Pengumuman kelas berhasil diperbarui.');
     }
 
+    /**
+     * Hapus pengumuman kelas.
+     */
     public function destroy(Pengumuman $pengumuman)
     {
         $pengumuman->delete();
 
-        return redirect()->route('dosen.kelas-pengumuman.index')
+        return redirect()->route('dosen.pengumuman.index')
             ->with('success', 'Pengumuman kelas berhasil dihapus.');
     }
 }
-

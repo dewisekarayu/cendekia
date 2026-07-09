@@ -12,6 +12,9 @@ use Illuminate\Validation\Rule;
 
 class MahasiswaController extends Controller
 {
+    /**
+     * Tampilkan daftar mahasiswa beserta filter pencarian, prodi, dan status.
+     */
     public function index(Request $request)
     {
         $search = trim($request->input('search', ''));
@@ -47,7 +50,7 @@ class MahasiswaController extends Controller
             return view('admin.mahasiswa.table', compact('mahasiswa'))->render();
         }
 
-        // Data Statistik Utama untuk Pencatatan Kartu (Hanya dihitung saat reload halaman penuh)
+        // Data Statistik Utama untuk Pencatatan Kartu
         $totalMahasiswa = User::role('mahasiswa')->count();
         $totalAktif = User::role('mahasiswa')->where('status', 'aktif')->count();
         $totalCuti = User::role('mahasiswa')->where('status', 'cuti')->count();
@@ -68,12 +71,18 @@ class MahasiswaController extends Controller
         ));
     }
 
+    /**
+     * Tampilkan formulir tambah mahasiswa baru.
+     */
     public function create()
     {
         $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
         return view('admin.mahasiswa.create', compact('programStudiList'));
     }
 
+    /**
+     * Simpan data mahasiswa baru ke database.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -85,7 +94,7 @@ class MahasiswaController extends Controller
             'telepon'          => ['nullable', 'string', 'max:20'],
             'foto'             => ['nullable', 'image', 'max:2048'],
         ], [
-            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
@@ -93,11 +102,6 @@ class MahasiswaController extends Controller
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
         }
-
-        ([
-            'nim.unique' => 'NIM sudah terdaftar di sistem.',
-            'email.unique' => 'Email sudah terdaftar di sistem.',
-        ]);
 
         $mahasiswa = User::create([
             'name'             => $validated['nama'],
@@ -116,34 +120,25 @@ class MahasiswaController extends Controller
             ->with('success', "Mahasiswa {$mahasiswa->name} berhasil ditambahkan. Password awal: mahasiswa123");
     }
 
-    public function edit($id)
-    {
-        $mahasiswaMember = User::findOrFail($id);
-        abort_unless($mahasiswaMember->hasRole('mahasiswa'), 404);
-
-        $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
-
-        return view('admin.mahasiswa.edit', compact('mahasiswaMember', 'programStudiList'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $mahasiswaMember = User::findOrFail($id);
-        abort_unless($mahasiswaMember->hasRole('mahasiswa'), 404);
-
-        $validated = $request->validate([
-            'nama'             => ['required', 'string', 'max:255'],
-            'nim'              => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($mahasiswaMember->id)],
-            'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($mahasiswaMember->id)],
+    /**
+     * Tampilkan formulir edit mahasiswa (Route Model Binding).
+     */
     public function edit(User $mahasiswa)
     {
         abort_unless($mahasiswa->hasRole('mahasiswa'), 404);
 
         $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
 
-        return view('admin.mahasiswa.edit', compact('mahasiswa', 'programStudiList'));
+        // PENYESUAIAN: Dilempar menggunakan kunci 'mahasiswaMember' agar sinkron dengan baris 17 file edit.blade.php
+        return view('admin.mahasiswa.edit', [
+            'mahasiswaMember'  => $mahasiswa, 
+            'programStudiList' => $programStudiList
+        ]);
     }
 
+    /**
+     * Perbarui data mahasiswa lama (Route Model Binding).
+     */
     public function update(Request $request, User $mahasiswa)
     {
         abort_unless($mahasiswa->hasRole('mahasiswa'), 404);
@@ -157,11 +152,10 @@ class MahasiswaController extends Controller
             'telepon'          => ['nullable', 'string', 'max:20'],
             'foto'             => ['nullable', 'image', 'max:2048'],
         ], [
-            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
-        $fotoPath = $mahasiswaMember->foto;
         $fotoPath = $mahasiswa->foto;
         if ($request->hasFile('foto')) {
             if ($fotoPath) {
@@ -181,13 +175,14 @@ class MahasiswaController extends Controller
         ]);
 
         return redirect()->route('admin.mahasiswa.index')
-            ->with('success', "Data mahasiswa {$mahasiswaMember->name} berhasil diperbarui.");
             ->with('success', "Data mahasiswa {$mahasiswa->name} berhasil diperbarui.");
     }
 
-    public function destroy($id)
+    /**
+     * Hapus permanen data mahasiswa beserta berkas foto profilnya.
+     */
+    public function destroy(User $mahasiswa)
     {
-        $mahasiswa = User::findOrFail($id);
         abort_unless($mahasiswa->hasRole('mahasiswa'), 404);
 
         if ($mahasiswa->foto) {
