@@ -7,162 +7,7 @@
 
 <div class="space-y-6">
     {{-- HEADER --}}
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-            <h1 class="text-2xl font-extrabold text-slate-800">Pengaturan</h1>
-            <p class="mt-1 text-sm text-gray-500">Kelola informasi dan keamanan akun Anda</p>
-        </div>
-    </div>
 
-    {{-- MAIN CONTENT --}}
-    <div class="grid gap-6 lg:grid-cols-3">
-        {{-- PROFILE CARD --}}
-        <div class="lg:col-span-1">
-            <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
-                <div class="h-32 bg-gradient-to-r from-[#0066ff] to-[#0052cc]"></div>
-                
-                <div class="relative px-5 pb-5">
-                    <div class="mb-4 -mt-12 flex items-end justify-between">
-                        <div class="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-white bg-[#0066ff] text-2xl font-bold text-white shadow-lg">
-                            {{ strtoupper(substr($user->name ?? '?', 0, 1)) }}
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-1 text-center">
-                        <h3 class="text-lg font-bold text-slate-800">{{ $user->name }}</h3>
-                        <p class="text-sm text-gray-500">{{ $user->email }}</p>
-                        <p class="text-sm text-gray-500">NIM: {{ $user->nip_nim }}</p>
-                        <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#0066ff]/10 px-3 py-1 text-xs font-semibold text-[#0066ff]">
-                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-                            Mahasiswa
-                        </div>
-                    </div>
-
-                    <div class="mt-4 space-y-3 border-t border-gray-100 pt-4">
-                        @php
-                            $stats = [
-                                ['label' => 'Program Studi', 'value' => $user->programStudi?->nama_prodi ?? '-'],
-                                ['label' => 'Bergabung', 'value' => $user->created_at->translatedFormat('d M Y')],
-                            ];
-                        @endphp
-                        @foreach ($stats as $stat)
-                            <div class="flex items-center justify-between text-xs">
-                                <span class="text-gray-500">{{ $stat['label'] }}</span>
-                                <span class="font-bold text-slate-800">{{ $stat['value'] }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- FORM CARD --}}
-        <div class="lg:col-span-2 space-y-6">
-            {{-- INFORMASI PRIBADI --}}
-            <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
-                <div class="border-b border-gray-100 px-5 py-4">
-                    <h3 class="font-bold text-slate-800">Informasi Pribadi</h3>
-                </div>
-                
-                <form class="space-y-5 p-5" method="POST" action="{{ route('mahasiswa.setting.profile') }}">
-                    @csrf
-                    @method('PATCH')
-
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                            <input type="text" name="name" value="{{ $user->name }}" placeholder="Nama lengkap"
-                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('name') border-red-400 @enderror">
-                            @error('name')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">Email</label>
-                            <input type="email" name="email" value="{{ $user->email }}" placeholder="Email"
-                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('email') border-red-400 @enderror">
-                            @error('email')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">NIM</label>
-                            <input type="text" value="{{ $user->nip_nim }}" placeholder="NIM" disabled
-                                   class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">Program Studi</label>
-                            <input type="text" value="{{ $user->programStudi?->nama_prodi ?? '-' }}" disabled
-                                   class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-500">
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end gap-3 pt-2">
-                        <button type="reset"
-                                class="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
-                            Batal
-                        </button>
-                        <button type="submit" class="rounded-lg bg-[#0066ff] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#0052cc] transition">
-                            Simpan Perubahan
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {{-- KEAMANAN --}}
-            <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
-                <div class="border-b border-gray-100 px-5 py-4">
-                    <h3 class="font-bold text-slate-800">Keamanan Akun</h3>
-                </div>
-                
-                <form class="space-y-5 p-5" method="POST" action="{{ route('mahasiswa.setting.password') }}">
-                    @csrf
-                    @method('PATCH')
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-2">Password Saat Ini</label>
-                        <input type="password" name="current_password" placeholder="Masukkan password saat ini"
-                               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('current_password') border-red-400 @enderror">
-                        @error('current_password')
-                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">Password Baru</label>
-                            <input type="password" name="password" placeholder="Masukkan password baru"
-                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('password') border-red-400 @enderror">
-                            @error('password')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
-                            <input type="password" name="password_confirmation" placeholder="Konfirmasi password baru"
-                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition">
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end gap-3 pt-2">
-                        <button type="reset"
-                                class="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
-                            Batal
-                        </button>
-                        <button type="submit" class="rounded-lg bg-[#0066ff] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#0052cc] transition">
-                            Update Password
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-@endsection
 {{-- STATS STRIP --}}
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
     <div class="group rounded-2xl bg-white border border-slate-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
@@ -237,7 +82,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Nama Lengkap <span class="text-red-400 normal-case">*</span></label>
-                                <input type="text" name="name" value="{{ old('name', $u->name) }}"
+                                <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                     class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-[#002B6B] focus:ring-2 focus:ring-[#002B6B]/10 transition-all @error('name') border-red-300 bg-red-50 @enderror"
                                     style="border-color: {{ $errors->has('name') ? '' : '#e5e7eb' }};"
                                     placeholder="Nama lengkap kamu" required>
@@ -246,7 +91,7 @@
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">NIM</label>
                                 <div class="relative">
-                                    <input type="text" value="{{ $u->nip_nim ?? '–' }}" disabled
+                                    <input type="text" value="{{ $user->nip_nim ?? '–' }}" disabled
                                         class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-400 bg-gray-100 cursor-not-allowed pr-10">
                                     <span class="absolute inset-y-0 right-3 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
@@ -256,7 +101,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Alamat Email <span class="text-red-400 normal-case">*</span></label>
-                                <input type="email" name="email" value="{{ old('email', $u->email) }}"
+                                <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                     class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-[#002B6B] focus:ring-2 focus:ring-[#002B6B]/10 transition-all @error('email') border-red-300 bg-red-50 @enderror"
                                     style="border-color: {{ $errors->has('email') ? '' : '#e5e7eb' }};"
                                     placeholder="email@student.ac.id" required>
@@ -265,7 +110,7 @@
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Program Studi</label>
                                 <div class="relative">
-                                    <input type="text" value="{{ $u->programStudi?->nama_prodi ?? 'Belum ditentukan' }}" disabled
+                                    <input type="text" value="{{ $user->programStudi?->nama_prodi ?? 'Belum ditentukan' }}" disabled
                                         class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-400 bg-gray-100 cursor-not-allowed pr-10">
                                     <span class="absolute inset-y-0 right-3 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
@@ -356,15 +201,15 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-xs text-gray-400">NIM</span>
-                    <span class="text-xs font-semibold text-slate-700">{{ $u->nip_nim ?? '–' }}</span>
+                    <span class="text-xs font-semibold text-slate-700">{{ $user->nip_nim ?? '–' }}</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-xs text-gray-400">Program Studi</span>
-                    <span class="text-xs font-semibold text-slate-700 text-right">{{ $u->programStudi?->nama_prodi ?? '–' }}</span>
+                    <span class="text-xs font-semibold text-slate-700 text-right">{{ $user->programStudi?->nama_prodi ?? '–' }}</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-xs text-gray-400">Bergabung Sejak</span>
-                    <span class="text-xs font-semibold text-slate-700">{{ $u->created_at?->translatedFormat('M Y') ?? '–' }}</span>
+                    <span class="text-xs font-semibold text-slate-700">{{ $user->created_at?->translatedFormat('M Y') ?? '–' }}</span>
                 </div>
             </div>
         </div>
