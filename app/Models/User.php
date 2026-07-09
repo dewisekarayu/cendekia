@@ -11,7 +11,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+<<<<<<< HEAD
 #[Fillable(['name', 'nip_nim', 'email', 'email_verified_at', 'password', 'program_studi_id', 'status', 'telepon', 'foto'])]
+=======
+#[Fillable(['name', 'nip_nim', 'email', 'password', 'program_studi_id', 'status', 'telepon', 'foto', 'email_verified_at'])]
+>>>>>>> 0de0cef02f3af816f9dfab402c227ef6e21844ab
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -139,5 +143,73 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+}
+
+    /**
+     * Check if user can access forum with detailed diagnostic information
+     * Returns an array with access status and detailed reason
+     */
+    public function canAccessForumDetailed(ForumDiskusi $forum): array
+    {
+        $result = [
+            'can_access' => false,
+            'user_id' => $this->id,
+            'user_role' => $this->getPrimaryRole(),
+            'forum_id' => $forum->id,
+            'forum_kelas_id' => $forum->kelas_perkuliahan_id,
+            'reason' => '',
+            'debug_info' => [],
+        ];
+
+        // Check if user is authenticated
+        if (!$this->id) {
+            $result['reason'] = 'User not authenticated';
+            return $result;
+        }
+
+        // Admin check
+        if ($this->isAdmin()) {
+            $result['can_access'] = true;
+            $result['reason'] = 'Admin user - full access';
+            return $result;
+        }
+
+        // Dosen check
+        if ($this->isDosen()) {
+            $classesTeaching = $this->kelasDiampu()->pluck('id')->toArray();
+            $result['debug_info']['classes_teaching'] = $classesTeaching;
+            
+            $hasAccess = in_array($forum->kelas_perkuliahan_id, $classesTeaching);
+            if ($hasAccess) {
+                $result['can_access'] = true;
+                $result['reason'] = 'Dosen teaches this class';
+                return $result;
+            } else {
+                $result['reason'] = 'Dosen does not teach this class';
+                return $result;
+            }
+        }
+
+        // Mahasiswa check
+        if ($this->isMahasiswa()) {
+            $classesEnrolled = $this->kelasDiikuti()->pluck('id')->toArray();
+            $result['debug_info']['classes_enrolled'] = $classesEnrolled;
+            
+            $hasAccess = in_array($forum->kelas_perkuliahan_id, $classesEnrolled);
+            if ($hasAccess) {
+                $result['can_access'] = true;
+                $result['reason'] = 'Mahasiswa enrolled in this class';
+                return $result;
+            } else {
+                $result['reason'] = 'Mahasiswa not enrolled in this class';
+                return $result;
+            }
+        }
+
+        // No valid role
+        $result['reason'] = 'User has no valid role (not admin, dosen, or mahasiswa)';
+        $result['debug_info']['user_roles'] = $this->getRoleNames()->toArray();
+        return $result;
     }
 }
