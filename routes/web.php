@@ -14,7 +14,11 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Dosen\GradebookController as DosenGradebookController;
+
 use App\Http\Controllers\Dosen\ForumController as DosenForumController;
+
+use App\Http\Controllers\Dosen\MateriController as DosenMateriController;
+
 
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
@@ -102,6 +106,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
     Route::post('/dosen/forums/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.forum.pesan');
 
+
     // Pengumuman
     Route::get('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
     Route::post('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
@@ -111,6 +116,12 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/profil', function () { return view('dosen.profil'); })->name('dosen.profil');
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
     Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
+
+    Route::get('/dosen/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
+    Route::post('/dosen/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
+    Route::put('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'update'])->name('dosen.kelas-pengumuman.update');
+    Route::delete('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
+
 });
 
 // Dashboard & halaman khusus Mahasiswa
