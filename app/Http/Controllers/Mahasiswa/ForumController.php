@@ -19,19 +19,35 @@ class ForumController extends Controller
     {
         $user = $request->user();
         
-        // Verify user is authenticated and is a Mahasiswa
-        if (!$user || !$user->isMahasiswa()) {
-            abort(403, 'Anda tidak memiliki akses ke forum.');
+        // Step 1: Verify user is authenticated and is a Mahasiswa
+        if (!$user) {
+            Log::warning('MahasiswaForumController::index - Unauthenticated access', [
+                'path' => $request->path(),
+            ]);
+            abort(403, 'Anda harus login terlebih dahulu.');
         }
 
-        // Get class IDs that this Mahasiswa is enrolled in
+        if (!$user->isMahasiswa()) {
+            Log::warning('MahasiswaForumController::index - Non-Mahasiswa access attempted', [
+                'user_id' => $user->id,
+                'user_roles' => $user->getRoleNames()->toArray(),
+                'path' => $request->path(),
+            ]);
+            abort(403, 'Anda tidak memiliki akses ke forum. Hanya Mahasiswa yang dapat mengakses halaman ini.');
+        }
+
+        // Step 2: Get class IDs that this Mahasiswa is enrolled in
         $kelasIds = $user->kelasDiikuti()->pluck('kelas_perkuliahan.id');
 
         if ($kelasIds->isEmpty()) {
-            Log::info('Mahasiswa not enrolled in any classes', ['mahasiswa_id' => $user->id]);
+            Log::info('MahasiswaForumController::index - Mahasiswa not enrolled in any classes', [
+                'mahasiswa_id' => $user->id,
+                'mahasiswa_name' => $user->name,
+            ]);
+            // Return empty list - this is valid
         }
 
-        // Fetch all forums from classes this Mahasiswa is enrolled in
+        // Step 3: Fetch all forums from classes this Mahasiswa is enrolled in
         $forumList = ForumDiskusi::whereIn('kelas_perkuliahan_id', $kelasIds)
             ->with([
                 'kelasPerkuliahan.mataKuliah',
@@ -42,13 +58,28 @@ class ForumController extends Controller
             ->latest('updated_at')
             ->get();
 
-        // Select active forum based on query parameter
+        Log::debug('MahasiswaForumController::index - Forums retrieved', [
+            'mahasiswa_id' => $user->id,
+            'classes_enrolled' => $kelasIds->toArray(),
+            'forums_count' => $forumList->count(),
+        ]);
+
+        // Step 4: Select active forum based on query parameter
         $activeForumId = $request->query('forum', $forumList->first()?->id);
         $activeForum = $forumList->firstWhere('id', $activeForumId) ?? $forumList->first();
 
-        // Verify active forum belongs to user's classes
-        if ($activeForum && !Gate::inspect('view', $activeForum)->allowed()) {
-            abort(403, 'Forum tidak dapat diakses.');
+        // Step 5: Verify active forum belongs to user's classes (double-check)
+        if ($activeForum) {
+            $canView = Gate::inspect('view', $activeForum)->allowed();
+            if (!$canView) {
+                Log::warning('MahasiswaForumController::index - Active forum access denied', [
+                    'mahasiswa_id' => $user->id,
+                    'forum_id' => $activeForum->id,
+                    'forum_kelas_id' => $activeForum->kelas_perkuliahan_id,
+                    'reason' => Gate::inspect('view', $activeForum)->message(),
+                ]);
+                abort(403, 'Forum yang dipilih tidak dapat diakses.');
+            }
         }
 
         // Get class list for view compatibility
@@ -67,18 +98,35 @@ class ForumController extends Controller
         $user = $request->user();
 
         // Step 1: Verify user is authenticated and is a Mahasiswa
-        if (!$user || !$user->isMahasiswa()) {
-            abort(403, 'Anda harus login sebagai Mahasiswa.');
+        if (!$user) {
+            Log::warning('MahasiswaForumController::kirimPesan - Unauthenticated access', [
+                'path' => $request->path(),
+                'forum_id' => $forum->id,
+            ]);
+            abort(403, 'Anda harus login terlebih dahulu.');
         }
 
-        // Step 2: Check authorization using policy
-        if (!Gate::inspect('sendMessage', $forum)->allowed()) {
-            Log::warning('Mahasiswa unauthorized to send forum message', [
+        if (!$user->isMahasiswa()) {
+            Log::warning('MahasiswaForumController::kirimPesan - Non-Mahasiswa access attempted', [
                 'user_id' => $user->id,
+                'user_roles' => $user->getRoleNames()->toArray(),
                 'forum_id' => $forum->id,
-                'reason' => Gate::inspect('sendMessage', $forum)->message(),
             ]);
-            abort(403, 'Anda tidak dapat mengirim pesan di forum ini.');
+            abort(403, 'Anda harus login sebagai Mahasiswa untuk mengirim pesan forum.');
+        }
+
+        // Step 2: Check authorization using policy with detailed logging
+        $policyInspection = Gate::inspect('sendMessage', $forum);
+        if (!$policyInspection->allowed()) {
+            Log::warning('MahasiswaForumController::kirimPesan - Authorization denied by policy', [
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'forum_id' => $forum->id,
+                'forum_kelas_id' => $forum->kelas_perkuliahan_id,
+                'policy_reason' => $policyInspection->message(),
+                'classes_enrolled' => $user->kelasDiikuti()->pluck('id')->toArray(),
+            ]);
+            abort(403, 'Anda tidak dapat mengirim pesan di forum ini. Pastikan Anda terdaftar di kelas ini.');
         }
 
         // Step 3: Validate message content
@@ -89,24 +137,42 @@ class ForumController extends Controller
             'isi.max' => 'Pesan maksimal 2000 karakter.',
         ]);
 
-        // Step 4: Create the forum message
-        $komentar = KomentarDiskusi::create([
-            'forum_diskusi_id' => $forum->id,
-            'user_id' => $user->id,
-            'isi' => $validated['isi'],
-        ]);
+        try {
+            // Step 4: Create the forum message
+            $komentar = KomentarDiskusi::create([
+                'forum_diskusi_id' => $forum->id,
+                'user_id' => $user->id,
+                'isi' => $validated['isi'],
+            ]);
 
-        // Step 5: Update forum's updated_at timestamp
-        $forum->touch();
+            // Step 5: Update forum's updated_at timestamp
+            $forum->touch();
 
-        Log::info('Forum message sent successfully', [
-            'user_id' => $user->id,
-            'forum_id' => $forum->id,
-            'komentar_id' => $komentar->id,
-        ]);
+            Log::info('MahasiswaForumController::kirimPesan - Message sent successfully', [
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'forum_id' => $forum->id,
+                'komentar_id' => $komentar->id,
+                'message_length' => strlen($validated['isi']),
+            ]);
 
-        return redirect()
-            ->route('mahasiswa.forums', ['forum' => $forum->id])
-            ->withFragment('bottom');
+            return redirect()
+                ->route('mahasiswa.forums', ['forum' => $forum->id])
+                ->with('success', 'Pesan berhasil dikirim!')
+                ->withFragment('bottom');
+
+        } catch (\Exception $e) {
+            Log::error('MahasiswaForumController::kirimPesan - Error creating message', [
+                'user_id' => $user->id,
+                'forum_id' => $forum->id,
+                'error' => $e->getMessage(),
+                'exception' => get_class($e),
+            ]);
+            
+            return redirect()
+                ->route('mahasiswa.forums', ['forum' => $forum->id])
+                ->with('error', 'Gagal mengirim pesan. Silakan coba lagi.')
+                ->withFragment('bottom');
+        }
     }
 }
