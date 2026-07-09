@@ -1,16 +1,18 @@
 @extends('layouts.portal')
-@section('title', 'Settings')
-@section('activeMenu', 'Settings')
+@section('title', 'Profil')
+@section('activeMenu', 'Profil')
 @section('content')
 
-@php $user = auth()->user(); @endphp
+@php
+    $user = auth()->user();
+@endphp
 
 <div class="space-y-6">
     {{-- HEADER --}}
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <h1 class="text-2xl font-extrabold text-slate-800">Pengaturan</h1>
-            <p class="mt-1 text-sm text-gray-500">Kelola informasi dan keamanan akun Anda</p>
+            <h1 class="text-2xl font-extrabold text-slate-800">Profil Mahasiswa</h1>
+            <p class="mt-1 text-sm text-gray-500">Kelola informasi pribadi dan akun Anda</p>
         </div>
     </div>
 
@@ -26,12 +28,16 @@
                         <div class="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-white bg-[#0066ff] text-2xl font-bold text-white shadow-lg">
                             {{ strtoupper(substr($user->name ?? '?', 0, 1)) }}
                         </div>
+                        <a href="#" class="inline-flex items-center gap-1.5 rounded-lg bg-[#0066ff] px-4 py-2 text-xs font-semibold text-white hover:bg-[#0052cc] transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            Edit
+                        </a>
                     </div>
                     
                     <div class="space-y-1 text-center">
                         <h3 class="text-lg font-bold text-slate-800">{{ $user->name }}</h3>
                         <p class="text-sm text-gray-500">{{ $user->email }}</p>
-                        <p class="text-sm text-gray-500">NIM: {{ $user->nip_nim }}</p>
+                        <p class="text-sm text-gray-500 mt-1">{{ $user->nip_nim }}</p>
                         <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#0066ff]/10 px-3 py-1 text-xs font-semibold text-[#0066ff]">
                             <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                             Mahasiswa
@@ -42,6 +48,7 @@
                         @php
                             $stats = [
                                 ['label' => 'Program Studi', 'value' => $user->programStudi?->nama_prodi ?? '-'],
+                                ['label' => 'Kelas Diikuti', 'value' => $user->kelasDiikuti?->count() ?? 0],
                                 ['label' => 'Bergabung', 'value' => $user->created_at->translatedFormat('d M Y')],
                             ];
                         @endphp
@@ -64,40 +71,37 @@
                     <h3 class="font-bold text-slate-800">Informasi Pribadi</h3>
                 </div>
                 
-                <form class="space-y-5 p-5" method="POST" action="{{ route('mahasiswa.setting.profile') }}">
-                    @csrf
-                    @method('PATCH')
-
+                <form class="space-y-5 p-5">
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                            <input type="text" name="name" value="{{ $user->name }}" placeholder="Nama lengkap"
-                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('name') border-red-400 @enderror">
-                            @error('name')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                            <input type="text" value="{{ $user->name }}" placeholder="Nama lengkap"
+                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition">
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">Email</label>
-                            <input type="email" name="email" value="{{ $user->email }}" placeholder="Email"
-                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('email') border-red-400 @enderror">
-                            @error('email')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-2">NIM</label>
                             <input type="text" value="{{ $user->nip_nim }}" placeholder="NIM" disabled
                                    class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-500">
                         </div>
+                    </div>
+
+                    <div class="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-2">Program Studi</label>
-                            <input type="text" value="{{ $user->programStudi?->nama_prodi ?? '-' }}" disabled
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="email" value="{{ $user->email }}" placeholder="Email" disabled
                                    class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-500">
                         </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">Nomor Telepon</label>
+                            <input type="tel" placeholder="Nomor telepon"
+                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-2">Program Studi</label>
+                        <input type="text" value="{{ $user->programStudi?->nama_prodi ?? '-' }}" disabled
+                               class="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-500">
                     </div>
 
                     <div class="flex justify-end gap-3 pt-2">
@@ -118,31 +122,22 @@
                     <h3 class="font-bold text-slate-800">Keamanan Akun</h3>
                 </div>
                 
-                <form class="space-y-5 p-5" method="POST" action="{{ route('mahasiswa.setting.password') }}">
-                    @csrf
-                    @method('PATCH')
-
+                <form class="space-y-5 p-5">
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-2">Password Saat Ini</label>
-                        <input type="password" name="current_password" placeholder="Masukkan password saat ini"
-                               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('current_password') border-red-400 @enderror">
-                        @error('current_password')
-                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                        @enderror
+                        <input type="password" placeholder="Masukkan password saat ini"
+                               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition">
                     </div>
 
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-2">Password Baru</label>
-                            <input type="password" name="password" placeholder="Masukkan password baru"
-                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition @error('password') border-red-400 @enderror">
-                            @error('password')
-                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                            <input type="password" placeholder="Masukkan password baru"
+                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
-                            <input type="password" name="password_confirmation" placeholder="Konfirmasi password baru"
+                            <input type="password" placeholder="Konfirmasi password baru"
                                    class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#0066ff] focus:outline-none focus:ring-2 focus:ring-[#0066ff]/10 transition">
                         </div>
                     </div>

@@ -95,17 +95,15 @@ class MahasiswaController extends Controller
             'status'           => ['required', Rule::in(['aktif', 'cuti', 'non_aktif'])],
             'telepon'          => ['nullable', 'string', 'max:20'],
             'foto'             => ['nullable', 'image', 'max:2048'],
+        ], [
+            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
         $fotoPath = null;
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
         }
-
-        ], [
-            'nim.unique' => 'NIM sudah terdaftar di sistem.',
-            'email.unique' => 'Email sudah terdaftar di sistem.',
-        ]);
 
         $mahasiswa = User::create([
             'name'             => $validated['nama'],
@@ -142,45 +140,15 @@ class MahasiswaController extends Controller
             'nim'              => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($mahasiswa->id)],
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($mahasiswa->id)],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
+            'status'           => ['required', Rule::in(['aktif', 'cuti', 'non_aktif'])],
+            'telepon'          => ['nullable', 'string', 'max:20'],
+            'foto'             => ['nullable', 'image', 'max:2048'],
         ], [
             'nim.unique' => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
-        $mahasiswa->update([
-            'name'             => $validated['nama'],
-            'nip_nim'          => $validated['nim'],
-            'email'            => $validated['email'],
-            'program_studi_id' => $validated['program_studi_id'] ?? null,
-        ]);
-
-        return redirect()->route('admin.mahasiswa.index')
-            ->with('success', "Data mahasiswa {$mahasiswa->name} berhasil diperbarui.");
-    }
-
-    public function edit($id)
-    {
-        $mahasiswaMember = User::findOrFail($id);
-        $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
-
-        return view('admin.mahasiswa.edit', compact('mahasiswaMember', 'programStudiList'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $mahasiswaMember = User::findOrFail($id);
-
-        $validated = $request->validate([
-            'nama'             => ['required', 'string', 'max:255'],
-            'nim'              => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($mahasiswaMember->id)],
-            'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($mahasiswaMember->id)],
-            'program_studi_id' => ['nullable', 'exists:program_studi,id'],
-            'status'           => ['required', Rule::in(['aktif', 'cuti', 'non_aktif'])],
-            'telepon'          => ['nullable', 'string', 'max:20'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
-        ]);
-
-        $fotoPath = $mahasiswaMember->foto;
+        $fotoPath = $mahasiswa->foto;
         if ($request->hasFile('foto')) {
             if ($fotoPath) {
                 Storage::disk('public')->delete($fotoPath);
@@ -188,7 +156,7 @@ class MahasiswaController extends Controller
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
         }
 
-        $mahasiswaMember->update([
+        $mahasiswa->update([
             'name'             => $validated['nama'],
             'nip_nim'          => $validated['nim'],
             'email'            => $validated['email'],
@@ -199,7 +167,7 @@ class MahasiswaController extends Controller
         ]);
 
         return redirect()->route('admin.mahasiswa.index')
-            ->with('success', 'Data mahasiswa berhasil diperbarui.');
+            ->with('success', "Data mahasiswa {$mahasiswa->name} berhasil diperbarui.");
     }
 
     public function destroy(User $mahasiswa)

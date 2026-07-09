@@ -102,10 +102,15 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
     Route::post('/dosen/forums/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.forum.pesan');
 
-    // Cari bagian rute pengumuman dosen, lalu ubah menjadi seperti ini:-
+    // Pengumuman
     Route::get('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
     Route::post('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
     Route::delete('/dosen/pengumuman/{id}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
+    
+    // Profil, Jadwal, dan Pengaturan Dosen
+    Route::get('/dosen/profil', function () { return view('dosen.profil'); })->name('dosen.profil');
+    Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
+    Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
 });
 
 // Dashboard & halaman khusus Mahasiswa
@@ -128,6 +133,9 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
     Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
+    
+    // Profil Mahasiswa
+    Route::get('/mahasiswa/profil', function () { return view('mahasiswa.profil'); })->name('mahasiswa.profil');
 });
 
 Route::middleware('auth')->group(function () {
