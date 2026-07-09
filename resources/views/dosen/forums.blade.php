@@ -2,185 +2,317 @@
 @section('title', 'Forum Diskusi')
 @section('content')
 @php
-    $user    = auth()->user();
-    $palette = ['#075E54','#128C7E','#25D366','#34B7F1','#6B21A8','#BE123C','#B45309'];
+    $user     = auth()->user();
+    $palette  = ['#002B6B','#0C4A6E','#1E3A8A','#164E63','#1C3144','#0F172A','#1F2937'];
 
-    function dosenForumAvatarColor(string $name, array $pal): string {
+    function forumAvatarColor(string $name, array $pal): string {
         return $pal[abs(crc32($name)) % count($pal)];
     }
 @endphp
 
-{{-- Full-height flex container --}}
-<div class="flex h-[calc(100vh-6rem)] min-h-[540px] overflow-hidden rounded-2xl border border-slate-200 shadow-md bg-white"
-     x-data="{ mobile: {{ $activeForum ? 'true' : 'false' }} }">
+<style>
+    :root{
+        --forum-primary: #002B6B;
+        --forum-primary-dark: #001A40;
+        --forum-light: #CDDCFF;
+        --forum-bg-1: #F4F7FF;
+        --forum-bg-2: #E9EFFF;
+    }
 
-{{-- ============================================
-     LEFT — Thread list
-============================================ --}}
-<aside class="w-[300px] lg:w-[340px] flex-none flex flex-col border-r border-gray-200 bg-white overflow-hidden"
-       :class="mobile ? 'hidden sm:flex' : 'flex'">
+    .forum-chat-wrap{
+        display: flex !important;
+        flex-direction: column !important;
+        height: calc(100vh - 120px);
+        min-height: 520px;
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,43,107,0.10);
+        border: 1px solid #E3E9F7;
+    }
 
-    {{-- Topbar --}}
-    <div class="flex items-center justify-between px-4 py-3 bg-[#321270]">
-        <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white text-sm font-bold">
-                {{ strtoupper(substr($user->name, 0, 1)) }}
-            </div>
-            <div>
-                <p class="text-[13px] font-bold text-white leading-tight">{{ explode(' ', $user->name)[0] }}</p>
-                <p class="text-[10px] text-purple-200/80">Forum Diskusi Kelas</p>
-            </div>
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-        </svg>
-    </div>
+    /* ===== Header ===== */
+    .forum-header{
+        flex-shrink: 0;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 14px;
+        padding: 16px 20px;
+        background: linear-gradient(120deg, var(--forum-primary) 0%, var(--forum-primary-dark) 100%);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .forum-header-left{
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 12px;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    .forum-back-btn{
+        display: none;
+        width: 36px; height: 36px; border-radius: 50%;
+        align-items: center; justify-content: center;
+        color: #fff; background: rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.25);
+        flex-shrink: 0;
+    }
+    @media (max-width: 575.98px){
+        .forum-back-btn{ display: flex !important; }
+    }
 
-    {{-- Search --}}
-    <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
-        <div class="flex items-center gap-2 rounded-full bg-white border border-gray-200 px-3 py-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input id="forumSearch" type="search" placeholder="Cari kelas..."
-                   class="flex-1 text-[12px] text-gray-700 placeholder-gray-400 bg-transparent focus:outline-none">
-        </div>
-    </div>
+    .forum-header-avatar{
+        width: 46px; height: 46px; border-radius: 50%;
+        display: flex !important; align-items: center; justify-content: center;
+        color: #fff; font-weight: 700; font-size: 13px;
+        border: 2px solid rgba(255,255,255,.35);
+        flex-shrink: 0;
+    }
 
-    {{-- Thread list --}}
-    <div class="flex-1 overflow-y-auto divide-y divide-gray-100" id="forumList">
-        @forelse ($forumList as $forum)
-            @php
-                $isActive  = $activeForum && $activeForum->id === $forum->id;
-                $last      = $forum->komentar->last();
-                $matkul    = $forum->kelasPerkuliahan?->mataKuliah?->nama_mk ?? 'Kelas';
-                $kode      = strtoupper(substr($forum->kelasPerkuliahan?->mataKuliah?->kode_mk ?? 'MK', 0, 2));
-                $avatarClr = dosenForumAvatarColor($matkul, $palette);
-                $isUnread  = !$isActive && $last && $last->user_id !== $user->id;
-                $lastTime  = $last ? ($last->created_at->isToday()
-                                ? $last->created_at->format('H:i')
-                                : $last->created_at->format('d/m/y')) : '';
-            @endphp
-            <a href="{{ route('dosen.forums', ['forum' => $forum->id]) }}"
-               data-search="{{ strtolower($matkul) }}"
-               @click="mobile = true"
-               class="forum-thread flex items-center gap-3 px-3 py-3 transition-colors
-                      {{ $isActive ? 'bg-purple-50' : 'hover:bg-gray-50' }}">
+    .forum-header-text{ flex: 1 1 auto; min-width: 0; }
+    .forum-header-title{
+        color: #fff; font-weight: 700; font-size: 15px; margin: 0;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .forum-header-sub{
+        color: var(--forum-light); font-size: 12px; margin: 2px 0 0 0;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
 
-                <div class="relative shrink-0">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-[13px] shadow-sm"
-                         style="background: {{ $avatarClr }}">{{ $kode }}</div>
-                    @if ($isActive)
-                        <span class="absolute -right-0.5 -bottom-0.5 w-3.5 h-3.5 rounded-full bg-[#25D366] border-2 border-white"></span>
-                    @endif
-                </div>
+    .forum-header-btn{
+        width: 38px; height: 38px; border-radius: 50%;
+        display: flex !important; align-items: center; justify-content: center;
+        color: #fff; background: rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.25);
+        transition: .2s; flex-shrink: 0; text-decoration: none;
+    }
+    .forum-header-btn:hover{ background: rgba(255,255,255,.2); color: #fff; }
 
-                <div class="flex-1 min-w-0">
-                    <div class="flex justify-between items-baseline mb-0.5">
-                        <p class="text-[13.5px] font-semibold text-gray-900 truncate">{{ $matkul }}</p>
-                        <span class="text-[11px] shrink-0 ml-2 {{ $isUnread ? 'text-[#25D366] font-bold' : 'text-gray-400' }}">
-                            {{ $lastTime }}
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <p class="text-[12px] text-gray-500 truncate flex-1">
-                            @if ($last)
-                                @if ($last->user_id === $user->id)
-                                    <span class="text-gray-400 inline-flex items-center gap-0.5 mr-0.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75l6 6 9-13.5" opacity=".5"/>
-                                        </svg>
-                                    </span>
-                                @else
-                                    <span class="font-semibold text-gray-600 mr-0.5">{{ explode(' ', $last->user?->name ?? '')[0] }}:</span>
-                                @endif
-                                {{ Str::limit($last->isi, 32) }}
-                            @else
-                                <span class="italic text-gray-400">Belum ada pesan</span>
-                            @endif
-                        </p>
-                        @if ($isUnread)
-                            <span class="ml-2 shrink-0 w-5 h-5 rounded-full bg-[#25D366] text-white text-[10px] font-bold flex items-center justify-center">!</span>
-                        @endif
-                    </div>
-                    {{-- Jumlah mahasiswa di kelas --}}
-                    <p class="text-[11px] text-gray-400 mt-0.5">
-                        {{ $forum->kelasPerkuliahan?->mahasiswa?->count() ?? 0 }} mahasiswa
-                    </p>
-                </div>
-            </a>
-        @empty
-            <div class="flex flex-col items-center justify-center py-16 px-5 text-center text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mb-3 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                <p class="text-sm font-semibold">Belum ada kelas aktif</p>
-                <p class="text-xs mt-1">Forum akan muncul otomatis setelah ada kelas yang diampu.</p>
-            </div>
-        @endforelse
-    </div>
-</aside>
+    /* ===== Body ===== */
+    .forum-body{
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 24px 20px;
+        background: linear-gradient(180deg, var(--forum-bg-1) 0%, var(--forum-bg-2) 100%);
+    }
 
-{{-- ============================================
-     RIGHT — Chat window
-============================================ --}}
-<section class="flex-1 min-w-0 flex flex-col overflow-hidden"
-         :class="mobile ? 'flex' : 'hidden sm:flex'">
+    .forum-center-row{
+        display: flex !important;
+        justify-content: center !important;
+        width: 100%;
+        margin-bottom: 18px;
+    }
+
+    .forum-chip{
+        display: inline-flex !important; align-items: center; gap: 8px;
+        background: #fff; border: 1.5px solid var(--forum-primary);
+        color: var(--forum-primary); font-weight: 700; font-size: 11.5px;
+        padding: 7px 16px; border-radius: 999px;
+        box-shadow: 0 2px 6px rgba(0,43,107,.08);
+    }
+
+    .forum-date-chip{
+        background: #fff; border: 1.5px solid var(--forum-primary);
+        color: var(--forum-primary); font-weight: 700; font-size: 11px;
+        padding: 6px 14px; border-radius: 999px;
+    }
+
+    .forum-msg-row{
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-end !important;
+        gap: 8px;
+        width: 100%;
+        margin-top: 14px;
+    }
+    .forum-msg-row.mine{ justify-content: flex-end !important; }
+    .forum-msg-row.grouped{ margin-top: 2px; }
+
+    .forum-avatar-slot{ width: 32px; flex-shrink: 0; }
+    .forum-avatar-sm{
+        width: 32px; height: 32px; border-radius: 50%;
+        display: flex !important; align-items: center; justify-content: center;
+        color: #fff; font-size: 12px; font-weight: 700;
+        border: 2px solid var(--forum-primary-dark);
+    }
+
+    .forum-bubble-col{
+        display: flex !important;
+        flex-direction: column !important;
+        max-width: 68%;
+    }
+    .forum-bubble-col.mine{ align-items: flex-end !important; margin-left: auto; }
+    .forum-bubble-col.theirs{ align-items: flex-start !important; }
+
+    .forum-sender-name{
+        font-size: 11.5px; font-weight: 700; margin: 0 0 3px 8px;
+        color: #0284C7;
+    }
+    .forum-sender-name.dosen{ color: #4338CA; }
+
+    .forum-bubble{
+        padding: 10px 16px;
+        border-radius: 18px;
+        min-width: 90px;
+        box-shadow: 0 3px 10px rgba(15,23,42,.08);
+        border: 1px solid rgba(0,43,107,.12);
+    }
+    .forum-bubble.mine{ background: var(--forum-light); border-top-right-radius: 4px; }
+    .forum-bubble.theirs{ background: #fff; border-top-left-radius: 4px; }
+    .forum-bubble.theirs.dosen{ background: #E9E7FF; }
+    .forum-bubble.grouped.mine{ border-top-right-radius: 18px; }
+    .forum-bubble.grouped.theirs{ border-top-left-radius: 18px; }
+
+    .forum-bubble-text{
+        font-size: 14px; line-height: 1.55; color: #1F2937;
+        white-space: pre-wrap; word-break: break-word; margin: 0; font-weight: 500;
+    }
+
+    .forum-bubble-meta{
+        display: flex !important; align-items: center; justify-content: flex-end;
+        gap: 6px; margin-top: 6px;
+    }
+    .forum-bubble-time{ font-size: 11px; color: #6B7280; white-space: nowrap; }
+
+    .forum-empty{
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center; justify-content: center;
+        height: 100%; text-align: center; padding: 48px 16px;
+    }
+    .forum-empty-icon{
+        width: 80px; height: 80px; border-radius: 50%;
+        background: #fff; border: 1px solid #E3E9F7;
+        display: flex !important; align-items: center; justify-content: center;
+        margin-bottom: 16px; color: #B9C4DA;
+    }
+    .forum-empty-title{ font-weight: 700; color: #374151; margin: 0 0 4px 0; }
+    .forum-empty-sub{ font-size: 13px; color: #9CA3AF; margin: 0; }
+
+    /* ===== Input bar ===== */
+    .forum-input-bar{
+        flex-shrink: 0;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-end !important;
+        gap: 12px;
+        padding: 16px 20px;
+        background: #fff;
+        border-top: 1px solid #E3E9F7;
+    }
+
+    .forum-icon-btn{
+        width: 44px; height: 44px; border-radius: 50%;
+        display: flex !important; align-items: center; justify-content: center;
+        color: var(--forum-primary); background: #fff;
+        border: 1.5px solid var(--forum-light);
+        transition: .2s; flex-shrink: 0; cursor: pointer;
+    }
+    .forum-icon-btn:hover{ background: var(--forum-bg-2); border-color: var(--forum-primary); }
+
+    .forum-form{
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-end !important;
+        gap: 10px;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .forum-textarea{
+        flex: 1 1 auto;
+        min-width: 0;
+        resize: none;
+        border-radius: 22px;
+        border: 1.5px solid var(--forum-primary);
+        padding: 11px 18px;
+        font-size: 14px; font-weight: 500;
+        max-height: 128px; overflow-y: auto;
+        font-family: inherit;
+    }
+    .forum-textarea:focus{
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0,43,107,.15);
+        border-color: var(--forum-primary);
+        background: var(--forum-bg-1);
+    }
+
+    .forum-send-btn{
+        width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+        display: flex !important; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, var(--forum-primary) 0%, var(--forum-primary-dark) 100%);
+        color: #fff; border: none; box-shadow: 0 3px 10px rgba(0,43,107,.3);
+        transition: .15s; cursor: pointer;
+    }
+    .forum-send-btn:hover{ filter: brightness(1.1); }
+    .forum-send-btn:active{ transform: scale(.94); }
+
+    /* ===== Empty state (no forum selected) ===== */
+    .forum-placeholder{
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center; justify-content: center;
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 48px 20px;
+        background: linear-gradient(180deg, var(--forum-bg-1) 0%, var(--forum-bg-2) 100%);
+    }
+    .forum-placeholder-icon{
+        width: 96px; height: 96px; border-radius: 50%;
+        background: #fff; border: 2px solid var(--forum-primary);
+        display: flex !important; align-items: center; justify-content: center;
+        margin-bottom: 16px;
+    }
+    .forum-placeholder-title{ font-weight: 700; color: var(--forum-primary); margin: 0; font-size: 18px; }
+    .forum-placeholder-sub{ color: #9CA3AF; margin-top: 8px; max-width: 320px; font-size: 14px; }
+</style>
+
+<div class="forum-chat-wrap">
 
 @if ($activeForum)
 @php
-    $mahasiswaCount = $activeForum->kelasPerkuliahan?->mahasiswa?->count() ?? 0;
-    $mn      = $activeForum->kelasPerkuliahan?->mataKuliah?->nama_mk ?? 'Kelas';
-    $mk      = strtoupper(substr($activeForum->kelasPerkuliahan?->mataKuliah?->kode_mk ?? 'MK', 0, 2));
-    $hdrClr  = dosenForumAvatarColor($mn, $palette);
-    $msgs    = $activeForum->komentar;
-    $total   = $msgs->count();
-    $byDay   = $msgs->groupBy(fn($m) => $m->created_at->format('Y-m-d'));
+    $dn       = $activeForum->kelasPerkuliahan?->dosen?->name ?? 'Dosen';
+    $mn       = $activeForum->judul;
+    $mk       = strtoupper(substr($activeForum->kelasPerkuliahan?->mataKuliah?->kode_mk ?? 'MK', 0, 2));
+    $hdrClr   = forumAvatarColor($activeForum->kelasPerkuliahan?->mataKuliah?->nama_mk ?? 'Kelas', $palette);
+    $msgs     = $activeForum->komentar;
+    $total    = $msgs->count();
+    $byDay    = $msgs->groupBy(fn($m) => $m->created_at->format('Y-m-d'));
 @endphp
 
     {{-- Header --}}
-    <div class="shrink-0 flex items-center gap-3 px-4 py-2.5 bg-[#321270] shadow-md z-10">
-        <button @click="mobile = false"
-                class="sm:hidden shrink-0 w-8 h-8 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-        </button>
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-             style="background: {{ $hdrClr }}">{{ $mk }}</div>
-        <div class="flex-1 min-w-0">
-            <p class="text-[14px] font-bold text-white leading-tight truncate">{{ $mn }}</p>
-            <p class="text-[11px] text-purple-200/80 truncate">{{ $mahasiswaCount }} mahasiswa · {{ $total }} pesan</p>
+    <div class="forum-header">
+        <div class="forum-header-left">
+            <button @click="mobile = false" class="forum-back-btn" type="button">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="forum-header-avatar" style="background: linear-gradient(135deg, {{ $hdrClr }} 0%, #001A40 100%)">{{ $mk }}</div>
+            <div class="forum-header-text">
+                <p class="forum-header-title">{{ $mn }}</p>
+                <p class="forum-header-sub">{{ $dn }} &bull; {{ $total }} pesan</p>
+            </div>
         </div>
-        <a href="{{ route('dosen.kelas-detail', $activeForum->kelas_perkuliahan_id) }}"
-           class="shrink-0 flex items-center justify-center w-9 h-9 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition"
-           title="Detail Kelas">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
+        <a href="{{ route('dosen.kelas-detail', $activeForum->kelas_perkuliahan_id) }}" class="forum-header-btn">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </a>
     </div>
 
     {{-- Chat area --}}
-    <div id="chatMessages"
-         class="flex-1 overflow-y-auto px-3 py-3"
-         style="background-color:#e5ddd5;
-                background-image:url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QMeDBIRVFTlBQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAHElEQVRo3u3BMQEAAADCoPVP7WsIoAAAAAAAAAAAeQMBxAABHa8drwAAAABJRU5ErkJggg==\");">
+    <div id="chatMessages" class="forum-body">
 
-        {{-- Info chip --}}
-        <div class="flex justify-center mb-3">
-            <span class="inline-flex items-center gap-2 rounded-full bg-white/90 border border-gray-200 shadow-sm px-4 py-1.5 text-[11px] text-gray-600 backdrop-blur-sm">
-                👨‍🏫 Anda sedang mengajar di forum
-                <strong class="text-[#321270]">{{ $mn }}</strong>
+        <div class="forum-center-row">
+            <span class="forum-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                Private Chat &bull; <strong>{{ $mn }}</strong>
             </span>
         </div>
 
         @forelse ($byDay as $tanggal => $dayMsgs)
 
-            {{-- Date chip --}}
-            <div class="flex justify-center my-3">
-                <span class="rounded-full bg-[#e1f0ea] border border-[#c8e6c9] px-4 py-1 text-[11px] font-semibold text-[#075E54] shadow-sm">
+            <div class="forum-center-row">
+                <span class="forum-date-chip">
                     @php
                         $d = \Carbon\Carbon::parse($tanggal);
                         echo $d->isToday() ? 'Hari Ini' : ($d->isYesterday() ? 'Kemarin' : $d->translatedFormat('l, d F Y'));
@@ -196,83 +328,44 @@
                     $grouped = $prev && $prev->user_id === $msg->user_id
                                && $msg->created_at->diffInSeconds($prev->created_at) < 180;
 
-                    $sName   = $msg->user?->name ?? 'Anonim';
-                    $sFirst  = explode(' ', $sName)[0];
-                    $sClr    = dosenForumAvatarColor($sName, $palette);
+                    $sName  = $msg->user?->name ?? 'Anonim';
+                    $sFirst = explode(' ', $sName)[0];
+                    $sClr   = forumAvatarColor($sName, $palette);
                     $timeStr = $msg->created_at->format('H:i');
-
-                    if ($mine) {
-                        $bg      = '#DCF8C6';
-                        $txtCls  = 'text-gray-900';
-                        $tmCls   = 'text-gray-500';
-                        $nameCls = '';
-                    } elseif ($isDosen) {
-                        $bg      = '#EDE9FE';
-                        $txtCls  = 'text-slate-800';
-                        $tmCls   = 'text-gray-400';
-                        $nameCls = 'text-violet-700';
-                    } else {
-                        $bg      = '#FFFFFF';
-                        $txtCls  = 'text-gray-900';
-                        $tmCls   = 'text-gray-400';
-                        $nameCls = 'text-[#075E54]';
-                    }
                 @endphp
 
-                <div class="flex items-end gap-1.5 mb-0.5 {{ $mine ? 'justify-end' : 'justify-start' }} {{ $grouped ? '' : 'mt-2' }}">
+                <div class="forum-msg-row {{ $mine ? 'mine' : '' }} {{ $grouped ? 'grouped' : '' }}">
 
                     @unless ($mine)
-                        <div class="w-8 shrink-0 self-end mb-0.5">
+                        <div class="forum-avatar-slot">
                             @unless ($grouped)
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm"
-                                     style="background:{{ $sClr }}">
+                                <div class="forum-avatar-sm" style="background:{{ $sClr }}">
                                     {{ strtoupper(substr($sFirst, 0, 1)) }}
                                 </div>
                             @endunless
                         </div>
                     @endunless
 
-                    <div class="relative flex flex-col {{ $mine ? 'items-end' : 'items-start' }} max-w-[70%] sm:max-w-[60%]">
+                    <div class="forum-bubble-col {{ $mine ? 'mine' : 'theirs' }}">
 
                         @unless ($mine || $grouped)
-                            <p class="text-[11px] font-bold mb-0.5 px-2 {{ $nameCls }}">
-                                @if ($isDosen)👨‍🏫 {{ $sName }}
+                            <p class="forum-sender-name {{ $isDosen ? 'dosen' : '' }}">
+                                @if ($isDosen)&#128104;&#8205;&#127979; {{ $sName }}
                                 @else{{ $sFirst }}
                                 @endif
                             </p>
                         @endunless
 
-                        <div class="relative">
-
-                            @unless ($grouped)
+                        <div class="forum-bubble {{ $mine ? 'mine' : 'theirs' }} {{ $isDosen ? 'dosen' : '' }} {{ $grouped ? 'grouped' : '' }}">
+                            <p class="forum-bubble-text">{{ $msg->isi }}</p>
+                            <div class="forum-bubble-meta">
+                                <span class="forum-bubble-time">{{ $timeStr }}</span>
                                 @if ($mine)
-                                    <svg class="absolute -right-[7px] bottom-[6px] w-3 h-4 drop-shadow-sm"
-                                         viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M0 16 Q10 14 11 4 Q11 0 8 0 L8 14 Q8 15 0 16Z" fill="#DCF8C6"/>
-                                    </svg>
-                                @else
-                                    <svg class="absolute -left-[7px] bottom-[6px] w-3 h-4 drop-shadow-sm"
-                                         viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 16 Q2 14 1 4 Q1 0 4 0 L4 14 Q4 15 12 16Z" fill="{{ $bg }}"/>
+                                    <svg width="15" height="10" viewBox="0 0 16 11" fill="none">
+                                        <path d="M1 5.5L4.5 9L10 2" stroke="#002B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6 5.5L9.5 9L15 2" stroke="#002B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 @endif
-                            @endunless
-
-                            <div class="rounded-xl shadow-sm px-3 py-2 min-w-[80px]
-                                        {{ $mine
-                                            ? ($grouped ? 'rounded-tr-xl' : 'rounded-tr-sm')
-                                            : ($grouped ? 'rounded-tl-xl' : 'rounded-tl-sm') }}"
-                                 style="background: {{ $bg }}">
-                                <p class="text-[13.5px] leading-[1.5] {{ $txtCls }} whitespace-pre-wrap break-words">{{ $msg->isi }}</p>
-                                <div class="flex items-center justify-end gap-1 mt-1 -mb-0.5">
-                                    <span class="text-[10px] {{ $tmCls }} whitespace-nowrap">{{ $timeStr }}</span>
-                                    @if ($mine)
-                                        <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M1 5.5L4.5 9L10 2" stroke="#53BDEB" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M6 5.5L9.5 9L15 2" stroke="#53BDEB" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    @endif
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -281,14 +374,14 @@
             @endforeach
 
         @empty
-            <div class="flex flex-col items-center justify-center h-full py-16 text-center">
-                <div class="w-20 h-20 rounded-full bg-white/70 border border-gray-200 flex items-center justify-center mb-4 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <div class="forum-empty">
+                <div class="forum-empty-icon">
+                    <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                     </svg>
                 </div>
-                <p class="text-sm font-bold text-gray-500">Belum ada pesan</p>
-                <p class="text-xs text-gray-400 mt-1">Mulai percakapan dengan mahasiswa Anda 🎓</p>
+                <p class="forum-empty-title">Belum ada pesan</p>
+                <p class="forum-empty-sub">Jadilah yang pertama memulai diskusi! &#128640;</p>
             </div>
         @endforelse
 
@@ -296,30 +389,23 @@
     </div>
 
     {{-- Input bar --}}
-    <div class="shrink-0 flex items-end gap-2 px-2 py-2 bg-[#F0F2F5] border-t border-gray-200">
-
-        <button type="button" class="shrink-0 mb-1 w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-200 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <div class="forum-input-bar">
+        <button type="button" class="forum-icon-btn">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
         </button>
 
         <form id="chatForm" method="POST"
-              action="{{ route('dosen.forum.pesan', $activeForum->id) }}"
-              class="flex-1 flex items-end gap-2">
+              action="{{ route('dosen.kelas-forum.pesan', $activeForum->id) }}"
+              class="forum-form">
             @csrf
             <textarea id="chatInput" name="isi" rows="1" maxlength="2000"
-                      placeholder="Tulis pesan kepada mahasiswa..."
-                      class="flex-1 resize-none rounded-2xl bg-white border-0 px-4 py-2.5
-                             text-[13.5px] text-gray-900 leading-relaxed placeholder-gray-400
-                             focus:outline-none focus:ring-2 focus:ring-[#321270]/30
-                             shadow-sm max-h-32 overflow-y-hidden"></textarea>
+                      placeholder="Ketik pesan..."
+                      class="forum-textarea"></textarea>
 
-            <button type="submit" id="sendBtn"
-                    class="shrink-0 mb-0.5 w-11 h-11 flex items-center justify-center rounded-full
-                           bg-[#321270] text-white shadow-md
-                           hover:bg-[#4c1d95] active:scale-90 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+            <button type="submit" id="sendBtn" class="forum-send-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/>
                 </svg>
             </button>
@@ -327,21 +413,18 @@
     </div>
 
 @else
-    <div class="flex-1 flex flex-col items-center justify-center p-10 text-center"
-         style="background:#e5ddd5">
-        <div class="w-24 h-24 rounded-full bg-white/80 border border-gray-200 flex items-center justify-center mb-5 shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-11 h-11 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+    {{-- No forum selected --}}
+    <div class="forum-placeholder">
+        <div class="forum-placeholder-icon">
+            <svg width="44" height="44" fill="none" viewBox="0 0 24 24" stroke="#002B6B" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
             </svg>
         </div>
-        <h3 class="text-base font-bold text-gray-600">Pilih percakapan</h3>
-        <p class="mt-2 max-w-xs text-sm text-gray-400 leading-relaxed">
-            Pilih kelas dari panel kiri untuk mulai berdiskusi dengan mahasiswa.
-        </p>
+        <h3 class="forum-placeholder-title">Pilih Percakapan</h3>
+        <p class="forum-placeholder-sub">Pilih forum dari panel kiri untuk mulai berdiskusi.</p>
     </div>
 @endif
 
-</section>
 </div>
 @endsection
 
@@ -349,11 +432,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Auto-scroll ke bawah
     const box = document.getElementById('chatMessages');
     if (box) box.scrollTop = box.scrollHeight;
 
-    // 2. Auto-resize textarea
     const ta = document.getElementById('chatInput');
     if (ta) {
         const resize = () => {
@@ -362,7 +443,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         ta.addEventListener('input', resize);
 
-        // Enter = kirim, Shift+Enter = baris baru
         ta.addEventListener('keydown', e => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -372,13 +452,12 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => ta.focus(), 80);
     }
 
-    // 3. Search kelas
     const s = document.getElementById('forumSearch');
     if (s) {
         s.addEventListener('input', () => {
             const q = s.value.toLowerCase();
             document.querySelectorAll('.forum-thread').forEach(el => {
-                el.style.display = (!q || (el.dataset.search || '').includes(q)) ? '' : 'none';
+                el.style.display = (!q || (el.dataset.search||'').includes(q)) ? '' : 'none';
             });
         });
     }
