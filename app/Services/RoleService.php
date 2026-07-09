@@ -178,4 +178,3 @@ class RoleService
 
         return false;
     }
-}
