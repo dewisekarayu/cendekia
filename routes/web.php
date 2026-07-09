@@ -113,19 +113,15 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
 
 
     // Pengumuman
-    Route::get('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
-    Route::post('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
-    Route::delete('/dosen/pengumuman/{id}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
+    Route::get('/dosen/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
+    Route::post('/dosen/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
+    Route::put('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'update'])->name('dosen.kelas-pengumuman.update');
+    Route::delete('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
     
     // Profil, Jadwal, dan Pengaturan Dosen
     Route::get('/dosen/profil', function () { return view('dosen.profil'); })->name('dosen.profil');
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
     Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
-
-    Route::get('/dosen/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
-    Route::post('/dosen/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
-    Route::put('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'update'])->name('dosen.kelas-pengumuman.update');
-    Route::delete('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
 
 });
 

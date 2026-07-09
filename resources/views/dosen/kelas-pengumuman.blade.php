@@ -5,29 +5,26 @@
 
 @section('content')
 
-    <div class="bg-[#321270] rounded-xl px-8 py-6 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            @if(isset($kelas))
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="text-xs font-semibold bg-white/15 text-white px-2.5 py-1 rounded">{{ $kelas->mataKuliah->kode_mk ?? '-' }}</span>
-                    <span class="text-xs text-white/80">Semester {{ $kelas->semester->nama_semester ?? '-' }}</span>
-                </div>
-                <h1 class="text-xl font-bold text-white">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</h1>
-            @else
-                <h1 class="text-xl font-bold text-white">Announcements</h1>
-                <p class="text-sm text-white/80 mt-1">Semua pengumuman dari kelas-kelas yang Anda ampu.</p>
-            @endif
-        </div>
+    {{-- NAVBAR TABS --}}
+    <div style="display: flex; align-items: center; gap: 0; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; background: transparent;">
+        <a href="{{ route('dosen.kelas-pengumuman.index') }}" style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; font-size: 15px; font-weight: 600; color: #321270; border-bottom: 3px solid #321270; text-decoration: none; white-space: nowrap; transition: all 0.2s;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+            Announcements
+        </a>
+        <a href="{{ route('dosen.forums') }}" style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; font-size: 15px; font-weight: 500; color: #9ca3af; border-bottom: 3px solid transparent; text-decoration: none; white-space: nowrap; transition: all 0.2s; opacity: 0.7;" onmouseover="this.style.opacity='1'; this.style.color='#6b7280';" onmouseout="this.style.opacity='0.7'; this.style.color='#9ca3af';">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            Forums
+        </a>
     </div>
-
-    <x-flash-message />
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
             <h1 class="text-3xl font-bold text-[#0f172a]">Announcements</h1>
-            <p class="text-sm text-gray-500 mt-1">Semua pengumuman dari kelas-kelas yang Anda ampu.</p>
-            <h2 class="text-lg font-bold text-[#0f172a]">Daftar Pengumuman</h2>
-            <p class="text-xs text-gray-500 mt-1">Kelola pengumuman untuk semua kelas Anda dari satu tempat.</p>
+            <p class="text-sm text-gray-500 mt-1">Kelola pengumuman untuk semua kelas Anda dari satu tempat.</p>
         </div>
         <button onclick="toggleAnnouncementModal('modalAnnouncement')" class="shrink-0 bg-[#321270] hover:bg-opacity-90 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
@@ -37,6 +34,8 @@
         </button>
     </div>
 
+    <x-flash-message />
+
     <div class="space-y-4">
         @forelse($pengumuman as $p)
             <div class="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md transition">
@@ -45,7 +44,7 @@
                         @if($p->untuk_semua)
                             <span class="text-xs font-semibold bg-amber-50 text-amber-600 px-2.5 py-1 rounded-lg">Important</span>
                         @endif
-                        <span class="text-xs font-semibold bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-lg">
+                        <span class="text-xs font-semibold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg">
                             {{ $p->kelasPerkuliahan->kode_kelas ?? 'Kelas' }}
                         </span>
                     </div>
@@ -58,7 +57,7 @@
                     </div>
                 </div>
 
-                <h2 class="text-lg font-bold text-[#0f172a] hover:text-[#321270] transition cursor-pointer">{{ $p->judul }}</h2>
+                <h2 class="text-lg font-bold text-[#0f172a]">{{ $p->judul }}</h2>
                 <p class="text-sm text-gray-500 mt-2 leading-relaxed">{{ $p->isi }}</p>
 
                 <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-4 border-t border-gray-50 text-xs text-gray-500">
@@ -99,12 +98,6 @@
         <div class="fixed inset-0 bg-black bg-opacity-40 transition-opacity" onclick="toggleAnnouncementModal('modalAnnouncement')"></div>
 
         <div class="relative min-h-screen flex items-center justify-center p-4">
-            <div class="relative bg-white w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
-                <div class="px-8 py-5 bg-gray-50/50 border-b border-gray-100">
-                    <h3 class="text-lg font-bold text-[#1e293b]">Informasi Pengumuman</h3>
-                </div>
-
-                <form action="{{ route('dosen.kelas-pengumuman.store', ['id' => $kelas_perkuliahan_id]) }}" method="POST">
             <div class="relative bg-white w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
 
                 <div class="px-8 py-5 bg-gray-50/50 border-b border-gray-100 flex items-center gap-3">
@@ -138,9 +131,9 @@
                             <input type="checkbox" name="untuk_semua" id="untuk_semua" value="1" class="rounded text-[#321270] focus:ring-[#321270] w-4 h-4 border-gray-300">
                             <label for="untuk_semua" class="text-sm text-slate-700 font-medium select-none">Tandai pengumuman ini sebagai info penting (Important Badge)</label>
                         </div>
+
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700">Content / Message</label>
-                            <textarea name="isi" rows="6" required placeholder="Tuliskan isi pengumuman secara mendetail..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none resize-none placeholder-gray-300"></textarea>
                             <textarea name="isi" rows="5" required placeholder="Tuliskan isi pengumuman atau informasi penting secara mendetail di sini..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition resize-none placeholder-gray-300"></textarea>
                         </div>
                     </div>
@@ -210,12 +203,8 @@
     <script>
         function toggleAnnouncementModal(modalId) {
             const modal = document.getElementById(modalId);
-
             modal.classList.toggle('hidden');
             document.body.classList.toggle('overflow-hidden');
-
-            modal.classList.toggle("hidden");
-            document.body.classList.toggle("overflow-hidden");
         }
 
         function openEditModal(id, judul, isi, untukSemua) {

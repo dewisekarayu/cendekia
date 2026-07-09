@@ -269,6 +269,22 @@
     .forum-placeholder-sub{ color: #9CA3AF; margin-top: 8px; max-width: 320px; font-size: 14px; }
 </style>
 
+{{-- NAVBAR TABS --}}
+<div style="display: flex; align-items: center; gap: 0; margin-bottom: 16px; border-bottom: 1px solid #E3E9F7; background: #fff; border-radius: 8px 8px 0 0;">
+    <a href="{{ route('dosen.kelas-pengumuman.index') }}" style="padding: 14px 20px; font-size: 14px; font-weight: 600; color: #757575; border-bottom: 2px solid transparent; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 8px; white-space: nowrap; opacity: 0.7; hover:opacity: 1;">
+        <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+        </svg>
+        Announcements
+    </a>
+    <a href="{{ route('dosen.forums') }}" style="padding: 14px 20px; font-size: 14px; font-weight: 600; color: #002B6B; border-bottom: 2px solid #002B6B; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+        <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        Forums
+    </a>
+</div>
+
 <div class="forum-chat-wrap">
 
 @if ($activeForum)
