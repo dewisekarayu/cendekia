@@ -207,8 +207,9 @@ class User extends Authenticatable
         $result['debug_info']['user_roles'] = $this->getRoleNames()->toArray();
         return $result;
     }
-        public function kelasDiajar()
-        {
-            return $this->hasMany(KelasPerkuliahan::class, 'dosen_id');
-        }
+        
+    public function kelasDiajar()
+    {
+        return $this->hasMany(KelasPerkuliahan::class, 'dosen_id');
+    }
 }

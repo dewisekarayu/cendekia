@@ -119,7 +119,11 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::delete('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
     
     // Profil, Jadwal, dan Pengaturan Dosen
-    Route::get('/dosen/profil', function () { return view('dosen.profil'); })->name('dosen.profil');
+    // GANTI dengan:
+    Route::get('/dosen/profil', [App\Http\Controllers\Dosen\ProfileController::class, 'index'])->name('dosen.profil.index');
+    Route::put('/dosen/profil', [App\Http\Controllers\Dosen\ProfileController::class, 'updateProfile'])->name('dosen.profil.update');
+    Route::put('/dosen/profil/password', [App\Http\Controllers\Dosen\ProfileController::class, 'updatePassword'])->name('dosen.profil.password');
+
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
     Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
 
@@ -134,7 +138,9 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
     Route::get('/mahasiswa/kelas-saya', [MahasiswaKelasController::class, 'kelasSaya'])->name('mahasiswa.kelas-saya');
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');
+
     Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/buka', [MahasiswaKelasController::class, 'bukaMateri'])->name('mahasiswa.materi.buka');
+    Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/unduh', [MahasiswaKelasController::class, 'unduhMateri'])->name('mahasiswa.materi.unduh');
     Route::get('/mahasiswa/jelajahi-kelas', [MahasiswaKelasController::class, 'jelajahi'])->name('mahasiswa.jelajahi-kelas');
     Route::post('/mahasiswa/kelas/{id}/join', [MahasiswaKelasController::class, 'join'])->name('mahasiswa.kelas.join');
 

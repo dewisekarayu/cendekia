@@ -64,6 +64,21 @@ class KelasController extends Controller
 
     public function bukaMateri(Request $request, $kelasId, $materiId)
     {
+        $kelas = KelasPerkuliahan::with('mataKuliah.programStudi')->findOrFail($kelasId);
+
+        $sudahGabung = KelasMahasiswa::where('kelas_perkuliahan_id', $kelas->id)
+            ->where('mahasiswa_id', $request->user()->id)
+            ->exists();
+
+        abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
+
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+
+        return view('mahasiswa.materi.buka', compact('kelas', 'materi'));
+    }
+
+    public function unduhMateri(Request $request, $kelasId, $materiId)
+    {
         $kelas = KelasPerkuliahan::findOrFail($kelasId);
 
         $sudahGabung = KelasMahasiswa::where('kelas_perkuliahan_id', $kelas->id)

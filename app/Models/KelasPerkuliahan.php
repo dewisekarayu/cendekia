@@ -83,3 +83,4 @@ class KelasPerkuliahan extends Model
         return $this->hasMany(Materi::class, 'kelas_perkuliahan_id');
     }
 }
+

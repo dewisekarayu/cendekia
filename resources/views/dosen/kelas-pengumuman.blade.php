@@ -5,6 +5,7 @@
 
 @section('content')
 
+<<<<<<< HEAD
     {{-- NAVBAR TABS --}}
     <div style="display: flex; align-items: center; gap: 0; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; background: transparent;">
         <a href="{{ route('dosen.kelas-pengumuman.index') }}" style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; font-size: 15px; font-weight: 600; color: #321270; border-bottom: 3px solid #321270; text-decoration: none; white-space: nowrap; transition: all 0.2s;">
@@ -25,6 +26,12 @@
         <div>
             <h1 class="text-3xl font-bold text-[#0f172a]">Announcements</h1>
             <p class="text-sm text-gray-500 mt-1">Kelola pengumuman untuk semua kelas Anda dari satu tempat.</p>
+=======
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-[#0f172a]">Announcements</h1>
+            <p class="text-sm text-gray-500 mt-1">Semua pengumuman dari kelas-kelas yang Anda ampu.</p>
+>>>>>>> 18ac6d0 (menambahkan fitur dan styling edit di bagian profil dosen, serta setting pada mahasiswa, dan menambahkan tampilan buka pada kelas detail)
         </div>
         <button onclick="toggleAnnouncementModal('modalAnnouncement')" class="shrink-0 bg-[#321270] hover:bg-opacity-90 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
@@ -109,7 +116,7 @@
                     <h3 class="text-lg font-bold text-[#1e293b]">Buat Pengumuman</h3>
                 </div>
 
-                <form action="{{ route('dosen.kelas-pengumuman.store') }}" method="POST">
+                <form id="formCreateAnnouncement" method="POST">
                     @csrf
                     <div class="px-8 py-6 space-y-5">
                         <div class="space-y-1.5">
@@ -119,10 +126,10 @@
 
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700">Kelas</label>
-                            <select name="kelas_perkuliahan_id" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition text-gray-700 bg-white">
+                            <select name="kelas_perkuliahan_id" id="create_kelas_id" required onchange="updateCreateFormAction(this.value)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition text-gray-700 bg-white">
                                 <option value="" disabled selected>Pilih kelas...</option>
-                                @foreach($kelasList as $kelasOption)
-                                    <option value="{{ $kelasOption->id }}">{{ $kelasOption->kode_kelas }}</option>
+                                @foreach($kelasList as $kelas)
+                                    <option value="{{ $kelas->id }}">{{ $kelas->kode_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -203,8 +210,13 @@
     <script>
         function toggleAnnouncementModal(modalId) {
             const modal = document.getElementById(modalId);
+<<<<<<< HEAD
             modal.classList.toggle('hidden');
             document.body.classList.toggle('overflow-hidden');
+=======
+            modal.classList.toggle("hidden");
+            document.body.classList.toggle("overflow-hidden");
+>>>>>>> 18ac6d0 (menambahkan fitur dan styling edit di bagian profil dosen, serta setting pada mahasiswa, dan menambahkan tampilan buka pada kelas detail)
         }
 
         function openEditModal(id, judul, isi, untukSemua) {
@@ -216,6 +228,11 @@
             document.getElementById('edit_untuk_semua').checked = untukSemua;
 
             toggleAnnouncementModal('modalEditAnnouncement');
+        }
+
+        function updateCreateFormAction(kelasId) {
+            const form = document.getElementById('formCreateAnnouncement');
+            form.action = `/dosen/kelas/${kelasId}/pengumuman`;
         }
     </script>
 

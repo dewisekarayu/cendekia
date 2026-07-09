@@ -43,7 +43,7 @@ class PengumumanController extends Controller
             'untuk_semua' => $request->boolean('untuk_semua'),
         ]);
 
-        return redirect()->route('dosen.kelas-pengumuman.index')
+        return redirect()->route('dosen.kelas-pengumuman.index', $validated['kelas_perkuliahan_id'])
             ->with('success', 'Pengumuman kelas berhasil diterbitkan.');
     }
 
@@ -63,7 +63,7 @@ class PengumumanController extends Controller
             'untuk_semua' => $request->boolean('untuk_semua'),
         ]);
 
-        return redirect()->route('dosen.kelas-pengumuman.index')
+        return redirect()->route('dosen.kelas-pengumuman.index', $pengumuman->kelas_perkuliahan_id)
             ->with('success', 'Pengumuman kelas berhasil diperbarui.');
     }
 
@@ -75,3 +75,4 @@ class PengumumanController extends Controller
             ->with('success', 'Pengumuman kelas berhasil dihapus.');
     }
 }
+
