@@ -32,15 +32,19 @@ class DosenController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'nip_nim' => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
+            'status' => ['required', 'boolean'],
         ]);
 
         $dosen = User::create([
             'name' => $validated['name'],
+            'nip_nim' => $validated['nip_nim'],
             'email' => $validated['email'],
             'password' => Hash::make('dosen123'),
             'program_studi_id' => $validated['program_studi_id'] ?? null,
+            'status' => $validated['status'],
         ]);
 
         $dosen->assignRole('dosen');
@@ -51,11 +55,7 @@ class DosenController extends Controller
 
     public function edit($id)
     {
-        // Mengambil data dosen berdasarkan ID
-        $dosenMember = User::findOrFail($id); 
-        
-        // Mengambil semua daftar prodi untuk pilihan select option di form edit
-        // Disamakan nama variabelnya dengan create/index jika perlu, di sini memakai prodiList agar pas dengan Blade Edit
+        $dosenMember = User::findOrFail($id);
         $prodiList = ProgramStudi::orderBy('nama_prodi')->get();
 
         return view('admin.dosen.edit', compact('dosenMember', 'prodiList'));
@@ -65,14 +65,14 @@ class DosenController extends Controller
     {
         $dosenMember = User::findOrFail($id);
 
-        // Validasi data input dari form edit
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'nip_nim' => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($dosenMember->id)],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($dosenMember->id)],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
+            'status' => ['required', 'boolean'],
         ]);
 
-        // Update data ke database
         $dosenMember->update($validated);
 
         return redirect()->route('admin.dosen.index')

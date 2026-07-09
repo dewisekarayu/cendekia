@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="fw-semibold text-secondary">{{ '04' . str_pad((string) $item->id, 8, '0', STR_PAD_LEFT) }}</td>
+                               <td class="fw-semibold text-secondary">{{ $item->nip_nim }}</td>
                                 <td>
                                     <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #E6EEFF; color: #002B6B; border-radius: 6px;">
                                         {{ $item->programStudi?->nama_prodi ?? 'Lintas Prodi' }}
@@ -75,9 +75,15 @@
                                 </td>
                                 <td class="text-secondary" style="font-size: 0.9rem;">+62 812-{{ str_pad((string) $item->id, 4, '0', STR_PAD_LEFT) }}-{{ str_pad((string) (($item->id * 73) % 10000), 4, '0', STR_PAD_LEFT) }}</td>
                                 <td>
-                                    <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #d1fae5; color: #065f46; border-radius: 6px;">
-                                        {{ $item->status ?? 'Aktif' }}
-                                    </span>
+                                    @if(($item->status ?? 'aktif') == 'aktif')
+                                        <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #d1fae5; color: #065f46; border-radius: 6px;">
+                                            Aktif
+                                        </span>
+                                    @else
+                                        <span class="badge px-2.5 py-1.5 fw-semibold" style="background-color: #fee2e2; color: #991b1b; border-radius: 6px;">
+                                            Non-Aktif
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="pe-4">
                                     <div class="d-flex justify-content-center gap-1.5">

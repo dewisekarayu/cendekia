@@ -76,16 +76,6 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label">Semester <span style="color: #dc2626;">*</span></label>
-                        <select class="form-select" name="semester" required>
-                            <option value="">-- Pilih Semester --</option>
-                            @for ($i = 1; $i <= 8; $i++)
-                                <option value="{{ $i }}" {{ old('semester') == $i ? 'selected' : '' }}>Semester {{ $i }}</option>
-                            @endfor
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
                         <label class="form-label">Status</label>
                         <div class="d-flex gap-3">
                             <div class="form-check">
@@ -101,22 +91,13 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="statusNonAktif" value="non-aktif" {{ old('status') == 'non-aktif' ? 'checked' : '' }}>
+                                <input class="form-check-input" type="radio" name="status" id="statusNonAktif" value="non_aktif" {{ old('status') == 'non_aktif' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="statusNonAktif">
                                     Non-Aktif
                                 </label>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Alamat</label>
-                        <textarea class="form-control" name="alamat" placeholder="Masukkan alamat" rows="3">{{ old('alamat') }}</textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}">
+                        @error('status') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                     </div>
 
                     <div style="display: flex; gap: 1rem; margin-top: 2rem;">

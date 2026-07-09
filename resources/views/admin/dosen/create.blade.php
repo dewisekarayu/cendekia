@@ -18,15 +18,15 @@
         <div class="table-card" style="max-width: 800px;">
             <form method="POST" action="{{ route('admin.dosen.store') }}" enctype="multipart/form-data">
                 @csrf
-                
+
                 <div style="padding: 2rem;">
                     <!-- Foto -->
                     <div class="mb-4">
                         <label class="form-label">Foto Profil</label>
                         <div style="display: flex; align-items: center; gap: 1rem;">
-                            <img id="photoPreview" 
-                                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=newteacher" 
-                                 style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" alt="Preview">
+                            <img id="photoPreview"
+                                src="https://api.dicebear.com/7.x/avataaars/svg?seed=newteacher"
+                                style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" alt="Preview">
                             <div>
                                 <input type="file" class="form-control" id="photoInput" accept="image/*">
                                 <small class="text-muted d-block mt-2">Format: JPG, PNG (Max 2MB)</small>
@@ -37,13 +37,15 @@
                     <!-- Nama Lengkap -->
                     <div class="mb-4">
                         <label class="form-label">Nama Lengkap <span style="color: #dc2626;">*</span></label>
-                        <input type="text" class="form-control" name="nama" placeholder="Masukkan nama lengkap" required>
+                        <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Masukkan nama lengkap" required>
+                        @error('name') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                     </div>
 
-                    <!-- NIDN -->
+                    <!-- NIP (dipakai sebagai identitas login) -->
                     <div class="mb-4">
-                        <label class="form-label">NIDN <span style="color: #dc2626;">*</span></label>
-                        <input type="text" class="form-control" name="nidn" placeholder="Masukkan NIDN" required>
+                        <label class="form-label">NIP <span style="color: #dc2626;">*</span></label>
+                        <input type="text" class="form-control" name="nip_nim" value="{{ old('nip_nim') }}" placeholder="Masukkan NIP" required>
+                        @error('nip_nim') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                     </div>
 
                     <!-- Email -->
@@ -52,19 +54,13 @@
                         <input type="email" class="form-control" name="email" placeholder="Masukkan email" required>
                     </div>
 
-                    <!-- No. Telepon -->
-                    <div class="mb-4">
-                        <label class="form-label">No. Telepon</label>
-                        <input type="tel" class="form-control" name="telepon" placeholder="Masukkan nomor telepon">
-                    </div>
-
                     <!-- Program Studi -->
                     <div class="mb-4">
                         <label class="form-label">Program Studi <span style="color: #dc2626;">*</span></label>
                         <select class="form-select" name="program_studi_id">
                             <option value="">-- Pilih Program Studi --</option>
                             @foreach ($programStudiList as $programStudi)
-                                <option value="{{ $programStudi->id }}">{{ $programStudi->nama_prodi }}</option>
+                            <option value="{{ $programStudi->id }}">{{ $programStudi->nama_prodi }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -74,35 +70,19 @@
                         <label class="form-label">Status</label>
                         <div class="d-flex gap-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="statusAktif" value="aktif" checked>
+                                <input class="form-check-input" type="radio" name="status" id="statusAktif" value="aktif" {{ old('status', 'aktif') == 'aktif' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="statusAktif">
                                     Aktif
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="statusNonAktif" value="non-aktif">
+                                <input class="form-check-input" type="radio" name="status" id="statusNonAktif" value="non_aktif" {{ old('status') == 'non_aktif' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="statusNonAktif">
                                     Non-Aktif
                                 </label>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Alamat -->
-                    <div class="mb-4">
-                        <label class="form-label">Alamat</label>
-                        <textarea class="form-control" name="alamat" placeholder="Masukkan alamat" rows="3"></textarea>
-                    </div>
-
-                    <!-- Kualifikasi Pendidikan -->
-                    <div class="mb-4">
-                        <label class="form-label">Kualifikasi Pendidikan</label>
-                        <select class="form-select" name="kualifikasi">
-                            <option value="">-- Pilih Kualifikasi --</option>
-                            <option value="S1">S1</option>
-                            <option value="S2">S2</option>
-                            <option value="S3">S3</option>
-                        </select>
+                        @error('status') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                     </div>
 
                     <!-- Buttons -->
