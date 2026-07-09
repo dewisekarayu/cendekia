@@ -9,6 +9,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+<<<<<<< HEAD
+=======
+#[Fillable(['name', 'nip_nim', 'email', 'email_verified_at', 'password', 'program_studi_id', 'status', 'telepon', 'foto'])]
+#[Hidden(['password', 'remember_token'])]
+>>>>>>> 477b8f9ae3232a8cb4f17d051eae627d426e224e
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -225,9 +230,15 @@ class User extends Authenticatable
             }
         }
 
-        // No valid role
+        // // No valid role
         $result['reason'] = 'User has no valid role (not admin, dosen, or mahasiswa)';
         $result['debug_info']['user_roles'] = $this->getRoleNames()->toArray();
         return $result;
+    }
+}
+        
+    public function kelasDiajar()
+    {
+        return $this->hasMany(KelasPerkuliahan::class, 'dosen_id');
     }
 }

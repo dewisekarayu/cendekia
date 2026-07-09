@@ -89,58 +89,66 @@
     {{-- DESKTOP: Grid timetable --}}
     <div class="hidden md:block overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
         <div class="overflow-x-auto">
-            <div class="flex min-w-[860px]">
-                {{-- Time column --}}
-                <div class="flex-none w-16 border-r border-gray-100">
-                    <div class="h-[{{ $headerHeight }}px] border-b border-gray-100"></div>
-                    @for ($h = $startHour; $h < $endHour; $h++)
-                        <div class="h-[{{ $hourHeight }}px] border-b border-gray-50 flex items-start justify-end pr-2 pt-1.5">
-                            <span class="text-[10px] font-medium text-gray-400">{{ sprintf('%02d:00', $h) }}</span>
-                        </div>
-                    @endfor
-                </div>
-
-                {{-- Day columns --}}
-                <div class="flex flex-1 divide-x divide-gray-100">
-                    @foreach ($days as $day)
-                        @php $isToday = $day === $hariIni; @endphp
-                        <div class="flex-1 min-w-[110px] flex flex-col">
-                            {{-- Day header --}}
-                            <div class="h-[{{ $headerHeight }}px] border-b {{ $isToday ? 'bg-[#002B6B]' : 'bg-gray-50/80' }} flex items-center justify-center">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="border-b border-gray-100">
+                        <th class="w-16 px-3 py-2 text-center text-[10px] font-semibold text-gray-400"></th>
+                        @foreach ($days as $day)
+                            @php $isToday = $day === $hariIni; @endphp
+                            <th class="w-32 px-3 py-3 text-center border-l border-gray-100 {{ $isToday ? 'bg-[#002B6B]' : 'bg-gray-50/80' }}">
                                 <span class="text-xs font-bold {{ $isToday ? 'text-white' : 'text-gray-600' }}">{{ $day }}</span>
-                            </div>
-
-                            {{-- Hour grid + events --}}
-                            <div class="relative flex-1" style="height: {{ $totalHeight }}px">
-                                @for ($h = $startHour; $h < $endHour; $h++)
-                                    <div class="absolute w-full border-b border-gray-50" style="top: {{ ($h - $startHour) * $hourHeight }}px; height: {{ $hourHeight }}px"></div>
-                                @endfor
-
-                                @foreach ($eventsByDay[$day] ?? [] as $ev)
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @for ($h = $startHour; $h < $endHour; $h++)
+                        <tr class="border-b border-gray-50">
+                            <td class="w-16 px-3 py-2 text-center border-r border-gray-100">
+                                <span class="text-[10px] font-medium text-gray-400">{{ sprintf('%02d:00', $h) }}</span>
+                            </td>
+                            @foreach ($days as $day)
+                                <td class="w-32 border-l border-gray-100 p-0.5 align-top relative" style="height: 80px;">
                                     @php
-                                        [$sh, $sm] = array_pad(explode(':', $ev->jam_mulai ?? '07:00'), 2, '00');
-                                        [$eh, $em] = array_pad(explode(':', $ev->jam_selesai ?? '08:00'), 2, '00');
-                                        $startMin = (int)$sh * 60 + (int)$sm;
-                                        $endMin   = (int)$eh * 60 + (int)$em;
-                                        $topPx    = max(0, $startMin - $startHour * 60) * ($hourHeight / 60);
-                                        $heightPx = max(28, ($endMin - $startMin) * ($hourHeight / 60));
-                                        $evColor  = $kelasColorMap[$ev->id] ?? $colors[0];
+                                        // Only render events that START at this hour
+                                        $eventsAtThisHour = [];
+                                        foreach ($eventsByDay[$day] ?? [] as $ev) {
+                                            [$sh, $sm] = array_pad(explode(':', $ev->jam_mulai ?? '07:00'), 2, '00');
+                                            if ((int)$sh === $h) {
+                                                $eventsAtThisHour[] = $ev;
+                                            }
+                                        }
                                     @endphp
-                                    <div class="absolute left-1 right-1 rounded-lg border-l-4 overflow-hidden {{ $evColor }} shadow-sm"
-                                         style="top: {{ $topPx }}px; height: {{ $heightPx }}px">
-                                        <div class="p-1.5 h-full overflow-hidden">
-                                            <p class="text-[11px] font-bold text-gray-800 leading-tight truncate">{{ $ev->mataKuliah?->nama_mk ?? '-' }}</p>
-                                            @if ($heightPx > 40)
-                                                <p class="text-[10px] text-gray-500 truncate mt-0.5">{{ $ev->ruangan ?? '' }}</p>
+                                    
+                                    @foreach ($eventsAtThisHour as $ev)
+                                        @php
+                                            [$sh, $sm] = array_pad(explode(':', $ev->jam_mulai ?? '07:00'), 2, '00');
+                                            [$eh, $em] = array_pad(explode(':', $ev->jam_selesai ?? '08:00'), 2, '00');
+                                            $startMin = (int)$sh * 60 + (int)$sm;
+                                            $endMin   = (int)$eh * 60 + (int)$em;
+                                            $durationMin = $endMin - $startMin;
+                                            $durationHours = $durationMin / 60;
+                                            $rowsSpanned = ceil($durationHours);
+                                            $heightPx = $rowsSpanned * 80;
+                                            $evColor  = $kelasColorMap[$ev->id] ?? $colors[0];
+                                        @endphp
+                                        <div class="absolute left-0.5 right-0.5 rounded-lg border-l-4 overflow-hidden {{ $evColor }} shadow-sm p-1.5 text-left text-[10px]" 
+                                             style="height: {{ $heightPx }}px; top: 2px;">
+                                            <p class="font-bold text-gray-800 leading-tight line-clamp-2">{{ $ev->mataKuliah?->nama_mk ?? '-' }}</p>
+                                            @if ($heightPx > 45)
+                                                <p class="text-gray-600 line-clamp-1 mt-1 font-semibold">{{ $ev->ruangan ?? '-' }}</p>
+                                                <p class="text-gray-500 mt-1">{{ substr($ev->jam_mulai,0,5) }} - {{ substr($ev->jam_selesai,0,5) }}</p>
+                                            @else
+                                                <p class="text-gray-600 line-clamp-1 mt-0.5">{{ substr($ev->jam_mulai,0,5) }} - {{ substr($ev->jam_selesai,0,5) }}</p>
                                             @endif
                                         </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+                                    @endforeach
+                                </td>
+                            @endforeach
+                        </tr>
+                    @endfor
+                </tbody>
+            </table>
         </div>
     </div>
 @endif

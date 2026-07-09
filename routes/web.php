@@ -14,7 +14,11 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Dosen\GradebookController as DosenGradebookController;
+
 use App\Http\Controllers\Dosen\ForumController as DosenForumController;
+
+use App\Http\Controllers\Dosen\MateriController as DosenMateriController;
+
 
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
@@ -99,13 +103,30 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::post('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'storeMateri'])->name('dosen.kelas-materi.store');
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
+    
+    // Forum - akses halaman forum umum dosen
     Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
-    Route::post('/dosen/forums/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.forum.pesan');
+    
+    // Forum - akses dari dalam kelas & kirim pesan
+    Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
+    Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
 
-    // Cari bagian rute pengumuman dosen, lalu ubah menjadi seperti ini:-
-    Route::get('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
-    Route::post('/dosen/kelas/{id}/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
-    Route::delete('/dosen/pengumuman/{id}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
+
+    // Pengumuman
+    Route::get('/dosen/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
+    Route::post('/dosen/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
+    Route::put('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'update'])->name('dosen.kelas-pengumuman.update');
+    Route::delete('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
+    
+    // Profil, Jadwal, dan Pengaturan Dosen
+    // GANTI dengan:
+    Route::get('/dosen/profil', [App\Http\Controllers\Dosen\ProfileController::class, 'index'])->name('dosen.profil.index');
+    Route::put('/dosen/profil', [App\Http\Controllers\Dosen\ProfileController::class, 'updateProfile'])->name('dosen.profil.update');
+    Route::put('/dosen/profil/password', [App\Http\Controllers\Dosen\ProfileController::class, 'updatePassword'])->name('dosen.profil.password');
+
+    Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
+    Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
+
 });
 
 // Dashboard & halaman khusus Mahasiswa
@@ -117,17 +138,25 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
     Route::get('/mahasiswa/kelas-saya', [MahasiswaKelasController::class, 'kelasSaya'])->name('mahasiswa.kelas-saya');
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');
+
     Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/buka', [MahasiswaKelasController::class, 'bukaMateri'])->name('mahasiswa.materi.buka');
+    Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/unduh', [MahasiswaKelasController::class, 'unduhMateri'])->name('mahasiswa.materi.unduh');
     Route::get('/mahasiswa/jelajahi-kelas', [MahasiswaKelasController::class, 'jelajahi'])->name('mahasiswa.jelajahi-kelas');
     Route::post('/mahasiswa/kelas/{id}/join', [MahasiswaKelasController::class, 'join'])->name('mahasiswa.kelas.join');
 
     Route::get('/mahasiswa/gradebook', [MahasiswaGradebookController::class, 'index'])->name('mahasiswa.gradebook');
-    Route::get('/mahasiswa/forums', [MahasiswaForumController::class, 'index'])->name('mahasiswa.forums');
-    Route::post('/mahasiswa/forums/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.forum.pesan');
+    
+    // Forum - akses hanya dari dalam kelas
+    Route::get('/mahasiswa/kelas/{id}/forum', [MahasiswaForumController::class, 'index'])->name('mahasiswa.kelas-forum');
+    Route::post('/mahasiswa/kelas/{id}/forum/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.kelas-forum.pesan');
+    
     Route::get('/mahasiswa/schedule', [MahasiswaScheduleController::class, 'index'])->name('mahasiswa.schedule');
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
     Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
+    
+    // Profil Mahasiswa
+    Route::get('/mahasiswa/profil', function () { return view('mahasiswa.profil'); })->name('mahasiswa.profil');
 });
 
 Route::middleware('auth')->group(function () {

@@ -15,6 +15,7 @@ class MataKuliahController extends Controller
 
         $query = MataKuliah::with('programStudi');
 
+        // Fitur Filter Pencarian Instan
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('nama_mk', 'like', "%{$search}%")
@@ -24,6 +25,7 @@ class MataKuliahController extends Controller
 
         $mataKuliah = $query->latest()->paginate(10)->withQueryString();
 
+        // Mengembalikan potongan tabel jika diakses via AJAX Live Search
         if ($request->has('ajax')) {
             return view('admin.mata-kuliah.table', compact('mataKuliah'))->render();
         }
@@ -61,7 +63,7 @@ class MataKuliahController extends Controller
         $prodiList = ProgramStudi::all();
 
         return view('admin.mata-kuliah.edit', [
-            'mk' => $mataKuliah,
+            'mk'        => $mataKuliah,
             'prodiList' => $prodiList,
         ]);
     }

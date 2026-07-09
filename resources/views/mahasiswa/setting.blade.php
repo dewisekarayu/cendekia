@@ -1,43 +1,9 @@
 @extends('layouts.portal')
 @section('title', 'Settings')
-@section('subtitle', 'Akun Mahasiswa')
+@section('activeMenu', 'Settings')
 @section('content')
-@php $u = auth()->user(); @endphp
 
-<x-flash-message />
-
-{{-- HERO PROFILE BANNER --}}
-<div class="mb-6 rounded-2xl relative overflow-hidden shadow-xl" style="background: linear-gradient(135deg, #001f52 0%, #002B6B 50%, #003d99 100%);">
-    <div class="absolute inset-0 pointer-events-none overflow-hidden">
-        <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full opacity-10" style="background: radial-gradient(circle, #60a5fa, transparent);"></div>
-        <div class="absolute -bottom-12 -left-12 w-52 h-52 rounded-full opacity-10" style="background: radial-gradient(circle, #818cf8, transparent);"></div>
-        <div class="absolute top-0 left-0 right-0 h-px opacity-20" style="background: linear-gradient(90deg, transparent, #60a5fa, transparent);"></div>
-    </div>
-    <div class="relative z-10 px-6 py-7 sm:px-8 sm:py-8">
-        <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-            <div class="relative shrink-0">
-                <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-extrabold text-white shadow-lg border-2 border-white/20" style="background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));">
-                    {{ strtoupper(substr($u->name, 0, 1)) }}
-                </div>
-                <span class="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-400 border-2 border-white shadow-sm"></span>
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-[11px] font-bold uppercase tracking-widest text-blue-200/70 mb-1">Akun Mahasiswa</p>
-                <h1 class="text-xl sm:text-2xl font-extrabold text-white leading-tight truncate">{{ $u->name }}</h1>
-                <p class="mt-0.5 text-sm text-blue-100/70 truncate">{{ $u->email }}</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2 shrink-0">
-                <span class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>Aktif
-                </span>
-                <span class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
-                    {{ $u->nip_nim ?? 'NIM belum diset' }}
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
+@php $user = auth()->user(); @endphp
 
 {{-- STATS STRIP --}}
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
@@ -67,6 +33,7 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 {{-- MAIN GRID --}}
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -113,7 +80,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Nama Lengkap <span class="text-red-400 normal-case">*</span></label>
-                                <input type="text" name="name" value="{{ old('name', $u->name) }}"
+                                <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                     class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-[#002B6B] focus:ring-2 focus:ring-[#002B6B]/10 transition-all @error('name') border-red-300 bg-red-50 @enderror"
                                     style="border-color: {{ $errors->has('name') ? '' : '#e5e7eb' }};"
                                     placeholder="Nama lengkap kamu" required>
@@ -122,7 +89,7 @@
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">NIM</label>
                                 <div class="relative">
-                                    <input type="text" value="{{ $u->nip_nim ?? '–' }}" disabled
+                                    <input type="text" value="{{ $user->nip_nim ?? '–' }}" disabled
                                         class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-400 bg-gray-100 cursor-not-allowed pr-10">
                                     <span class="absolute inset-y-0 right-3 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
@@ -132,7 +99,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Alamat Email <span class="text-red-400 normal-case">*</span></label>
-                                <input type="email" name="email" value="{{ old('email', $u->email) }}"
+                                <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                     class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-[#002B6B] focus:ring-2 focus:ring-[#002B6B]/10 transition-all @error('email') border-red-300 bg-red-50 @enderror"
                                     style="border-color: {{ $errors->has('email') ? '' : '#e5e7eb' }};"
                                     placeholder="email@student.ac.id" required>
@@ -141,7 +108,7 @@
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Program Studi</label>
                                 <div class="relative">
-                                    <input type="text" value="{{ $u->programStudi?->nama_prodi ?? 'Belum ditentukan' }}" disabled
+                                    <input type="text" value="{{ $user->programStudi?->nama_prodi ?? 'Belum ditentukan' }}" disabled
                                         class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-400 bg-gray-100 cursor-not-allowed pr-10">
                                     <span class="absolute inset-y-0 right-3 flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
@@ -162,3 +129,206 @@
                     </form>
                 </div>
             </div>
+
+            {{-- PASSWORD / KEAMANAN TAB --}}
+            <div x-show="tab==='password'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
+                <div class="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-5 border-b border-gray-50 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-base font-bold text-slate-800">Ubah Kata Sandi</h2>
+                            <p class="text-xs text-gray-400 mt-0.5">Pastikan gunakan kata sandi yang kuat dan mudah kamu ingat</p>
+                        </div>
+                    </div>
+                    <form method="POST" action="{{ route('mahasiswa.setting.password') }}" class="px-6 py-6">
+                        @csrf @method('PATCH')
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Kata Sandi Saat Ini <span class="text-red-400 normal-case">*</span></label>
+                                <input type="password" name="current_password"
+                                    class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 transition-all @error('current_password', 'updatePassword') border-red-300 bg-red-50 @enderror"
+                                    style="border-color: {{ $errors->updatePassword->has('current_password') ? '' : '#e5e7eb' }};"
+                                    placeholder="Masukkan kata sandi saat ini" required>
+                                @error('current_password', 'updatePassword')<p class="mt-1.5 text-xs text-red-500 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Kata Sandi Baru <span class="text-red-400 normal-case">*</span></label>
+                                <input type="password" name="password"
+                                    class="w-full rounded-xl border px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 transition-all @error('password', 'updatePassword') border-red-300 bg-red-50 @enderror"
+                                    style="border-color: {{ $errors->updatePassword->has('password') ? '' : '#e5e7eb' }};"
+                                    placeholder="Minimal 8 karakter" required>
+                                @error('password', 'updatePassword')<p class="mt-1.5 text-xs text-red-500 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Konfirmasi Kata Sandi <span class="text-red-400 normal-case">*</span></label>
+                                <input type="password" name="password_confirmation"
+                                    class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 transition-all"
+                                    placeholder="Ulangi kata sandi baru" required>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-5 border-t border-gray-50 flex items-center justify-between">
+                            <p class="text-xs text-gray-400">Kamu akan tetap login setelah kata sandi diperbarui</p>
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-amber-600 active:scale-95 transition-all duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Perbarui Kata Sandi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- RIGHT: INFO CARD --}}
+    <div class="lg:col-span-1 space-y-5">
+        <div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-6">
+            <h3 class="text-sm font-bold text-slate-800 mb-4">Ringkasan Akun</h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400">Status</span>
+                    <span class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Aktif
+                    </span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400">NIM</span>
+                    <span class="text-xs font-semibold text-slate-700">{{ $user->nip_nim ?? '–' }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400">Program Studi</span>
+                    <span class="text-xs font-semibold text-slate-700 text-right">{{ $user->programStudi?->nama_prodi ?? '–' }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400">Bergabung Sejak</span>
+                    <span class="text-xs font-semibold text-slate-700">{{ $user->created_at?->translatedFormat('M Y') ?? '–' }}</span>
+                </div>
+            </div>
+
+            <div class="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mx-auto text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="mt-2 text-xs text-slate-500">Data NIM dan Program Studi hanya dapat diubah melalui admin akademik.</p>
+            </div>
+        </div>
+
+        {{-- FORM CARD --}}
+        <div class="lg:col-span-2 space-y-6">
+            {{-- INFORMASI PROFIL --}}
+            <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+                <div class="border-b border-gray-100 px-5 py-4">
+                    <h3 class="font-bold text-slate-800">Informasi Profil</h3>
+                </div>
+
+                <form method="POST" action="{{ route('mahasiswa.setting.profile') }}" class="space-y-5 p-5">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                            <input type="text" name="name" value="{{ old('name', $user->name) }}" placeholder="Nama lengkap"
+                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#321270] focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition"
+                                   required>
+                            @error('name')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Email"
+                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#321270] focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition"
+                                   required>
+                            @error('email')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">NIM</label>
+                            <input type="text" value="{{ $user->nip_nim ?? '–' }}" disabled
+                                   class="w-full rounded-lg border border-gray-200 bg-gray-100 px-4 py-2.5 text-sm text-gray-400 cursor-not-allowed">
+                            <p class="mt-1 text-xs text-gray-400">NIM tidak dapat diubah sendiri</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">Program Studi</label>
+                            <input type="text" value="{{ $user->programStudi?->nama_prodi ?? 'Belum ditentukan' }}" disabled
+                                   class="w-full rounded-lg border border-gray-200 bg-gray-100 px-4 py-2.5 text-sm text-gray-400 cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="reset"
+                                class="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                            Batal
+                        </button>
+                        <button type="submit" class="rounded-lg bg-[#321270] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#321270]/90 transition">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {{-- KEAMANAN --}}
+            <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+                <div class="border-b border-gray-100 px-5 py-4">
+                    <h3 class="font-bold text-slate-800">Keamanan Akun</h3>
+                </div>
+
+                <form method="POST" action="{{ route('mahasiswa.setting.password') }}" class="space-y-5 p-5">
+                    @csrf
+                    @method('PATCH')
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-2">Password Saat Ini</label>
+                        <input type="password" name="current_password" placeholder="Masukkan password saat ini"
+                               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#321270] focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition"
+                               required>
+                        @error('current_password', 'updatePassword')
+                            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">Password Baru</label>
+                            <input type="password" name="password" placeholder="Minimal 8 karakter"
+                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#321270] focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition"
+                                   required>
+                            @error('password', 'updatePassword')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
+                            <input type="password" name="password_confirmation" placeholder="Ulangi password baru"
+                                   class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-[#321270] focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="reset"
+                                class="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                            Batal
+                        </button>
+                        <button type="submit" class="rounded-lg bg-[#321270] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#321270]/90 transition">
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection

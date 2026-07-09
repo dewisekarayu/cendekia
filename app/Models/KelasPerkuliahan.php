@@ -71,4 +71,16 @@ class KelasPerkuliahan extends Model
     {
         return $this->hasMany(ForumDiskusi::class, 'kelas_perkuliahan_id');
     }
+
+
+    public function pengumuman()
+    {
+        return $this->hasMany(Pengumuman::class, 'kelas_perkuliahan_id');
+    }
+
+    public function materi()
+    {
+        return $this->hasMany(Materi::class, 'kelas_perkuliahan_id');
+    }
 }
+
