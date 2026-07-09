@@ -202,9 +202,13 @@ class User extends Authenticatable
             }
         }
 
-        // No valid role
+        // // No valid role
         $result['reason'] = 'User has no valid role (not admin, dosen, or mahasiswa)';
         $result['debug_info']['user_roles'] = $this->getRoleNames()->toArray();
         return $result;
     }
+        public function kelasDiajar()
+        {
+            return $this->hasMany(KelasPerkuliahan::class, 'dosen_id');
+        }
 }
