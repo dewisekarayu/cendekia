@@ -12,31 +12,45 @@ use Illuminate\Validation\Rule;
 
 class MahasiswaController extends Controller
 {
+    /**
+     * Tampilkan daftar mahasiswa beserta filter pencarian, prodi, dan status.
+     */
     public function index(Request $request)
     {
+        $search = trim($request->input('search', ''));
+        $prodiFilter = $request->input('program_studi_id') ?? $request->input('prodi');
+        $statusFilter = $request->input('status');
+
         $query = User::role('mahasiswa')->with('programStudi');
 
-        // Search by name or NIM
-        if ($request->filled('search')) {
-            $search = $request->input('search');
+        // Filter Pencarian (Nama, NIM, atau Email)
+        if ($search !== '') {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('nip_nim', 'like', "%{$search}%");
+                  ->orWhere('nip_nim', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
-        // Filter by program studi
-        if ($request->filled('program_studi_id')) {
-            $query->where('program_studi_id', $request->input('program_studi_id'));
+        // Filter Program Studi
+        if ($prodiFilter) {
+            $query->where('program_studi_id', $prodiFilter);
         }
 
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+        // Filter Status
+        if ($statusFilter) {
+            $query->where('status', $statusFilter);
         }
 
+        // Penomoran Halaman (Pagination)
         $mahasiswa = $query->latest()->paginate(10)->withQueryString();
 
+        // FITUR AJAX: Jika request meminta potongan tabel saja (live search/filter)
+        if ($request->has('ajax')) {
+            return view('admin.mahasiswa.table', compact('mahasiswa'))->render();
+        }
+
+        // Data Statistik Utama untuk Pencatatan Kartu
         $totalMahasiswa = User::role('mahasiswa')->count();
         $totalAktif = User::role('mahasiswa')->where('status', 'aktif')->count();
         $totalCuti = User::role('mahasiswa')->where('status', 'cuti')->count();
@@ -50,41 +64,25 @@ class MahasiswaController extends Controller
             'totalAktif',
             'totalCuti',
             'totalNonAktif',
-            'programStudiList'
+            'programStudiList',
+            'search',
+            'prodiFilter',
+            'statusFilter'
         ));
-        $search = trim($request->input('search', ''));
-        $prodiFilter = $request->input('prodi');
-
-        $query = User::role('mahasiswa')
-            ->with('programStudi')
-            ->latest();
-
-        if ($search !== '') {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('nip_nim', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        if ($prodiFilter) {
-            $query->where('program_studi_id', $prodiFilter);
-        }
-
-        $mahasiswa = $query->paginate(15)->withQueryString();
-        $totalMahasiswa = User::role('mahasiswa')->count();
-        $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
-
-        return view('admin.mahasiswa.index', compact('mahasiswa', 'totalMahasiswa', 'search', 'prodiFilter', 'programStudiList'));
     }
 
+    /**
+     * Tampilkan formulir tambah mahasiswa baru.
+     */
     public function create()
     {
         $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
-
         return view('admin.mahasiswa.create', compact('programStudiList'));
     }
 
+    /**
+     * Simpan data mahasiswa baru ke database.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -96,7 +94,7 @@ class MahasiswaController extends Controller
             'telepon'          => ['nullable', 'string', 'max:20'],
             'foto'             => ['nullable', 'image', 'max:2048'],
         ], [
-            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
@@ -104,11 +102,6 @@ class MahasiswaController extends Controller
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
         }
-
-        ([
-            'nim.unique' => 'NIM sudah terdaftar di sistem.',
-            'email.unique' => 'Email sudah terdaftar di sistem.',
-        ]);
 
         $mahasiswa = User::create([
             'name'             => $validated['nama'],
@@ -127,15 +120,25 @@ class MahasiswaController extends Controller
             ->with('success', "Mahasiswa {$mahasiswa->name} berhasil ditambahkan. Password awal: mahasiswa123");
     }
 
+    /**
+     * Tampilkan formulir edit mahasiswa (Route Model Binding).
+     */
     public function edit(User $mahasiswa)
     {
         abort_unless($mahasiswa->hasRole('mahasiswa'), 404);
 
         $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
 
-        return view('admin.mahasiswa.edit', compact('mahasiswa', 'programStudiList'));
+        // PENYESUAIAN: Dilempar menggunakan kunci 'mahasiswaMember' agar sinkron dengan baris 17 file edit.blade.php
+        return view('admin.mahasiswa.edit', [
+            'mahasiswaMember'  => $mahasiswa, 
+            'programStudiList' => $programStudiList
+        ]);
     }
 
+    /**
+     * Perbarui data mahasiswa lama (Route Model Binding).
+     */
     public function update(Request $request, User $mahasiswa)
     {
         abort_unless($mahasiswa->hasRole('mahasiswa'), 404);
@@ -149,7 +152,7 @@ class MahasiswaController extends Controller
             'telepon'          => ['nullable', 'string', 'max:20'],
             'foto'             => ['nullable', 'image', 'max:2048'],
         ], [
-            'nim.unique' => 'NIM sudah terdaftar di sistem.',
+            'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
@@ -175,6 +178,9 @@ class MahasiswaController extends Controller
             ->with('success', "Data mahasiswa {$mahasiswa->name} berhasil diperbarui.");
     }
 
+    /**
+     * Hapus permanen data mahasiswa beserta berkas foto profilnya.
+     */
     public function destroy(User $mahasiswa)
     {
         abort_unless($mahasiswa->hasRole('mahasiswa'), 404);

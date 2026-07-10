@@ -22,69 +22,74 @@
         </a>
     </div>
 
-    <div class="table-card" style="margin-top: 0;">
+    <div class="table-card" style="margin-top: 0; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
         <div style="padding: 1.5rem; border-bottom: 1px solid rgba(0, 43, 107, 0.08);">
             <div style="position: relative; max-width: 620px;">
-                <input type="text" class="form-control" placeholder="Cari data..." style="height: 46px; padding-right: 3rem;">
-                <i class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem;"></i>
+                <input type="text" id="liveSearchProdi" class="form-control" value="{{ $search ?? '' }}" placeholder="Cari Kode atau Nama Program Studi..." style="height: 46px; padding-right: 3rem;" autocomplete="off">
+                <div id="searchSpinner" class="spinner-border spinner-border-sm text-secondary d-none" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);" role="status"></div>
+                <i id="searchIcon" class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem;"></i>
             </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>KODE PRODI</th>
-                        <th>NAMA PROGRAM STUDI</th>
-                        <th>JENJANG PENDIDIKAN</th>
-                        <th>AKREDITASI</th>
-                        <th class="text-center">AKSI</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($prodiList as $prodi)
-                        @php
-                            $akreditasi = match ($prodi->kode_prodi) {
-                                'TI' => 'Unggul',
-                                'SI' => 'A',
-                                'DKV' => 'B',
-                                default => 'Baik',
-                            };
-                            $kodeTampil = match ($prodi->kode_prodi) {
-                                'TI' => 'IF101',
-                                'SI' => 'SI102',
-                                'DKV' => 'DKV103',
-                                default => $prodi->kode_prodi,
-                            };
-                        @endphp
-                        <tr>
-                            <td style="font-weight: 700; color: #002B6B;">{{ $kodeTampil }}</td>
-                            <td style="font-weight: 600;">{{ $prodi->nama_prodi }}</td>
-                            <td>{{ $prodi->jenjang }} - {{ $prodi->jenjang === 'S1' ? 'Sarjana' : 'Program ' . $prodi->jenjang }}</td>
-                            <td>{{ $akreditasi }}</td>
-                            <td>
-                                <div class="action-buttons justify-content-center">
-                                    <button type="button" class="action-btn action-btn-view" title="Lihat"><i class="bi bi-eye"></i></button>
-                                    <form method="POST" action="{{ route('admin.program-studi.destroy', $prodi->id) }}" style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="action-btn action-btn-delete" title="Hapus"><i class="bi bi-trash"></i></button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-5">Belum ada data program studi.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <div style="padding: 1.25rem 1.5rem; border-top: 1px solid rgba(0, 43, 107, 0.08);">
-            {{ $prodiList->links() }}
+        {{-- DOM Target Penggantian Tabel Otomatis --}}
+        <div id="tableContainer">
+            @include('admin.program-studi.table')
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('liveSearchProdi');
+        const tableContainer = document.getElementById('tableContainer');
+        const searchIcon = document.getElementById('searchIcon');
+        const spinner = document.getElementById('searchSpinner');
+        let typingTimer;
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(function () {
+                searchIcon.classList.add('d-none');
+                spinner.classList.remove('d-none');
+
+                const keyword = searchInput.value;
+                const url = new URL(window.location.href);
+                url.searchParams.set('search', keyword);
+                url.searchParams.set('ajax', '1');
+
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        tableContainer.innerHTML = html;
+                        spinner.classList.add('d-none');
+                        searchIcon.classList.remove('d-none');
+                        
+                        const browserUrl = new URL(window.location.href);
+                        keyword ? browserUrl.searchParams.set('search', keyword) : browserUrl.searchParams.delete('search');
+                        window.history.pushState({}, '', browserUrl);
+                    });
+            }, 350);
+        });
+
+        // Intercept pagination links
+        document.addEventListener('click', function (e) {
+            const link = e.target.closest('#tableContainer .pagination a');
+            if (link) {
+                e.preventDefault();
+                const targetUrl = new URL(link.getAttribute('href'));
+                targetUrl.searchParams.set('ajax', '1');
+
+                fetch(targetUrl)
+                    .then(response => response.text())
+                    .then(html => {
+                        tableContainer.innerHTML = html;
+                        targetUrl.searchParams.delete('ajax');
+                        window.history.pushState({}, '', targetUrl);
+                    });
+            }
+        });
+    });
+</script>
+@endpush

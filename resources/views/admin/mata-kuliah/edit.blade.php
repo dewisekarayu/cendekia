@@ -21,7 +21,6 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
-                
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-info-circle-fill text-primary" style="color: #002B6B !important;"></i>
@@ -82,11 +81,11 @@
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-diagram-3-fill text-primary" style="color: #002B6B !important;"></i>
-                        <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Kurikulum & Prasyarat</h6>
+                        <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Kurikulum</h6>
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="program_studi_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Program Studi</label>
                             <select class="form-select @error('program_studi_id') is-invalid @enderror" id="program_studi_id" name="program_studi_id" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
                                 <option value="" disabled>Pilih Program Studi</option>
@@ -98,22 +97,12 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Mata Kuliah Prasyarat</label>
-                            <div class="form-control d-flex flex-wrap gap-1 align-items-center" style="border-radius: 8px; padding: 0.5rem 0.75rem; background-color: #F8FAFC; min-height: 43px;">
-                                <span class="badge bg-primary bg-opacity-10 text-primary d-flex align-items-center gap-1 fw-medium px-2 py-1.5" style="border-radius: 6px; font-size: 0.8rem; color: #002B6B !important; background-color: rgba(0,43,107,0.08) !important;">
-                                    Dasar Pemrograman <i class="bi bi-x-lg text-muted" style="font-size: 0.65rem;"></i>
-                                </span>
-                                <span class="text-muted small ms-1" style="cursor: pointer;">Tambah...</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm p-3 mb-4 text-white" style="border-radius: 12px; background: linear-gradient(135deg, #1e293b, #0f172a); min-height: 140px; position: relative; overflow: hidden;">
+                <div class="card border-0 shadow-sm p-3 mb-4 text-white" style="border-radius: 12px; background: linear-gradient(135deg, #1e293b, #0f172a); min-height: 110px; position: relative; overflow: hidden;">
                     <div class="position-absolute end-0 top-0 translate-middle-y opacity-10" style="font-size: 6rem; pointer-events: none; transform: rotate(-15deg);">
                         <i class="bi bi-book-half"></i>
                     </div>
@@ -121,32 +110,18 @@
                         <span class="badge bg-white bg-opacity-20 text-uppercase tracking-wider fw-bold px-2 py-1" style="font-size: 0.65rem; border-radius: 4px;">PREVIEW</span>
                     </div>
                     <h4 class="fw-bold m-0 tracking-wide text-start text-truncate" id="preview_code">{{ $mk->kode_mk }}</h4>
-                    <p class="small text-start text-white-50 text-truncate mb-3" id="preview_title">{{ $mk->nama_mk }}</p>
-                    
-                    <button type="button" class="btn btn-sm btn-light w-100 bg-white bg-opacity-10 border-0 text-white fw-semibold py-1.5" style="border-radius: 6px; font-size: 0.8rem;">
-                        <i class="bi bi-image me-1"></i> Ubah Banner
-                    </button>
+                    <p class="small text-start text-white-50 text-truncate mb-0" id="preview_title">{{ $mk->nama_mk }}</p>
                 </div>
 
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
-                    <label class="form-label fw-semibold small text-muted text-uppercase d-block mb-3" style="letter-spacing: 0.5px;">Status Kurikulum</label>
-                    
-                    <div class="btn-group w-100 p-1 bg-light rounded-3" role="group" style="border: 1px solid #e2e8f0;">
-                        <input type="radio" class="btn-check" name="status" id="status_aktif" value="1" checked>
-                        <label class="btn btn-outline-primary border-0 fw-semibold py-2 text-center" for="status_aktif" style="border-radius: 6px; font-size: 0.85rem;">Aktif</label>
-
-                        <input type="radio" class="btn-check" name="status" id="status_nonaktif" value="0">
-                        <label class="btn btn-outline-primary border-0 fw-semibold py-2 text-center" for="status_nonaktif" style="border-radius: 6px; font-size: 0.85rem;">Nonaktif</label>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-top" style="font-size: 0.8rem; color: #64748b;">
+                    <div style="font-size: 0.8rem; color: #64748b;">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Dibuat pada:</span>
-                            <span class="fw-medium text-dark">{{ $mk->created_at ? $mk->created_at->format('d M Y') : '12 Jan 2026' }}</span>
+                            <span class="fw-medium text-dark">{{ $mk->created_at ? $mk->created_at->format('d M Y') : '-' }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Terakhir diubah:</span>
-                            <span class="fw-medium text-dark">{{ $mk->updated_at ? $mk->updated_at->format('d M Y') : 'Just Now' }}</span>
+                            <span class="fw-medium text-dark">{{ $mk->updated_at ? $mk->updated_at->format('d M Y') : '-' }}</span>
                         </div>
                     </div>
                 </div>
@@ -159,39 +134,23 @@
                         Batal
                     </a>
                 </div>
-
             </div>
         </div>
     </form>
 @endsection
 
-@push('styles')
-<style>
-    .btn-check:checked + .btn-outline-primary {
-        background-color: #002B6B !important;
-        color: white !important;
-        box-shadow: 0 2px 6px rgba(0, 43, 107, 0.2);
-    }
-    .btn-outline-primary {
-        color: #64748b;
-        background-color: transparent;
-    }
-    .btn-outline-primary:hover {
-        background-color: rgba(0, 43, 107, 0.05);
-        color: #002B6B;
-    }
-</style>
-@endpush
-
 @push('scripts')
 <script>
-    // Live preview binding
     const codeInput = document.getElementById('kode_mk');
     const titleInput = document.getElementById('nama_mk');
     const previewCode = document.getElementById('preview_code');
     const previewTitle = document.getElementById('preview_title');
 
-    codeInput.addEventListener('input', (e) => { previewCode.textContent = e.target.value || 'KODE MK'; });
-    titleInput.addEventListener('input', (e) => { previewTitle.textContent = e.target.value || 'Nama Mata Kuliah'; });
+    if(codeInput && previewCode) {
+        codeInput.addEventListener('input', (e) => { previewCode.textContent = e.target.value.toUpperCase() || 'KODE MK'; });
+    }
+    if(titleInput && previewTitle) {
+        titleInput.addEventListener('input', (e) => { previewTitle.textContent = e.target.value || 'Nama Mata Kuliah'; });
+    }
 </script>
 @endpush

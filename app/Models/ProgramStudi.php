@@ -11,10 +11,13 @@ class ProgramStudi extends Model
 
     protected $table = 'program_studi';
 
+    // TAMBAHKAN 'akreditasi' DAN 'status' DI SINI AGAR BISA DISIMPAN
     protected $fillable = [
         'kode_prodi',
         'nama_prodi',
         'jenjang',
+        'akreditasi',
+        'status',
     ];
 
     public function mataKuliah()

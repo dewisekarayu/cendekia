@@ -4,22 +4,45 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'nip_nim', 'email', 'email_verified_at', 'password', 'program_studi_id', 'status', 'telepon', 'foto'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
     /**
-     * Get the attributes that should be cast.
+     * Atribut yang dapat diisi secara massal (Mass Assignable).
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'nip_nim',
+        'email',
+        'password',
+        'program_studi_id',
+        'status',
+        'telepon',
+        'foto',
+        'email_verified_at'
+    ];
+
+    /**
+     * Atribut yang harus disembunyikan dalam serialisasi JSON.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Atribut tipe data casting.
      *
      * @return array<string, string>
      */
@@ -202,14 +225,9 @@ class User extends Authenticatable
             }
         }
 
-        // // No valid role
+        // No valid role
         $result['reason'] = 'User has no valid role (not admin, dosen, or mahasiswa)';
         $result['debug_info']['user_roles'] = $this->getRoleNames()->toArray();
         return $result;
-    }
-        
-    public function kelasDiajar()
-    {
-        return $this->hasMany(KelasPerkuliahan::class, 'dosen_id');
     }
 }
