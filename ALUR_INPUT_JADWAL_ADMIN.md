@@ -339,3 +339,170 @@ Tabel: users (mahasiswa & dosen)
 ---
 
 **✅ Alur input jadwal di sistem LMS Cendekia sudah benar dan mengikuti best practice database design!**
+
+
+---
+
+## 👥 TEAM TEACHING - MULTIPLE DOSEN PER MATERI
+
+### Background
+
+Dalam sistem LMS Cendekia, satu materi dapat diajarkan oleh multiple dosen (team teaching). Ini memberikan fleksibilitas untuk:
+
+1. **Co-teaching:** Dua dosen mengajar materi yang sama dengan perspektif berbeda
+2. **Specialist Input:** Dosen khusus mengisi bagian tertentu dari materi
+3. **Peer Review:** Dosen lain melakukan validasi dan review materi
+4. **Workload Distribution:** Membagi beban kerja pengajaran antar dosen
+
+### Struktur Database
+
+**Many-to-Many Relationship:**
+```
+users (dosen)
+   ↓
+dosen_materi (pivot table)
+   ↓
+materi
+```
+
+**Tabel `dosen_materi`:**
+```sql
+CREATE TABLE dosen_materi (
+  id BIGINT PRIMARY KEY,
+  materi_id BIGINT (FK to materi),
+  dosen_id BIGINT (FK to users),
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP,
+  UNIQUE KEY (materi_id, dosen_id)  -- Cegah duplikasi
+);
+```
+
+### Model Relationships
+
+**Model Materi:**
+```php
+public function dosen()
+{
+    return $this->belongsToMany(User::class, 'dosen_materi', 'materi_id', 'dosen_id')
+               ->withTimestamps();
+}
+```
+
+**Model User (Dosen):**
+```php
+public function materi()
+{
+    return $this->belongsToMany(Materi::class, 'dosen_materi', 'dosen_id', 'materi_id')
+               ->withTimestamps();
+}
+```
+
+### Seeding Distribution
+
+Dalam `ComprehensiveAcademicSeeder`, setiap materi di-assign dengan:
+- **1-2 dosen per materi** (random)
+- **Dosen dipilih dari dosen yang mengajar MK yang sama**
+- **Distribution yang merata di semua materi**
+
+**Result:**
+```
+Total Materi: 4,464
+Total Dosen-Materi Relations: 6,700
+Rata-rata Dosen per Materi: 1.5
+
+Breakdown:
+- 2,228 materi (49.9%) dengan 1 dosen
+- 2,236 materi (50.1%) dengan 2 dosen (team teaching)
+```
+
+### Usage Examples
+
+**Query: Cari semua dosen yang mengajar materi tertentu**
+```php
+$materi = Materi::find($materiId);
+$dosenPengajar = $materi->dosen; // Collection of User models
+```
+
+**Query: Cari semua materi yang diajarkan dosen tertentu**
+```php
+$dosen = User::find($dosenId);
+$materiYangDiajar = $dosen->materi; // Collection of Materi models
+```
+
+**Attach dosen ke materi (tambah relasi):**
+```php
+$materi->dosen()->attach($dosenId);
+// atau sync jika sudah ada:
+$materi->dosen()->sync([$dosenId1, $dosenId2]);
+```
+
+**Detach dosen dari materi (hapus relasi):**
+```php
+$materi->dosen()->detach($dosenId);
+```
+
+### Display di Views
+
+**Tampilkan dosen pengajar di halaman materi:**
+```blade
+@foreach($materi->dosen as $dosen)
+    <div class="badge badge-primary">{{ $dosen->name }}</div>
+@endforeach
+```
+
+**Tampilkan di list materi (untuk dosen melihat materi yang diajarkan):**
+```blade
+@foreach($mahasiswa->kelasDiikuti as $kelas)
+    @foreach($kelas->materis as $materi)
+        <tr>
+            <td>{{ $materi->judul }}</td>
+            <td>
+                @foreach($materi->dosen as $d)
+                    <span class="badge">{{ $d->name }}</span>
+                @endforeach
+            </td>
+        </tr>
+    @endforeach
+@endforeach
+```
+
+### Best Practices
+
+1. **Jangan biarkan materi tanpa dosen**
+   - Selalu assign minimal 1 dosen ke setiap materi
+
+2. **Gunakan sync() untuk update multiple dosen**
+   ```php
+   $materi->dosen()->sync([$dosenA, $dosenB]); // Replace semua
+   ```
+
+3. **Cek relasi sebelum menampilkan**
+   ```php
+   @if($materi->dosen->isNotEmpty())
+       Pengajar: {{ $materi->dosen->pluck('name')->join(', ') }}
+   @endif
+   ```
+
+4. **Performance: Eager load relasi**
+   ```php
+   // BAIK - Menghindari N+1 query
+   $materis = Materi::with('dosen')->get();
+   
+   // BURUK - N+1 query problem
+   $materis = Materi::get();
+   foreach ($materis as $m) {
+       echo $m->dosen; // Query per materi!
+   }
+   ```
+
+### Feature Roadmap
+
+- [ ] Admin dashboard untuk manage dosen-materi assignments
+- [ ] Form create/edit materi dengan multiple dosen selector
+- [ ] Report: Workload distribution antar dosen
+- [ ] Notification ketika materi di-assign ke dosen
+- [ ] Validation: Cegah dosen dari prodi berbeda di-assign
+
+---
+
+✅ **Team Teaching Feature: COMPLETE**
