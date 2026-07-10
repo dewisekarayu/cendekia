@@ -67,7 +67,7 @@
                                     </div>
                                     <div class="text-right">
                                         @if($m->file_path)
-                                            <a href="{{ route('mahasiswa.materi.buka', [$kelas->id, $m->id]) }}" target="_blank" rel="noopener" class="text-sm px-3 py-1 bg-[#321270] text-white rounded">Buka</a>
+                                            <a href="{{ route('dosen.materi.buka', [$kelas->id, $m->id]) }}" class="text-sm px-3 py-1 bg-[#321270] text-white rounded">Buka</a>
                                         @endif
                                     </div>
                                 </div>

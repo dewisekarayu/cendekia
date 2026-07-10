@@ -51,7 +51,7 @@ class PengumumanController extends Controller
         ]);
 
         // Dialihkan kembali ke halaman indeks utama pengumuman dosen
-        return redirect()->route('dosen.pengumuman.index')
+        return redirect()->route('dosen.kelas-pengumuman.index')
             ->with('success', 'Pengumuman kelas berhasil diterbitkan.');
     }
 
@@ -74,7 +74,7 @@ class PengumumanController extends Controller
             'untuk_semua' => $request->boolean('untuk_semua'),
         ]);
 
-        return redirect()->route('dosen.pengumuman.index')
+        return redirect()->route('dosen.kelas-pengumuman.index')
             ->with('success', 'Pengumuman kelas berhasil diperbarui.');
     }
 
@@ -85,7 +85,7 @@ class PengumumanController extends Controller
     {
         $pengumuman->delete();
 
-        return redirect()->route('dosen.pengumuman.index')
+        return redirect()->route('dosen.kelas-pengumuman.index')
             ->with('success', 'Pengumuman kelas berhasil dihapus.');
     }
 }

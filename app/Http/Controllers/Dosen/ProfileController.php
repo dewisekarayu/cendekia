@@ -43,32 +43,45 @@ class ProfileController extends Controller
             'email'   => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'telepon' => ['nullable', 'string', 'max:20'],
             'nip_nim' => ['nullable', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($user->id)],
-            'foto'    => ['nullable', 'image', 'max:2048'],
         ], [
-            'name.required'    => 'Nama lengkap wajib diisi.',
-            'email.required'   => 'Email wajib diisi.',
-            'email.email'      => 'Format email tidak valid.',
-            'email.unique'     => 'Email sudah digunakan akun lain.',
-            'nip_nim.unique'   => 'NID sudah digunakan akun lain.',
-            'foto.image'       => 'File harus berupa gambar.',
-            'foto.max'         => 'Ukuran foto maksimal 2MB.',
+            'name.required'  => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email'    => 'Format email tidak valid.',
+            'email.unique'   => 'Email sudah digunakan akun lain.',
+            'nip_nim.unique' => 'NID sudah digunakan akun lain.',
         ]);
 
         if ($user->email !== $validated['email']) {
             $user->email_verified_at = null;
         }
 
-        if ($request->hasFile('foto')) {
-            // Hapus foto lama kalau ada
-            if ($user->foto) {
-                Storage::disk('public')->delete($user->foto);
-            }
-            $validated['foto'] = $request->file('foto')->store('profile-photos', 'public');
-        }
-
         $user->update($validated);
 
         return back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function updateFoto(Request $request)
+    {
+        $request->validate([
+            'foto' => ['required', 'image', 'max:2048'],
+        ], [
+            'foto.required' => 'Pilih foto terlebih dahulu.',
+            'foto.image'    => 'File harus berupa gambar.',
+            'foto.max'      => 'Ukuran foto maksimal 2MB.',
+        ]);
+
+        $user = $request->user();
+
+        // Hapus foto lama kalau ada
+        if ($user->foto) {
+            Storage::disk('public')->delete($user->foto);
+        }
+
+        $path = $request->file('foto')->store('foto-profil', 'public');
+
+        $user->update(['foto' => $path]);
+
+        return back()->with('success', 'Foto profil berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request)

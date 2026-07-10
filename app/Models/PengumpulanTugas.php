@@ -24,7 +24,14 @@ class PengumpulanTugas extends Model
 
     protected $casts = [
         'waktu_kumpul' => 'datetime',
+        'nilai'        => 'integer',
     ];
+
+    // Status yang dipakai di kolom `status`
+    public const STATUS_BELUM_DIKUMPUL = 'belum_dikumpulkan';
+    public const STATUS_DIKUMPUL       = 'dikumpulkan';
+    public const STATUS_DINILAI        = 'dinilai';
+    public const STATUS_TERLAMBAT      = 'terlambat';
 
     public function tugas()
     {
@@ -34,5 +41,19 @@ class PengumpulanTugas extends Model
     public function mahasiswa()
     {
         return $this->belongsTo(User::class, 'mahasiswa_id');
+    }
+
+    public function getIsGradedAttribute(): bool
+    {
+        return $this->status === self::STATUS_DINILAI && !is_null($this->nilai);
+    }
+
+    public function getIsLateAttribute(): bool
+    {
+        if (!$this->waktu_kumpul || !$this->tugas) {
+            return false;
+        }
+
+        return $this->waktu_kumpul->gt($this->tugas->deadline);
     }
 }

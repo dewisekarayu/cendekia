@@ -29,6 +29,11 @@ class Tugas extends Model
         return $this->belongsTo(KelasPerkuliahan::class, 'kelas_perkuliahan_id');
     }
 
+    public function pengumpulanTugas()
+    {
+        return $this->hasMany(PengumpulanTugas::class, 'tugas_id');
+    }
+
     public function pengumpulan()
     {
         return $this->hasMany(PengumpulanTugas::class, 'tugas_id');

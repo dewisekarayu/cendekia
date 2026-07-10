@@ -117,7 +117,7 @@
                                 @endif
                             </td>
                             <td class="px-5 py-3 text-right space-x-2 whitespace-nowrap">
-                                <a href="#" class="inline-block text-xs font-medium text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-md transition">
+                                <a href="{{ route('dosen.tugas.submissions', [$kelas->id, $tugas->id]) }}" class="inline-block text-xs font-medium text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-md transition">
                                     View Submissions
                                 </a>
                             </td>
