@@ -22,18 +22,46 @@
                 @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
                         <p class="text-red-300 text-sm font-medium">
-                            {{ $errors->first('nip_nim') ?: ($errors->first('email') ?: ($errors->first('password') ?: 'Login gagal, cek kembali kredensial Anda')) }}
+                            {{ $errors->first('email') ?: ($errors->first('nip_nim') ?: ($errors->first('password') ?: 'Login gagal, cek kembali kredensial Anda')) }}
                         </p>
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                <form method="POST" action="{{ route('login') }}" class="space-y-4">
                     @csrf
 
-                    {{-- NIM/Email Input --}}
+                    {{-- Email Input --}}
                     <div>
-                        <label for="identifier" class="block text-sm font-semibold text-slate-300 mb-2">
-                            NIM / NIDN / Email
+                        <label for="email" class="block text-sm font-semibold text-slate-300 mb-2">
+                            Email
+                            <span class="text-red-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <input 
+                                id="email" 
+                                type="email" 
+                                name="email" 
+                                value="{{ old('email') }}"
+                                placeholder="Masukkan email"
+                                required
+                                class="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#321270] focus:border-transparent transition"
+                                autocomplete="email"
+                            />
+                        </div>
+                        @error('email')
+                            <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- NIM/NIDN Input --}}
+                    <div>
+                        <label for="nip_nim" class="block text-sm font-semibold text-slate-300 mb-2">
+                            NIM / NIDN
                             <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
@@ -43,20 +71,19 @@
                                 </svg>
                             </div>
                             <input 
-                                id="identifier" 
+                                id="nip_nim" 
                                 type="text" 
-                                name="identifier" 
-                                value="{{ old('identifier') }}"
-                                placeholder="NIM, NIDN, atau Email"
+                                name="nip_nim" 
+                                value="{{ old('nip_nim') }}"
+                                placeholder="NIM (mahasiswa) atau NIDN (dosen)"
                                 required
                                 class="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#321270] focus:border-transparent transition"
                                 autocomplete="username"
                             />
                         </div>
-                        <p class="text-xs text-slate-400 mt-2">NIM mahasiswa, NIDN dosen, atau email</p>
-                        @if ($errors->has('nip_nim') || $errors->has('email'))
-                            <p class="text-red-400 text-xs mt-1.5">{{ $errors->first('nip_nim') ?: $errors->first('email') }}</p>
-                        @endif
+                        @error('nip_nim')
+                            <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Password --}}
