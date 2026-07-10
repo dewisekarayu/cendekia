@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class=" sm:flex-row sm:items-center sm:justify-between gap-4">
         <div class="min-w-0">
             <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
                 <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,20 +233,26 @@
             </div>
 
             <!-- Student Attendance Table -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-50 to-blue-50 px-6 py-4 border-b border-gray-100">
-                    <h2 class="text-lg font-semibold text-gray-900">Daftar Kehadiran Mahasiswa</h2>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-purple-500 to-blue-600 px-6 py-4 text-white flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 8.646 4 4 0 010-8.646zM12 14H8m4 0h4m-4 0c-3.728 0-7-1.493-7-4.5" />
+                        </svg>
+                        <h2 class="text-lg font-semibold">Daftar Kehadiran Mahasiswa</h2>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-white bg-opacity-20 text-sm font-semibold">{{ $kelas->mahasiswa->count() }} Mahasiswa</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-gray-50 border-b border-gray-100">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">No</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Nama Mahasiswa</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">NIM</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Waktu Absensi</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Keterangan</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">No</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nama Mahasiswa</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">NIM</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Waktu Absensi</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Keterangan</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -268,28 +274,62 @@
                                         default => '-',
                                     };
                                 @endphp
-                                <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-6 py-4 text-sm text-gray-900">{{ $index + 1 }}</td>
+                                <tr class="hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 transition-colors">
                                     <td class="px-6 py-4">
-                                        <span class="font-semibold text-gray-900">{{ $mahasiswa->name }}</span>
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-bold text-sm">
+                                            {{ $index + 1 }}
+                                        </span>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $mahasiswa->nim ?? '-' }}</td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {{ $statusClass }}">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                                {{ substr($mahasiswa->name, 0, 1) }}
+                                            </div>
+                                            <span class="font-semibold text-gray-900">{{ $mahasiswa->name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-600 font-medium">{{ $mahasiswa->nim ?? '-' }}</td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold {{ $statusClass }}">
+                                            @if($attendance?->status === 'hadir')
+                                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                            @elseif($attendance?->status === 'izin')
+                                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                            @elseif($attendance?->status === 'sakit')
+                                                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                                            @else
+                                                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                            @endif
                                             {{ $statusLabel }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-500">
-                                        {{ $attendance && $attendance->waktu_absensi ? $attendance->waktu_absensi->format('H:i:s') : '-' }}
+                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                        @if($attendance && $attendance->waktu_absensi)
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                {{ $attendance->waktu_absensi->format('H:i:s') }}
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">—</span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                                        {{ $attendance && $attendance->keterangan ? $attendance->keterangan : '-' }}
+                                        @if($attendance && $attendance->keterangan)
+                                            <span class="inline-block truncate" title="{{ $attendance->keterangan }}">{{ $attendance->keterangan }}</span>
+                                        @else
+                                            <span class="text-gray-400">—</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-gray-500">
-                                        Tidak ada mahasiswa terdaftar di kelas ini.
+                                    <td colspan="6" class="px-6 py-12 text-center">
+                                        <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 8.646 4 4 0 010-8.646zM12 14H8m4 0h4m-4 0c-3.728 0-7-1.493-7-4.5" />
+                                        </svg>
+                                        <p class="text-gray-500 font-medium">Tidak ada mahasiswa terdaftar di kelas ini.</p>
                                     </td>
                                 </tr>
                             @endforelse
