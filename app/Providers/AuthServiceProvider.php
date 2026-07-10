@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\ForumDiskusi;
+use App\Models\Absensi;
 use App\Policies\ForumPolicy;
+use App\Policies\AbsensiPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -16,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         ForumDiskusi::class => ForumPolicy::class,
+        Absensi::class => AbsensiPolicy::class,
     ];
 
     /**
@@ -38,6 +41,21 @@ class AuthServiceProvider extends ServiceProvider
         // Gate: Check if user can delete forum message
         Gate::define('delete-forum-message', function ($user, ForumDiskusi $forum) {
             return (new ForumPolicy())->deleteMessage($user, $forum);
+        });
+
+        // Gate: Check if user can check in to attendance
+        Gate::define('check-in-attendance', function ($user, Absensi $absensi) {
+            return (new AbsensiPolicy())->checkIn($user, $absensi);
+        });
+
+        // Gate: Check if user can manage attendance
+        Gate::define('manage-attendance', function ($user, Absensi $absensi) {
+            return (new AbsensiPolicy())->manageAttendance($user, $absensi);
+        });
+
+        // Gate: Check if user can view attendance history
+        Gate::define('view-attendance-history', function ($user, Absensi $absensi) {
+            return (new AbsensiPolicy())->viewHistory($user, $absensi);
         });
     }
 }
