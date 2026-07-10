@@ -22,7 +22,7 @@
                 @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
                         <p class="text-red-300 text-sm font-medium">
-                            {{ $errors->first('nip_nim') ?: ($errors->first('password') ?: 'Login gagal, cek kembali NIM dan password') }}
+                            {{ $errors->first('nip_nim') ?: ($errors->first('email') ?: ($errors->first('password') ?: 'Login gagal, cek kembali kredensial Anda')) }}
                         </p>
                     </div>
                 @endif
@@ -30,10 +30,10 @@
                 <form method="POST" action="{{ route('login') }}" class="space-y-5">
                     @csrf
 
-                    {{-- NIM/NIDN Input (PRIMARY) --}}
+                    {{-- NIM/Email Input --}}
                     <div>
-                        <label for="nip_nim" class="block text-sm font-semibold text-slate-300 mb-2">
-                            NIM / NIDN
+                        <label for="identifier" class="block text-sm font-semibold text-slate-300 mb-2">
+                            NIM / NIDN / Email
                             <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
@@ -43,20 +43,20 @@
                                 </svg>
                             </div>
                             <input 
-                                id="nip_nim" 
+                                id="identifier" 
                                 type="text" 
-                                name="nip_nim" 
-                                value="{{ old('nip_nim') }}"
-                                placeholder="Cth: 20241001 atau 19790000001"
+                                name="identifier" 
+                                value="{{ old('identifier') }}"
+                                placeholder="NIM, NIDN, atau Email"
                                 required
                                 class="w-full pl-12 pr-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#321270] focus:border-transparent transition"
                                 autocomplete="username"
                             />
                         </div>
-                        <p class="text-xs text-slate-400 mt-2">Masukkan NIM (mahasiswa) atau NIDN (dosen)</p>
-                        @error('nip_nim')
-                            <p class="text-red-400 text-xs mt-1.5">{{ $message }}</p>
-                        @enderror
+                        <p class="text-xs text-slate-400 mt-2">NIM mahasiswa, NIDN dosen, atau email</p>
+                        @if ($errors->has('nip_nim') || $errors->has('email'))
+                            <p class="text-red-400 text-xs mt-1.5">{{ $errors->first('nip_nim') ?: $errors->first('email') }}</p>
+                        @endif
                     </div>
 
                     {{-- Password --}}
@@ -120,25 +120,6 @@
                         Masuk ke Dashboard
                     </button>
                 </form>
-
-                {{-- Test Accounts Info --}}
-                <div class="mt-6 pt-6 border-t border-slate-700">
-                    <p class="text-xs text-slate-400 text-center mb-3">
-                        <strong>📚 Demo Credentials:</strong>
-                    </p>
-                    <div class="space-y-2 text-xs text-slate-500">
-                        <div class="bg-slate-900/50 p-3 rounded border border-slate-700/50">
-                            <p class="text-slate-300 font-mono font-semibold">👨‍🎓 Mahasiswa</p>
-                            <p class="text-slate-400 font-mono mt-1">NIM: 20241001</p>
-                            <p class="text-slate-400 font-mono">Password: password123</p>
-                        </div>
-                        <div class="bg-slate-900/50 p-3 rounded border border-slate-700/50">
-                            <p class="text-slate-300 font-mono font-semibold">👨‍🏫 Dosen</p>
-                            <p class="text-slate-400 font-mono mt-1">NIDN: 19790000001</p>
-                            <p class="text-slate-400 font-mono">Password: password123</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {{-- Footer --}}

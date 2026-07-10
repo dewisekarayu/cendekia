@@ -28,7 +28,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nip_nim' => ['required', 'string'],
+            'identifier' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -42,18 +42,21 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // HANYA gunakan nip_nim untuk login, email tidak diperlukan
-        $nimNidn = $this->input('nip_nim');
+        $identifier = $this->input('identifier');
+        $password = $this->input('password');
 
-        if (! $nimNidn || ! Auth::attempt(['nip_nim' => $nimNidn, 'password' => $this->input('password')], $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'nip_nim' => trans('auth.failed'),
-            ]);
+        // Coba login dengan NIM/NIDN atau Email
+        if (Auth::attempt(['nip_nim' => $identifier, 'password' => $password], $this->boolean('remember')) ||
+            Auth::attempt(['email' => $identifier, 'password' => $password], $this->boolean('remember'))) {
+            RateLimiter::clear($this->throttleKey());
+            return;
         }
 
-        RateLimiter::clear($this->throttleKey());
+        RateLimiter::hit($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'identifier' => trans('auth.failed'),
+        ]);
     }
 
     /**
@@ -72,7 +75,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'nip_nim' => trans('auth.throttle', [
+            'identifier' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -84,6 +87,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower((string) $this->input('nip_nim')).'|'.$this->ip());
+        return Str::transliterate(Str::lower((string) $this->input('identifier')).'|'.$this->ip());
     }
 }
