@@ -25,6 +25,8 @@ use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
 use App\Http\Controllers\Mahasiswa\GradebookController as MahasiswaGradebookController;
 use App\Http\Controllers\Mahasiswa\ForumController as MahasiswaForumController;
 use App\Http\Controllers\Mahasiswa\ScheduleController as MahasiswaScheduleController;
+use App\Http\Controllers\Mahasiswa\JadwalController as MahasiswaJadwalController;
+use App\Http\Controllers\Dosen\JadwalController as DosenJadwalController;
 use App\Http\Controllers\Mahasiswa\SettingController as MahasiswaSettingController;
 
 use App\Http\Controllers\ProfileController;
@@ -125,6 +127,14 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::put('/dosen/profil/password', [App\Http\Controllers\Dosen\ProfileController::class, 'updatePassword'])->name('dosen.profil.password');
 
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
+    
+    // Jadwal Dosen
+    Route::prefix('dosen/jadwal')->group(function () {
+        Route::get('/', [DosenJadwalController::class, 'index'])->name('dosen.jadwal.index');
+        Route::get('/{id}', [DosenJadwalController::class, 'show'])->name('dosen.jadwal.show');
+        Route::get('/calendar', [DosenJadwalController::class, 'calendar'])->name('dosen.jadwal.calendar');
+        Route::get('/export', [DosenJadwalController::class, 'exportPdf'])->name('dosen.jadwal.export');
+    });
     Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
 
 });
@@ -151,6 +161,13 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::post('/mahasiswa/kelas/{id}/forum/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.kelas-forum.pesan');
     
     Route::get('/mahasiswa/schedule', [MahasiswaScheduleController::class, 'index'])->name('mahasiswa.schedule');
+    
+    // Jadwal Mahasiswa
+    Route::prefix('mahasiswa/jadwal')->group(function () {
+        Route::get('/', [MahasiswaJadwalController::class, 'index'])->name('mahasiswa.jadwal.index');
+        Route::get('/semester/{semesterId?}', [MahasiswaJadwalController::class, 'showBySemester'])->name('mahasiswa.jadwal.semester');
+        Route::get('/calendar', [MahasiswaJadwalController::class, 'calendar'])->name('mahasiswa.jadwal.calendar');
+    });
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
     Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');

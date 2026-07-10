@@ -73,6 +73,24 @@ class EnhancedKelasPerkuliahanSeeder extends Seeder
                 $jam = $jamList[$jamIndex];
                 $ruangan = $ruanganList[($i + $sectionIdx) % count($ruanganList)];
 
+                // Generate dosen pengampu tambahan untuk team teaching (random)
+                $dosenPengampu = [];
+                $totalDosen = $dosenList->count();
+                if ($totalDosen > 1) {
+                    $possibleDosenIds = $dosenList->pluck('id')->toArray();
+                    $currentDosenId = $dosen->id;
+                    $possibleDosenIds = array_filter($possibleDosenIds, function($id) use ($currentDosenId) {
+                        return $id !== $currentDosenId;
+                    });
+                    
+                    // Pilih 0-2 dosen tambahan secara random
+                    $numExtraDosen = rand(0, min(2, count($possibleDosenIds)));
+                    if ($numExtraDosen > 0) {
+                        shuffle($possibleDosenIds);
+                        $dosenPengampu = array_slice($possibleDosenIds, 0, $numExtraDosen);
+                    }
+                }
+
                 KelasPerkuliahan::updateOrCreate(
                     [
                         'mata_kuliah_id' => $mk->id,
@@ -81,11 +99,16 @@ class EnhancedKelasPerkuliahanSeeder extends Seeder
                     ],
                     [
                         'dosen_id' => $dosen->id,
+                        'program_studi_id' => $mk->program_studi_id,
+                        'tahun_akademik' => date('Y') . '/' . (date('Y') + 1),
                         'hari' => $hari,
                         'jam_mulai' => $jam[0],
                         'jam_selesai' => $jam[1],
                         'ruangan' => $ruangan,
+                        'kuota_mahasiswa' => rand(30, 60),
+                        'status_kelas' => 'aktif',
                         'is_active' => true,
+                        'dosen_pengampu' => !empty($dosenPengampu) ? $dosenPengampu : null,
                     ]
                 );
             }
