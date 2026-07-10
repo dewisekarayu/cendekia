@@ -7,7 +7,7 @@ use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class DosenController extends Controller
 {
@@ -57,8 +57,14 @@ class DosenController extends Controller
             'nip_nim'          => ['required', 'string', 'max:50', Rule::unique('users', 'nip_nim')],
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
-            'status'           => ['required', 'in:aktif,non_aktif'], 
+            'status'           => ['required', 'in:aktif,non_aktif'],
+            'foto'             => ['nullable', 'image', 'max:2048'],
         ]);
+
+        $fotoPath = null;
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+        }
 
         $dosen = User::create([
             'name'             => $validated['name'],
@@ -67,6 +73,7 @@ class DosenController extends Controller
             'password'         => Hash::make('dosen123'),
             'program_studi_id' => $validated['program_studi_id'] ?? null,
             'status'           => $validated['status'],
+            'foto'             => $fotoPath,
         ]);
 
         $dosen->assignRole('dosen');
@@ -96,9 +103,25 @@ class DosenController extends Controller
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($dosenMember->id)],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', 'in:aktif,non_aktif'],
+            'foto'             => ['nullable', 'image', 'max:2048'],
         ]);
 
-        $dosenMember->update($validated);
+        $fotoPath = $dosenMember->foto;
+        if ($request->hasFile('foto')) {
+            if ($fotoPath) {
+                Storage::disk('public')->delete($fotoPath);
+            }
+            $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+        }
+
+        $dosenMember->update([
+            'name'             => $validated['name'],
+            'nip_nim'          => $validated['nip_nim'],
+            'email'            => $validated['email'],
+            'program_studi_id' => $validated['program_studi_id'] ?? null,
+            'status'           => $validated['status'],
+            'foto'             => $fotoPath,
+        ]);
 
         return redirect()->route('admin.dosen.index')
             ->with('success', 'Data dosen berhasil diperbarui.');
