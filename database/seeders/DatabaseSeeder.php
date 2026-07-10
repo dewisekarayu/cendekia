@@ -18,11 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             ProgramStudiSeeder::class,
-            UserSeeder::class,
+            EnhancedUserSeeder::class,
             SemesterSeeder::class,
-            MataKuliahSeeder::class,
-            KelasPerkuliahanSeeder::class,
-            ComprehensiveLmsSeeder::class,
+            EnhancedMataKuliahSeeder::class,
+            EnhancedKelasPerkuliahanSeeder::class,
+            ComprehensiveAcademicSeeder::class,
         ]);
     }
 }
