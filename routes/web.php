@@ -115,7 +115,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
     Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
     Route::get('/dosen/kelas/{kelas}/tugas/{tugas}/submissions', [DosenKelasController::class, 'submissions'])->name('dosen.tugas.submissions');
-Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/nilai', [DosenKelasController::class, 'simpanNilai'])->name('dosen.tugas.nilai');
+    Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/nilai', [DosenKelasController::class, 'simpanNilai'])->name('dosen.tugas.nilai');
     // Pengumuman
     Route::get('/dosen/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
     Route::post('/dosen/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
@@ -177,6 +177,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
         Route::get('/semester/{semesterId?}', [MahasiswaJadwalController::class, 'showBySemester'])->name('mahasiswa.jadwal.semester');
         Route::get('/calendar', [MahasiswaJadwalController::class, 'calendar'])->name('mahasiswa.jadwal.calendar');
     });
+
+    Route::put('/mahasiswa/setting/foto', [MahasiswaSettingController::class, 'updateFoto'])->name('mahasiswa.setting.foto');
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
     Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');

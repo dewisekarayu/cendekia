@@ -63,11 +63,11 @@ class ProfileController extends Controller
     public function updateFoto(Request $request)
     {
         $request->validate([
-            'foto' => ['required', 'image', 'max:2048'],
+            'foto' => ['required', 'image', 'max:10240'],
         ], [
             'foto.required' => 'Pilih foto terlebih dahulu.',
             'foto.image'    => 'File harus berupa gambar.',
-            'foto.max'      => 'Ukuran foto maksimal 2MB.',
+            'foto.max'      => 'Ukuran foto maksimal 10MB.',
         ]);
 
         $user = $request->user();

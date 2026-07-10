@@ -187,8 +187,50 @@
 
     {{-- RIGHT: INFO CARD --}}
     <div class="lg:col-span-1 space-y-5">
+
+        {{-- FOTO PROFIL CARD (BARU) --}}
+        <div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-6 text-center">
+            <form action="{{ route('mahasiswa.setting.foto') }}" method="POST" enctype="multipart/form-data" id="formFoto">
+                @csrf
+                @method('PUT')
+                <div class="relative mx-auto mb-3 h-24 w-24 group/avatar">
+                    <img id="avatarPreview"
+                        src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}"
+                        alt="Foto Profil"
+                        class="h-24 w-24 rounded-full object-cover border-4 border-white shadow-md ring-1 ring-slate-100 mx-auto">
+
+                    <label for="fotoInput"
+                        class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828H9V13z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 19h14" />
+                        </svg>
+                    </label>
+                    <input type="file" id="fotoInput" name="foto" accept="image/*" class="hidden" onchange="previewFoto(event)">
+                </div>
+
+                <p class="text-sm font-bold text-slate-800">{{ $user->name }}</p>
+                <p class="text-xs text-gray-500 mb-3">{{ $user->email }}</p>
+
+                <div id="fotoActions" class="hidden justify-center gap-2">
+                    <button type="submit"
+                            class="rounded-full bg-[#002B6B] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#002B6B]/90 transition">
+                        Simpan Foto
+                    </button>
+                    <button type="button" onclick="batalFoto()"
+                            class="rounded-full border border-gray-200 px-4 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition">
+                        Batal
+                    </button>
+                </div>
+                @error('foto')
+                    <p class="mt-2 text-xs text-red-500">{{ $message }}</p>
+                @enderror
+            </form>
+        </div>
+
+        {{-- Card "Ringkasan Akun" yang sudah ada tetap di sini, tidak diubah --}}
         <div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-6">
-            <h3 class="text-sm font-bold text-slate-800 mb-4">Ringkasan Akun</h3>
+              <h3 class="text-sm font-bold text-slate-800 mb-4">Ringkasan Akun</h3>
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
                     <span class="text-xs text-gray-400">Status</span>
@@ -209,15 +251,29 @@
                     <span class="text-xs font-semibold text-slate-700">{{ $user->created_at?->translatedFormat('M Y') ?? '–' }}</span>
                 </div>
             </div>
-
-            <div class="mt-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-6 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mx-auto text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <p class="mt-2 text-xs text-slate-500">Data NIM dan Program Studi hanya dapat diubah melalui admin akademik.</p>
-            </div>
         </div>
     </div>
 </div>
+
+<script>
+    function previewFoto(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('avatarPreview').src = e.target.result;
+            document.getElementById('fotoActions').classList.remove('hidden');
+            document.getElementById('fotoActions').classList.add('flex');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function batalFoto() {
+        document.getElementById('fotoInput').value = '';
+        document.getElementById('fotoActions').classList.add('hidden');
+        document.getElementById('fotoActions').classList.remove('flex');
+        document.getElementById('avatarPreview').src = "{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}";
+    }
+</script>
 
 @endsection
