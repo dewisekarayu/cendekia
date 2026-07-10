@@ -133,12 +133,25 @@ class ComprehensiveAcademicSeeder extends Seeder
 
     private function seedMateri(KelasPerkuliahan $kelas, Carbon $startDate): void
     {
+        // Get all dosen yang mengajar MK yang sama (untuk team teaching)
+        $dosenPengajarMK = User::role('dosen')
+            ->whereHas('kelasDiampu', function ($query) use ($kelas) {
+                $query->where('mata_kuliah_id', $kelas->mata_kuliah_id);
+            })
+            ->get();
+
+        // Jika hanya ada 1 dosen, tambahkan dosen lainnya untuk team teaching
+        if ($dosenPengajarMK->count() <= 1) {
+            $allDosen = User::role('dosen')->limit(3)->get();
+            $dosenPengajarMK = $allDosen->isNotEmpty() ? $allDosen : collect([$kelas->dosen]);
+        }
+
         foreach ($this->materiTopics as $index => $topic) {
             $pertemuan = $index + 1;
             $uploadDate = $startDate->copy()->addWeeks($index - 1)->addDays(rand(0, 3));
 
             foreach (['pdf', 'ppt', 'video'] as $fileType) {
-                Materi::updateOrCreate(
+                $materi = Materi::updateOrCreate(
                     [
                         'kelas_perkuliahan_id' => $kelas->id,
                         'pertemuan_ke' => $pertemuan,
@@ -152,6 +165,18 @@ class ComprehensiveAcademicSeeder extends Seeder
                         'updated_at' => $uploadDate,
                     ]
                 );
+
+                // Assign 1-2 dosen untuk setiap materi (distribusi merata)
+                // Gunakan pertemuan dan fileType sebagai seed untuk consistent randomization
+                $seed = ($pertemuan * 17) + (ord($fileType[0]) * 13);
+                $numDosen = rand(1, min(2, $dosenPengajarMK->count()));
+                
+                $dosenTerpilih = $dosenPengajarMK->random($numDosen);
+                
+                // Attach dosen ke materi (many-to-many)
+                foreach ($dosenTerpilih as $dosen) {
+                    $materi->dosen()->syncWithoutDetaching([$dosen->id]);
+                }
             }
         }
     }

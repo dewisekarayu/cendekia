@@ -79,6 +79,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Relasi: materi yang diajarkan (kalau user ini dosen)
+     * Many-to-many: satu dosen bisa mengajarkan beberapa materi
+     */
+    public function materi()
+    {
+        return $this->belongsToMany(Materi::class, 'dosen_materi', 'dosen_id', 'materi_id')->withTimestamps();
+    }
+
+    /**
      * Relasi: program studi milik user ini (kalau mahasiswa)
      */
     public function programStudi()

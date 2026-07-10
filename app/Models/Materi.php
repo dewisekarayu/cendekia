@@ -24,4 +24,10 @@ class Materi extends Model
     {
         return $this->belongsTo(KelasPerkuliahan::class, 'kelas_perkuliahan_id');
     }
+
+    // Many-to-many: satu materi bisa diajarkan oleh 1-2 dosen
+    public function dosen()
+    {
+        return $this->belongsToMany(User::class, 'dosen_materi', 'materi_id', 'dosen_id')->withTimestamps();
+    }
 }
