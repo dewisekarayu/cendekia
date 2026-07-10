@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\KelasPerkuliahan;
 use App\Models\Materi;
 use App\Models\Tugas;
+use App\Models\PengumpulanTugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -52,7 +53,7 @@ class KelasController extends Controller
 
         $tugasList = Tugas::where('kelas_perkuliahan_id', $kelas->id)
             ->withCount([
-                'pengumpulan as submitted_count' => fn ($q) => $q->where('status', '!=', 'belum_dikumpulkan'),
+                'pengumpulan as submitted_count' => fn ($q) => $q->where('status', '!=', PengumpulanTugas::STATUS_BELUM_DIKUMPUL),
             ])
             ->latest()
             ->get();
@@ -93,6 +94,86 @@ class KelasController extends Controller
 
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil dipublikasikan.');
+    }
+
+    public function submissions(Request $request, $kelasId, $tugasId)
+    {
+        $kelas = KelasPerkuliahan::with(['mataKuliah', 'mahasiswa'])
+            ->where('dosen_id', $request->user()->id)
+            ->findOrFail($kelasId);
+
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+
+        // Auto-buat baris "belum dikumpul" untuk mahasiswa yang belum punya record,
+        // biar mereka tetap kelihatan di daftar (bukan cuma yang udah submit)
+        $sudahAdaIds = PengumpulanTugas::where('tugas_id', $tugas->id)->pluck('mahasiswa_id');
+        $belumAda = $kelas->mahasiswa->whereNotIn('id', $sudahAdaIds);
+
+        foreach ($belumAda as $mhs) {
+            PengumpulanTugas::create([
+                'tugas_id' => $tugas->id,
+                'mahasiswa_id' => $mhs->id,
+                'status' => PengumpulanTugas::STATUS_BELUM_DIKUMPUL,
+            ]);
+        }
+
+        $submissions = PengumpulanTugas::with('mahasiswa')
+            ->where('tugas_id', $tugas->id)
+            ->get()
+            ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
+            ->values();
+
+        return view('dosen.kelas-tugas-submissions', compact('kelas', 'tugas', 'submissions'));
+    }
+
+    public function simpanNilai(Request $request, $kelasId, $tugasId, $pengumpulanId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+        $pengumpulan = PengumpulanTugas::where('tugas_id', $tugas->id)->findOrFail($pengumpulanId);
+
+        $validated = $request->validate([
+            'nilai' => ['required', 'integer', 'min:0', 'max:100'],
+            'feedback_dosen' => ['nullable', 'string', 'max:2000'],
+        ], [
+            'nilai.required' => 'Nilai wajib diisi.',
+            'nilai.max' => 'Nilai maksimal 100.',
+        ]);
+
+        $pengumpulan->update([
+            'nilai' => $validated['nilai'],
+            'feedback_dosen' => $validated['feedback_dosen'] ?? null,
+            'status' => PengumpulanTugas::STATUS_DINILAI,
+        ]);
+
+        return back()->with('success', 'Nilai untuk ' . ($pengumpulan->mahasiswa->name ?? 'mahasiswa') . ' berhasil disimpan.');
+    }
+
+    public function bukaMateri(Request $request, $kelasId, $materiId)
+    {
+        $kelas = KelasPerkuliahan::with('mataKuliah.programStudi')
+            ->where('dosen_id', $request->user()->id)
+            ->findOrFail($kelasId);
+
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+
+        return view('dosen.materi.buka', compact('kelas', 'materi'));
+    }
+
+    public function unduhMateri(Request $request, $kelasId, $materiId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)
+            ->findOrFail($kelasId);
+
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+
+        abort_unless($materi->file_path, 404, 'File materi tidak ditemukan.');
+
+        $path = Storage::disk('public')->path($materi->file_path);
+
+        abort_unless(file_exists($path), 404, 'File tidak ditemukan di server.');
+
+        return response()->download($path, basename($materi->file_path));
     }
 
     public function materi(Request $request, $id)

@@ -10,12 +10,14 @@ use App\Http\Controllers\Dosen\PengumumanController as DosenPengumumanController
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\KelasController;
 
+use App\Http\Controllers\Dosen\ProfileController as DosenProfileController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Dosen\GradebookController as DosenGradebookController;
 use App\Http\Controllers\Dosen\ForumController as DosenForumController;
 use App\Http\Controllers\Dosen\AbsensiController as DosenAbsensiController;
 use App\Http\Controllers\Dosen\JadwalController as DosenJadwalController;
+use App\Http\Controllers\Dosen\MateriController as DosenMateriController;
 
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\Mahasiswa\ScheduleController as MahasiswaScheduleContro
 use App\Http\Controllers\Mahasiswa\JadwalController as MahasiswaJadwalController;
 use App\Http\Controllers\Mahasiswa\SettingController as MahasiswaSettingController;
 use App\Http\Controllers\Mahasiswa\AbsensiController as MahasiswaAbsensiController;
+use App\Http\Controllers\Mahasiswa\PengumpulantugasController as MahasiswaPengumpulantugasController;
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -123,7 +126,9 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
     Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
-
+    Route::get('/dosen/kelas/{kelas}/tugas/{tugas}/submissions', [DosenKelasController::class, 'submissions'])->name('dosen.tugas.submissions');
+    Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/nilai', [DosenKelasController::class, 'simpanNilai'])->name('dosen.tugas.nilai');
+    
     // Pengumuman Dosen
     Route::get('/dosen/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
     Route::post('/dosen/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');
@@ -131,9 +136,10 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::delete('/dosen/pengumuman/{pengumuman}', [DosenPengumumanController::class, 'destroy'])->name('dosen.kelas-pengumuman.destroy');
     
     // Profil Dosen
-    Route::get('/dosen/profil', [App\Http\Controllers\Dosen\ProfileController::class, 'index'])->name('dosen.profil.index');
-    Route::put('/dosen/profil', [App\Http\Controllers\Dosen\ProfileController::class, 'updateProfile'])->name('dosen.profil.update');
-    Route::put('/dosen/profil/password', [App\Http\Controllers\Dosen\ProfileController::class, 'updatePassword'])->name('dosen.profil.password');
+    Route::get('/dosen/profil', [DosenProfileController::class, 'index'])->name('dosen.profil.index');
+    Route::put('/dosen/profil', [DosenProfileController::class, 'updateProfile'])->name('dosen.profil.update');
+    Route::put('/dosen/profil/foto', [DosenProfileController::class, 'updateFoto'])->name('dosen.profil.foto');
+    Route::put('/dosen/profil/password', [DosenProfileController::class, 'updatePassword'])->name('dosen.profil.password');
 
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
     Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
@@ -176,12 +182,17 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/jelajahi-kelas', [MahasiswaKelasController::class, 'jelajahi'])->name('mahasiswa.jelajahi-kelas');
     Route::post('/mahasiswa/kelas/{id}/join', [MahasiswaKelasController::class, 'join'])->name('mahasiswa.kelas.join');
 
+    // Pengumpulan Tugas
+    Route::get('/mahasiswa/tugas/{tugas}', [MahasiswaPengumpulantugasController::class, 'show'])->name('mahasiswa.pengumpulan-tugas.show');
+    Route::post('/mahasiswa/tugas/{tugas}/kumpulkan', [MahasiswaPengumpulantugasController::class, 'store'])->name('mahasiswa.pengumpulan-tugas.store');
+    Route::delete('/mahasiswa/tugas/{tugas}/batalkan', [MahasiswaPengumpulantugasController::class, 'destroy'])->name('mahasiswa.pengumpulan-tugas.destroy');
+
     Route::get('/mahasiswa/gradebook', [MahasiswaGradebookController::class, 'index'])->name('mahasiswa.gradebook');
-    
+
     // Forum Mahasiswa
     Route::get('/mahasiswa/kelas/{id}/forum', [MahasiswaForumController::class, 'index'])->name('mahasiswa.kelas-forum');
     Route::post('/mahasiswa/kelas/{id}/forum/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.kelas-forum.pesan');
-    
+
     Route::get('/mahasiswa/schedule', [MahasiswaScheduleController::class, 'index'])->name('mahasiswa.schedule');
     
     // Jadwal Mahasiswa
@@ -203,7 +214,6 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
     Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
-    Route::get('/mahasiswa/profil', function () { return view('mahasiswa.profil'); })->name('mahasiswa.profil');
 });
 
 // Profile umum bawaan Laravel Breeze/Jetstream (opsional)

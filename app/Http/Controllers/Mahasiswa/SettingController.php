@@ -7,6 +7,7 @@ use App\Models\NilaiAkhir;
 use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -60,6 +61,30 @@ class SettingController extends Controller
         $user->update($validated);
 
         return back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function updateFoto(Request $request)
+    {
+        $request->validate([
+            'foto' => ['required', 'image', 'max:10240'],
+        ], [
+            'foto.required' => 'Pilih foto terlebih dahulu.',
+            'foto.image'    => 'File harus berupa gambar.',
+            'foto.max'      => 'Ukuran foto maksimal 10MB.',
+        ]);
+
+        $user = $request->user();
+
+        // Hapus foto lama kalau ada
+        if ($user->foto) {
+            Storage::disk('public')->delete($user->foto);
+        }
+
+        $path = $request->file('foto')->store('foto-profil', 'public');
+
+        $user->update(['foto' => $path]);
+
+        return back()->with('success', 'Foto profil berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request)

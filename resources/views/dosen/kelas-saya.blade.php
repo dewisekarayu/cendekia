@@ -91,7 +91,7 @@
                 </div>
             </div>
 
-            <a href="{{ route('dosen.kelas-detail', $kelas->id) }}" class="mt-4 block text-center bg-blue-900 hover:bg-blue-800 text-white text-sm font-medium py-2 rounded-lg transition">
+            <a href="{{ route('dosen.kelas-detail', $kelas->id) }}" class="mt-4 block text-center bg-[#321270] hover:bg-[#250d54] text-white text-sm font-medium py-2 rounded-lg transition">
                 Manage Class
             </a>
         </div>

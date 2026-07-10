@@ -3,7 +3,7 @@
 @section('content')
 @php
     $user     = auth()->user();
-    $palette  = ['#002B6B','#0C4A6E','#1E3A8A','#164E63','#1C3144','#0F172A','#1F2937'];
+    $palette  = ['#321270','#0C4A6E','#1E3A8A','#164E63','#1C3144','#0F172A','#1F2937'];
 
     function forumAvatarColor(string $name, array $pal): string {
         return $pal[abs(crc32($name)) % count($pal)];
@@ -12,8 +12,8 @@
 
 <style>
     :root{
-        --forum-primary: #002B6B;
-        --forum-primary-dark: #001A40;
+        --forum-primary: #321270;
+        --forum-primary-dark: #321270;
         --forum-light: #CDDCFF;
         --forum-bg-1: #F4F7FF;
         --forum-bg-2: #E9EFFF;
@@ -148,7 +148,7 @@
 
     .forum-sender-name{
         font-size: 11.5px; font-weight: 700; margin: 0 0 3px 8px;
-        color: #0284C7;
+        color: #321270;
     }
     .forum-sender-name.dosen{ color: #4338CA; }
 
