@@ -37,43 +37,18 @@ class EnhancedKelasPerkuliahanSeeder extends Seeder
         ];
 
         $jadwalUsed = [];
-        $dosenMKCount = array_fill(0, $dosenList->count(), 0); // Track MK count per dosen
-        $dosenToAssign = []; // Track which dosen to assign
+        $dosenIdx = 0; // Simple round-robin: assign MK to dosen in order
 
         foreach ($mkList as $i => $mk) {
             // Create 2-3 kelas per mata kuliah (A, B, sometimes C)
             $numSections = ($i % 3) === 2 ? 3 : 2;
 
+            // Assign MK to dosen secara round-robin (1 dosen = 1 MK saja)
+            $dosen = $dosenList[$dosenIdx % $dosenList->count()];
+            $dosenIdx++; // Move to next dosen for next MK
+
             for ($sectionIdx = 0; $sectionIdx < $numSections; $sectionIdx++) {
                 $section = chr(65 + $sectionIdx); // A, B, C
-                
-                // Only increment MK count on first section (A)
-                // So 1 dosen can teach MK-A, MK-B, MK-C (sections don't count)
-                $shouldAssignNewMK = ($sectionIdx === 0);
-                
-                // Find dosen dengan MK paling sedikit, dengan limit 4 MK per dosen
-                $bestDosenIdx = null;
-                $minMKCount = 5; // Limit 4 MK per dosen
-                
-                for ($j = 0; $j < $dosenList->count(); $j++) {
-                    if ($dosenMKCount[$j] < 4 && $dosenMKCount[$j] < $minMKCount) {
-                        $minMKCount = $dosenMKCount[$j];
-                        $bestDosenIdx = $j;
-                    }
-                }
-
-                // Jika semua dosen sudah 4 MK, reset dan mulai lagi
-                if ($bestDosenIdx === null) {
-                    $dosenMKCount = array_fill(0, $dosenList->count(), 0);
-                    $bestDosenIdx = ($i % $dosenList->count());
-                }
-
-                $dosen = $dosenList[$bestDosenIdx];
-                
-                // Increment MK count hanya jika first section (A)
-                if ($shouldAssignNewMK) {
-                    $dosenMKCount[$bestDosenIdx]++;
-                }
                 
                 // Find a schedule that doesn't conflict
                 $jadwalIndex = ($i * 3 + $sectionIdx) % (count($hariList) * count($jamList));
