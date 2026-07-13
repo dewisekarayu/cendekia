@@ -41,46 +41,48 @@
         @endif
 
         {{-- File --}}
-        <div class="mt-6">
-            @if ($materi->file_path)
+        <div class="mt-6 space-y-3">
+            @if ($materi->files->isNotEmpty())
                 @php
                     $icons = [
                         'pdf'   => 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z',
                         'ppt'   => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-                        'video' => 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+                        'pptx'  => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+                        'mp4'   => 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
                     ];
-                    $iconPath = $icons[$materi->tipe_file ?? ''] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
                 @endphp
-                <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#002B6B]">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}"/></svg>
+                @foreach ($materi->files as $file)
+                    @php
+                        $iconPath = $icons[$file->tipe_file ?? ''] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
+                    @endphp
+                    <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#002B6B]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}"/></svg>
+                        </div>
+
+                        <a href="{{ route('dosen.materi.preview', [$kelas->id, $materi->id, $file->id]) }}" target="_blank" class="min-w-0 flex-1 group">
+                            <p class="truncate text-sm font-semibold text-slate-800 group-hover:text-[#002B6B] group-hover:underline transition">
+                                {{ $file->nama_asli ?? basename($file->file_path) }}
+                            </p>
+                            @if ($file->tipe_file)
+                                <p class="text-[11px] uppercase tracking-wide text-slate-400">{{ $file->tipe_file }}</p>
+                            @endif
+                        </a>
+
+                        <a href="{{ route('dosen.materi.unduh', [$kelas->id, $materi->id, $file->id]) }}"
+                        title="Unduh file"
+                        class="shrink-0 rounded-lg p-2 text-slate-400 hover:bg-blue-50 hover:text-[#002B6B] transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                        </a>
                     </div>
-
-                    {{-- Nama file: klik = buka file di tab baru --}}
-                    <a href="{{ route('dosen.materi.preview', [$kelas->id, $materi->id]) }}" target="_blank" class="min-w-0 flex-1 group">
-                        <p class="truncate text-sm font-semibold text-slate-800 group-hover:text-[#002B6B] group-hover:underline transition">
-                            {{ basename($materi->file_path) }}
-                        </p>
-                        @if ($materi->tipe_file)
-                            <p class="text-[11px] uppercase tracking-wide text-slate-400">{{ $materi->tipe_file }}</p>
-                        @endif
-                    </a>
-
-                    {{-- Icon kecil: klik = unduh file --}}
-                    <a href="{{ route('dosen.materi.unduh', [$kelas->id, $materi->id]) }}"
-                    title="Unduh file"
-                    class="shrink-0 rounded-lg p-2 text-slate-400 hover:bg-blue-50 hover:text-[#002B6B] transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
-                    </a>
-                </div>
+                @endforeach
             @else
                 <div class="rounded-xl border-2 border-dashed border-gray-200 bg-white p-6 text-center text-sm text-gray-400">
                     File belum diunggah untuk materi ini.
                 </div>
             @endif
         </div>
-
     </div>
 @endsection

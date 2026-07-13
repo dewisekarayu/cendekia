@@ -194,10 +194,12 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
                                     </div>
-                                    <p class="text-sm font-bold text-gray-800">Klik atau seret file ke sini</p>
-                                    <p class="text-xs text-gray-400 mt-1">PDF, DOCX, ZIP (Maksimal 25MB)</p>
-                                    <input type="file" id="fileInput" name="template" accept=".pdf,.doc,.docx,.zip,.ppt,.pptx,.xls,.xlsx" class="hidden" onchange="updateTugasFileName(this)">
-                                    <p id="tugasFileNameDisplay" class="text-sm text-emerald-600 font-medium mt-2 hidden"></p>
+                                    <p class="text-sm font-bold text-gray-800">Klik atau seret file ke sini (bisa lebih dari 1)</p>
+                                    <p class="text-xs text-gray-400 mt-1">PDF, DOCX, PPT, ZIP, JPG, PNG (Maksimal 25MB/file)</p>
+                                    <input type="file" id="fileInput" name="template[]" multiple
+                                        accept=".pdf,.doc,.docx,.zip,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png"
+                                        class="hidden" onchange="updateTugasFileName(this)">
+                                    <ul id="tugasFileNameDisplay" class="text-sm text-emerald-600 font-medium mt-2 hidden space-y-0.5"></ul>
                                 </div>
                             </div>
                         </div>
@@ -234,8 +236,14 @@
 
         function updateTugasFileName(input) {
             const display = document.getElementById('tugasFileNameDisplay');
+            display.innerHTML = '';
+
             if (input.files.length > 0) {
-                display.innerText = "Dipilih: " + input.files[0].name;
+                Array.from(input.files).forEach(file => {
+                    const li = document.createElement('li');
+                    li.textContent = file.name;
+                    display.appendChild(li);
+                });
                 display.classList.remove('hidden');
             } else {
                 display.classList.add('hidden');

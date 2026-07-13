@@ -65,10 +65,15 @@
                                         <div class="text-sm font-semibold text-gray-800">Pertemuan {{ $m->pertemuan_ke }} - {{ $m->judul }}</div>
                                         <div class="text-xs text-gray-500 mt-1">{{ Str::limit($m->deskripsi, 200) }}</div>
                                     </div>
-                                    <div class="text-right">
-                                        @if($m->file_path)
-                                            <a href="{{ route('dosen.materi.buka', [$kelas->id, $m->id]) }}" class="text-sm px-3 py-1 bg-[#321270] text-white rounded">Buka</a>
-                                        @endif
+                                    <div class="text-right space-y-1">
+                                        @forelse($m->files as $file)
+                                            <a href="{{ route('dosen.materi.buka', [$kelas->id, $m->id, $file->id]) }}"
+                                            class="block text-xs px-3 py-1 bg-[#321270] text-white rounded truncate max-w-[160px]">
+                                                {{ $file->nama_asli ?? 'Buka File' }}
+                                            </a>
+                                        @empty
+                                            <span class="text-xs text-gray-400">Tidak ada file</span>
+                                        @endforelse
                                     </div>
                                 </div>
                             </li>
@@ -167,10 +172,9 @@
                                 </div>
                                 <p class="text-sm font-bold text-slate-800">Seret dan lepas file di sini</p>
                                 <p class="text-xs text-gray-400 mt-0.5">atau <span class="text-blue-600 underline font-medium">pilih file</span> dari komputer Anda</p>
-                                <p class="text-[11px] text-gray-400 mt-3">PDF, PPT, DOCX, atau MP4 (Maksimal 100MB)</p>
-                                <input type="file" id="materiFileInput" name="file_materi" class="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.mp4,.zip" onchange="updateFileName(this)">
-                                <p id="fileNameDisplay" class="text-sm text-emerald-600 font-medium mt-2 hidden"></p>
-                            </div>
+                                <p class="text-[11px] text-gray-400 mt-3">PDF, PPT, DOCX, XLS, MP4, ZIP, JPG, PNG (Maksimal 100MB/file)</p>
+                                <input type="file" id="materiFileInput" name="file_materi[]" multiple class="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.mp4,.zip,.jpg,.jpeg,.png" onchange="updateFileName(this)">
+                                <ul id="fileNameDisplay" class="text-sm text-emerald-600 font-medium mt-2 hidden space-y-0.5 text-left"></ul>
                         </div>
 
                     </div>
@@ -197,8 +201,14 @@
 
         function updateFileName(input) {
             const display = document.getElementById('fileNameDisplay');
-            if(input.files.length > 0) {
-                display.innerText = "Dipilih: " + input.files[0].name;
+            display.innerHTML = '';
+
+            if (input.files.length > 0) {
+                Array.from(input.files).forEach(file => {
+                    const li = document.createElement('li');
+                    li.textContent = file.name;
+                    display.appendChild(li);
+                });
                 display.classList.remove('hidden');
             } else {
                 display.classList.add('hidden');

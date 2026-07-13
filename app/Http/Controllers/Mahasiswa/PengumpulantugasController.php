@@ -34,11 +34,15 @@ class PengumpulantugasController extends Controller
     public function store(Request $request, Tugas $tugas)
     {
         $validated = $request->validate([
-            'file_jawaban'   => ['required', 'array', 'min:1', 'max:5'], // maks 5 file per submit
-            'file_jawaban.*' => ['file', 'mimes:pdf,zip', 'max:10240'],  // 10 MB per file
+            'file_jawaban'   => ['required', 'array', 'min:1', 'max:5'],
+            'file_jawaban.*' => [
+                'file',
+                'mimes:pdf,zip,doc,docx,ppt,pptx,jpg,jpeg,png',
+                'max:10240',
+            ],
             'catatan'        => ['nullable', 'string', 'max:1000'],
         ]);
-
+        
         $mahasiswaId = Auth::id();
         $isLate = now()->gt($tugas->deadline);
 

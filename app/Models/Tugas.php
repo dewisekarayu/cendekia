@@ -38,4 +38,9 @@ class Tugas extends Model
     {
         return $this->hasMany(PengumpulanTugas::class, 'tugas_id');
     }
+
+    public function files()
+    {
+        return $this->hasMany(TugasFile::class, 'tugas_id');
+    }
 }

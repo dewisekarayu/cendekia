@@ -66,23 +66,34 @@
         </div>
 
         {{-- File lampiran (jika ada) --}}
-        @if ($tugas->file_lampiran)
-            <div class="mt-4 flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3">
-                <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                    </svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-slate-700 truncate">{{ basename($tugas->file_lampiran) }}</p>
-                    <p class="text-xs text-slate-400">Lampiran tugas</p>
-                </div>
-                <a href="{{ Storage::url($tugas->file_lampiran) }}" download
-                   class="w-8 h-8 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                </a>
+        @if ($tugas->files->count())
+            <div class="mt-4 space-y-2">
+                @foreach ($tugas->files as $file)
+                    <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3">
+                        <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                        </div>
+
+                        {{-- Klik nama file = buka di tab baru --}}
+                        <a href="{{ Storage::url($file->file_path) }}" target="_blank" class="flex-1 min-w-0 group">
+                            <p class="text-sm font-medium text-slate-700 truncate group-hover:text-blue-600 group-hover:underline transition">
+                                {{ $file->nama_asli ?? basename($file->file_path) }}
+                            </p>
+                            <p class="text-xs text-slate-400">Lampiran tugas</p>
+                        </a>
+
+                        {{-- Icon panah = unduh --}}
+                        <a href="{{ Storage::url($file->file_path) }}" download
+                        title="Unduh file"
+                        class="w-8 h-8 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                        </a>
+                    </div>
+                @endforeach
             </div>
         @endif
     </div>
@@ -93,11 +104,21 @@
             {{-- Sudah mengumpulkan: tampilkan file-file yang diunggah --}}
             <div class="space-y-2">
                 @foreach ($pengumpulan->files as $file)
+                    @php
+                        $ext = strtolower(pathinfo($file->file_path, PATHINFO_EXTENSION));
+                        $isImage = in_array($ext, ['jpg', 'jpeg', 'png']);
+                    @endphp
                     <div class="flex items-center gap-3 border border-slate-100 rounded-xl px-4 py-3 bg-slate-50">
                         <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                            @if ($isImage)
+                                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                </svg>
+                            @else
+                                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            @endif
                         </div>
                         <p class="flex-1 min-w-0 text-sm text-slate-700 truncate">{{ $file->nama_asli ?? basename($file->file_path) }}</p>
                         <a href="{{ Storage::url($file->file_path) }}" target="_blank"
@@ -141,13 +162,17 @@
                         </ul>
                     </template>
 
-                    <div class="flex items-center gap-2 mt-4">
+                    <div class="flex flex-wrap items-center justify-center gap-2 mt-4">
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">PDF</span>
+                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">DOC</span>
+                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">PPT</span>
+                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">JPG/PNG</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">ZIP</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">MAX 10MB/FILE</span>
                     </div>
 
-                    <input id="file_jawaban" name="file_jawaban[]" type="file" accept=".pdf,.zip" multiple class="hidden"
+                    <input id="file_jawaban" name="file_jawaban[]" type="file"
+                        accept=".pdf,.zip,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png" multiple class="hidden"
                         @change="fileNames = Array.from($event.target.files).map(f => f.name)">
                 </label>
                 @error('file_jawaban')

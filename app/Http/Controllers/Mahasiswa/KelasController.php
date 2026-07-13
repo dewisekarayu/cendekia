@@ -7,6 +7,7 @@ use App\Models\AbsensiMahasiswa;
 use App\Models\KelasMahasiswa;
 use App\Models\KelasPerkuliahan;
 use App\Models\Materi;
+use App\Models\MateriFile;
 use App\Models\PengumpulanTugas;
 use App\Models\Tugas;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class KelasController extends Controller
         abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
 
         $materiList = Materi::where('kelas_perkuliahan_id', $kelas->id)
+            ->with('files') 
             ->orderBy('pertemuan_ke')
             ->get();
 
@@ -65,7 +67,7 @@ class KelasController extends Controller
         ));
     }
 
-    public function previewMateri(Request $request, $kelasId, $materiId)
+    public function previewMateri(Request $request, $kelasId, $materiId, $fileId)
     {
         $kelas = KelasPerkuliahan::findOrFail($kelasId);
 
@@ -76,27 +78,12 @@ class KelasController extends Controller
         abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
 
         $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+        $file = MateriFile::where('materi_id', $materi->id)->findOrFail($fileId);
 
-        abort_unless($materi->file_path, 404, 'File materi belum tersedia.');
+        $path = Storage::disk('public')->path($file->file_path);
+        abort_unless(is_file($path), 404, 'File materi tidak ditemukan.');
 
-        if (filter_var($materi->file_path, FILTER_VALIDATE_URL)) {
-            return redirect()->away($materi->file_path);
-        }
-
-        $path = ltrim($materi->file_path, '/');
-        $path = str_starts_with($path, 'storage/') ? substr($path, strlen('storage/')) : $path;
-        $path = str_starts_with($path, 'public/') ? substr($path, strlen('public/')) : $path;
-
-        abort_if(str_contains($path, '..'), 404, 'File materi tidak ditemukan.');
-
-        if (Storage::disk('public')->exists($path)) {
-            return response()->file(Storage::disk('public')->path($path));
-        }
-
-        $publicPath = public_path($path);
-        abort_unless(is_file($publicPath), 404, 'File materi tidak ditemukan.');
-
-        return response()->file($publicPath);
+        return response()->file($path);
     }
 
     public function bukaMateri(Request $request, $kelasId, $materiId)
@@ -109,12 +96,14 @@ class KelasController extends Controller
 
         abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
 
-        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+        $materi = Materi::with('files')
+            ->where('kelas_perkuliahan_id', $kelas->id)
+            ->findOrFail($materiId);
 
         return view('mahasiswa.materi.buka', compact('kelas', 'materi'));
     }
 
-    public function unduhMateri(Request $request, $kelasId, $materiId)
+    public function unduhMateri(Request $request, $kelasId, $materiId, $fileId)
     {
         $kelas = KelasPerkuliahan::findOrFail($kelasId);
 
@@ -125,31 +114,12 @@ class KelasController extends Controller
         abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
 
         $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+        $file = MateriFile::where('materi_id', $materi->id)->findOrFail($fileId);
 
-        abort_unless($materi->file_path, 404, 'File materi belum tersedia.');
+        $path = Storage::disk('public')->path($file->file_path);
+        abort_unless(is_file($path), 404, 'File materi tidak ditemukan.');
 
-        if (filter_var($materi->file_path, FILTER_VALIDATE_URL)) {
-            return redirect()->away($materi->file_path);
-        }
-
-        $path = ltrim($materi->file_path, '/');
-        $path = str_starts_with($path, 'storage/') ? substr($path, strlen('storage/')) : $path;
-        $path = str_starts_with($path, 'public/') ? substr($path, strlen('public/')) : $path;
-
-        abort_if(str_contains($path, '..'), 404, 'File materi tidak ditemukan.');
-
-        $downloadName = basename($materi->file_path);
-
-        if (Storage::disk('public')->exists($path)) {
-            return Storage::disk('public')->download($path, $downloadName);
-            // atau: return response()->download(Storage::disk('public')->path($path), $downloadName);
-        }
-
-        $publicPath = public_path($path);
-
-        abort_unless(is_file($publicPath), 404, 'File materi tidak ditemukan.');
-
-        return response()->download($publicPath, $downloadName);
+        return response()->download($path, $file->nama_asli ?? basename($file->file_path));
     }
 
     public function jelajahi(Request $request)

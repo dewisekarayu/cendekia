@@ -120,12 +120,11 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'materi'])->name('dosen.kelas-materi');
     Route::post('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'storeMateri'])->name('dosen.kelas-materi.store');
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
-    Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
     
-    
-    Route::get('/dosen/kelas/{kelas}/materi/{materi}/preview', [DosenKelasController::class, 'previewMateri'])->name('dosen.materi.preview');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
-    Route::get('/dosen/kelas/{kelas}/materi/{materi}/unduh', [DosenKelasController::class, 'unduhMateri'])->name('dosen.materi.unduh');
+    Route::get('/dosen/kelas/{kelas}/materi/{materi}/preview/{file}', [DosenKelasController::class, 'previewMateri'])->name('dosen.materi.preview');
+    Route::get('/dosen/kelas/{kelas}/materi/{materi}/unduh/{file}', [DosenKelasController::class, 'unduhMateri'])->name('dosen.materi.unduh');
+    
     // Forum Dosen
     Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
@@ -182,8 +181,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');
 
     Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/buka', [MahasiswaKelasController::class, 'bukaMateri'])->name('mahasiswa.materi.buka');
-    Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/unduh', [MahasiswaKelasController::class, 'unduhMateri'])->name('mahasiswa.materi.unduh');
-    Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/preview', [MahasiswaKelasController::class, 'previewMateri'])->name('mahasiswa.materi.preview');
+    Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/unduh/{file}', [MahasiswaKelasController::class, 'unduhMateri'])->name('mahasiswa.materi.unduh');
+    Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/preview/{file}', [MahasiswaKelasController::class, 'previewMateri'])->name('mahasiswa.materi.preview');
 
     Route::get('/mahasiswa/jelajahi-kelas', [MahasiswaKelasController::class, 'jelajahi'])->name('mahasiswa.jelajahi-kelas');
     Route::post('/mahasiswa/kelas/{id}/join', [MahasiswaKelasController::class, 'join'])->name('mahasiswa.kelas.join');
@@ -219,6 +218,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     // Pengaturan & Profil Mahasiswa
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
+    Route::put('/mahasiswa/setting/foto', [MahasiswaSettingController::class, 'updateFoto'])->name('mahasiswa.setting.foto');
     Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
 });
 

@@ -31,16 +31,16 @@
                         <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20" class="shrink-0 mt-0.5">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
                         </svg>
-                        <p>{{ $errors->first('email') ?: ($errors->first('nip_nim') ?: ($errors->first('password') ?: 'Login gagal, periksa kembali kredensial Anda')) }}</p>
+                        <p>{{ $errors->first('login') ?: $errors->first('password') ?: 'Login gagal, periksa kembali kredensial Anda' }}</p>
                     </div>
                 @endif
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    {{-- Email Input --}}
+                    {{-- Email / NIM / NIDN Input (digabung) --}}
                     <div class="mb-5">
-                        <label for="email" class="block text-[13.5px] font-semibold text-gray-800 mb-2">Email</label>
+                        <label for="login" class="block text-[13.5px] font-semibold text-gray-800 mb-2">Email / NIM / NIDN</label>
                         <div class="relative">
                             <div class="absolute left-4 inset-y-0 flex items-center pointer-events-none text-slate-400">
                                 <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,42 +48,18 @@
                                 </svg>
                             </div>
                             <input
-                                id="email"
-                                type="email"
-                                name="email"
-                                value="{{ old('email') }}"
-                                placeholder="nama@example.com"
-                                required
-                                autocomplete="email"
-                                class="w-full box-border pl-[46px] pr-4 py-3.5 bg-[#F4F7FF] border-[1.5px] border-[#DCE6FF] rounded-2xl text-gray-800 text-[14.5px] placeholder-gray-400 transition focus:outline-none focus:border-[#002B6B] focus:bg-white focus:ring-[3px] focus:ring-[#002B6B]/10"
-                            />
-                        </div>
-                        @error('email')
-                            <p class="text-red-600 text-xs mt-2 ml-0.5">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- NIM/NIDN Input --}}
-                    <div class="mb-5">
-                        <label for="nip_nim" class="block text-[13.5px] font-semibold text-gray-800 mb-2">NIM / NIDN</label>
-                        <div class="relative">
-                            <div class="absolute left-4 inset-y-0 flex items-center pointer-events-none text-slate-400">
-                                <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                            <input
-                                id="nip_nim"
+                                id="login"
                                 type="text"
-                                name="nip_nim"
-                                value="{{ old('nip_nim') }}"
-                                placeholder="20241001 atau 19790000001"
+                                name="login"
+                                value="{{ old('login') }}"
+                                placeholder="nama@example.com / 20241001 / 19790000001"
                                 required
+                                autofocus
                                 autocomplete="username"
                                 class="w-full box-border pl-[46px] pr-4 py-3.5 bg-[#F4F7FF] border-[1.5px] border-[#DCE6FF] rounded-2xl text-gray-800 text-[14.5px] placeholder-gray-400 transition focus:outline-none focus:border-[#002B6B] focus:bg-white focus:ring-[3px] focus:ring-[#002B6B]/10"
                             />
                         </div>
-                        @error('nip_nim')
+                        @error('login')
                             <p class="text-red-600 text-xs mt-2 ml-0.5">{{ $message }}</p>
                         @enderror
                     </div>
@@ -149,4 +125,4 @@
     </div>
 </div>
 
-</x-guest-layout>
+</x-guest-layout>   
