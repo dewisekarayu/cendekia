@@ -177,7 +177,7 @@
         <div class="cnd-card">
             <div class="cnd-card-heading">
                 <h2>Masuk</h2>
-                <p>Gunakan email, NIM/NIDN, dan password Anda</p>
+                <p>Gunakan NIM, NIP, atau email Anda</p>
             </div>
 
             @if (session('status'))
@@ -190,41 +190,16 @@
                     <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
                     </svg>
-                    <p>{{ $errors->first('email') ?: ($errors->first('nip_nim') ?: ($errors->first('password') ?: 'Login gagal, periksa kembali kredensial Anda')) }}</p>
+                    <p>{{ $errors->first('credential') ?: ($errors->first('password') ?: 'Login gagal, periksa kembali kredensial Anda') }}</p>
                 </div>
             @endif
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                {{-- Email Input --}}
+                {{-- Combined Credential Input (NIM/NIP/Email) --}}
                 <div class="cnd-field">
-                    <label for="email" class="cnd-label">Email</label>
-                    <div class="cnd-input-wrap">
-                        <div class="cnd-input-icon">
-                            <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <input
-                            id="email"
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            placeholder="nama@example.com"
-                            required
-                            class="cnd-input"
-                            autocomplete="email"
-                        />
-                    </div>
-                    @error('email')
-                        <p class="cnd-error-text">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- NIM/NIDN Input --}}
-                <div class="cnd-field">
-                    <label for="nip_nim" class="cnd-label">NIM / NIDN</label>
+                    <label for="credential" class="cnd-label">NIM / NIP / Email</label>
                     <div class="cnd-input-wrap">
                         <div class="cnd-input-icon">
                             <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -232,17 +207,17 @@
                             </svg>
                         </div>
                         <input
-                            id="nip_nim"
+                            id="credential"
                             type="text"
-                            name="nip_nim"
-                            value="{{ old('nip_nim') }}"
-                            placeholder="20241001 atau 19790000001"
+                            name="credential"
+                            value="{{ old('credential') }}"
+                            placeholder="20241001, 19790000001, atau nama@example.com"
                             required
                             class="cnd-input"
                             autocomplete="username"
                         />
                     </div>
-                    @error('nip_nim')
+                    @error('credential')
                         <p class="cnd-error-text">{{ $message }}</p>
                     @enderror
                 </div>
