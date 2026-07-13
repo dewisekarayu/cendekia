@@ -192,7 +192,7 @@
                     @foreach ($deadlines as $tugas)
                         @php
                             $deadline = \Carbon\Carbon::parse($tugas->deadline);
-                            $daysLeft = now()->diffInDays($deadline, false);
+                            $daysLeft = (int) floor(now()->diffInDays($deadline, false));
                             $isUrgent = $daysLeft <= 2;
                         @endphp
                         <div class="flex items-start gap-3 rounded-xl p-2 -mx-2 hover:bg-gray-50 transition">

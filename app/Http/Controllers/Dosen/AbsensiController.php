@@ -55,10 +55,10 @@ class AbsensiController extends Controller
         $kelas = $this->kelasMilikDosen($kelasId);
 
         $validated = $request->validate([
-            'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:16'],
+            'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:99'],
             'tanggal' => ['required', 'date'],
-            'jam_mulai' => ['required', 'date_format:H:i'],
-            'jam_selesai' => ['required', 'date_format:H:i', 'after:jam_mulai'],
+            'jam_mulai' => ['required', 'string', 'max:50'],
+            'jam_selesai' => ['required', 'string', 'max:50'],
             'rangkuman' => ['nullable', 'string', 'max:500'],
             'berita_acara' => ['nullable', 'string', 'max:1000'],
             'catatan' => ['nullable', 'string', 'max:500'],
@@ -247,10 +247,10 @@ class AbsensiController extends Controller
         $this->authorize('manage', $absensi);
 
         $validated = $request->validate([
-            'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:16'],
+            'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:99'],
             'tanggal' => ['required', 'date'],
-            'jam_mulai' => ['required', 'date_format:H:i'],
-            'jam_selesai' => ['required', 'date_format:H:i', 'after:jam_mulai'],
+            'jam_mulai' => ['required', 'string', 'max:50'],
+            'jam_selesai' => ['required', 'string', 'max:50'],
             'session_status' => ['required', 'in:draft,buka,tutup'],
             'rangkuman' => ['nullable', 'string', 'max:500'],
             'berita_acara' => ['nullable', 'string', 'max:1000'],

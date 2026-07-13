@@ -33,8 +33,8 @@ class KelasController extends Controller
         abort_unless($sudahGabung, 403, 'Kamu belum bergabung ke kelas ini.');
 
         $materiList = Materi::where('kelas_perkuliahan_id', $kelas->id)
-            ->with('files') 
-            ->orderBy('pertemuan_ke')
+            ->with('files')
+            ->latest()
             ->get();
 
         $tugasList = Tugas::where('kelas_perkuliahan_id', $kelas->id)
@@ -55,7 +55,7 @@ class KelasController extends Controller
             ->whereHas('absensi', fn ($q) => $q->where('kelas_perkuliahan_id', $kelas->id))
             ->where('mahasiswa_id', $request->user()->id)
             ->get()
-            ->sortBy(fn ($item) => $item->absensi->pertemuan_ke)
+            ->sortByDesc(fn ($item) => $item->absensi->pertemuan_ke) // ← diubah dari sortBy jadi sortByDesc
             ->values();
 
         $totalHadir = $rekapAbsen->where('status', 'hadir')->count();

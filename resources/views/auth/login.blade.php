@@ -1,22 +1,22 @@
 <x-guest-layout>
 
 <div class="fixed inset-0 z-[9999] flex items-center justify-center w-screen h-screen overflow-y-auto px-4 py-12 bg-gradient-to-br from-[#F4F7FF] via-[#E9EFFF] to-[#DCE6FF]">
-    <div class="w-full max-w-[880px] lg:grid lg:grid-cols-2 lg:items-center lg:gap-16">
+    <div class="w-full max-w-[420px] flex flex-col items-center justify-center">
 
-        {{-- ===== KIRI: LOGO / HEADER ===== --}}
-        <div class="text-center lg:text-left mb-10 lg:mb-0">
-            <div class="inline-flex items-center justify-center w-[68px] h-[68px] rounded-[20px] bg-gradient-to-br from-[#002B6B] to-[#001A40] shadow-[0_10px_26px_rgba(0,43,107,0.28)] mb-5">
+        {{-- ===== ATAS: LOGO / HEADER ===== --}}
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-[68px] h-[68px] rounded-[20px] bg-gradient-to-br from-[#002B6B] to-[#001A40] shadow-[0_10px_26px_rgba(0,43,107,0.28)] mb-4">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="9.5" stroke="#CDDCFF" stroke-width="1.6"/>
                     <path d="M8 12.5l2.7 2.7L16.5 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <h1 class="text-[34px] lg:text-[42px] font-extrabold text-[#002B6B] tracking-tight mb-2">Cendekia</h1>
-            <p class="text-slate-500 text-[13.5px] lg:text-[15px] lg:max-w-[320px]">Platform Pembelajaran Digital</p>
+            <h1 class="text-[34px] lg:text-[38px] font-extrabold text-[#002B6B] tracking-tight mb-1">Cendekia</h1>
+            <p class="text-slate-500 text-[13.5px] lg:text-[14.5px]">Platform Pembelajaran Digital</p>
         </div>
 
-        {{-- ===== KANAN: LOGIN FORM ===== --}}
-        <div class="w-full max-w-[400px] mx-auto lg:mx-0">
+        {{-- ===== BAWAH: LOGIN FORM ===== --}}
+        <div class="w-full">
             <div class="bg-white border border-[#E3E9F7] rounded-[26px] px-9 py-10 shadow-[0_20px_50px_rgba(0,43,107,0.12)]">
 
                 @if (session('status'))
@@ -38,7 +38,7 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    {{-- Email / NIM / NIDN Input (digabung) --}}
+                    {{-- Email / NIM / NIDN Input --}}
                     <div class="mb-5">
                         <label for="login" class="block text-[13.5px] font-semibold text-gray-800 mb-2">Email / NIM / NIDN</label>
                         <div class="relative">
@@ -52,7 +52,7 @@
                                 type="text"
                                 name="login"
                                 value="{{ old('login') }}"
-                                placeholder="nama@example.com / 20241001 / 19790000001"
+                                placeholder="nama@example.com / 20241001"
                                 required
                                 autofocus
                                 autocomplete="username"
@@ -98,16 +98,24 @@
                         @enderror
                     </div>
 
-                    {{-- Remember Me --}}
-                    <div class="flex items-center gap-2.5 pt-1.5 mb-2">
-                        <input id="remember_me" type="checkbox" name="remember"
-                               class="w-4 h-4 rounded accent-[#002B6B] cursor-pointer">
-                        <label for="remember_me" class="text-[13.5px] text-gray-600 cursor-pointer">Ingat saya di perangkat ini</label>
+                    {{-- Remember Me & Lupa Password (Dibuat sejajar) --}}
+                    <div class="flex items-center justify-between pt-1.5 mb-5">
+                        <div class="flex items-center gap-2.5">
+                            <input id="remember_me" type="checkbox" name="remember"
+                                   class="w-4 h-4 rounded accent-[#002B6B] cursor-pointer">
+                            <label for="remember_me" class="text-[13.5px] text-gray-600 cursor-pointer select-none">Ingat saya</label>
+                        </div>
+                        
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" class="text-[13.5px] font-medium text-[#002B6B] hover:underline transition">
+                                Lupa Password?
+                            </a>
+                        @endif
                     </div>
 
                     {{-- Submit Button --}}
                     <button type="submit"
-                            class="w-full mt-2 py-3.5 px-4 rounded-2xl font-bold text-[14.5px] text-white bg-gradient-to-r from-[#002B6B] to-[#001A40] shadow-[0_10px_25px_rgba(0,43,107,0.3)] transition hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.97]">
+                            class="w-full py-3.5 px-4 rounded-2xl font-bold text-[14.5px] text-white bg-gradient-to-r from-[#002B6B] to-[#001A40] shadow-[0_10px_25px_rgba(0,43,107,0.3)] transition hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.97]">
                         Masuk ke Dashboard
                     </button>
 
@@ -125,4 +133,4 @@
     </div>
 </div>
 
-</x-guest-layout>   
+</x-guest-layout>

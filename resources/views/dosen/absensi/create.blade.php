@@ -52,7 +52,7 @@
                             </label>
                             <input type="number" id="pertemuan_ke" name="pertemuan_ke"
                                 value="{{ old('pertemuan_ke', $nextPertemuan) }}"
-                                min="1" max="16" required
+                                min="1" max="99" required
                                 class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition @error('pertemuan_ke') border-red-500 @enderror">
                             @error('pertemuan_ke')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -78,8 +78,9 @@
                             <label for="jam_mulai" class="block text-sm font-semibold text-gray-700 mb-2">
                                 Jam Mulai <span class="text-red-500">*</span>
                             </label>
-                            <input type="time" id="jam_mulai" name="jam_mulai"
+                            <input type="text" id="jam_mulai" name="jam_mulai"
                                 value="{{ old('jam_mulai', $kelas->jam_mulai ?? '') }}"
+                                placeholder="contoh: 08:00 atau 8 pagi"
                                 required
                                 class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition @error('jam_mulai') border-red-500 @enderror">
                             @error('jam_mulai')
@@ -90,8 +91,9 @@
                             <label for="jam_selesai" class="block text-sm font-semibold text-gray-700 mb-2">
                                 Jam Selesai <span class="text-red-500">*</span>
                             </label>
-                            <input type="time" id="jam_selesai" name="jam_selesai"
+                            <input type="text" id="jam_selesai" name="jam_selesai"
                                 value="{{ old('jam_selesai', $kelas->jam_selesai ?? '') }}"
+                                placeholder="contoh: 10:00 atau 10 pagi"
                                 required
                                 class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition @error('jam_selesai') border-red-500 @enderror">
                             @error('jam_selesai')

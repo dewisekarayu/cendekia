@@ -43,4 +43,9 @@ class Tugas extends Model
     {
         return $this->hasMany(TugasFile::class, 'tugas_id');
     }
+    
+    public function getDaysLeftAttribute(): int
+    {
+        return (int) floor(now()->diffInDays($this->deadline, false));
+    }
 }

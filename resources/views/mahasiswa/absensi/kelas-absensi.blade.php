@@ -107,16 +107,59 @@
                         </div>
 
                         @if(!$sudahAbsen)
-                            <form action="{{ route('mahasiswa.absensi.masuk', ['kelasId' => $kelas->id, 'absensiId' => $absensiAktif->id]) }}" method="POST">
+                            <form action="{{ route('mahasiswa.absensi.masuk', ['kelasId' => $kelas->id, 'absensiId' => $absensiAktif->id]) }}" method="POST" x-data="{ status: 'hadir' }">
                                 @csrf
-                                <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 rounded-xl transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-lg">
+
+                                <label class="block text-sm font-semibold text-gray-700 mb-3">Pilih Status Kehadiran</label>
+                                <div class="grid grid-cols-3 gap-3 mb-4">
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="status" value="hadir" x-model="status" class="peer sr-only">
+                                        <div class="text-center py-3 rounded-xl border-2 border-gray-200 peer-checked:border-green-500 peer-checked:bg-green-50 transition">
+                                            <svg class="w-6 h-6 mx-auto mb-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                            <span class="text-sm font-semibold text-gray-800">Hadir</span>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="status" value="izin" x-model="status" class="peer sr-only">
+                                        <div class="text-center py-3 rounded-xl border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition">
+                                            <svg class="w-6 h-6 mx-auto mb-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                            <span class="text-sm font-semibold text-gray-800">Izin</span>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="status" value="sakit" x-model="status" class="peer sr-only">
+                                        <div class="text-center py-3 rounded-xl border-2 border-gray-200 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 transition">
+                                            <svg class="w-6 h-6 mx-auto mb-1 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+                                            <span class="text-sm font-semibold text-gray-800">Sakit</span>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div x-show="status === 'izin' || status === 'sakit'" x-cloak class="mb-4">
+                                    <label for="keterangan" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Keterangan <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea id="keterangan" name="keterangan" rows="2" :required="status === 'izin' || status === 'sakit'"
+                                        placeholder="Jelaskan alasan izin/sakit Anda..."
+                                        class="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none @error('keterangan') border-red-500 @enderror"></textarea>
+                                    @error('keterangan')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <button type="submit" class="w-full font-bold py-4 rounded-xl transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-lg text-white"
+                                    :class="{
+                                        'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700': status === 'hadir',
+                                        'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700': status === 'izin',
+                                        'bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700': status === 'sakit',
+                                    }">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    PRESENSI / ABSEN MASUK
+                                    <span x-text="status === 'hadir' ? 'PRESENSI / ABSEN MASUK' : (status === 'izin' ? 'KIRIM IZIN' : 'KIRIM SAKIT')"></span>
                                 </button>
                             </form>
-                            <p class="text-center text-gray-500 text-sm">Klik tombol di atas untuk mencatat kehadiran Anda</p>
+                            <p class="text-center text-gray-500 text-sm mt-2">Pilih status kehadiran Anda lalu kirim</p>
                         @endif
                     </div>
                 </div>
