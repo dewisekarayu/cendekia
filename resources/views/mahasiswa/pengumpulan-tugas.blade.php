@@ -89,18 +89,21 @@
 
     {{-- ===================== CARD: UPLOAD / STATUS JAWABAN ===================== --}}
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-
         @if ($pengumpulan)
-            {{-- Sudah mengumpulkan: tampilkan file yang diunggah --}}
-            <div class="flex items-center gap-3 border border-slate-100 rounded-xl px-4 py-3 bg-slate-50">
-                <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                
-                <a href="{{ Storage::url($pengumpulan->file_jawaban) }}" target="_blank"
-                   class="text-blue-600 text-xs font-semibold hover:underline shrink-0">Lihat</a>
+            {{-- Sudah mengumpulkan: tampilkan file-file yang diunggah --}}
+            <div class="space-y-2">
+                @foreach ($pengumpulan->files as $file)
+                    <div class="flex items-center gap-3 border border-slate-100 rounded-xl px-4 py-3 bg-slate-50">
+                        <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <p class="flex-1 min-w-0 text-sm text-slate-700 truncate">{{ $file->nama_asli ?? basename($file->file_path) }}</p>
+                        <a href="{{ Storage::url($file->file_path) }}" target="_blank"
+                        class="text-blue-600 text-xs font-semibold hover:underline shrink-0">Lihat</a>
+                    </div>
+                @endforeach
             </div>
 
             @if ($pengumpulan->catatan)
@@ -115,29 +118,42 @@
             @endif
         @else
             {{-- Belum mengumpulkan: form upload --}}
-            <form action="{{ route('mahasiswa.pengumpulan-tugas.store', $tugas->id) }}" method="POST" enctype="multipart/form-data" x-data="{ fileName: null }">
+            <form action="{{ route('mahasiswa.pengumpulan-tugas.store', $tugas->id) }}" method="POST" enctype="multipart/form-data" x-data="{ fileNames: [] }">
                 @csrf
 
                 <label for="file_jawaban"
-                       class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl py-10 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition">
+                    class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl py-10 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition">
                     <div class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center mb-3">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                         </svg>
                     </div>
-                    <p class="font-semibold text-slate-700 text-sm">Unggah Jawaban</p>
-                    <p class="text-xs text-slate-400 mt-1" x-text="fileName ?? 'Seret berkas di sini atau klik untuk memilih'"></p>
+                    <p class="font-semibold text-slate-700 text-sm">Unggah Jawaban (bisa lebih dari 1 file)</p>
+
+                    <template x-if="fileNames.length === 0">
+                        <p class="text-xs text-slate-400 mt-1">Seret berkas di sini atau klik untuk memilih</p>
+                    </template>
+                    <template x-if="fileNames.length > 0">
+                        <ul class="text-xs text-slate-500 mt-1 space-y-0.5 text-center">
+                            <template x-for="name in fileNames" :key="name">
+                                <li x-text="name"></li>
+                            </template>
+                        </ul>
+                    </template>
 
                     <div class="flex items-center gap-2 mt-4">
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">PDF</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">ZIP</span>
-                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">MAX 10MB</span>
+                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">MAX 10MB/FILE</span>
                     </div>
 
-                    <input id="file_jawaban" name="file_jawaban" type="file" accept=".pdf,.zip" class="hidden"
-                           @change="fileName = $event.target.files[0]?.name">
+                    <input id="file_jawaban" name="file_jawaban[]" type="file" accept=".pdf,.zip" multiple class="hidden"
+                        @change="fileNames = Array.from($event.target.files).map(f => f.name)">
                 </label>
                 @error('file_jawaban')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
+                @error('file_jawaban.*')
                     <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                 @enderror
 

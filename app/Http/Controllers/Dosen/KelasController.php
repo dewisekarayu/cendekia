@@ -117,11 +117,11 @@ class KelasController extends Controller
             ]);
         }
 
-        $submissions = PengumpulanTugas::with('mahasiswa')
-            ->where('tugas_id', $tugas->id)
-            ->get()
-            ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
-            ->values();
+        $submissions = PengumpulanTugas::with(['mahasiswa', 'files'])
+        ->where('tugas_id', $tugas->id)
+        ->get()
+        ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
+        ->values();
 
         return view('dosen.kelas-tugas-submissions', compact('kelas', 'tugas', 'submissions'));
     }
@@ -174,6 +174,22 @@ class KelasController extends Controller
         abort_unless(file_exists($path), 404, 'File tidak ditemukan di server.');
 
         return response()->download($path, basename($materi->file_path));
+    }
+
+    public function previewMateri(Request $request, $kelasId, $materiId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)
+            ->findOrFail($kelasId);
+
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+
+        abort_unless($materi->file_path, 404, 'File materi tidak ditemukan.');
+
+        $path = Storage::disk('public')->path($materi->file_path);
+
+        abort_unless(file_exists($path), 404, 'File tidak ditemukan di server.');
+
+        return response()->file($path);
     }
 
     public function materi(Request $request, $id)

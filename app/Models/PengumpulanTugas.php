@@ -43,6 +43,11 @@ class PengumpulanTugas extends Model
         return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 
+    public function files()
+    {
+        return $this->hasMany(PengumpulanTugasFile::class, 'pengumpulan_tugas_id');
+    }
+
     public function getIsGradedAttribute(): bool
     {
         return $this->status === self::STATUS_DINILAI && !is_null($this->nilai);

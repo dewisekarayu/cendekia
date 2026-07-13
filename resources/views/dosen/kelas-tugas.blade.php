@@ -196,7 +196,8 @@
                                     </div>
                                     <p class="text-sm font-bold text-gray-800">Klik atau seret file ke sini</p>
                                     <p class="text-xs text-gray-400 mt-1">PDF, DOCX, ZIP (Maksimal 25MB)</p>
-                                    <input type="file" id="fileInput" name="template" accept=".pdf,.doc,.docx,.zip,.ppt,.pptx,.xls,.xlsx" class="hidden">
+                                    <input type="file" id="fileInput" name="template" accept=".pdf,.doc,.docx,.zip,.ppt,.pptx,.xls,.xlsx" class="hidden" onchange="updateTugasFileName(this)">
+                                    <p id="tugasFileNameDisplay" class="text-sm text-emerald-600 font-medium mt-2 hidden"></p>
                                 </div>
                             </div>
                         </div>
@@ -221,15 +222,23 @@
     <script>
         function toggleModal(modalID) {
             document.getElementById(modalID).classList.toggle("hidden");
-            // Prevent scroll when modal is open
             document.body.classList.toggle("overflow-hidden");
         }
 
-        // Close modal if user clicks outside
         window.onclick = function(event) {
             let modal = document.getElementById('modalTugas');
             if (event.target == modal.firstElementChild) {
                 toggleModal('modalTugas');
+            }
+        }
+
+        function updateTugasFileName(input) {
+            const display = document.getElementById('tugasFileNameDisplay');
+            if (input.files.length > 0) {
+                display.innerText = "Dipilih: " + input.files[0].name;
+                display.classList.remove('hidden');
+            } else {
+                display.classList.add('hidden');
             }
         }
     </script>
