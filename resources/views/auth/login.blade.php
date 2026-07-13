@@ -10,15 +10,13 @@
     }
 
     .cnd-login-overlay{
-        position: fixed !important;
-        inset: 0 !important;
+        position: relative !important;
+        min-height: 100vh;
         z-index: 9999;
         display: flex !important;
         align-items: center;
         justify-content: center;
-        width: 100vw;
-        height: 100vh;
-        overflow-y: auto;
+        width: 100%;
         padding: 48px 16px;
         background: linear-gradient(160deg, var(--cnd-bg-1) 0%, var(--cnd-bg-2) 55%, #DCE6FF 100%);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -31,18 +29,21 @@
     .cnd-logo-icon{
         display: inline-flex !important;
         align-items: center; justify-content: center;
-        width: 68px; height: 68px;
+        width: 80px; height: 80px;
         background: linear-gradient(135deg, var(--cnd-primary) 0%, var(--cnd-primary-dark) 100%);
-        border-radius: 20px;
-        box-shadow: 0 10px 26px rgba(0,43,107,.28);
-        margin-bottom: 20px;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0,43,107,.35);
+        margin-bottom: 24px;
+    }
+    .cnd-logo-icon svg {
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,.1));
     }
     .cnd-title{
-        font-size: 34px; font-weight: 800; margin: 0 0 6px 0;
+        font-size: 42px; font-weight: 900; margin: 0 0 8px 0;
         color: var(--cnd-primary);
-        letter-spacing: -0.5px;
+        letter-spacing: -1px;
     }
-    .cnd-subtitle{ color: #64748b; font-size: 13.5px; margin: 0; }
+    .cnd-subtitle{ color: #64748b; font-size: 14px; margin: 0; font-weight: 500; }
 
     /* Card */
     .cnd-card{
@@ -156,6 +157,19 @@
         text-align: center; font-size: 12px;
         color: #94A3B8; margin-top: 26px;
     }
+
+    /* Forgot Password Link */
+    .cnd-forgot-link{
+        color: var(--cnd-primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all .2s ease;
+        font-size: 13px;
+    }
+    .cnd-forgot-link:hover{
+        color: var(--cnd-primary-dark);
+        text-decoration: underline;
+    }
 </style>
 
 <div class="cnd-login-overlay">
@@ -224,7 +238,10 @@
 
                 {{-- Password Input --}}
                 <div class="cnd-field">
-                    <label for="password" class="cnd-label">Password</label>
+                    <div style="display: flex !important; align-items: center; justify-content: space-between; margin-bottom: 9px;">
+                        <label for="password" class="cnd-label" style="margin-bottom: 0;">Password</label>
+                        <a href="{{ route('password.request') }}" class="cnd-forgot-link">Lupa Password?</a>
+                    </div>
                     <div class="cnd-input-wrap" x-data="{ show: false }">
                         <div class="cnd-input-icon">
                             <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor">
