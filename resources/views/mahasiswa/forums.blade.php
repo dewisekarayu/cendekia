@@ -98,11 +98,16 @@
         background: linear-gradient(180deg, var(--forum-bg-1) 0%, var(--forum-bg-2) 100%);
     }
 
+    /* PERBAIKAN: Menambah jarak atas-bawah pembatas tanggal agar tidak berhimpitan */
     .forum-center-row{
         display: flex !important;
         justify-content: center !important;
         width: 100%;
-        margin-bottom: 18px;
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+    .forum-center-row:first-child {
+        margin-top: 8px;
     }
 
     .forum-chip{
@@ -119,62 +124,75 @@
         padding: 6px 14px; border-radius: 999px;
     }
 
+    /* PERBAIKAN: Menambah margin-top dari 14px ke 20px agar jarak antar baris chat lebih renggang */
     .forum-msg-row{
         display: flex !important;
         flex-direction: row !important;
         align-items: flex-end !important;
-        gap: 8px;
+        gap: 10px;
         width: 100%;
-        margin-top: 14px;
+        margin-top: 20px;
     }
-    .forum-msg-row.mine{ justify-content: flex-end !important; }
-    .forum-msg-row.grouped{ margin-top: 2px; }
+    .forum-msg-row.mine{ 
+        justify-content: flex-end !important; 
+    }
+    /* Jika chat dikirim beruntun oleh orang yang sama dalam waktu singkat */
+    .forum-msg-row.grouped{ margin-top: 6px; }
 
-    .forum-avatar-slot{ width: 32px; flex-shrink: 0; }
+    .forum-avatar-slot{ width: 34px; flex-shrink: 0; }
     .forum-avatar-sm{
-        width: 32px; height: 32px; border-radius: 50%;
+        width: 34px; height: 34px; border-radius: 50%;
         display: flex !important; align-items: center; justify-content: center;
         color: #fff; font-size: 12px; font-weight: 700;
-        border: 2px solid var(--forum-primary-dark);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
 
     .forum-bubble-col{
         display: flex !important;
         flex-direction: column !important;
-        max-width: 68%;
+        max-width: 70%;
     }
-    .forum-bubble-col.mine{ align-items: flex-end !important; margin-left: auto; }
-    .forum-bubble-col.theirs{ align-items: flex-start !important; }
+    .forum-bubble-col.mine{ 
+        align-items: flex-end !important; 
+        margin-left: auto; 
+    }
+    .forum-bubble-col.theirs{ 
+        align-items: flex-start !important; 
+        margin-right: auto;
+    }
 
     .forum-sender-name{
-        font-size: 11.5px; font-weight: 700; margin: 0 0 3px 8px;
+        font-size: 12px; font-weight: 700; margin: 0 0 6px 4px;
         color: #0284C7;
     }
     .forum-sender-name.dosen{ color: #4338CA; }
 
     .forum-bubble{
-        padding: 10px 16px;
+        padding: 12px 18px;
         border-radius: 18px;
         min-width: 90px;
-        box-shadow: 0 3px 10px rgba(15,23,42,.08);
+        box-shadow: 0 2px 6px rgba(15,23,42,.06);
         border: 1px solid rgba(0,43,107,.12);
     }
-    .forum-bubble.mine{ background: var(--forum-light); border-top-right-radius: 4px; }
-    .forum-bubble.theirs{ background: #fff; border-top-left-radius: 4px; }
+    .forum-bubble.mine{ background: var(--forum-primary); border-bottom-right-radius: 4px; }
+    .forum-bubble.theirs{ background: #fff; border-bottom-left-radius: 4px; }
     .forum-bubble.theirs.dosen{ background: #E9E7FF; }
-    .forum-bubble.grouped.mine{ border-top-right-radius: 18px; }
-    .forum-bubble.grouped.theirs{ border-top-left-radius: 18px; }
+    
+    .forum-bubble.grouped.mine{ border-bottom-right-radius: 18px; border-top-right-radius: 4px; }
+    .forum-bubble.grouped.theirs{ border-bottom-left-radius: 18px; border-top-left-radius: 4px; }
 
     .forum-bubble-text{
-        font-size: 14px; line-height: 1.55; color: #1F2937;
+        font-size: 14px; line-height: 1.5; color: #1F2937;
         white-space: pre-wrap; word-break: break-word; margin: 0; font-weight: 500;
     }
+    .forum-bubble.mine .forum-bubble-text{ color: #fff; }
 
     .forum-bubble-meta{
         display: flex !important; align-items: center; justify-content: flex-end;
         gap: 6px; margin-top: 6px;
     }
     .forum-bubble-time{ font-size: 11px; color: #6B7280; white-space: nowrap; }
+    .forum-bubble.mine .forum-bubble-time{ color: rgba(255, 255, 255, 0.75); }
 
     .forum-empty{
         display: flex !important;
@@ -249,7 +267,7 @@
     .forum-send-btn:hover{ filter: brightness(1.1); }
     .forum-send-btn:active{ transform: scale(.94); }
 
-    /* ===== Empty state (no forum selected) ===== */
+    /* ===== Empty state ===== */
     .forum-placeholder{
         display: flex !important;
         flex-direction: column !important;
@@ -362,8 +380,8 @@
                                 <span class="forum-bubble-time">{{ $timeStr }}</span>
                                 @if ($mine)
                                     <svg width="15" height="10" viewBox="0 0 16 11" fill="none">
-                                        <path d="M1 5.5L4.5 9L10 2" stroke="#002B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M6 5.5L9.5 9L15 2" stroke="#002B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M1 5.5L4.5 9L10 2" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M6 5.5L9.5 9L15 2" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 @endif
                             </div>
@@ -381,7 +399,7 @@
                     </svg>
                 </div>
                 <p class="forum-empty-title">Belum ada pesan</p>
-                <p class="forum-empty-sub">Jadilah yang pertama memulai diskusi! &#128640;</p>
+                <p class="forum-empty-sub">Jadilah yang pertama memulai diskusi! &#126980;</p>
             </div>
         @endforelse
 
@@ -430,37 +448,26 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
+        const box = document.getElementById('chatMessages');
+        if (box) box.scrollTop = box.scrollHeight;
 
-    const box = document.getElementById('chatMessages');
-    if (box) box.scrollTop = box.scrollHeight;
+        const ta = document.getElementById('chatInput');
+        if (ta) {
+            const resize = () => {
+                ta.style.height = 'auto';
+                ta.style.height = Math.min(ta.scrollHeight, 128) + 'px';
+            };
+            ta.addEventListener('input', resize);
 
-    const ta = document.getElementById('chatInput');
-    if (ta) {
-        const resize = () => {
-            ta.style.height = 'auto';
-            ta.style.height = Math.min(ta.scrollHeight, 128) + 'px';
-        };
-        ta.addEventListener('input', resize);
-
-        ta.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (ta.value.trim()) document.getElementById('chatForm').submit();
-            }
-        });
-        setTimeout(() => ta.focus(), 80);
-    }
-
-    const s = document.getElementById('forumSearch');
-    if (s) {
-        s.addEventListener('input', () => {
-            const q = s.value.toLowerCase();
-            document.querySelectorAll('.forum-thread').forEach(el => {
-                el.style.display = (!q || (el.dataset.search||'').includes(q)) ? '' : 'none';
+            ta.addEventListener('keydown', e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (ta.value.trim()) document.getElementById('chatForm').submit();
+                }
             });
-        });
-    }
-});
+            setTimeout(() => ta.focus(), 80);
+        }
+    });
 </script>
 @endpush
