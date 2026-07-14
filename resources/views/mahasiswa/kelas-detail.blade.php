@@ -72,7 +72,7 @@
 </div>
 
 {{-- ===== MAIN CONTENT ===== --}}
-<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua' }">
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua' }" x-init="tab = new URLSearchParams(window.location.search).get('tab') || 'semua'">
 
     {{-- Content Area --}}
     <div class="lg:col-span-2 space-y-4">

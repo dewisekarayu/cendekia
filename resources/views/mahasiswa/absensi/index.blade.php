@@ -3,6 +3,7 @@
 @section('title', 'Presensi')
 
 @section('content')
+
 <div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4 bg-sky-50/40 rounded-2xl border border-sky-100 shadow-sm">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-sky-100">
         <div>
@@ -126,6 +127,13 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span>Log Riwayat</span>
+                            </a>
+                            <a href="{{ route('mahasiswa.kelas-detail', $kelas->id) }}"
+                                class="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-slate-500 hover:text-blue-600 rounded-xl font-semibold transition text-xs">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                    </svg>
+                                    <span>Kembali ke Detail Kelas</span>
                             </a>
                         </div>
                     </div>
