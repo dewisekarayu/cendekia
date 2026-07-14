@@ -119,19 +119,28 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::post('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'storeTugas'])->name('dosen.kelas-tugas.store');
     Route::get('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'materi'])->name('dosen.kelas-materi');
     Route::post('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'storeMateri'])->name('dosen.kelas-materi.store');
+
+    // Gradebook Dosen
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
     
+    // Materi Dosen
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/preview/{file}', [DosenKelasController::class, 'previewMateri'])->name('dosen.materi.preview');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/unduh/{file}', [DosenKelasController::class, 'unduhMateri'])->name('dosen.materi.unduh');
+    
+    // Rekap Tugas Dosen
+    Route::get('/dosen/kelas/{id}/rekap-tugas', [DosenKelasController::class, 'rekapTugas'])->name('dosen.kelas-tugas.rekap');
     
     // Forum Dosen
     Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
     Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
+
+    //Penilaian Tugas oleh Dosen
     Route::get('/dosen/kelas/{kelas}/tugas/{tugas}/submissions', [DosenKelasController::class, 'submissions'])->name('dosen.tugas.submissions');
     Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/nilai', [DosenKelasController::class, 'simpanNilai'])->name('dosen.tugas.nilai');
-    
+    Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/nilai/bulk', [DosenKelasController::class, 'simpanNilaiBulk'])->name('dosen.tugas.nilai.bulk');
+
     // Pengumuman Dosen
     Route::get('/dosen/pengumuman', [DosenPengumumanController::class, 'index'])->name('dosen.kelas-pengumuman.index');
     Route::post('/dosen/pengumuman', [DosenPengumumanController::class, 'store'])->name('dosen.kelas-pengumuman.store');

@@ -27,6 +27,7 @@
             'Beranda'      => ['url' => route('dosen.kelas-detail', $kelas->id), 'active' => request()->routeIs('dosen.kelas-detail')],
             'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
             'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
+            'Absensi'      => ['url' => route('dosen.absensi.index', $kelas->id),  'active' => request()->routeIs('dosen.absensi.*')],
             'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
         ];
     @endphp
@@ -61,14 +62,33 @@
     </div>
 
     <!-- Create Assignment Button -->
-    <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-gray-800">Daftar Tugas</h2>
-        <button onclick="toggleModal('modalTugas')" class="inline-flex items-center gap-2 bg-[#321270] hover:bg-opacity-90 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-            Create New Assignment
-        </button>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4 border-b border-gray-100">
+    {{-- Sisi Kiri: Judul --}}
+    <div>
+        <h2 class="text-xl font-bold text-gray-800 tracking-tight">Daftar Tugas</h2>
+        <p class="text-xs text-gray-500 mt-0.5">Kelola dan pantau tugas mahasiswa</p>
+    </div>
+
+    {{-- Sisi Kanan: Aksi (Tombol-Tombol) --}}
+    <div class="flex flex-wrap items-center gap-3">
+            {{-- Tombol Rekap Nilai --}}
+            <a href="{{ route('dosen.kelas-tugas.rekap', $kelas->id) }}"
+            class="inline-flex items-center text-xs font-semibold text-[#321270] bg-purple-50 hover:bg-purple-100 px-4 py-2.5 rounded-xl transition-all duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Lihat Rekap Nilai
+            </a>
+
+            {{-- Tombol Tambah Tugas Baru --}}
+            <button onclick="toggleModal('modalTugas')" 
+                    class="inline-flex items-center gap-2 bg-[#321270] hover:bg-[#230c50] text-white text-sm font-semibold px-[18px] py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Create New Assignment
+            </button>
+        </div>
     </div>
 
     <!-- Assignments Table -->

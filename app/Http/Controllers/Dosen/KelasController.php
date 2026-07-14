@@ -107,60 +107,8 @@ class KelasController extends Controller
             ->with('success', 'Tugas berhasil dipublikasikan.');
     }
 
-    public function submissions(Request $request, $kelasId, $tugasId)
-    {
-        $kelas = KelasPerkuliahan::with(['mataKuliah', 'mahasiswa'])
-            ->where('dosen_id', $request->user()->id)
-            ->findOrFail($kelasId);
-
-        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
-
-        // Auto-buat baris "belum dikumpul" untuk mahasiswa yang belum punya record,
-        // biar mereka tetap kelihatan di daftar (bukan cuma yang udah submit)
-        $sudahAdaIds = PengumpulanTugas::where('tugas_id', $tugas->id)->pluck('mahasiswa_id');
-        $belumAda = $kelas->mahasiswa->whereNotIn('id', $sudahAdaIds);
-
-        foreach ($belumAda as $mhs) {
-            PengumpulanTugas::create([
-                'tugas_id' => $tugas->id,
-                'mahasiswa_id' => $mhs->id,
-                'status' => PengumpulanTugas::STATUS_BELUM_DIKUMPUL,
-            ]);
-        }
-
-        $submissions = PengumpulanTugas::with(['mahasiswa', 'files'])
-        ->where('tugas_id', $tugas->id)
-        ->get()
-        ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
-        ->values();
-
-        return view('dosen.kelas-tugas-submissions', compact('kelas', 'tugas', 'submissions'));
-    }
-
-    public function simpanNilai(Request $request, $kelasId, $tugasId, $pengumpulanId)
-    {
-        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
-        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
-        $pengumpulan = PengumpulanTugas::where('tugas_id', $tugas->id)->findOrFail($pengumpulanId);
-
-        $validated = $request->validate([
-            'nilai' => ['required', 'integer', 'min:0', 'max:100'],
-            'feedback_dosen' => ['nullable', 'string', 'max:2000'],
-        ], [
-            'nilai.required' => 'Nilai wajib diisi.',
-            'nilai.max' => 'Nilai maksimal 100.',
-        ]);
-
-        $pengumpulan->update([
-            'nilai' => $validated['nilai'],
-            'feedback_dosen' => $validated['feedback_dosen'] ?? null,
-            'status' => PengumpulanTugas::STATUS_DINILAI,
-        ]);
-
-        return back()->with('success', 'Nilai untuk ' . ($pengumpulan->mahasiswa->name ?? 'mahasiswa') . ' berhasil disimpan.');
-    }
-
-   public function bukaMateri(Request $request, $kelasId, $materiId)
+    
+    public function bukaMateri(Request $request, $kelasId, $materiId)
     {
         $kelas = KelasPerkuliahan::with('mataKuliah.programStudi')
             ->where('dosen_id', $request->user()->id)
@@ -249,4 +197,155 @@ class KelasController extends Controller
         return redirect()->route('dosen.kelas-materi', $kelas->id)
             ->with('success', 'Materi berhasil ditambahkan.');
     }
+
+    public function submissions(Request $request, $kelasId, $tugasId)
+    {
+        $kelas = KelasPerkuliahan::with(['mataKuliah', 'mahasiswa'])
+            ->where('dosen_id', $request->user()->id)
+            ->findOrFail($kelasId);
+    
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+        $sudahAdaIds = PengumpulanTugas::where('tugas_id', $tugas->id)->pluck('mahasiswa_id');
+        $belumAda = $kelas->mahasiswa->whereNotIn('id', $sudahAdaIds);
+    
+        foreach ($belumAda as $mhs) {
+            PengumpulanTugas::create([
+                'tugas_id' => $tugas->id,
+                'mahasiswa_id' => $mhs->id,
+                'status' => PengumpulanTugas::STATUS_BELUM_DIKUMPUL,
+            ]);
+        }
+    
+        $submissions = PengumpulanTugas::with(['mahasiswa', 'files'])
+        ->where('tugas_id', $tugas->id)
+        ->get()
+        ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
+        ->values();
+    
+        return view('dosen.kelas-tugas-submissions', compact('kelas', 'tugas', 'submissions'));
+    }
+    
+    public function simpanNilai(Request $request, $kelasId, $tugasId, $pengumpulanId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+        $pengumpulan = PengumpulanTugas::where('tugas_id', $tugas->id)->findOrFail($pengumpulanId);
+
+        $validated = $request->validate([
+            'nilai' => ['required', 'integer', 'min:0', 'max:100'],
+            'feedback_dosen' => ['nullable', 'string', 'max:2000'],
+        ], [
+            'nilai.required' => 'Nilai wajib diisi.',
+            'nilai.max' => 'Nilai maksimal 100.',
+        ]);
+
+        $pengumpulan->update([
+            'nilai' => $validated['nilai'],
+            'feedback_dosen' => $validated['feedback_dosen'] ?? null,
+            'status' => PengumpulanTugas::STATUS_DINILAI,
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'nilai' => $pengumpulan->nilai,
+                'status' => $pengumpulan->status,
+            ]);
+        }
+
+        return back()->with('success', 'Nilai untuk ' . ($pengumpulan->mahasiswa->name ?? 'mahasiswa') . ' berhasil disimpan.');
+    }
+
+    public function simpanNilaiBulk(Request $request, $kelasId, $tugasId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+
+        $validated = $request->validate([
+            'nilai' => ['array'],
+            'nilai.*' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'feedback_dosen' => ['array'],
+            'feedback_dosen.*' => ['nullable', 'string', 'max:2000'],
+        ]);
+
+        $nilaiInput = $validated['nilai'] ?? [];
+        $feedbackInput = $validated['feedback_dosen'] ?? [];
+
+        $pengumpulanIds = array_keys($nilaiInput);
+
+        // tidak lagi filter by status, jadi mahasiswa "belum kumpul" pun bisa dikasih nilai (misal 0)
+        $submissions = PengumpulanTugas::where('tugas_id', $tugas->id)
+            ->whereIn('id', $pengumpulanIds)
+            ->get();
+
+        $updated = 0;
+
+        foreach ($submissions as $pengumpulan) {
+            $nilai = $nilaiInput[$pengumpulan->id] ?? null;
+
+            if ($nilai === null || $nilai === '') {
+                continue;
+            }
+
+            $pengumpulan->update([
+                'nilai' => $nilai,
+                'feedback_dosen' => $feedbackInput[$pengumpulan->id] ?? $pengumpulan->feedback_dosen,
+                'status' => \App\Models\PengumpulanTugas::STATUS_DINILAI,
+            ]);
+
+            $updated++;
+        }
+
+        return back()->with('success', "{$updated} nilai berhasil disimpan sekaligus.");
+    }
+
+    public function rekapTugas(Request $request, $id)
+    {
+        $kelas = KelasPerkuliahan::with(['mataKuliah', 'mahasiswa'])
+            ->where('dosen_id', $request->user()->id)
+            ->findOrFail($id);
+    
+        // Semua tugas di kelas ini, urut dari yang paling lama
+        $tugasList = Tugas::where('kelas_perkuliahan_id', $kelas->id)
+            ->latest()
+            ->get(['id', 'judul', 'bobot_nilai', 'deadline']);
+    
+        // Semua pengumpulan tugas di kelas ini, dikelompokkan per mahasiswa -> per tugas
+        // supaya gampang di-lookup di view: $matrix[$mahasiswaId][$tugasId]
+        $matrix = PengumpulanTugas::whereHas('tugas', function ($q) use ($kelas) {
+                $q->where('kelas_perkuliahan_id', $kelas->id);
+            })
+            ->get()
+            ->groupBy('mahasiswa_id')
+            ->map(function ($items) {
+                return $items->keyBy('tugas_id');
+            });
+    
+        // Mahasiswa diurutkan berdasarkan nama
+        $mahasiswaList = $kelas->mahasiswa->sortBy('name')->values();
+    
+        // Hitung rata-rata nilai tugas per mahasiswa (untuk kolom "Rata-rata" di rekap)
+        $rataRata = $mahasiswaList->mapWithKeys(function ($mhs) use ($matrix, $tugasList) {
+            $submisi = $matrix[$mhs->id] ?? collect();
+    
+            $totalBobot = 0;
+            $totalSkor = 0;
+    
+            foreach ($tugasList as $t) {
+                $p = $submisi[$t->id] ?? null;
+                if ($p && $p->status === PengumpulanTugas::STATUS_DINILAI) {
+                    $totalBobot += $t->bobot_nilai;
+                    $totalSkor += $p->nilai * $t->bobot_nilai;
+                }
+            }
+    
+            $avg = $totalBobot > 0 ? round($totalSkor / $totalBobot, 1) : null;
+    
+            return [$mhs->id => $avg];
+        });
+    
+        return view('dosen.kelas-rekap-tugas', compact(
+            'kelas', 'tugasList', 'matrix', 'mahasiswaList', 'rataRata'
+        ));
+    } 
 }
