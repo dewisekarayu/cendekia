@@ -72,7 +72,11 @@
 </div>
 
 {{-- ===== MAIN CONTENT ===== --}}
+<<<<<<< HEAD
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua', showAbsenForm: false, selectedStatus: null }">
+=======
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua' }" x-init="tab = new URLSearchParams(window.location.search).get('tab') || 'semua'">
+>>>>>>> b320d8c77ad2863bdc4c054486ac90e8e8d4a1d3
 
     {{-- Content Area --}}
     <div class="lg:col-span-2 space-y-4">

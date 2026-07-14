@@ -3,7 +3,7 @@
 @section('title', 'Presensi - ' . $kelas->mataKuliah->nama_mk)
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4">
     <!-- Header with Breadcrumb -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div class="min-w-0">
