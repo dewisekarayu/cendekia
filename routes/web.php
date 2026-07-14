@@ -164,7 +164,9 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::put('/dosen/profil/password', [DosenProfileController::class, 'updatePassword'])->name('dosen.profil.password');
 
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
-    Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
+    Route::get('/dosen/setting', [App\Http\Controllers\Dosen\SettingController::class, 'index'])->name('dosen.setting');
+    Route::post('/dosen/setting/umum', [App\Http\Controllers\Dosen\SettingController::class, 'updateUmum'])->name('dosen.setting.umum');
+    Route::post('/dosen/setting/notifikasi', [App\Http\Controllers\Dosen\SettingController::class, 'updateNotifikasi'])->name('dosen.setting.notifikasi');
     
     // Management Absensi oleh Dosen (Struktur Bersih & Rapi)
     Route::prefix('dosen/kelas/{kelasId}/absensi')->name('dosen.absensi.')->group(function () {

@@ -11,10 +11,21 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
+    <script>
+        (function() {
+            const theme = "{{ auth()->check() ? auth()->user()->theme : 'light' }}";
+            if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-gray-50">
+<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
     @php
         // Warna background sidebar per role
         $user = auth()->user();
@@ -136,7 +147,7 @@
                     @endphp
                     <a
                         href="{{ $item['route'] === '#' ? '#' : route($item['route'], $item['param'] ?? []) }}"
-                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isActive ? 'sidebar-link-active' : '' }}"
                         style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
@@ -150,7 +161,7 @@
                         @php $isSettingActive = request()->routeIs('mahasiswa.setting'); @endphp
                         <a
                             href="{{ route('mahasiswa.setting') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isSettingActive ? 'sidebar-link-active' : '' }}"
                             style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -161,7 +172,7 @@
                         @php $isProfilActive = request()->routeIs('dosen.profil.index'); @endphp
                         <a
                             href="{{ route('dosen.profil.index') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isProfilActive ? 'sidebar-link-active' : '' }}"
                             style="{{ $isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z" />
@@ -172,7 +183,7 @@
                         @php $isSettingActive = request()->routeIs('dosen.setting'); @endphp
                         <a
                             href="{{ route('dosen.setting') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isSettingActive ? 'sidebar-link-active' : '' }}"
                             style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -203,12 +214,12 @@
 
         <div class="flex-1 min-w-0 w-full transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
 
-            <header class="sticky top-0 z-30 bg-white border-b border-gray-100 px-4 py-3 sm:px-6 lg:px-8 lg:py-4 flex items-center justify-between gap-3">
+            <header class="sticky top-0 z-30 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 px-4 py-3 sm:px-6 lg:px-8 lg:py-4 flex items-center justify-between gap-3 transition-colors duration-200">
 
                 <button
                     type="button"
                     @click="sidebarOpen = !sidebarOpen"
-                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition"
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
                     aria-label="Toggle menu">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -216,24 +227,24 @@
                 </button>
 
                 <div class="min-w-0 flex-1 lg:hidden">
-                    <p class="truncate text-sm font-bold text-gray-800">@yield('title', 'Dashboard')</p>
+                    <p class="truncate text-sm font-bold text-gray-800 dark:text-white">@yield('title', 'Dashboard')</p>
                 </div>
 
                 <div class="hidden lg:block flex-1"></div>
 
                 <div class="flex items-center justify-end gap-2 sm:gap-4">
-                    <button class="relative w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50">
+                    <button class="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
                         <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
                     </button>
 
-                    <div class="min-w-0 flex items-center gap-2 bg-gray-50 rounded-full pl-1 pr-2 sm:pr-4 py-1">
+                    <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
                         <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
                             {{ substr(auth()->user()->name, 0, 1) }}
                         </div>
-                        <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 sm:inline">{{ auth()->user()->name }}</span>
+                        <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 dark:text-gray-200 sm:inline">{{ auth()->user()->name }}</span>
                     </div>
                 </div>
             </header>
@@ -251,6 +262,163 @@
 
         .sidebar-link:hover {
             background-color: var(--hover-bg) !important;
+        }
+
+        /* Premium Dark Mode Sidebar Penyelarasan */
+        html.dark aside {
+            background-color: #0f172a !important; /* Matches main dark mode background */
+            border-right: 1px solid #1e293b !important;
+        }
+        
+        html.dark aside .sidebar-link {
+            color: #94a3b8 !important; /* slate-400 */
+        }
+        
+        html.dark aside .sidebar-link:hover {
+            background-color: #1e293b !important;
+            color: #f8fafc !important; /* slate-50 */
+        }
+        
+        html.dark aside .sidebar-link-active {
+            background-color: #1e1b4b !important; /* indigo-950 dark */
+            color: #c084fc !important; /* purple-400 */
+            border-left: 3px solid #a855f7 !important; /* violet indicator */
+            padding-left: calc(0.75rem - 3px) !important;
+        }
+
+        html.dark aside .pt-4.mt-4 {
+            border-top: 1px solid #1e293b !important;
+        }
+
+        html.dark aside div.px-6.py-5 {
+            border-bottom: 1px solid #1e293b !important;
+        }
+
+        html.dark aside div.text-base {
+            color: #f8fafc !important;
+        }
+
+        html.dark aside div.text-\[11px\] {
+            color: #64748b !important;
+        }
+
+        /* Universal Dark Mode Overrides for Dosen Portal Pages */
+        html.dark .bg-white {
+            background-color: #1e293b !important; /* slate-800 */
+        }
+        html.dark .border-gray-100,
+        html.dark .border-slate-100,
+        html.dark .border-slate-200,
+        html.dark .border-slate-250\/70,
+        html.dark .border-slate-200\/60,
+        html.dark .border-slate-200\/80,
+        html.dark .border-gray-200 {
+            border-color: #334155 !important; /* slate-700 */
+        }
+        html.dark .bg-slate-50,
+        html.dark .bg-gray-50,
+        html.dark .bg-slate-50\/50,
+        html.dark .bg-gray-50\/50,
+        html.dark .bg-gray-50\/70,
+        html.dark .bg-slate-50\/30,
+        html.dark .bg-slate-100 {
+            background-color: #0f172a !important; /* slate-900 */
+            border-color: #334155 !important;
+        }
+        html.dark tbody {
+            background-color: #1e293b !important;
+        }
+        html.dark tr.hover\:bg-gray-50\/50:hover,
+        html.dark tr.hover\:bg-slate-50\/80:hover {
+            background-color: #334155 !important;
+        }
+        html.dark .text-slate-800,
+        html.dark .text-gray-800,
+        html.dark .text-slate-700,
+        html.dark .text-gray-700 {
+            color: #f8fafc !important;
+        }
+        html.dark .text-slate-600,
+        html.dark .text-gray-600 {
+            color: #cbd5e1 !important;
+        }
+        html.dark .text-slate-500,
+        html.dark .text-gray-500 {
+            color: #94a3b8 !important;
+        }
+        
+        /* Form inputs, select box, and textareas - global overrides */
+        html.dark input,
+        html.dark select,
+        html.dark textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        html.dark input:focus,
+        html.dark select:focus,
+        html.dark textarea:focus {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #a855f7 !important; /* violet border on focus */
+            box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2) !important;
+        }
+        html.dark input:hover,
+        html.dark select:hover,
+        html.dark textarea:hover {
+            border-color: #475569 !important;
+        }
+        html.dark input::placeholder,
+        html.dark textarea::placeholder {
+            color: #475569 !important;
+        }
+        
+        /* Buttons, breadcrumbs, link items */
+        html.dark .bg-white.text-slate-700,
+        html.dark .bg-white.text-gray-700,
+        html.dark a.bg-white,
+        html.dark button.bg-white {
+            background-color: #1e293b !important;
+            color: #cbd5e1 !important;
+            border-color: #334155 !important;
+        }
+        html.dark .bg-white.text-slate-700:hover,
+        html.dark a.bg-white:hover,
+        html.dark button.bg-white:hover {
+            background-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        html.dark .hover\:bg-slate-50:hover,
+        html.dark .hover\:bg-gray-50:hover {
+            background-color: #334155 !important;
+        }
+        
+        /* Badges & Accent colors */
+        html.dark .bg-blue-50,
+        html.dark .bg-blue-50\/80 {
+            background-color: #1e1b4b !important;
+            color: #a78bfa !important;
+            border-color: #312e81 !important;
+        }
+        html.dark .bg-purple-50 {
+            background-color: #3b0764 !important;
+            color: #d8b4fe !important;
+            border-color: #581c87 !important;
+        }
+        html.dark .bg-emerald-50 {
+            background-color: #064e3b !important;
+            color: #6ee7b7 !important;
+            border-color: #065f46 !important;
+        }
+        html.dark .bg-amber-50 {
+            background-color: #78350f !important;
+            color: #fde047 !important;
+            border-color: #92400e !important;
+        }
+        html.dark .bg-rose-50 {
+            background-color: #4c0519 !important;
+            color: #fda4af !important;
+            border-color: #9f1239 !important;
         }
     </style>
 

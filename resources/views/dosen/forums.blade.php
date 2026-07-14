@@ -284,18 +284,105 @@
     }
     .forum-placeholder-title{ font-weight: 700; color: var(--forum-primary); margin: 0; font-size: 18px; }
     .forum-placeholder-sub{ color: #9CA3AF; margin-top: 8px; max-width: 320px; font-size: 14px; }
+
+    /* ===== Dark Mode Override ===== */
+    html.dark .forum-chat-wrap {
+        background: #1e293b !important;
+        border: 1px solid #334155 !important;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3) !important;
+    }
+    html.dark .forum-body {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+    }
+    html.dark .forum-bubble.mine {
+        background: #312e81 !important;
+        border: 1px solid #4338ca !important;
+    }
+    html.dark .forum-bubble.theirs {
+        background: #334155 !important;
+        border: 1px solid #475569 !important;
+    }
+    html.dark .forum-bubble.theirs.dosen {
+        background: #3c3a6e !important;
+        border: 1px solid #5850ec !important;
+    }
+    html.dark .forum-bubble-text {
+        color: #f8fafc !important;
+    }
+    html.dark .forum-bubble-time {
+        color: #94a3b8 !important;
+    }
+    html.dark .forum-date-chip {
+        background: #1e293b !important;
+        border: 1.5px solid #6366f1 !important;
+        color: #818cf8 !important;
+    }
+    html.dark .forum-chip {
+        background: #1e293b !important;
+        border: 1.5px solid #6366f1 !important;
+        color: #818cf8 !important;
+    }
+    html.dark .forum-empty-icon {
+        background: #1e293b !important;
+        border: 1px solid #334155 !important;
+        color: #475569 !important;
+    }
+    html.dark .forum-empty-title {
+        color: #f8fafc !important;
+    }
+    html.dark .forum-input-bar {
+        background: #1e293b !important;
+        border-top: 1px solid #334155 !important;
+    }
+    html.dark .forum-textarea {
+        background: #0f172a !important;
+        border: 1.5px solid #475569 !important;
+        color: #f8fafc !important;
+    }
+    html.dark .forum-textarea:focus {
+        border-color: #818cf8 !important;
+        background: #0f172a !important;
+    }
+    html.dark .forum-icon-btn {
+        background: #1e293b !important;
+        border: 1.5px solid #334155 !important;
+        color: #a78bfa !important;
+    }
+    html.dark .forum-icon-btn:hover {
+        background: #334155 !important;
+        border-color: #8b5cf6 !important;
+    }
+    html.dark .forum-sender-name {
+        color: #38bdf8 !important;
+    }
+    html.dark .forum-sender-name.dosen {
+        color: #a78bfa !important;
+    }
+    html.dark .forum-placeholder {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+    }
+    html.dark .forum-placeholder-icon {
+        background: #1e293b !important;
+        border: 2px solid #6366f1 !important;
+    }
+    html.dark .forum-placeholder-icon svg {
+        stroke: #818cf8 !important;
+    }
+    html.dark .forum-placeholder-title {
+        color: #818cf8 !important;
+    }
 </style>
 
 {{-- NAVBAR TABS --}}
-<div style="display: flex; align-items: center; gap: 0; margin-bottom: 16px; border-bottom: 1px solid #E3E9F7; background: #fff; border-radius: 8px 8px 0 0;">
-    <a href="{{ route('dosen.kelas-pengumuman.index') }}" style="padding: 14px 20px; font-size: 14px; font-weight: 600; color: #757575; border-bottom: 2px solid transparent; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 8px; white-space: nowrap; opacity: 0.7;">
-        <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+<div class="flex items-center gap-0 mb-4 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors duration-200">
+    <a href="{{ route('dosen.kelas-pengumuman.index') }}" class="px-5 py-3.5 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-white border-b-2 border-transparent transition-all duration-200 text-decoration-none flex items-center gap-2 white-space-nowrap opacity-70">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
         </svg>
         Announcements
     </a>
-    <a href="{{ route('dosen.forums') }}" style="padding: 14px 20px; font-size: 14px; font-weight: 600; color: #002B6B; border-bottom: 2px solid #002B6B; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-        <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <a href="{{ route('dosen.forums') }}" class="px-5 py-3.5 text-sm font-semibold text-[#002B6B] dark:text-purple-400 border-b-2 border-[#002B6B] dark:border-purple-500 transition-all duration-200 text-decoration-none flex items-center gap-2 white-space-nowrap">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
         </svg>
         Forums

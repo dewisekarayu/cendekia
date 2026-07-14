@@ -3,7 +3,7 @@
 @section('title', 'Detail Sesi Presensi - Pertemuan ' . $absensi->pertemuan_ke)
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 bg-slate-50/50 rounded-2xl border border-slate-100 shadow-sm">
+<div class="space-y-6 max-w-7xl mx-auto">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/60">
         <div class="min-w-0">
             <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
