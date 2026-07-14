@@ -287,6 +287,29 @@
     .forum-placeholder-sub{ color: #9CA3AF; margin-top: 8px; max-width: 320px; font-size: 14px; }
 </style>
 
+{{-- Tab buttons --}}
+<div class="flex gap-2 overflow-x-auto pb-1 mb-4">
+    @foreach ([
+        'semua'   => ['label' => 'Semua',   'url' => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=semua'],
+        'materi'  => ['label' => 'Materi',  'url' => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=materi'],
+        'tugas'   => ['label' => 'Tugas',   'url' => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=tugas'],
+        'absensi' => ['label' => 'Absensi', 'url' => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=absensi'],
+        'forum'   => ['label' => 'Forum',   'url' => route('mahasiswa.kelas-forum', $kelas->id)],
+    ] as $key => $tab)
+        <a href="{{ $tab['url'] }}"
+           class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition
+               {{ $key === 'forum'
+                   ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20'
+                   : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]' }}">
+            {{ $tab['label'] }}
+        </a>
+    @endforeach
+    <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="ml-auto whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition inline-flex items-center gap-1.5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+        Pencet Absen
+    </a>
+</div>
+
 <div class="forum-chat-wrap">
 
 @if ($activeForum)

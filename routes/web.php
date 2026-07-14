@@ -142,10 +142,9 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/kelas/{id}/rekap-tugas', [DosenKelasController::class, 'rekapTugas'])->name('dosen.kelas-tugas.rekap');
     
     // Forum Dosen
-    Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
     Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
-
+    
     //Penilaian Tugas oleh Dosen
     Route::get('/dosen/kelas/{kelas}/tugas/{tugas}/submissions', [DosenKelasController::class, 'submissions'])->name('dosen.tugas.submissions');
     Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/nilai', [DosenKelasController::class, 'simpanNilai'])->name('dosen.tugas.nilai');

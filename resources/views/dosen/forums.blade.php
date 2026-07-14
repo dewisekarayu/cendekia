@@ -286,20 +286,53 @@
     .forum-placeholder-sub{ color: #9CA3AF; margin-top: 8px; max-width: 320px; font-size: 14px; }
 </style>
 
-{{-- NAVBAR TABS --}}
-<div style="display: flex; align-items: center; gap: 0; margin-bottom: 16px; border-bottom: 1px solid #E3E9F7; background: #fff; border-radius: 8px 8px 0 0;">
-    <a href="{{ route('dosen.kelas-pengumuman.index') }}" style="padding: 14px 20px; font-size: 14px; font-weight: 600; color: #757575; border-bottom: 2px solid transparent; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 8px; white-space: nowrap; opacity: 0.7;">
-        <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-        </svg>
-        Announcements
-    </a>
-    <a href="{{ route('dosen.forums') }}" style="padding: 14px 20px; font-size: 14px; font-weight: 600; color: #002B6B; border-bottom: 2px solid #002B6B; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-        <svg xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-        Forums
-    </a>
+{{-- HEADER --}}
+<div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#321270] to-[#4a1fa8] px-6 py-6 sm:px-8 shadow-lg relative">
+    <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
+    <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0">
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="rounded-lg border border-white/20 bg-white/15 px-2.5 py-1 text-xs font-bold text-white">
+                    {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
+                </span>
+                <span class="text-xs text-purple-200/80">{{ $kelas->semester?->nama_semester ?? 'Semester Aktif' }}</span>
+            </div>
+            <h1 class="text-xl font-extrabold text-white sm:text-2xl">{{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}</h1>
+            <p class="mt-1 text-sm text-purple-100/80">
+                {{ $kelas->hari }}, {{ substr($kelas->jam_mulai,0,5) }}–{{ substr($kelas->jam_selesai,0,5) }} · {{ $kelas->ruangan ?? '-' }}
+            </p>
+        </div>
+        <div class="shrink-0 flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z"/></svg>
+                {{ $kelas->mahasiswa->count() }} mahasiswa
+            </span>
+        </div>
+    </div>
+</div>
+
+
+{{-- TABS --}}
+@php
+    $tabLinks = [
+        'Beranda'      => ['url' => route('dosen.kelas-detail', $kelas->id), 'active' => request()->routeIs('dosen.kelas-detail')],
+        'Absensi'      => ['url' => route('dosen.absensi.index', $kelas->id),  'active' => request()->routeIs('dosen.absensi.*')],
+        'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
+        'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
+        'Forum'        => ['url' => route('dosen.kelas-forum', $kelas->id),  'active' => request()->routeIs('dosen.kelas-forum')],
+        'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
+    ];
+@endphp
+<div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 bg-white p-1.5 shadow-sm">
+    @foreach ($tabLinks as $label => $tab)
+        <a href="{{ $tab['url'] }}"
+            class="whitespace-nowrap rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200 ease-out
+                {{ $tab['active']
+                    ? 'bg-[#321270] text-white shadow-sm shadow-purple-900/20 scale-[1.02]'
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800 hover:scale-[1.02]' }}">
+            {{ $label }}
+        </a>
+    @endforeach
 </div>
 
 <div class="forum-chat-wrap">
