@@ -110,69 +110,7 @@ class KelasController extends Controller
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil dipublikasikan.');
     }
-
-<<<<<<< HEAD
-    public function submissions(Request $request, $kelasId, $tugasId)
-    {
-        $kelas = KelasPerkuliahan::with(['mataKuliah', 'mahasiswa'])
-            ->where('dosen_id', $request->user()->id)
-            ->findOrFail($kelasId);
-
-        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
-
-        // Auto-buat baris "belum dikumpul" untuk mahasiswa yang belum punya record,
-        // biar mereka tetap kelihatan di daftar (bukan cuma yang udah submit)
-        $sudahAdaIds = PengumpulanTugas::where('tugas_id', $tugas->id)->pluck('mahasiswa_id');
-        $belumAda = $kelas->mahasiswa->whereNotIn('id', $sudahAdaIds);
-
-        foreach ($belumAda as $mhs) {
-            PengumpulanTugas::create([
-                'tugas_id' => $tugas->id,
-                'mahasiswa_id' => $mhs->id,
-                'status' => PengumpulanTugas::STATUS_BELUM_DIKUMPUL,
-            ]);
-        }
-
-        $submissions = PengumpulanTugas::with(['mahasiswa', 'files'])
-        ->where('tugas_id', $tugas->id)
-        ->get()
-        ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
-        ->values();
-
-        return view('dosen.kelas-tugas-submissions', compact('kelas', 'tugas', 'submissions'));
-    }
-
-    public function simpanNilai(Request $request, $kelasId, $tugasId, $pengumpulanId)
-    {
-        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
-        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
-        $pengumpulan = PengumpulanTugas::where('tugas_id', $tugas->id)->findOrFail($pengumpulanId);
-
-        $validated = $request->validate([
-            'nilai' => ['required', 'integer', 'min:0', 'max:100'],
-            'feedback_dosen' => ['nullable', 'string', 'max:2000'],
-        ], [
-            'nilai.required' => 'Nilai wajib diisi.',
-            'nilai.max' => 'Nilai maksimal 100.',
-        ]);
-
-        $pengumpulan->update([
-            'nilai' => $validated['nilai'],
-            'feedback_dosen' => $validated['feedback_dosen'] ?? null,
-            'status' => PengumpulanTugas::STATUS_DINILAI,
-        ]);
-
-        // Send email notification to student about grade
-        NotificationService::notifyNilaiBaru($pengumpulan, auth()->user());
-
-        return back()->with('success', 'Nilai untuk ' . ($pengumpulan->mahasiswa->name ?? 'mahasiswa') . ' berhasil disimpan.');
-    }
-
-   public function bukaMateri(Request $request, $kelasId, $materiId)
-=======
-    
     public function bukaMateri(Request $request, $kelasId, $materiId)
->>>>>>> 71ec3a84f0e6da1358f208fe82b549596e8edebb
     {
         $kelas = KelasPerkuliahan::with('mataKuliah.programStudi')
             ->where('dosen_id', $request->user()->id)
@@ -311,6 +249,9 @@ class KelasController extends Controller
             'feedback_dosen' => $validated['feedback_dosen'] ?? null,
             'status' => PengumpulanTugas::STATUS_DINILAI,
         ]);
+
+        // Send email notification to student about grade
+        NotificationService::notifyNilaiBaru($pengumpulan, auth()->user());
 
         if ($request->wantsJson()) {
             return response()->json([

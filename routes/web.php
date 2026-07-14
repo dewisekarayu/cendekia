@@ -142,10 +142,9 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/kelas/{id}/rekap-tugas', [DosenKelasController::class, 'rekapTugas'])->name('dosen.kelas-tugas.rekap');
     
     // Forum Dosen
-    Route::get('/dosen/forums', [DosenForumController::class, 'index'])->name('dosen.forums');
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
     Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
-
+    
     //Penilaian Tugas oleh Dosen
     Route::get('/dosen/kelas/{kelas}/tugas/{tugas}/submissions', [DosenKelasController::class, 'submissions'])->name('dosen.tugas.submissions');
     Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/nilai', [DosenKelasController::class, 'simpanNilai'])->name('dosen.tugas.nilai');
@@ -164,7 +163,9 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::put('/dosen/profil/password', [DosenProfileController::class, 'updatePassword'])->name('dosen.profil.password');
 
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
-    Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
+    Route::get('/dosen/setting', [App\Http\Controllers\Dosen\SettingController::class, 'index'])->name('dosen.setting');
+    Route::post('/dosen/setting/umum', [App\Http\Controllers\Dosen\SettingController::class, 'updateUmum'])->name('dosen.setting.umum');
+    Route::post('/dosen/setting/notifikasi', [App\Http\Controllers\Dosen\SettingController::class, 'updateNotifikasi'])->name('dosen.setting.notifikasi');
     
     // Management Absensi oleh Dosen (Struktur Bersih & Rapi)
     Route::prefix('dosen/kelas/{kelasId}/absensi')->name('dosen.absensi.')->group(function () {

@@ -28,7 +28,9 @@ class User extends Authenticatable
         'status',
         'telepon',
         'foto',
-        'email_verified_at'
+        'email_verified_at',
+        'theme',
+        'language'
     ];
 
     /**
