@@ -205,27 +205,48 @@
         <div x-show="tab === 'semua' || tab === 'absensi'" class="space-y-3">
             @forelse ($rekapAbsen as $item)
                 @php
+                    $attendance = $item->absensiMahasiswa->first();
+                    $status = $attendance?->status;
+                    if (!$status) {
+                        if ($item->isBuka()) {
+                            $status = 'terbuka';
+                        } elseif ($item->isDraft()) {
+                            $status = 'draft';
+                        } else {
+                            $status = 'alpha';
+                        }
+                    }
+
                     $absenMap = [
-                        'hadir'  => ['label' => 'Hadir',       'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200', 'icon' => 'M5 13l4 4L19 7'],
-                        'izin'   => ['label' => 'Izin',         'class' => 'bg-blue-50 text-blue-700 border-blue-200',         'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'sakit'  => ['label' => 'Sakit',        'class' => 'bg-amber-50 text-amber-700 border-amber-200',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'alpha'  => ['label' => 'Tidak Hadir',  'class' => 'bg-red-50 text-red-700 border-red-200',            'icon' => 'M6 18L18 6M6 6l12 12'],
+                        'hadir'    => ['label' => 'Hadir',         'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/30', 'icon' => 'M5 13l4 4L19 7'],
+                        'izin'     => ['label' => 'Izin',           'class' => 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30',           'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'sakit'    => ['label' => 'Sakit',          'class' => 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/30',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'alpha'    => ['label' => 'Tidak Hadir',    'class' => 'bg-red-50 text-red-700 border-red-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/30',              'icon' => 'M6 18L18 6M6 6l12 12'],
+                        'terbuka'  => ['label' => 'Terbuka',        'class' => 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-900/30',  'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'draft'    => ['label' => 'Belum Dimulai',  'class' => 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-900/40 dark:text-slate-400 dark:border-slate-800',        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
                     ];
-                    $ab = $absenMap[$item->status] ?? $absenMap['alpha'];
+                    $ab = $absenMap[$status] ?? $absenMap['alpha'];
                 @endphp
-                <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+                <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm transition-colors duration-200">
                     <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border {{ $ab['class'] }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $ab['icon'] }}"/></svg>
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-sm font-semibold text-gray-800">Pertemuan {{ $item->absensi->pertemuan_ke }}</p>
-                        <p class="text-xs text-gray-400">{{ $item->absensi->tanggal->format('d M Y') }}
-                            @if ($item->absensi->rangkuman)
-                                · {{ Str::limit($item->absensi->rangkuman, 80) }}
+                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-250">Pertemuan {{ $item->pertemuan_ke }}</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-450">{{ $item->tanggal->format('d M Y') }}
+                            @if ($item->rangkuman)
+                                · {{ Str::limit($item->rangkuman, 80) }}
                             @endif
                         </p>
                     </div>
-                    <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
+                    <div class="flex items-center gap-2">
+                        @if($status === 'terbuka')
+                            <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white hover:text-white text-decoration-none transition shadow-sm">
+                                Absen Masuk
+                            </a>
+                        @endif
+                        <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
+                    </div>
                 </div>
             @empty
                 <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'absensi'">

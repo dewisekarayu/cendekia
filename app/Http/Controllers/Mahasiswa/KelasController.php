@@ -51,15 +51,21 @@ class KelasController extends Controller
             ->count();
         $progress = $totalTugas > 0 ? round(($submitted / $totalTugas) * 100) : 0;
 
-        $rekapAbsen = AbsensiMahasiswa::with('absensi')
-            ->whereHas('absensi', fn ($q) => $q->where('kelas_perkuliahan_id', $kelas->id))
-            ->where('mahasiswa_id', $request->user()->id)
-            ->get()
-            ->sortByDesc(fn ($item) => $item->absensi->pertemuan_ke) // ← diubah dari sortBy jadi sortByDesc
-            ->values();
+        $rekapAbsen = \App\Models\Absensi::where('kelas_perkuliahan_id', $kelas->id)
+            ->with(['absensiMahasiswa' => function ($q) use ($request) {
+                $q->where('mahasiswa_id', $request->user()->id);
+            }])
+            ->orderByDesc('pertemuan_ke')
+            ->get();
 
-        $totalHadir = $rekapAbsen->where('status', 'hadir')->count();
-        $totalPertemuan = $rekapAbsen->count();
+        $totalHadir = \App\Models\AbsensiMahasiswa::where('mahasiswa_id', $request->user()->id)
+            ->whereHas('absensi', fn ($q) => $q->where('kelas_perkuliahan_id', $kelas->id))
+            ->where('status', 'hadir')
+            ->count();
+
+        $totalPertemuan = \App\Models\Absensi::where('kelas_perkuliahan_id', $kelas->id)
+            ->where('session_status', '!=', 'draft')
+            ->count();
 
         return view('mahasiswa.kelas-detail', compact(
             'kelas', 'materiList', 'tugasList', 'rekapAbsen',

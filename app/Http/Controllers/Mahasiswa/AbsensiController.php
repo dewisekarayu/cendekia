@@ -38,7 +38,6 @@ class AbsensiController extends Controller
 
         $absensiAktif = Absensi::where('kelas_perkuliahan_id', $kelasId)
             ->where('session_status', 'buka')
-            ->whereDate('tanggal', today())
             ->latest('created_at')
             ->first();
 
@@ -72,9 +71,9 @@ class AbsensiController extends Controller
 
         $this->authorize('checkIn', $absensi);
 
-        // Sesi harus benar-benar masih terbuka & untuk hari ini
-        if (!$absensi->isBuka() || !$absensi->tanggal->isToday()) {
-            return redirect()->back()->with('warning', 'Sesi presensi ini tidak dapat diakses (sudah ditutup atau bukan sesi hari ini).');
+        // Sesi harus benar-benar masih terbuka
+        if (!$absensi->isBuka()) {
+            return redirect()->back()->with('warning', 'Sesi presensi ini tidak dapat diakses (sudah ditutup).');
         }
 
         $validated = $request->validate([
