@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\KelasPerkuliahan;
 use App\Models\Materi;
 use App\Models\Tugas;
+use App\Models\MateriFile;
+use App\Models\TugasFile;
 use App\Models\PengumpulanTugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -71,26 +73,35 @@ class KelasController extends Controller
             'instruksi' => ['required', 'string', 'max:5000'],
             'deadline' => ['required', 'date', 'after:now'],
             'poin' => ['required', 'integer', 'min:1', 'max:100'],
-            'template' => ['nullable', 'file', 'mimes:pdf,doc,docx,zip,ppt,pptx,xls,xlsx', 'max:25600'],
+            'template' => ['nullable', 'array', 'max:5'],
+            'template.*' => [
+                'file',
+                'mimes:pdf,doc,docx,zip,ppt,pptx,jpg,jpeg,png',
+                'max:25600',
+            ],
         ], [
             'deadline.after' => 'Deadline harus lebih besar dari waktu saat ini.',
-            'template.max' => 'Ukuran lampiran maksimal 25MB.',
+            'template.*.max' => 'Ukuran setiap lampiran maksimal 25MB.',
         ]);
 
-        $lampiranPath = null;
-
-        if ($request->hasFile('template')) {
-            $lampiranPath = $request->file('template')->store('tugas/' . $kelas->id, 'public');
-        }
-
-        Tugas::create([
+        $tugas = Tugas::create([
             'kelas_perkuliahan_id' => $kelas->id,
             'judul' => $validated['judul'],
             'instruksi' => $validated['instruksi'],
-            'file_lampiran' => $lampiranPath,
             'deadline' => $validated['deadline'],
             'bobot_nilai' => $validated['poin'],
         ]);
+
+        if ($request->hasFile('template')) {
+            foreach ($request->file('template') as $file) {
+                $path = $file->store('tugas/' . $kelas->id, 'public');
+
+                $tugas->files()->create([
+                    'file_path' => $path,
+                    'nama_asli' => $file->getClientOriginalName(),
+                ]);
+            }
+        }
 
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil dipublikasikan.');
@@ -117,11 +128,11 @@ class KelasController extends Controller
             ]);
         }
 
-        $submissions = PengumpulanTugas::with('mahasiswa')
-            ->where('tugas_id', $tugas->id)
-            ->get()
-            ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
-            ->values();
+        $submissions = PengumpulanTugas::with(['mahasiswa', 'files'])
+        ->where('tugas_id', $tugas->id)
+        ->get()
+        ->sortBy(fn ($p) => $p->mahasiswa->name ?? '')
+        ->values();
 
         return view('dosen.kelas-tugas-submissions', compact('kelas', 'tugas', 'submissions'));
     }
@@ -149,31 +160,41 @@ class KelasController extends Controller
         return back()->with('success', 'Nilai untuk ' . ($pengumpulan->mahasiswa->name ?? 'mahasiswa') . ' berhasil disimpan.');
     }
 
-    public function bukaMateri(Request $request, $kelasId, $materiId)
+   public function bukaMateri(Request $request, $kelasId, $materiId)
     {
         $kelas = KelasPerkuliahan::with('mataKuliah.programStudi')
             ->where('dosen_id', $request->user()->id)
             ->findOrFail($kelasId);
 
-        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+        $materi = Materi::with('files')
+            ->where('kelas_perkuliahan_id', $kelas->id)
+            ->findOrFail($materiId);
 
         return view('dosen.materi.buka', compact('kelas', 'materi'));
     }
 
-    public function unduhMateri(Request $request, $kelasId, $materiId)
+    public function unduhMateri(Request $request, $kelasId, $materiId, $fileId)
     {
-        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)
-            ->findOrFail($kelasId);
-
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
         $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+        $file = MateriFile::where('materi_id', $materi->id)->findOrFail($fileId);
 
-        abort_unless($materi->file_path, 404, 'File materi tidak ditemukan.');
-
-        $path = Storage::disk('public')->path($materi->file_path);
-
+        $path = Storage::disk('public')->path($file->file_path);
         abort_unless(file_exists($path), 404, 'File tidak ditemukan di server.');
 
-        return response()->download($path, basename($materi->file_path));
+        return response()->download($path, $file->nama_asli ?? basename($file->file_path));
+    }
+
+    public function previewMateri(Request $request, $kelasId, $materiId, $fileId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+        $file = MateriFile::where('materi_id', $materi->id)->findOrFail($fileId);
+
+        $path = Storage::disk('public')->path($file->file_path);
+        abort_unless(file_exists($path), 404, 'File tidak ditemukan di server.');
+
+        return response()->file($path);
     }
 
     public function materi(Request $request, $id)
@@ -182,10 +203,10 @@ class KelasController extends Controller
             ->where('dosen_id', $request->user()->id)
             ->findOrFail($id);
 
-        // also provide list of classes the dosen teaches for sidebar/search consistency
         $kelasList = $request->user()->kelasDiampu()->with(['mataKuliah.programStudi', 'mahasiswa'])->get();
 
         $materiList = Materi::where('kelas_perkuliahan_id', $kelas->id)
+            ->with('files')
             ->orderBy('pertemuan_ke')
             ->get();
 
@@ -200,28 +221,30 @@ class KelasController extends Controller
             'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string', 'max:5000'],
             'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:32'],
-            'file_materi' => ['nullable', 'file', 'mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,mp4,zip', 'max:102400'],
+            'file_materi' => ['nullable', 'array', 'max:5'],
+            'file_materi.*' => ['file', 'mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,mp4,zip,jpg,jpeg,png', 'max:102400'],
         ], [
-            'file_materi.max' => 'Ukuran file materi maksimal 100MB.',
+            'file_materi.*.max' => 'Ukuran setiap file materi maksimal 100MB.',
         ]);
 
-        $filePath = null;
-        $tipeFile = null;
-
-        if ($request->hasFile('file_materi')) {
-            $file = $request->file('file_materi');
-            $filePath = $file->store('materi/' . $kelas->id, 'public');
-            $tipeFile = strtolower($file->getClientOriginalExtension());
-        }
-
-        Materi::create([
+        $materi = Materi::create([
             'kelas_perkuliahan_id' => $kelas->id,
             'judul' => $validated['judul'],
             'deskripsi' => $validated['deskripsi'] ?? null,
             'pertemuan_ke' => $validated['pertemuan_ke'],
-            'file_path' => $filePath,
-            'tipe_file' => $tipeFile,
         ]);
+
+        if ($request->hasFile('file_materi')) {
+            foreach ($request->file('file_materi') as $file) {
+                $path = $file->store('materi/' . $kelas->id, 'public');
+
+                $materi->files()->create([
+                    'file_path' => $path,
+                    'nama_asli' => $file->getClientOriginalName(),
+                    'tipe_file' => strtolower($file->getClientOriginalExtension()),
+                ]);
+            }
+        }
 
         return redirect()->route('dosen.kelas-materi', $kelas->id)
             ->with('success', 'Materi berhasil ditambahkan.');

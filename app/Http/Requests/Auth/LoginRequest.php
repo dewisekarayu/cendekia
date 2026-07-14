@@ -97,4 +97,3 @@ class LoginRequest extends FormRequest
         return Str::transliterate(Str::lower((string) $this->input('credential')).'|'.$this->ip());
     }
 }
-

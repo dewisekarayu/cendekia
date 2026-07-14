@@ -18,13 +18,11 @@ class PengumpulantugasController extends Controller
     public function show(Tugas $tugas)
     {
         $mahasiswaId = Auth::id();
-
-        $pengumpulan = PengumpulanTugas::with('tugas')
+        $pengumpulan = PengumpulanTugas::with(['tugas', 'files'])
             ->where('tugas_id', $tugas->id)
             ->where('mahasiswa_id', $mahasiswaId)
-            ->where('status', '!=', PengumpulanTugas::STATUS_BELUM_DIKUMPUL) // tambahkan ini
+            ->where('status', '!=', PengumpulanTugas::STATUS_BELUM_DIKUMPUL)
             ->first();
-
         $tugas->load('kelasPerkuliahan.mataKuliah');
 
         return view('mahasiswa.pengumpulan-tugas', [
@@ -33,35 +31,32 @@ class PengumpulantugasController extends Controller
         ]);
     }
 
-    /**
-     * Simpan / perbarui jawaban yang diunggah mahasiswa.
-     */
     public function store(Request $request, Tugas $tugas)
     {
         $validated = $request->validate([
-            'file_jawaban' => ['required', 'file', 'mimes:pdf,zip', 'max:10240'], // 10 MB
-            'catatan'      => ['nullable', 'string', 'max:1000'],
+            'file_jawaban'   => ['required', 'array', 'min:1', 'max:5'],
+            'file_jawaban.*' => [
+                'file',
+                'mimes:pdf,zip,doc,docx,ppt,pptx,jpg,jpeg,png',
+                'max:10240',
+            ],
+            'catatan'        => ['nullable', 'string', 'max:1000'],
         ]);
-
+        
         $mahasiswaId = Auth::id();
-
-        // Cek apakah sudah lewat batas waktu
         $isLate = now()->gt($tugas->deadline);
 
-        // Kalau sebelumnya sudah ada jawaban, hapus file lama biar tidak menumpuk
         $existing = PengumpulanTugas::where('tugas_id', $tugas->id)
             ->where('mahasiswa_id', $mahasiswaId)
             ->first();
 
-        if ($existing && $existing->file_jawaban) {
-            Storage::disk('public')->delete($existing->file_jawaban);
+        // Kalau sudah pernah upload, hapus file lama dulu biar tidak menumpuk
+        if ($existing) {
+            foreach ($existing->files as $oldFile) {
+                Storage::disk('public')->delete($oldFile->file_path);
+            }
+            $existing->files()->delete();
         }
-
-        // Simpan file baru ke storage/app/public/pengumpulan/{tugas_id}
-        $path = $request->file('file_jawaban')->store(
-            "pengumpulan/{$tugas->id}",
-            'public'
-        );
 
         $pengumpulan = PengumpulanTugas::updateOrCreate(
             [
@@ -69,28 +64,33 @@ class PengumpulantugasController extends Controller
                 'mahasiswa_id' => $mahasiswaId,
             ],
             [
-                'file_jawaban' => $path,
                 'catatan'      => $validated['catatan'] ?? null,
                 'waktu_kumpul' => now(),
                 'status'       => $isLate
                     ? PengumpulanTugas::STATUS_TERLAMBAT
                     : PengumpulanTugas::STATUS_DIKUMPUL,
-                // nilai & feedback_dosen sengaja tidak disentuh di sini,
-                // itu diisi dosen lewat halaman penilaian
             ]
         );
+
+        // Simpan setiap file yang diunggah
+        foreach ($request->file('file_jawaban') as $file) {
+            $path = $file->store("pengumpulan/{$tugas->id}", 'public');
+
+            $pengumpulan->files()->create([
+                'file_path' => $path,
+                'nama_asli' => $file->getClientOriginalName(),
+            ]);
+        }
 
         return redirect()
             ->route('mahasiswa.pengumpulan-tugas.show', $tugas->id)
             ->with('success', 'Tugas berhasil dikumpulkan.');
     }
 
-    /**
-     * Batalkan / hapus pengumpulan yang belum dinilai.
-     */
     public function destroy(Tugas $tugas)
     {
-        $pengumpulan = PengumpulanTugas::where('tugas_id', $tugas->id)
+        $pengumpulan = PengumpulanTugas::with('files')
+            ->where('tugas_id', $tugas->id)
             ->where('mahasiswa_id', Auth::id())
             ->firstOrFail();
 
@@ -100,11 +100,11 @@ class PengumpulantugasController extends Controller
             'Tugas yang sudah dinilai tidak dapat dibatalkan.'
         );
 
-        if ($pengumpulan->file_jawaban) {
-            Storage::disk('public')->delete($pengumpulan->file_jawaban);
+        foreach ($pengumpulan->files as $file) {
+            Storage::disk('public')->delete($file->file_path);
         }
 
-        $pengumpulan->delete();
+        $pengumpulan->delete(); // files ikut terhapus otomatis kalau pakai cascadeOnDelete
 
         return redirect()
             ->route('mahasiswa.pengumpulan-tugas.show', $tugas->id)

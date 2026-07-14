@@ -30,4 +30,9 @@ class Materi extends Model
     {
         return $this->belongsToMany(User::class, 'dosen_materi', 'materi_id', 'dosen_id')->withTimestamps();
     }
+
+    public function files()
+    {
+        return $this->hasMany(MateriFile::class, 'materi_id');
+    }
 }

@@ -8,6 +8,8 @@ use App\Models\AbsensiMahasiswa;
 use App\Models\KelasPerkuliahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class AbsensiController extends Controller
 {
@@ -27,7 +29,7 @@ class AbsensiController extends Controller
 
     /**
      * Halaman presensi untuk satu kelas: menampilkan sesi aktif hari ini (jika ada)
-     * dan tombol "Absen Masuk".
+     * dan form pilihan status (Hadir/Izin/Sakit).
      */
     public function kelasAbsensi($kelasId)
     {
@@ -57,7 +59,7 @@ class AbsensiController extends Controller
     }
 
     /**
-     * Proses klik tombol "Absen Masuk".
+     * Proses submit form presensi mahasiswa (Hadir / Izin / Sakit).
      */
     public function absenMasuk(Request $request, $kelasId, $absensiId)
     {
@@ -70,23 +72,47 @@ class AbsensiController extends Controller
 
         $this->authorize('checkIn', $absensi);
 
-        $sudahAda = AbsensiMahasiswa::where('absensi_id', $absensi->id)
-            ->where('mahasiswa_id', $user->id)
-            ->exists();
+        // Sesi harus benar-benar masih terbuka & untuk hari ini
+        if (!$absensi->isBuka() || !$absensi->tanggal->isToday()) {
+            return redirect()->back()->with('warning', 'Sesi presensi ini tidak dapat diakses (sudah ditutup atau bukan sesi hari ini).');
+        }
 
-        if ($sudahAda) {
+        $validated = $request->validate([
+            'status' => ['required', 'in:hadir,izin,sakit'],
+            'keterangan' => ['required_if:status,izin,sakit', 'nullable', 'string', 'max:255'],
+        ], [
+            'status.required' => 'Silakan pilih status kehadiran.',
+            'status.in' => 'Status kehadiran tidak valid.',
+            'keterangan.required_if' => 'Keterangan wajib diisi untuk status Izin/Sakit.',
+        ]);
+
+        try {
+            $absensiMahasiswa = DB::transaction(function () use ($absensi, $user, $validated) {
+                $sudahAda = AbsensiMahasiswa::where('absensi_id', $absensi->id)
+                    ->where('mahasiswa_id', $user->id)
+                    ->lockForUpdate()
+                    ->exists();
+
+                if ($sudahAda) {
+                    throw ValidationException::withMessages([
+                        'status' => 'Anda sudah melakukan presensi untuk sesi ini.',
+                    ]);
+                }
+
+                return AbsensiMahasiswa::create([
+                    'absensi_id' => $absensi->id,
+                    'mahasiswa_id' => $user->id,
+                    'status' => $validated['status'],
+                    'keterangan' => $validated['keterangan'] ?? null,
+                    'waktu_absensi' => now(),
+                ]);
+            });
+        } catch (ValidationException $e) {
             return redirect()->back()->with('warning', 'Anda sudah melakukan presensi untuk sesi ini.');
         }
 
-        AbsensiMahasiswa::create([
-            'absensi_id' => $absensi->id,
-            'mahasiswa_id' => $user->id,
-            'status' => 'hadir',
-            'waktu_absensi' => now(),
-        ]);
-
         return redirect()->route('mahasiswa.absensi.kelas', $kelasId)
-            ->with('success', 'Presensi berhasil dicatat. Status Anda: Hadir.');
+            ->with('success', 'Presensi berhasil dicatat. Status Anda: ' . $absensiMahasiswa->getStatusLabel() . '.');
     }
 
     /**
@@ -99,7 +125,7 @@ class AbsensiController extends Controller
 
         $absensiList = Absensi::where('kelas_perkuliahan_id', $kelasId)
             ->with(['absensiMahasiswa' => fn ($q) => $q->where('mahasiswa_id', $user->id)])
-            ->orderByDesc('tanggal')
+            ->latest()
             ->paginate(10);
 
         if ($absensiList->isNotEmpty()) {
@@ -127,9 +153,6 @@ class AbsensiController extends Controller
         return view('mahasiswa.absensi.show', compact('kelas', 'absensiList', 'stats'));
     }
 
-    /**
-     * Ambil kelas dan pastikan mahasiswa yang login benar-benar terdaftar di kelas tersebut.
-     */
     private function kelasDiikutiMahasiswa($kelasId, array $with = []): KelasPerkuliahan
     {
         $user = Auth::user();

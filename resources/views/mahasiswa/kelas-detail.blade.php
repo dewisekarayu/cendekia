@@ -114,14 +114,14 @@
                         </div>
                         <p class="text-sm font-bold text-slate-800">{{ $materi->judul }}</p>
                         <p class="mt-0.5 text-xs leading-relaxed text-slate-500">
-                            {{ $materi->deskripsi ? Str::limit($materi->deskripsi, 110) : ($materi->file_path ? 'File tersedia.' : 'File belum diunggah.') }}
-                        </p>
+                        {{ $materi->deskripsi ? Str::limit($materi->deskripsi, 110) : ($materi->files->isNotEmpty() ? 'File tersedia.' : 'File belum diunggah.') }}
+                    </p>
                     </div>
-                    @if ($materi->file_path)
+                    @if ($materi->files->isNotEmpty())
                         <a href="{{ route('mahasiswa.materi.buka', [$kelas->id, $materi->id]) }}"
-                           class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#002B6B] px-4 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
+                        class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#002B6B] px-4 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                            Buka
+                            Buka ({{ $materi->files->count() }})
                         </a>
                     @else
                         <span class="inline-flex shrink-0 items-center justify-center rounded-xl bg-slate-100 px-4 py-2.5 text-xs font-bold text-slate-400">Belum Ada</span>
@@ -140,7 +140,7 @@
                 @php
                     $dl = \Carbon\Carbon::parse($tugas->deadline);
                     $overdue = $dl->isPast();
-                    $daysLeft = now()->diffInDays($dl, false);
+                    $daysLeft = (int) floor(now()->diffInDays($dl, false));
 
                     // pengumpulan milik mahasiswa yang login (eager-load dari controller)
                     $pengumpulanSaya = $tugas->pengumpulanTugas
