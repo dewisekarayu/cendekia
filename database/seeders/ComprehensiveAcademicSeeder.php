@@ -176,7 +176,7 @@ class ComprehensiveAcademicSeeder extends Seeder
 
     private function seedAbsensi(KelasPerkuliahan $kelas, $peserta, Carbon $startDate): void
     {
-        for ($pertemuan = 1; $pertemuan <= 16; $pertemuan++) {
+        for ($pertemuan = 1; $pertemuan <= 3; $pertemuan++) {
             $tanggal = $startDate->copy()->addWeeks($pertemuan - 1);
 
             $absensi = Absensi::updateOrCreate(
