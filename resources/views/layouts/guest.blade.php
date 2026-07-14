@@ -1,3 +1,19 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    {{-- Fonts (opsional) --}}
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900" rel="stylesheet" />
+
+    {{-- INI YANG PENTING --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
 <body class="font-sans antialiased">
 
 <div
@@ -17,10 +33,9 @@ linear-gradient(135deg,#F8FBFF 0%,#F2F7FF 35%,#EDF4FF 70%,#F9FBFF 100%);
 
         {{ $slot }}
 
-
-
     </div>
 
 </div>
 
 </body>
+</html>
