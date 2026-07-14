@@ -9,6 +9,7 @@ use App\Models\Tugas;
 use App\Models\MateriFile;
 use App\Models\TugasFile;
 use App\Models\PengumpulanTugas;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -103,6 +104,9 @@ class KelasController extends Controller
             }
         }
 
+        // Send email notification to all enrolled students
+        NotificationService::notifyTugasBaru($tugas, auth()->user());
+
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil dipublikasikan.');
     }
@@ -156,6 +160,9 @@ class KelasController extends Controller
             'feedback_dosen' => $validated['feedback_dosen'] ?? null,
             'status' => PengumpulanTugas::STATUS_DINILAI,
         ]);
+
+        // Send email notification to student about grade
+        NotificationService::notifyNilaiBaru($pengumpulan, auth()->user());
 
         return back()->with('success', 'Nilai untuk ' . ($pengumpulan->mahasiswa->name ?? 'mahasiswa') . ' berhasil disimpan.');
     }
@@ -245,6 +252,9 @@ class KelasController extends Controller
                 ]);
             }
         }
+
+        // Send email notification to all enrolled students
+        NotificationService::notifyMateriBaru($materi, auth()->user());
 
         return redirect()->route('dosen.kelas-materi', $kelas->id)
             ->with('success', 'Materi berhasil ditambahkan.');

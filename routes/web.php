@@ -93,6 +93,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.user')
         ->parameters(['user' => 'user']);
 
+    // Notification Preferences
+    Route::prefix('admin/notification-preferences')->name('admin.notification-preferences.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'index'])->name('index');
+        Route::get('/{user}', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'show'])->name('show');
+        Route::put('/{user}', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'update'])->name('update');
+        Route::put('/{user}/reset', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'reset'])->name('reset');
+        Route::put('/{user}/disable-all', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'disableAll'])->name('disableAll');
+        Route::put('/{user}/enable-all', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'enableAll'])->name('enableAll');
+    });
+
     // Admin Absensi CRUD
     Route::prefix('admin/absensi')->name('admin.absensi.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\AbsensiController::class, 'index'])->name('index');

@@ -3,88 +3,96 @@
 @section('title', 'Riwayat Presensi - ' . $kelas->mataKuliah->nama_mk)
 
 @section('content')
-<div class="space-y-6">
-    <!-- Header -->
+<div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4">
+    <!-- Header with Breadcrumb -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Riwayat Presensi
+        <div class="min-w-0">
+            <div class="flex items-center gap-2 text-sm text-slate-500 mb-2">
+                <a href="{{ route('mahasiswa.absensi.index') }}" class="hover:text-blue-600 transition">Daftar Kelas</a>
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                <span class="text-slate-800 font-semibold truncate">Riwayat Presensi</span>
+            </div>
+            <h1 class="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-sky-500 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <span class="truncate">Riwayat Presensi</span>
             </h1>
-            <p class="mt-1 text-gray-500">
-                {{ $kelas->mataKuliah->nama_mk }} <span class="font-semibold">({{ $kelas->kode_kelas }})</span>
+            <p class="mt-2 text-slate-500 flex items-center gap-2 flex-wrap">
+                <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">{{ $kelas->kode_kelas }}</span>
+                <span>{{ $kelas->mataKuliah->nama_mk }}</span>
             </p>
         </div>
-        <div class="flex gap-2">
-            <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+        <div class="flex flex-col sm:flex-row gap-2">
+            <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-semibold transition shadow-sm hover:shadow-md">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Presensi Sekarang
+                <span class="hidden sm:inline">Presensi Sekarang</span>
             </a>
-            <a href="{{ route('mahasiswa.absensi.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition">
+            <a href="{{ route('mahasiswa.absensi.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
-                Kembali
+                <span class="hidden sm:inline">Kembali</span>
             </a>
         </div>
     </div>
 
-    <!-- Statistics Cards -->
+    <!-- Main Statistics Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-4">
+        <div class="bg-blue-50 rounded-2xl border border-blue-100 p-5 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">Total Pertemuan</p>
-                    <p class="text-3xl font-bold text-blue-600 mt-1">{{ $stats['totalPertemuan'] }}</p>
+                    <p class="text-blue-600 text-xs font-bold uppercase tracking-wide mb-1">Total Pertemuan</p>
+                    <p class="text-2xl sm:text-lg font-black text-blue-700">{{ $stats['totalPertemuan'] }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-blue-200 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-11 h-11 rounded-lg bg-blue-100 flex items-center justify-center shadow-sm">
+                    <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-green-200 p-4">
+        <div class="bg-emerald-50 rounded-2xl border border-emerald-100 p-5 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">Hadir</p>
-                    <p class="text-3xl font-bold text-green-600 mt-1">{{ $stats['hadir'] }}</p>
+                    <p class="text-emerald-600 text-xs font-bold uppercase tracking-wide mb-1">Hadir</p>
+                    <p class="text-2xl sm:text-lg font-black text-emerald-700">{{ $stats['hadir'] }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-green-200 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-11 h-11 rounded-lg bg-emerald-100 flex items-center justify-center shadow-sm">
+                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl border border-yellow-200 p-4">
+        <div class="bg-amber-50 rounded-2xl border border-amber-100 p-5 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">Izin/Sakit</p>
-                    <p class="text-3xl font-bold text-yellow-600 mt-1">{{ $stats['izin'] + $stats['sakit'] }}</p>
+                    <p class="text-amber-600 text-xs font-bold uppercase tracking-wide mb-1">Izin/Sakit</p>
+                    <p class="text-2xl sm:text-lg font-black text-amber-700">{{ $stats['izin'] + $stats['sakit'] }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-yellow-200 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-11 h-11 rounded-lg bg-amber-100 flex items-center justify-center shadow-sm">
+                    <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 4v-4z" />
                     </svg>
                 </div>
             </div>
         </div>
 
-        <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 p-4">
+        <div class="bg-red-50 rounded-2xl border border-red-100 p-5 shadow-sm hover:shadow-md transition">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-600 font-medium">Alpha</p>
-                    <p class="text-3xl font-bold text-red-600 mt-1">{{ $stats['alpha'] }}</p>
+                    <p class="text-red-600 text-xs font-bold uppercase tracking-wide mb-1">Alpha</p>
+                    <p class="text-2xl sm:text-lg font-black text-red-700">{{ $stats['alpha'] }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-lg bg-red-200 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-11 h-11 rounded-lg bg-red-100 flex items-center justify-center shadow-sm">
+                    <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                 </div>
@@ -92,115 +100,159 @@
         </div>
     </div>
 
-    <!-- Progress Bars -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Persentase Kehadiran</h3>
-            <div class="space-y-4">
-                @php
-                    $totalPresensi = $stats['hadir'] + $stats['izin'] + $stats['sakit'] + $stats['alpha'];
-                    $hairPct = $totalPresensi > 0 ? round($stats['hadir'] / $stats['totalPertemuan'] * 100) : 0;
-                    $izinPct = $totalPresensi > 0 ? round(($stats['izin'] + $stats['sakit']) / $stats['totalPertemuan'] * 100) : 0;
-                    $alphaPct = $totalPresensi > 0 ? round($stats['alpha'] / $stats['totalPertemuan'] * 100) : 0;
-                @endphp
+    <!-- Analytics Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- Percentage Chart -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-blue-50 px-4 sm:px-5 py-3 border-b border-blue-100 flex items-center gap-2.5">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <h3 class="text-base font-bold text-slate-800">Persentase Kehadiran</h3>
+            </div>
+            <div class="p-4 sm:p-5">
+                <div class="space-y-4">
+                    @php
+                        $totalPresensi = $stats['hadir'] + $stats['izin'] + $stats['sakit'] + $stats['alpha'];
+                        $hairPct = $totalPresensi > 0 ? round($stats['hadir'] / $stats['totalPertemuan'] * 100) : 0;
+                        $izinPct = $totalPresensi > 0 ? round(($stats['izin'] + $stats['sakit']) / $stats['totalPertemuan'] * 100) : 0;
+                        $alphaPct = $totalPresensi > 0 ? round($stats['alpha'] / $stats['totalPertemuan'] * 100) : 0;
+                    @endphp
 
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
-                            Hadir
-                        </span>
-                        <span class="text-sm font-bold text-green-600">{{ $hairPct }}%</span>
+                    <!-- Hadir Progress -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                <span class="text-sm font-semibold text-slate-700">Hadir</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-base font-bold text-emerald-600">{{ $hairPct }}%</span>
+                                <span class="text-xs font-medium text-slate-400">({{ $stats['hadir'] }}/{{ $stats['totalPertemuan'] }})</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-emerald-500 h-full rounded-full transition-all duration-700" style="width: {{ $hairPct }}%"></div>
+                        </div>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div class="bg-green-500 h-full rounded-full transition-all duration-500" style="width: {{ $hairPct }}%"></div>
-                    </div>
-                </div>
 
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
-                            Izin/Sakit
-                        </span>
-                        <span class="text-sm font-bold text-yellow-600">{{ $izinPct }}%</span>
+                    <!-- Izin/Sakit Progress -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                <span class="text-sm font-semibold text-slate-700">Izin/Sakit</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-base font-bold text-amber-600">{{ $izinPct }}%</span>
+                                <span class="text-xs font-medium text-slate-400">({{ $stats['izin'] + $stats['sakit'] }}/{{ $stats['totalPertemuan'] }})</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-amber-500 h-full rounded-full transition-all duration-700" style="width: {{ $izinPct }}%"></div>
+                        </div>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div class="bg-yellow-500 h-full rounded-full transition-all duration-500" style="width: {{ $izinPct }}%"></div>
-                    </div>
-                </div>
 
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
-                            Alpha
-                        </span>
-                        <span class="text-sm font-bold text-red-600">{{ $alphaPct }}%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div class="bg-red-500 h-full rounded-full transition-all duration-500" style="width: {{ $alphaPct }}%"></div>
+                    <!-- Alpha Progress -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                <span class="text-sm font-semibold text-slate-700">Alpha</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-base font-bold text-red-600">{{ $alphaPct }}%</span>
+                                <span class="text-xs font-medium text-slate-400">({{ $stats['alpha'] }}/{{ $stats['totalPertemuan'] }})</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-red-500 h-full rounded-full transition-all duration-700" style="width: {{ $alphaPct }}%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Class Info -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Kelas</h3>
-            <div class="space-y-3 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Pengajar</span>
-                    <span class="font-semibold text-gray-900">{{ $kelas->dosen->name }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Kode Kelas</span>
-                    <span class="font-semibold text-gray-900">{{ $kelas->kode_kelas }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Ruangan</span>
-                    <span class="font-semibold text-gray-900">{{ $kelas->ruangan ?? '-' }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Hari</span>
-                    <span class="font-semibold text-gray-900">{{ $kelas->hari ?? '-' }}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Waktu</span>
-                    <span class="font-semibold text-gray-900">{{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }}</span>
+        <!-- Class Info & Status -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-blue-50 px-4 sm:px-5 py-3 border-b border-blue-100 flex items-center gap-2.5">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="text-base font-bold text-slate-800">Informasi Kelas</h3>
+            </div>
+            <div class="p-4 sm:p-5">
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-slate-500 text-xs font-medium mb-1">Pengajar</p>
+                        <p class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                                {{ substr($kelas->dosen->name, 0, 1) }}
+                            </span>
+                            <span class="truncate">{{ $kelas->dosen->name }}</span>
+                        </p>
+                    </div>
+                    <hr class="border-slate-100">
+                    <div>
+                        <p class="text-slate-500 text-xs font-medium mb-1">Kode Kelas</p>
+                        <p class="text-sm font-bold text-slate-800 font-mono bg-slate-100 px-2.5 py-1 rounded-lg inline-block">{{ $kelas->kode_kelas }}</p>
+                    </div>
+                    <hr class="border-slate-100">
+                    <div>
+                        <p class="text-slate-500 text-xs font-medium mb-1">Ruangan</p>
+                        <p class="text-sm font-semibold text-slate-800">{{ $kelas->ruangan ?? '—' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-xs font-medium mb-1">Hari/Waktu</p>
+                        <p class="text-sm font-semibold text-slate-800">{{ $kelas->hari ?? '—' }} • {{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Attendance History Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="bg-gradient-to-r from-purple-50 to-blue-50 px-6 py-4 border-b border-gray-100">
-            <h2 class="text-lg font-semibold text-gray-900">Riwayat Detail Presensi</h2>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-5 sm:px-6 py-4 text-white flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                    <h2 class="text-lg font-bold">Riwayat Detail Presensi</h2>
+                    <p class="text-sky-100 text-sm mt-0.5">Daftar lengkap kehadiran per pertemuan</p>
+                </div>
+            </div>
         </div>
 
         @if($absensiList->count() > 0)
             <div class="overflow-x-auto">
                 <table class="w-full">
-                    <thead class="bg-gray-50 border-b border-gray-100">
+                    <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Pertemuan</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Tanggal</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Waktu</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Waktu Absensi</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Pertemuan</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Waktu</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Waktu Absensi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100">
+                    <tbody class="divide-y divide-slate-100">
                         @foreach($absensiList as $absensi)
                             @php
                                 $attendance = $absensi->absensiMahasiswa->first();
                                 $statusClass = match($attendance->status ?? 'alpha') {
-                                    'hadir' => 'bg-green-100 text-green-800',
+                                    'hadir' => 'bg-emerald-100 text-emerald-800',
                                     'izin' => 'bg-blue-100 text-blue-800',
-                                    'sakit' => 'bg-yellow-100 text-yellow-800',
+                                    'sakit' => 'bg-amber-100 text-amber-800',
                                     'alpha' => 'bg-red-100 text-red-800',
-                                    default => 'bg-gray-100 text-gray-800',
+                                    default => 'bg-slate-100 text-slate-700',
+                                };
+                                $statusDot = match($attendance->status ?? 'alpha') {
+                                    'hadir' => 'bg-emerald-500',
+                                    'izin' => 'bg-blue-500',
+                                    'sakit' => 'bg-amber-500',
+                                    default => 'bg-red-500',
                                 };
                                 $statusLabel = match($attendance->status ?? 'alpha') {
                                     'hadir' => 'Hadir',
@@ -210,19 +262,31 @@
                                     default => '-',
                                 };
                             @endphp
-                            <tr class="hover:bg-gray-50 transition">
+                            <tr class="hover:bg-blue-50/60 transition-colors duration-150">
                                 <td class="px-6 py-4">
-                                    <span class="font-semibold text-gray-900">Pertemuan {{ $absensi->pertemuan_ke }}</span>
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-700 font-bold text-sm border border-blue-100">
+                                        {{ $absensi->pertemuan_ke }}
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $absensi->tanggal->format('d M Y') }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500">{{ $absensi->jam_mulai }} - {{ $absensi->jam_selesai }}</td>
+                                <td class="px-6 py-4 text-sm font-semibold text-slate-800">{{ $absensi->tanggal->format('d M Y') }}</td>
+                                <td class="px-6 py-4 text-sm text-slate-500">{{ $absensi->jam_mulai }} - {{ $absensi->jam_selesai }}</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {{ $statusClass }}">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold {{ $statusClass }}">
+                                        <span class="w-2 h-2 rounded-full {{ $statusDot }}"></span>
                                         {{ $statusLabel }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-500">
-                                    {{ $attendance && $attendance->waktu_absensi ? $attendance->waktu_absensi->format('H:i:s') : '-' }}
+                                <td class="px-6 py-4 text-sm">
+                                    @if($attendance && $attendance->waktu_absensi)
+                                        <div class="flex items-center gap-2 text-slate-700 font-semibold">
+                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            {{ $attendance->waktu_absensi->format('H:i:s') }}
+                                        </div>
+                                    @else
+                                        <span class="text-slate-300 font-medium">—</span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -231,36 +295,37 @@
             </div>
 
             <!-- Pagination -->
-            <div class="px-6 py-4 border-t border-gray-100 flex justify-center">
+            <div class="px-6 py-4 border-t border-slate-200 flex justify-center bg-slate-50">
                 {{ $absensiList->links() }}
             </div>
         @else
-            <div class="text-center py-12">
-                <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="text-center py-10">
+                <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p class="text-gray-500 font-medium">Belum ada data presensi untuk kelas ini.</p>
+                <p class="text-slate-500 font-medium text-lg">Belum ada data presensi untuk kelas ini.</p>
+                <p class="text-slate-400 text-sm mt-1">Riwayat presensi akan muncul setelah dosen membuat sesi</p>
             </div>
         @endif
     </div>
 
     <!-- Legend -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="flex items-center gap-2 p-3 rounded-lg bg-green-50 border border-green-200">
-            <span class="w-3 h-3 rounded-full bg-green-500"></span>
-            <span class="text-sm font-medium text-green-700">Hadir</span>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-100 shadow-sm hover:shadow-md transition">
+            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm"></span>
+            <span class="text-sm font-semibold text-emerald-700">Hadir</span>
         </div>
-        <div class="flex items-center gap-2 p-3 rounded-lg bg-blue-50 border border-blue-200">
-            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-            <span class="text-sm font-medium text-blue-700">Izin</span>
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100 shadow-sm hover:shadow-md transition">
+            <span class="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-sm"></span>
+            <span class="text-sm font-semibold text-blue-700">Izin</span>
         </div>
-        <div class="flex items-center gap-2 p-3 rounded-lg bg-yellow-50 border border-yellow-200">
-            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
-            <span class="text-sm font-medium text-yellow-700">Sakit</span>
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-amber-50 border border-amber-100 shadow-sm hover:shadow-md transition">
+            <span class="w-3.5 h-3.5 rounded-full bg-amber-500 shadow-sm"></span>
+            <span class="text-sm font-semibold text-amber-700">Sakit</span>
         </div>
-        <div class="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200">
-            <span class="w-3 h-3 rounded-full bg-red-500"></span>
-            <span class="text-sm font-medium text-red-700">Alpha</span>
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-100 shadow-sm hover:shadow-md transition">
+            <span class="w-3.5 h-3.5 rounded-full bg-red-500 shadow-sm"></span>
+            <span class="text-sm font-semibold text-red-700">Alpha</span>
         </div>
     </div>
 </div>

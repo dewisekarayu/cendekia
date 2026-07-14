@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\PengumpulanTugas;
 use App\Models\Tugas;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -80,6 +81,12 @@ class PengumpulantugasController extends Controller
                 'file_path' => $path,
                 'nama_asli' => $file->getClientOriginalName(),
             ]);
+        }
+
+        // Send email notification to dosen about new submission
+        $dosen = $tugas->kelasPerkuliahan->dosen;
+        if ($dosen) {
+            NotificationService::notifyPengumpulanTugas($pengumpulan, $dosen);
         }
 
         return redirect()

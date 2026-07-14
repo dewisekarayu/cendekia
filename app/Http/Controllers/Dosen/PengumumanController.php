@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengumuman;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class PengumumanController extends Controller
@@ -49,6 +50,12 @@ class PengumumanController extends Controller
             'isi'                  => $validated['isi'],
             'untuk_semua'          => $request->boolean('untuk_semua'),
         ]);
+
+        // Send email notification to all enrolled students
+        $pengumuman = Pengumuman::latest()->first();
+        if ($pengumuman) {
+            NotificationService::notifyPengumumanBaru($pengumuman, auth()->user());
+        }
 
         // Dialihkan kembali ke halaman indeks utama pengumuman dosen
         return redirect()->route('dosen.kelas-pengumuman.index')

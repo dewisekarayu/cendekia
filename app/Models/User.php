@@ -96,6 +96,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Relasi: notification preferences untuk user ini
+     */
+    public function notificationPreferences()
+    {
+        return $this->hasOne(NotificationPreference::class);
+    }
+
+    /**
+     * Relasi: presensi mahasiswa
+     */
+    public function absensiMahasiswa()
+    {
+        return $this->hasMany(AbsensiMahasiswa::class, 'mahasiswa_id');
+    }
+
+    /**
      * Helper methods for role checking with null safety
      */
     

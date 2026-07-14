@@ -3,423 +3,282 @@
 @section('title', 'Detail Sesi Presensi - Pertemuan ' . $absensi->pertemuan_ke)
 
 @section('content')
-<div class="space-y-6">
-    <!-- Header -->
-    <div class=" sm:flex-row sm:items-center sm:justify-between gap-4">
+<div class="space-y-6 max-w-7xl mx-auto p-4 sm:p-6 bg-slate-50/50 rounded-2xl border border-slate-100 shadow-sm">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/60">
         <div class="min-w-0">
-            <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Detail Sesi Presensi
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                <a href="{{ route('dosen.kelas-saya') }}" class="hover:text-blue-600 transition duration-200">Kelas Saya</a>
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                <a href="{{ route('dosen.absensi.index', $kelas->id) }}" class="hover:text-blue-600 transition duration-200">Presensi</a>
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                <span class="text-slate-800 font-bold">Pertemuan {{ $absensi->pertemuan_ke }}</span>
+            </div>
+            
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 flex items-center gap-3 mt-2">
+                <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 shadow-sm flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+                <span>Detail Ringkasan Sesi Presensi</span>
             </h1>
-            <p class="mt-1 text-gray-500">
-                {{ $kelas->mataKuliah->nama_mk }} <span class="font-semibold">({{ $kelas->kode_kelas }})</span> • Pertemuan {{ $absensi->pertemuan_ke }}
-            </p>
         </div>
-        <div class="flex gap-2">
-            <a href="{{ route('dosen.absensi.index', $kelas->id) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center">
+            <a href="{{ route('dosen.absensi.index', $kelas->id) }}" 
+               class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold text-sm shadow-sm hover:shadow transition-all duration-300">
+                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
-                Kembali
+                <span>Kembali</span>
             </a>
-            <div class="relative group">
-                <button type="button" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
-                    Aksi
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition">
-                    <a href="{{ route('dosen.absensi.edit', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" class="block px-4 py-2 text-sm text-purple-600 hover:bg-purple-50 transition">Edit Presensi</a>
-                    @if($absensi->isDraft())
-                        <form action="{{ route('dosen.absensi.buka', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-green-50 transition">Buka Sesi Presensi</button>
-                        </form>
-                    @elseif($absensi->isBuka())
-                        <form action="{{ route('dosen.absensi.tutup', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-yellow-600 hover:bg-yellow-50 transition">Tutup Sesi Presensi</button>
-                        </form>
-                    @endif
-                    <a href="{{ route('dosen.absensi.attendance', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" class="block px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition">Edit Kehadiran Manual</a>
-                    <form action="{{ route('dosen.absensi.destroy', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus sesi ini?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">Hapus Sesi</button>
-                    </form>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200/80 p-6 shadow-sm">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="space-y-1">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nomor Pertemuan</p>
+                <p class="text-xl font-black text-slate-700">Pertemuan {{ $absensi->pertemuan_ke }}</p>
+            </div>
+            <div class="space-y-1">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tanggal Kegiatan</p>
+                <p class="text-xl font-black text-slate-700">{{ $absensi->tanggal->format('d M Y') }}</p>
+            </div>
+            <div class="space-y-1">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alokasi Waktu Sesi</p>
+                <p class="text-base font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg inline-block font-mono">
+                    {{ substr($absensi->jam_mulai, 0, 5) }} - {{ substr($absensi->jam_selesai, 0, 5) }}
+                </p>
+            </div>
+            <div class="space-y-1">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status Akses Sesi</p>
+                <div>
+                    <span @class([
+                        'inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold border shadow-sm mt-0.5',
+                        'bg-amber-50 text-amber-700 border-amber-200' => $absensi->isDraft(),
+                        'bg-emerald-50 text-emerald-700 border-emerald-200' => $absensi->isBuka(),
+                        'bg-rose-50 text-rose-700 border-rose-200' => $absensi->isTutup(),
+                    ])>
+                        @if($absensi->isDraft())
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                        @elseif($absensi->isBuka())
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        @else
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                        @endif
+                        {{ $absensi->getStatusLabel() }}
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Alerts -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-slate-200/70 shadow-sm p-4 flex items-center justify-between hover:border-emerald-300 hover:scale-[1.02] transition-all duration-300">
+            <div class="space-y-0.5">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hadir (Present)</p>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-2xl font-black text-slate-700">{{ $stats['hadir'] }}</p>
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
+                        {{ $stats['total'] > 0 ? round(($stats['hadir']/$stats['total'])*100) : 0 }}%
+                    </span>
+                </div>
+            </div>
+            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100 flex-shrink-0"></span>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200/70 shadow-sm p-4 flex items-center justify-between hover:border-sky-300 hover:scale-[1.02] transition-all duration-300">
+            <div class="space-y-0.5">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Izin (Permitted)</p>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-2xl font-black text-slate-700">{{ $stats['izin'] }}</p>
+                    <span class="text-xs font-bold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100">
+                        {{ $stats['total'] > 0 ? round(($stats['izin']/$stats['total'])*100) : 0 }}%
+                    </span>
+                </div>
+            </div>
+            <span class="w-3.5 h-3.5 rounded-full bg-sky-500 ring-4 ring-sky-100 flex-shrink-0"></span>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200/70 shadow-sm p-4 flex items-center justify-between hover:border-amber-300 hover:scale-[1.02] transition-all duration-300">
+            <div class="space-y-0.5">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sakit (Sick Leave)</p>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-2xl font-black text-slate-700">{{ $stats['sakit'] }}</p>
+                    <span class="text-xs font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                        {{ $stats['total'] > 0 ? round(($stats['sakit']/$stats['total'])*100) : 0 }}%
+                    </span>
+                </div>
+            </div>
+            <span class="w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-amber-100 flex-shrink-0"></span>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200/70 shadow-sm p-4 flex items-center justify-between hover:border-rose-300 hover:scale-[1.02] transition-all duration-300">
+            <div class="space-y-0.5">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alpha (Absent)</p>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-2xl font-black text-slate-700">{{ $stats['alpha'] }}</p>
+                    <span class="text-xs font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100">
+                        {{ $stats['total'] > 0 ? round(($stats['alpha']/$stats['total'])*100) : 0 }}%
+                    </span>
+                </div>
+            </div>
+            <span class="w-3.5 h-3.5 rounded-full bg-rose-500 ring-4 ring-rose-100 flex-shrink-0"></span>
+        </div>
+    </div>
+
     @if(session('success'))
-        <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
-            <svg class="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-            <p class="font-semibold text-green-900">{{ session('success') }}</p>
+        <div class="animate-in slide-in-from-top-2 duration-300 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
+            <div class="p-1 bg-emerald-100 text-emerald-700 rounded-md flex-shrink-0">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+            </div>
+            <p class="text-sm font-bold text-emerald-900">{{ session('success') }}</p>
         </div>
     @endif
-
     @if(session('warning'))
-        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-start gap-3">
-            <svg class="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.487 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-            </svg>
-            <p class="font-semibold text-yellow-900">{{ session('warning') }}</p>
+        <div class="animate-in slide-in-from-top-2 duration-300 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
+            <div class="p-1 bg-amber-100 text-amber-700 rounded-md flex-shrink-0">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.487 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+            </div>
+            <p class="text-sm font-bold text-amber-900">{{ session('warning') }}</p>
         </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- Session Info -->
-        <div class="lg:col-span-3 space-y-6">
-            <!-- Session Info Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-50 to-blue-50 px-6 py-4 border-b border-gray-100">
-                    <h2 class="text-lg font-semibold text-gray-900">Informasi Sesi Presensi</h2>
-                </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-4 gap-4">
-                        <div class="text-center">
-                            <p class="text-gray-600 text-sm font-medium mb-2">Status Sesi</p>
-                            @php
-                                $statusClass = match($absensi->session_status) {
-                                    'draft' => 'bg-yellow-100 text-yellow-800',
-                                    'buka' => 'bg-green-100 text-green-800',
-                                    'tutup' => 'bg-red-100 text-red-800',
-                                    default => 'bg-gray-100 text-gray-800',
-                                };
-                                $statusLabel = match($absensi->session_status) {
-                                    'draft' => 'Draft',
-                                    'buka' => 'Dibuka',
-                                    'tutup' => 'Ditutup',
-                                    default => 'Unknown',
-                                };
-                            @endphp
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {{ $statusClass }}">{{ $statusLabel }}</span>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-gray-600 text-sm font-medium mb-2">Pertemuan</p>
-                            <p class="text-2xl font-bold text-gray-900">{{ $absensi->pertemuan_ke }}</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-gray-600 text-sm font-medium mb-2">Tanggal</p>
-                            <p class="text-lg font-semibold text-gray-900">{{ $absensi->tanggal->format('d M Y') }}</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-gray-600 text-sm font-medium mb-2">Waktu</p>
-                            <p class="text-lg font-semibold text-gray-900">{{ $absensi->jam_mulai }} - {{ $absensi->jam_selesai }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Session Details -->
-                    @if($absensi->rangkuman || $absensi->berita_acara || $absensi->catatan)
-                        <div class="mt-6 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            @if($absensi->rangkuman)
-                                <div>
-                                    <h3 class="text-sm font-semibold text-gray-900 mb-2">Ringkasan Materi</h3>
-                                    <p class="text-sm text-gray-600">{{ $absensi->rangkuman }}</p>
-                                </div>
-                            @endif
-                            @if($absensi->berita_acara)
-                                <div>
-                                    <h3 class="text-sm font-semibold text-gray-900 mb-2">Berita Acara</h3>
-                                    <p class="text-sm text-gray-600">{{ $absensi->berita_acara }}</p>
-                                </div>
-                            @endif
-                            @if($absensi->catatan)
-                                <div>
-                                    <h3 class="text-sm font-semibold text-gray-900 mb-2">Catatan</h3>
-                                    <p class="text-sm text-gray-600">{{ $absensi->catatan }}</p>
-                                </div>
-                            @endif
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Statistics Cards -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Total Mahasiswa</p>
-                            <p class="text-3xl font-bold text-blue-600 mt-1">{{ $stats['total'] }}</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg bg-blue-200 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 8.646 4 4 0 010-8.646zM12 14H8m4 0h4m-4 0c-3.728 0-7-1.493-7-4.5" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-green-200 p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Hadir</p>
-                            <p class="text-3xl font-bold text-green-600 mt-1">{{ $stats['hadir'] }}</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg bg-green-200 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl border border-yellow-200 p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Izin/Sakit</p>
-                            <p class="text-3xl font-bold text-yellow-600 mt-1">{{ $stats['izin'] + $stats['sakit'] }}</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg bg-yellow-200 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 4v-4z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 p-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-medium">Alpha</p>
-                            <p class="text-3xl font-bold text-red-600 mt-1">{{ $stats['alpha'] }}</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg bg-red-200 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attendance Progress -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-50 to-blue-50 px-6 py-4 border-b border-gray-100">
-                    <h2 class="text-lg font-semibold text-gray-900">Statistik Kehadiran</h2>
-                </div>
-                <div class="p-6">
-                    <div class="space-y-4">
-                        @php
-                            $categories = [
-                                ['label' => 'Hadir', 'count' => $stats['hadir'], 'color' => 'green', 'percentage' => $stats['total'] > 0 ? round($stats['hadir'] / $stats['total'] * 100) : 0],
-                                ['label' => 'Izin/Sakit', 'count' => $stats['izin'] + $stats['sakit'], 'color' => 'yellow', 'percentage' => $stats['total'] > 0 ? round(($stats['izin'] + $stats['sakit']) / $stats['total'] * 100) : 0],
-                                ['label' => 'Alpha', 'count' => $stats['alpha'], 'color' => 'red', 'percentage' => $stats['total'] > 0 ? round($stats['alpha'] / $stats['total'] * 100) : 0],
-                            ];
-                        @endphp
-                        
-                        @foreach($categories as $category)
-                            <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                        <span class="w-3 h-3 rounded-full bg-{{ $category['color'] }}-500"></span>
-                                        {{ $category['label'] }}
-                                    </span>
-                                    <span class="text-sm font-bold text-gray-900">{{ $category['count'] }} ({{ $category['percentage'] }}%)</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                                    <div class="bg-{{ $category['color'] }}-500 h-full rounded-full transition-all duration-500" 
-                                        style="width: {{ $category['percentage'] }}%"></div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Student Attendance Table -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-500 to-blue-600 px-6 py-4 text-white flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 8.646 4 4 0 010-8.646zM12 14H8m4 0h4m-4 0c-3.728 0-7-1.493-7-4.5" />
-                        </svg>
-                        <h2 class="text-lg font-semibold">Daftar Kehadiran Mahasiswa</h2>
-                    </div>
-                    <span class="px-3 py-1 rounded-full bg-white bg-opacity-20 text-sm font-semibold">{{ $kelas->mahasiswa->count() }} Mahasiswa</span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-50 border-b border-gray-100">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nama Mahasiswa</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">NIM</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Waktu Absensi</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            @forelse($kelas->mahasiswa as $index => $mahasiswa)
-                                @php
-                                    $attendance = $hadirMap[$mahasiswa->id] ?? null;
-                                    $statusClass = match($attendance->status ?? 'alpha') {
-                                        'hadir' => 'bg-green-100 text-green-800',
-                                        'izin' => 'bg-blue-100 text-blue-800',
-                                        'sakit' => 'bg-yellow-100 text-yellow-800',
-                                        'alpha' => 'bg-red-100 text-red-800',
-                                        default => 'bg-gray-100 text-gray-800',
-                                    };
-                                    $statusLabel = match($attendance->status ?? 'alpha') {
-                                        'hadir' => 'Hadir',
-                                        'izin' => 'Izin',
-                                        'sakit' => 'Sakit',
-                                        'alpha' => 'Alpha',
-                                        default => '-',
-                                    };
-                                @endphp
-                                <tr class="hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 transition-colors">
-                                    <td class="px-6 py-4">
-                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-bold text-sm">
-                                            {{ $index + 1 }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                                                {{ substr($mahasiswa->name, 0, 1) }}
-                                            </div>
-                                            <span class="font-semibold text-gray-900">{{ $mahasiswa->name }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 font-medium">{{ $mahasiswa->nim ?? '-' }}</td>
-                                    <td class="px-6 py-4">
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold {{ $statusClass }}">
-                                            @if($attendance?->status === 'hadir')
-                                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                                            @elseif($attendance?->status === 'izin')
-                                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                            @elseif($attendance?->status === 'sakit')
-                                                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                                            @else
-                                                <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                                            @endif
-                                            {{ $statusLabel }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">
-                                        @if($attendance && $attendance->waktu_absensi)
-                                            <div class="flex items-center gap-2">
-                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                {{ $attendance->waktu_absensi->format('H:i:s') }}
-                                            </div>
-                                        @else
-                                            <span class="text-gray-400">—</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                                        @if($attendance && $attendance->keterangan)
-                                            <span class="inline-block truncate" title="{{ $attendance->keterangan }}">{{ $attendance->keterangan }}</span>
-                                        @else
-                                            <span class="text-gray-400">—</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="px-6 py-12 text-center">
-                                        <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 8.646 4 4 0 010-8.646zM12 14H8m4 0h4m-4 0c-3.728 0-7-1.493-7-4.5" />
-                                        </svg>
-                                        <p class="text-gray-500 font-medium">Tidak ada mahasiswa terdaftar di kelas ini.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="space-y-4">
-            <!-- Quick Actions -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="flex flex-wrap items-center justify-start gap-2.5 p-4 bg-white rounded-xl border border-slate-200/80 shadow-sm">
+        @if($absensi->isDraft())
+            <form action="{{ route('dosen.absensi.buka', [$kelas->id, $absensi->id]) }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 rounded-xl text-xs font-bold shadow-sm transition-all hover:scale-[1.02]">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    Aksi Cepat
-                </h3>
-                <div class="space-y-2">
-                    @if($absensi->isDraft())
-                        <form action="{{ route('dosen.absensi.buka', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 rounded-lg transition shadow-lg hover:shadow-xl">
-                                Buka Sesi Presensi
-                            </button>
-                        </form>
-                        <p class="text-xs text-gray-500 text-center mt-1">Mahasiswa dapat melakukan presensi setelah sesi dibuka</p>
-                    @elseif($absensi->isBuka())
-                        <form action="{{ route('dosen.absensi.tutup', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="w-full bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700 text-white font-medium py-3 rounded-lg transition shadow-lg hover:shadow-xl">
-                                Tutup Sesi Presensi
-                            </button>
-                        </form>
-                        <p class="text-xs text-gray-500 text-center mt-1">Mahasiswa tidak dapat presensi setelah sesi ditutup</p>
-                    @endif
-                    
-                    <a href="{{ route('dosen.absensi.attendance', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" 
-                        class="block w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 rounded-lg transition shadow-lg hover:shadow-xl text-center">
-                        Edit Kehadiran Manual
-                    </a>
-                </div>
-            </div>
+                    <span>Buka Akses Sesi</span>
+                </button>
+            </form>
+        @endif
 
-            <!-- Session Timeline -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <h3 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        @if($absensi->isBuka())
+            <form action="{{ route('dosen.absensi.tutup', [$kelas->id, $absensi->id]) }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-50 hover:bg-amber-600 text-amber-800 hover:text-white border border-amber-200 rounded-xl text-xs font-bold shadow-sm transition-all hover:scale-[1.02]" 
+                        onclick="return confirm('Apakah Anda yakin ingin menutup akses gerbang presensi mandiri mahasiswa pada sesi ini?')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    Timeline Sesi
-                </h3>
-                <div class="space-y-3 text-sm">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-600">Dibuat</span>
-                        <span class="font-semibold text-gray-900">{{ $absensi->created_at->format('d M H:i') }}</span>
-                    </div>
-                    @if($absensi->waktu_buka)
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-600">Dibuka</span>
-                            <span class="font-semibold text-green-600">{{ $absensi->waktu_buka->format('d M H:i') }}</span>
-                        </div>
-                    @endif
-                    @if($absensi->waktu_tutup)
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-600">Ditutup</span>
-                            <span class="font-semibold text-red-600">{{ $absensi->waktu_tutup->format('d M H:i') }}</span>
-                        </div>
-                    @endif
-                </div>
-            </div>
+                    <span>Tutup Akses Sesi</span>
+                </button>
+            </form>
+        @endif
 
-            <!-- Tips Card -->
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-4">
-                <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+        <a href="{{ route('dosen.absensi.edit', [$kelas->id, $absensi->id]) }}" 
+           class="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-250/70 rounded-xl text-xs font-bold shadow-sm transition-all hover:scale-[1.02]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>Edit Sesi</span>
+        </a>
+
+        <a href="{{ route('dosen.absensi.attendance', [$kelas->id, $absensi->id]) }}" 
+           class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white border border-blue-200 rounded-xl text-xs font-bold shadow-sm transition-all hover:scale-[1.02]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m7 4v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9" />
+            </svg>
+            <span>Koreksi Manual</span>
+        </a>
+
+        <div class="flex-1 text-right">
+            <form action="{{ route('dosen.absensi.destroy', [$kelas->id, $absensi->id]) }}" method="POST" class="inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2 bg-rose-50 hover:bg-rose-650 text-rose-600 hover:text-white border border-rose-100 rounded-xl text-xs font-bold shadow-sm transition-all hover:scale-[1.02]" 
+                        onclick="return confirm('Apakah Anda yakin ingin menghapus arsip sesi presensi beserta rekap riwayat pertemuan ini? Data tidak dapat dikembalikan.')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    <div>
-                        <h4 class="font-semibold text-blue-900 mb-2">Tips Penggunaan</h4>
-                        <ul class="text-xs text-blue-800 space-y-1">
-                            <li>✓ Pastikan sesi dibuka agar mahasiswa dapat presensi</li>
-                            <li>✓ Edit manual jika ada ketidaksempurnaan</li>
-                            <li>✓ Tutup sesi setelah waktu selesai</li>
-                            <li>✓ Periksa statistik untuk tracking kehadiran</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                    <span>Hapus Sesi</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 overflow-hidden">
+        <div class="bg-gradient-to-r from-slate-50 to-blue-50/30 px-6 py-4 border-b border-slate-100 flex items-center gap-2">
+            <span class="w-2 h-4 bg-blue-500 rounded-full"></span>
+            <h2 class="text-base font-bold text-slate-800">Daftar Rekap Absensi Mahasiswa</h2>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200/80">
+                        <th class="px-5 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider w-16">No</th>
+                        <th class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-40">NIM</th>
+                        <th class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider min-w-[220px]">Nama Lengkap</th>
+                        <th class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-36">Status</th>
+                        <th class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-32">Waktu Log</th>
+                        <th class="px-6 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider min-w-[240px]">Keterangan Catatan</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 bg-white">
+                    @forelse($kelas->mahasiswa as $index => $mahasiswa)
+                        @php
+                            $attendance = $hadirMap[$mahasiswa->id] ?? null;
+                            $statusColor = match($attendance?->status ?? 'alpha') {
+                                'hadir' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                                'izin' => 'bg-sky-50 text-sky-700 border-sky-200',
+                                'sakit' => 'bg-amber-50 text-amber-700 border-amber-200',
+                                'alpha' => 'bg-rose-50 text-rose-700 border-rose-200',
+                            };
+                            $statusLabel = match($attendance?->status ?? 'alpha') {
+                                'hadir' => 'Hadir',
+                                'izin' => 'Izin',
+                                'sakit' => 'Sakit',
+                                'alpha' => 'Alpha',
+                            };
+                        @endphp
+                        <tr class="hover:bg-slate-50/80 transition duration-150 group">
+                            <td class="px-5 py-4 text-center text-sm font-bold text-slate-400 group-hover:text-slate-700 transition">
+                                {{ $index + 1 }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-500 tracking-medium">
+                                {{ $mahasiswa->nim ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-xs font-bold text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                                        {{ strtoupper(substr($mahasiswa->name, 0, 2)) }}
+                                    </div>
+                                    <div class="font-bold text-slate-700 group-hover:text-blue-600 transition">
+                                        {{ $mahasiswa->name }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border shadow-sm {{ $statusColor }}">
+                                    {{ $statusLabel }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-600 font-mono">
+                                {{ $attendance?->waktu_absensi?->format('H:i') ?? '—' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500 italic">
+                                {{ $attendance?->keterangan ?? '—' }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center text-slate-400 font-medium">
+                                <div class="w-12 h-12 bg-slate-50 text-slate-400 rounded-xl border border-slate-200/60 flex items-center justify-center mx-auto mb-3">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                </div>
+                                <span>Tidak ada data mahasiswa terdaftar di dalam kelas ini.</span>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

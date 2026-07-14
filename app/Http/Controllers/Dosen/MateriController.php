@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Materi;
 use App\Models\KelasPerkuliahan;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -53,6 +54,12 @@ class MateriController extends Controller
             'file_path'            => $filePath,
             'tipe_file'            => $tipeFile,
         ]);
+
+        // Send email notification to all enrolled students
+        $materi = Materi::latest()->first();
+        if ($materi) {
+            NotificationService::notifyMateriBaru($materi, auth()->user());
+        }
 
         return redirect()
             ->route('dosen.kelas-materi', $kelas->id)

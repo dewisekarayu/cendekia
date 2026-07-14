@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\AbsensiMahasiswa;
 use App\Models\KelasPerkuliahan;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -128,6 +129,9 @@ class AbsensiController extends Controller
         }
 
         $absensi->bukaSession();
+
+        // Send email notification to all enrolled students
+        NotificationService::notifyAbsensiDibuka($absensi, Auth::user());
 
         return redirect()->back()->with('success', 'Sesi presensi telah dibuka. Mahasiswa dapat mulai melakukan presensi.');
     }

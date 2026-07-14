@@ -158,4 +158,70 @@ class Absensi extends Model
     {
         return $query->whereDate('tanggal', today());
     }
+
+    /**
+     * Get attendance statistics for this session
+     */
+    public function getAttendanceStats(): array
+    {
+        $mahasiswaCount = $this->kelasPerkuliahan->mahasiswa->count();
+        $hadirCount = $this->absensiMahasiswa->where('status', 'hadir')->count();
+        $izinCount = $this->absensiMahasiswa->where('status', 'izin')->count();
+        $sakitCount = $this->absensiMahasiswa->where('status', 'sakit')->count();
+        $alphaCount = $mahasiswaCount - $this->absensiMahasiswa->count();
+
+        return [
+            'total_mahasiswa' => $mahasiswaCount,
+            'hadir' => $hadirCount,
+            'izin' => $izinCount,
+            'sakit' => $sakitCount,
+            'alpha' => $alphaCount,
+            'hadir_pct' => $mahasiswaCount > 0 ? round(($hadirCount / $mahasiswaCount) * 100) : 0,
+            'absensi_pct' => $mahasiswaCount > 0 ? round((($izinCount + $sakitCount) / $mahasiswaCount) * 100) : 0,
+            'alpha_pct' => $mahasiswaCount > 0 ? round(($alphaCount / $mahasiswaCount) * 100) : 0,
+        ];
+    }
+
+    /**
+     * Check if attendance is locked (session tutup or older than 1 day)
+     */
+    public function isLocked(): bool
+    {
+        return $this->isTutup() || $this->tanggal->diffInDays(today()) > 0;
+    }
+
+    /**
+     * Get formatted duration time
+     */
+    public function getFormattedDuration(): string
+    {
+        if (!$this->jam_mulai || !$this->jam_selesai) {
+            return '—';
+        }
+
+        $durasi = $this->getDurasi();
+        $jam = floor($durasi / 60);
+        $menit = $durasi % 60;
+
+        if ($jam > 0) {
+            return "{$jam}j {$menit}m";
+        }
+        return "{$menit}m";
+    }
+
+    /**
+     * Check if attendance can be opened
+     */
+    public function canBeOpened(): bool
+    {
+        return $this->isDraft() && !$this->isLocked();
+    }
+
+    /**
+     * Check if attendance can be closed
+     */
+    public function canBeClosed(): bool
+    {
+        return $this->isBuka();
+    }
 }

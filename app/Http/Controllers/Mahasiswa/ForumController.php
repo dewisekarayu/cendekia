@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ForumDiskusi;
 use App\Models\KomentarDiskusi;
 use App\Models\KelasPerkuliahan;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -106,6 +107,15 @@ class ForumController extends Controller
 
             // Step 6: Update forum's updated_at timestamp
             $forum->touch();
+
+            // Step 7: Send notification to dosen and other participants
+            $kelas = $forum->kelasPerkuliahan;
+            $dosen = $kelas->dosen;
+            
+            // Notify dosen about new message in forum
+            if ($dosen && $dosen->id !== $user->id) {
+                NotificationService::notifyPesanBaru($forum, $dosen, $user);
+            }
 
             return redirect()
                 ->route('mahasiswa.kelas-forum', ['id' => $id, 'forum' => $forum->id])
