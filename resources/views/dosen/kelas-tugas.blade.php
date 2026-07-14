@@ -25,9 +25,10 @@
     @php
         $tabLinks = [
             'Beranda'      => ['url' => route('dosen.kelas-detail', $kelas->id), 'active' => request()->routeIs('dosen.kelas-detail')],
+            'Absensi'      => ['url' => route('dosen.absensi.index', $kelas->id),  'active' => request()->routeIs('dosen.absensi.*')],
             'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
             'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
-            'Absensi'      => ['url' => route('dosen.absensi.index', $kelas->id),  'active' => request()->routeIs('dosen.absensi.*')],
+            'Forum'        => ['url' => route('dosen.kelas-forum', $kelas->id),  'active' => request()->routeIs('dosen.kelas-forum')],
             'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
         ];
     @endphp
@@ -241,21 +242,56 @@
     </div>
 
     <script>
+        // Fungsi untuk membuka/tutup modal materi
+        function toggleMateriModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle("hidden");
+                document.body.classList.toggle("overflow-hidden");
+            }
+        }
+        
+        // Fungsi umum untuk membuka/tutup modal apa saja
         function toggleModal(modalID) {
-            document.getElementById(modalID).classList.toggle("hidden");
-            document.body.classList.toggle("overflow-hidden");
+            const modal = document.getElementById(modalID);
+            if (modal) {
+                modal.classList.toggle("hidden");
+                document.body.classList.toggle("overflow-hidden");
+            }
         }
 
+        // Perbaikan: Menutup modal ketika user mengklik area background luar (overlay)
+        window.onclick = function(event) {
+            // Jika Anda punya lebih dari satu modal, masukkan ID-nya ke dalam array ini
+            const modalIds = ['modalTugas', 'modalMateri']; 
+            
+            modalIds.forEach(id => {
+                const modal = document.getElementById(id);
+                // Jika yang diklik adalah kontainer utama (overlay-nya) dan modal sedang tidak tersembunyi
+                if (modal && event.target === modal && !modal.classList.contains('hidden')) {
+                    toggleModal(id);
+                }
+            });
+        }
+
+        // Fungsi menampilkan daftar nama file yang diunggah
         function updateTugasFileName(input) {
             const display = document.getElementById('tugasFileNameDisplay');
+            if (!display) return;
+
             display.innerHTML = '';
 
             if (input.files.length > 0) {
+                // Menggunakan fragment agar manipulasi DOM lebih cepat dan efisien
+                const fragment = document.createDocumentFragment(); 
+                
                 Array.from(input.files).forEach(file => {
                     const li = document.createElement('li');
                     li.textContent = file.name;
-                    display.appendChild(li);
+                    fragment.appendChild(li);
                 });
+                
+                display.appendChild(fragment);
                 display.classList.remove('hidden');
             } else {
                 display.classList.add('hidden');
