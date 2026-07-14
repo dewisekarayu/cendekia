@@ -72,7 +72,7 @@
 </div>
 
 {{-- ===== MAIN CONTENT ===== --}}
-<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua' }">
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua', showAbsenForm: false, selectedStatus: null }">
 
     {{-- Content Area --}}
     <div class="lg:col-span-2 space-y-4">
