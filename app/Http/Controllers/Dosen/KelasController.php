@@ -110,6 +110,7 @@ class KelasController extends Controller
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil dipublikasikan.');
     }
+    
     public function bukaMateri(Request $request, $kelasId, $materiId)
     {
         $kelas = KelasPerkuliahan::with('mataKuliah.programStudi')

@@ -4,68 +4,81 @@
 
 @section('content')
 <div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4">
-    <!-- Header with Breadcrumb -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div class="min-w-0">
-            <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-2">
-                <a href="{{ route('mahasiswa.absensi.index') }}" class="hover:text-blue-600 dark:hover:text-purple-400 transition">Daftar Kelas</a>
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
-                <span class="text-slate-800 dark:text-slate-200 font-semibold truncate">Presensi</span>
-            </div>
-            <h1 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
-                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-sky-500 dark:from-purple-900 dark:to-indigo-850 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
+    
+    {{-- ===== HEADER BANNER ===== --}}
+    <div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] dark:from-indigo-950 dark:to-purple-900 p-6 sm:p-7 shadow-lg shadow-blue-950/15 relative transition-all">
+        <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
+        <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
+        <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0">
+                <div class="mb-2 flex flex-wrap items-center gap-2">
+                    <span class="rounded-lg bg-white/15 border border-white/20 px-2.5 py-1 text-xs font-bold text-white">
+                        {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
+                    </span>
+                    <span class="text-xs text-blue-200/80">Kelas {{ $kelas->kode_kelas }}</span>
                 </div>
-                <span class="truncate">Presensi Kelas</span>
-            </h1>
-            <p class="mt-2 text-slate-500 dark:text-slate-400 flex items-center gap-2 flex-wrap">
-                <span class="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-purple-950/50 text-blue-700 dark:text-purple-400 text-sm font-semibold">{{ $kelas->kode_kelas }}</span>
-                <span>{{ $kelas->mataKuliah->nama_mk }}</span>
-            </p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-2">
-            <a href="{{ route('mahasiswa.absensi.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-semibold transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-                <span>Kembali</span>
-            </a>
-            <a href="{{ route('mahasiswa.absensi.show', $kelas->id) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#321270] hover:bg-[#230c50] dark:bg-purple-650 dark:hover:bg-purple-700 text-white rounded-xl font-semibold transition shadow-sm hover:shadow-md">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Riwayat Lengkap</span>
+                <h1 class="text-xl font-extrabold leading-tight text-white sm:text-2xl">
+                    {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
+                </h1>
+                <p class="mt-1.5 text-sm text-blue-100/80">
+                    Bersama {{ $kelas->dosen?->name ?? 'Dosen pengampu' }}
+                </p>
+            </div>
+            <a href="{{ route('mahasiswa.kelas-saya') }}"
+               class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                Kembali
             </a>
         </div>
     </div>
 
-    <!-- Alerts -->
-    @if(session('success'))
-        <div class="animate-in slide-in-from-top-2 duration-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/30 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-            <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+    {{-- ===== INFO CARDS ===== --}}
+    <div class="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        @php
+            $infoCards = [
+                ['icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'label' => 'Dosen', 'value' => $kelas->dosen?->name ?? '-', 'color' => 'text-blue-600 bg-blue-50 dark:text-purple-400 dark:bg-purple-950/40'],
+                ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => $kelas->hari, 'value' => substr($kelas->jam_mulai,0,5).' – '.substr($kelas->jam_selesai,0,5), 'color' => 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/40'],
+                ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Ruangan', 'value' => $kelas->ruangan ?? '-', 'color' => 'text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/40'],
+                ['icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'label' => 'SKS', 'value' => ($kelas->mataKuliah?->sks ?? 0).' SKS', 'color' => 'text-violet-600 bg-violet-50 dark:text-violet-400 dark:bg-purple-950/35'],
+            ];
+        @endphp
+        @foreach ($infoCards as $card)
+            <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-3.5 shadow-sm transition-colors duration-200">
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $card['color'] }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $card['icon'] }}"/></svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="truncate text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">{{ $card['value'] }}</p>
+                    <p class="text-[10px] text-gray-400 dark:text-gray-550">{{ $card['label'] }}</p>
+                </div>
             </div>
-            <div class="flex-1 min-w-0">
-                <p class="font-bold text-emerald-900 dark:text-emerald-300">Berhasil!</p>
-                <p class="text-sm text-emerald-700 dark:text-emerald-450 mt-0.5">{{ session('success') }}</p>
-            </div>
-        </div>
-    @endif
-    @if(session('warning'))
-        <div class="animate-in slide-in-from-top-2 duration-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/30 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-            <div class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-amber-600 dark:text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.487 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="font-bold text-amber-900 dark:text-amber-300">Perhatian!</p>
-                <p class="text-sm text-amber-700 dark:text-amber-450 mt-0.5">{{ session('warning') }}</p>
-            </div>
-        </div>
-    @endif
+        @endforeach
+    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {{-- ===== TAB BUTTONS ===== --}}
+    <div class="flex gap-2 overflow-x-auto pb-1">
+        @php
+            $tabLinks = [
+                'semua'   => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=semua',
+                'materi'  => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=materi',
+                'tugas'   => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=tugas',
+                'absensi' => route('mahasiswa.absensi.kelas', $kelas->id),
+                'forum'   => route('mahasiswa.kelas-forum', $kelas->id),
+            ];
+        @endphp
+        @foreach (['semua' => 'Semua', 'materi' => 'Materi', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'forum' => 'Forum'] as $key => $label)
+            <a href="{{ $tabLinks[$key] }}"
+               class="whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold transition-all duration-200
+                   {{ $key === 'absensi'
+                       ? 'bg-[#002B6B] dark:bg-purple-650 text-white shadow-sm shadow-blue-900/20 shadow-purple-900/20'
+                       : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-[#002B6B] dark:hover:border-purple-500 hover:text-[#002B6B] dark:hover:text-purple-400' }}">
+                {{ $label }}
+            </a>
+        @endforeach
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <!-- Main Content -->
         <div class="lg:col-span-2 space-y-6">
             @if($absensiAktif)
@@ -84,8 +97,8 @@
                                     <p class="text-sky-100 dark:text-purple-200 text-sm mt-0.5">Silakan lakukan absensi kehadiran hari ini</p>
                                 </div>
                             </div>
-                            <span class="inline-flex items-center px-4 py-2 rounded-full bg-emerald-400/90 dark:bg-emerald-900/80 text-emerald-950 dark:text-emerald-350 font-bold text-sm shadow-sm">
-                                <span class="w-2 h-2 rounded-full bg-emerald-800 dark:bg-emerald-400 mr-2 animate-pulse"></span>
+                            <span class="inline-flex items-center px-4 py-2 rounded-full bg-emerald-400/90 dark:bg-emerald-900/80 text-emerald-950 dark:text-emerald-300 font-bold text-sm shadow-sm">
+                                <span class="w-2 h-2 rounded-full bg-emerald-800 dark:bg-emerald-450 mr-2 animate-pulse"></span>
                                 Terbuka
                             </span>
                         </div>
@@ -94,11 +107,11 @@
                     <!-- Session Info -->
                     <div class="px-5 sm:px-6 py-4">
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                            <div class="bg-blue-50 dark:bg-slate-900/50 rounded-xl p-4 border border-blue-100 dark:border-slate-700">
+                            <div class="bg-blue-50 dark:bg-slate-900/50 rounded-xl p-4 border border-blue-100/50 dark:border-slate-700">
                                 <p class="text-blue-600 dark:text-purple-400 text-xs font-bold uppercase tracking-wide mb-2">Pertemuan</p>
-                                <p class="text-lg font-black text-blue-700 dark:text-purple-300">Pertemuan {{ $absensiAktif->pertemuan_ke }}</p>
+                                <p class="text-lg font-black text-blue-700 dark:text-purple-300">{{ $absensiAktif->pertemuan_ke }}</p>
                             </div>
-                            <div class="bg-sky-50 dark:bg-slate-900/50 rounded-xl p-4 border border-sky-100 dark:border-slate-700">
+                            <div class="bg-sky-50 dark:bg-slate-900/50 rounded-xl p-4 border border-sky-100/50 dark:border-slate-700">
                                 <p class="text-sky-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wide mb-2">Tanggal</p>
                                 <p class="text-lg font-black text-sky-700 dark:text-indigo-300">{{ $absensiAktif->tanggal->format('d M') }}</p>
                             </div>
@@ -116,7 +129,7 @@
                         @if($sudahAbsen)
                             <div class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-5 border border-slate-200 dark:border-slate-700 text-center">
                                 <div class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center mx-auto mb-4">
-                                    <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-450" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                     </svg>
                                 </div>
@@ -199,7 +212,7 @@
                                         <label for="keterangan" class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Alasan / Keterangan</label>
                                         <textarea id="keterangan" name="keterangan" rows="3" required
                                                   placeholder="Tulis alasan berhalangan Anda..."
-                                                  class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-xl focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 focus:ring-1 focus:ring-purple-500 dark:focus:ring-purple-400 text-sm resize-none"></textarea>
+                                                  class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-850 text-slate-800 dark:text-slate-200 rounded-xl focus:outline-none focus:border-purple-500 dark:focus:border-purple-400 focus:ring-1 focus:ring-purple-500 dark:focus:ring-purple-400 text-sm resize-none"></textarea>
                                     </div>
 
                                     <button type="submit" 
@@ -222,36 +235,6 @@
                     <p class="text-sm text-slate-500 dark:text-slate-400">Sesi presensi mandiri belum dibuka oleh dosen untuk hari ini.</p>
                 </div>
             @endif
-
-            <!-- Class Info Card -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden transition-colors">
-                <div class="bg-slate-50 dark:bg-slate-900/30 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center gap-3">
-                    <svg class="w-6 h-6 text-blue-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <h3 class="text-base font-bold text-slate-800 dark:text-white">Informasi Kelas Perkuliahan</h3>
-                </div>
-                <div class="px-6 py-5">
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                        <div class="bg-blue-50 dark:bg-slate-900/50 rounded-xl p-4 border border-blue-100/50 dark:border-slate-700">
-                            <p class="text-blue-600 dark:text-purple-400 text-xs font-bold uppercase tracking-wide mb-1">Dosen Pengampu</p>
-                            <p class="font-bold text-slate-800 dark:text-slate-200 truncate" title="{{ $kelas->dosen->name }}">{{ $kelas->dosen->name }}</p>
-                        </div>
-                        <div class="bg-sky-50 dark:bg-slate-900/50 rounded-xl p-4 border border-sky-100/50 dark:border-slate-700">
-                            <p class="text-sky-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wide mb-1">Ruangan</p>
-                            <p class="font-bold text-slate-800 dark:text-slate-200">{{ $kelas->ruangan ?? '—' }}</p>
-                        </div>
-                        <div class="bg-slate-50 dark:bg-slate-900/30 rounded-xl p-4 border border-slate-200 dark:border-slate-700/60">
-                            <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wide mb-1">Hari</p>
-                            <p class="font-bold text-slate-800 dark:text-slate-200">{{ $kelas->hari ?? '—' }}</p>
-                        </div>
-                        <div class="bg-blue-50 dark:bg-slate-900/50 rounded-xl p-4 border border-blue-100/50 dark:border-slate-700 md:col-span-2">
-                            <p class="text-blue-600 dark:text-purple-400 text-xs font-bold uppercase tracking-wide mb-1">Jam Kuliah</p>
-                            <p class="font-bold text-slate-800 dark:text-slate-200 font-mono">{{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Sidebar -->
