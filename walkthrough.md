@@ -32,7 +32,7 @@ Saya telah berhasil merancang, membuat, dan mengintegrasikan preferensi pengatur
   * **HIGHLIGHT AKTIF SIDEBAR**: Rute menu yang sedang diakses (seperti Dashboard, Profil, Pengaturan) kini memiliki indikator samping violet yang menyala (`border-left: 3px solid #a855f7`) dengan background kontainer ungu tua transparan (`#1e1b4b`) dan teks ungu muda (`#c084fc`) untuk estetika premium.
   * **OVERLAY UNIVERSAL MODE GELAP**: Menambahkan rule CSS helper global pada layout untuk secara otomatis menyesuaikan warna box `.bg-white`, pembatas border, table headers, form inputs, dropdown select, textarea, dan badge-badge berwarna khas agar otomatis menyesuaikan dengan skema warna mode gelap premium secara instan. Termasuk menetralkan warna input saat fokus (`focus:bg-white`) agar tetap gelap dengan outline violet menyala.
 * **Halaman Dashboard Dosen (`resources/views/dosen/dashboard.blade.php`)**:
-  * Menerapkan class `dark:bg-slate-800`, `dark:border-slate-700`, and `dark:text-white` pada semua ringkasan statistik (Stats Summary Cards), sehingga tidak ada lagi kotak putih yang mencolok (clashing) ketika mode gelap diaktifkan.
+  * Menerapkan class `dark:bg-slate-800`, `dark:border-slate-700`, dan `dark:text-white` pada semua ringkasan statistik (Stats Summary Cards), sehingga tidak ada lagi kotak putih yang mencolok (clashing) ketika mode gelap diaktifkan.
   * Menyelaraskan kartu daftar kelas perkuliahan ("Kelas Mengajar Saya") dengan background gelap yang serasi, mempermudah keterbacaan teks, serta menyesuaikan kontras warna badge kelas.
   * Merapikan tabel "Pengumpulan Tugas Terbaru" dengan border gelap, background header tabel (`dark:bg-slate-900/30`), teks yang jelas, serta mempercantik tombol tindakan "Buka Evaluasi" (`dark:bg-purple-950/40`, `dark:text-purple-300`).
 * **Halaman Profil Dosen (`resources/views/dosen/profil.blade.php`)**:
@@ -65,3 +65,6 @@ Saya telah berhasil merancang, membuat, dan mengintegrasikan preferensi pengatur
 ## Verifikasi & Pengujian
 1. **Pemeriksaan Rute**: Perintah `php artisan route:list` berjalan sukses dan rute settings telah terdaftar dengan benar.
 2. **Kesesuaian Kode**: Menambahkan pemanggilan `NotificationService::notifyNilaiBaru` yang terlewat pada implementasi penilaian agar mahasiswa menerima email saat diberi nilai.
+3. **Penyelesaian Git & Push**:
+   * Melakukan `git pull` dan menyelesaikan konflik penggabungan pada `kelas-tugas.blade.php`, `kelas-pengumuman.blade.php`, dan `forums.blade.php` (menyesuaikan perubahan letak tab forum ke kelas masing-masing dari maylusirahmawati).
+   * Berhasil mempublikasikan/push seluruh commit ke remote branch `origin main` di GitHub.
