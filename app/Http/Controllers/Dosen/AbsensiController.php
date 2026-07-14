@@ -161,12 +161,7 @@ class AbsensiController extends Controller
      */
     public function editAttendance($kelasId, $absensiId)
     {
-        $kelas = $this->kelasMilikDosen($kelasId, ['mahasiswa']);
-        $absensi = $this->absensiDiKelas($kelasId, $absensiId, ['absensiMahasiswa']);
-
-        $this->authorize('manage', $absensi);
-
-        return view('dosen.absensi.attendance', compact('kelas', 'absensi'));
+        return redirect()->route('dosen.absensi.show', [$kelasId, $absensiId]);
     }
 
     /**
