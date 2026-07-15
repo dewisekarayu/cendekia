@@ -23,6 +23,83 @@
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        /* Dark Mode overrides for Student/Dosen portal */
+        html.dark body {
+            background-color: #0f172a !important; /* slate-900 */
+            color: #cbd5e1 !important;
+        }
+
+        /* Ensure cards and text are white/slate-200 in dark mode */
+        html.dark .text-slate-800,
+        html.dark .text-gray-900,
+        html.dark .text-slate-900,
+        html.dark .text-gray-800,
+        html.dark .text-slate-700,
+        html.dark .text-slate-600 {
+            color: #f8fafc !important;
+        }
+
+        html.dark .text-gray-600,
+        html.dark .text-gray-500,
+        html.dark .text-slate-500 {
+            color: #94a3b8 !important;
+        }
+
+        html.dark .bg-white {
+            background-color: #1e293b !important; /* slate-800 */
+        }
+
+        html.dark .border-slate-100,
+        html.dark .border-slate-200,
+        html.dark .border-gray-200,
+        html.dark .border-gray-100 {
+            border-color: #334155 !important;
+        }
+
+        html.dark .bg-gray-50,
+        html.dark .bg-slate-50 {
+            background-color: #0f172a !important;
+        }
+
+        /* Stats numbers in dark mode */
+        html.dark .text-\[\#002B6B\],
+        html.dark .text-indigo-900,
+        html.dark .text-blue-900,
+        html.dark .text-violet-900 {
+            color: #60a5fa !important;
+        }
+
+        html.dark .text-purple-900 {
+            color: #a78bfa !important;
+        }
+
+        html.dark .bg-blue-50,
+        html.dark .bg-indigo-50 {
+            background-color: #1e1b4b !important;
+        }
+
+        /* Inputs and selects */
+        html.dark input,
+        html.dark select,
+        html.dark textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+
+        /* SweetAlert override for dark mode */
+        .swal2-popup {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+        }
+        .swal2-title {
+            color: #f8fafc !important;
+        }
+        .swal2-html-container {
+            color: #cbd5e1 !important;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
