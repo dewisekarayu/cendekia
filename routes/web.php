@@ -136,15 +136,23 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/dashboard', [DosenDashboardController::class, 'index'])->name('dosen.dashboard');
     Route::get('/dosen/kelas-saya', [DosenKelasController::class, 'kelasSaya'])->name('dosen.kelas-saya');
     Route::get('/dosen/kelas/{id}', [DosenKelasController::class, 'show'])->name('dosen.kelas-detail');
+
+    // Tugas Dosen
+    Route::put('/dosen/kelas/{id}/tugas/{tugasId}', [DosenKelasController::class, 'updateTugas'])->name('dosen.kelas-tugas.update');
     Route::get('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'tugas'])->name('dosen.kelas-tugas');
     Route::post('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'storeTugas'])->name('dosen.kelas-tugas.store');
-    Route::get('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'materi'])->name('dosen.kelas-materi');
-    Route::post('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'storeMateri'])->name('dosen.kelas-materi.store');
-
+    Route::delete('/dosen/kelas/{id}/tugas/{tugasId}', [DosenKelasController::class, 'hapusTugas'])->name('dosen.kelas-tugas.destroy');
+    
     // Gradebook Dosen
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
     
     // Materi Dosen
+    Route::delete('/kelas/{id}/materi/{materiId}', [DosenKelasController::class, 'hapusMateri'])->name('dosen.kelas-materi.hapus');
+    Route::put('/dosen/kelas/{id}/materi/{materiId}', [DosenKelasController::class, 'updateMateri'])->name('dosen.kelas-materi.update');
+
+    Route::get('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'materi'])->name('dosen.kelas-materi');
+    Route::post('/dosen/kelas/{id}/materi', [DosenKelasController::class, 'storeMateri'])->name('dosen.kelas-materi.store');
+    
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/buka', [DosenKelasController::class, 'bukaMateri'])->name('dosen.materi.buka');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/preview/{file}', [DosenKelasController::class, 'previewMateri'])->name('dosen.materi.preview');
     Route::get('/dosen/kelas/{kelas}/materi/{materi}/unduh/{file}', [DosenKelasController::class, 'unduhMateri'])->name('dosen.materi.unduh');
