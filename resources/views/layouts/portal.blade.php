@@ -43,7 +43,7 @@
         html.dark .text-gray-600,
         html.dark .text-gray-500,
         html.dark .text-slate-500 {
-            color: #94a3b8 !important;
+            color: #cbd5e1 !important;
         }
 
         html.dark .bg-white {
@@ -53,6 +53,7 @@
         html.dark .border-slate-100,
         html.dark .border-slate-200,
         html.dark .border-gray-200,
+        html.dark .border-gray-150,
         html.dark .border-gray-100 {
             border-color: #334155 !important;
         }
@@ -62,7 +63,7 @@
             background-color: #0f172a !important;
         }
 
-        /* Stats numbers in dark mode */
+        /* Stats numbers and dynamic background boxes in dark mode */
         html.dark .text-\[\#002B6B\],
         html.dark .text-indigo-900,
         html.dark .text-blue-900,
@@ -74,9 +75,57 @@
             color: #a78bfa !important;
         }
 
+        /* Standard Tailwind color backgrounds overrides */
         html.dark .bg-blue-50,
-        html.dark .bg-indigo-50 {
-            background-color: #1e1b4b !important;
+        html.dark .bg-indigo-50,
+        html.dark .bg-sky-50,
+        html.dark .bg-sky-50\/40,
+        html.dark .bg-blue-50\/30,
+        html.dark .bg-slate-50,
+        html.dark .bg-emerald-50,
+        html.dark .bg-amber-50,
+        html.dark .bg-rose-50,
+        html.dark .bg-violet-50 {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .bg-blue-100,
+        html.dark .bg-indigo-100,
+        html.dark .bg-sky-100,
+        html.dark .bg-slate-100,
+        html.dark .bg-emerald-100,
+        html.dark .bg-amber-100,
+        html.dark .bg-rose-100,
+        html.dark .bg-violet-100 {
+            background-color: #334155 !important;
+        }
+
+        /* Accent Text Colors in Dark Mode */
+        html.dark .text-blue-700,
+        html.dark .text-blue-600,
+        html.dark .text-indigo-700,
+        html.dark .text-indigo-600 {
+            color: #93c5fd !important;
+        }
+        html.dark .text-emerald-700,
+        html.dark .text-emerald-600 {
+            color: #6ee7b7 !important;
+        }
+        html.dark .text-amber-700,
+        html.dark .text-amber-600 {
+            color: #fde047 !important;
+        }
+        html.dark .text-rose-700,
+        html.dark .text-rose-600 {
+            color: #fca5a5 !important;
+        }
+        html.dark .text-violet-700,
+        html.dark .text-violet-600 {
+            color: #c7d2fe !important;
+        }
+        html.dark .text-sky-700,
+        html.dark .text-sky-600 {
+            color: #7dd3fc !important;
         }
 
         /* Inputs and selects */
@@ -86,6 +135,80 @@
             background-color: #0f172a !important;
             color: #f8fafc !important;
             border-color: #334155 !important;
+        }
+
+        /* Contextual Help Box Overrides */
+        html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 {
+            background-image: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
+            border-color: #312e81 !important;
+        }
+        html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 p,
+        html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 span,
+        html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 li {
+            color: #cbd5e1 !important;
+        }
+        html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 a {
+            color: #818cf8 !important;
+        }
+
+        /* Alert Box Gradients in Dark Mode */
+        html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 {
+            background-image: linear-gradient(to right, #064e3b, #022c22) !important;
+            border-color: #047857 !important;
+        }
+        html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 {
+            background-image: linear-gradient(to right, #78350f, #451a03) !important;
+            border-color: #b45309 !important;
+        }
+        html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 p,
+        html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 span,
+        html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 p,
+        html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 span {
+            color: #cbd5e1 !important;
+        }
+        html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 .font-bold {
+            color: #6ee7b7 !important;
+        }
+        html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 .font-bold {
+            color: #fde047 !important;
+        }
+
+        /* Forums Dark Mode Overrides */
+        html.dark .forum-chat-wrap {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            box-shadow: none !important;
+        }
+        html.dark .forum-body {
+            background: #0f172a !important;
+        }
+        html.dark .forum-input-bar {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        html.dark .forum-textarea {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        html.dark .forum-bubble.theirs {
+            background-color: #334155 !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+        html.dark .forum-bubble.theirs .forum-bubble-text {
+            color: #f8fafc !important;
+        }
+        html.dark .forum-bubble.theirs .forum-bubble-time {
+            color: #cbd5e1 !important;
+        }
+        html.dark .forum-chip {
+            background-color: #1e1b4b !important;
+            color: #818cf8 !important;
+        }
+        html.dark .forum-date-chip {
+            background-color: #334155 !important;
+            color: #cbd5e1 !important;
         }
 
         /* SweetAlert override for dark mode */
