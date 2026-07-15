@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
+use App\Models\NilaiAkhir;
+
 class SettingController extends Controller
 {
     /**
@@ -18,7 +20,7 @@ class SettingController extends Controller
         
         // Get stats for dashboard
         $totalKelas = $user->kelasDiikuti()->count();
-        $nilaiAkhirList = $user->nilaiAkhir()->get();
+        $nilaiAkhirList = NilaiAkhir::where('mahasiswa_id', $user->id)->get();
         $rataRata = $nilaiAkhirList->avg('nilai_akhir');
         $announcements = collect([]);
         
