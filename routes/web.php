@@ -18,6 +18,7 @@ use App\Http\Controllers\Dosen\ForumController as DosenForumController;
 use App\Http\Controllers\Dosen\AbsensiController as DosenAbsensiController;
 use App\Http\Controllers\Dosen\JadwalController as DosenJadwalController;
 use App\Http\Controllers\Dosen\MateriController as DosenMateriController;
+use App\Http\Controllers\Dosen\SettingController as DosenSettingController;
 
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
@@ -163,8 +164,10 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::put('/dosen/profil/password', [DosenProfileController::class, 'updatePassword'])->name('dosen.profil.password');
 
     Route::get('/dosen/schedule', function () { return view('dosen.schedule'); })->name('dosen.schedule');
-    Route::get('/dosen/setting', function () { return view('dosen.setting'); })->name('dosen.setting');
-    
+    Route::get('/dosen/setting', [DosenSettingController::class, 'index'])->name('dosen.setting');
+    Route::post('/dosen/setting/umum', [DosenSettingController::class, 'updateUmum'])->name('dosen.setting.umum');
+    Route::post('/dosen/setting/notifikasi', [DosenSettingController::class, 'updateNotifikasi'])->name('dosen.setting.notifikasi');
+
     // Management Absensi oleh Dosen (Struktur Bersih & Rapi)
     Route::prefix('dosen/kelas/{kelasId}/absensi')->name('dosen.absensi.')->group(function () {
         Route::get('/', [DosenAbsensiController::class, 'index'])->name('index');
