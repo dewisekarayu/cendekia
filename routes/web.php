@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController
 use App\Http\Controllers\Dosen\PengumumanController as DosenPengumumanController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\KelasController;
+use App\Http\Controllers\HelpCenterController;
 
 use App\Http\Controllers\Dosen\ProfileController as DosenProfileController;
 use App\Http\Controllers\Dosen\DashboardController as DosenDashboardController;
@@ -116,6 +117,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{absensi}', [App\Http\Controllers\Admin\AbsensiController::class, 'destroy'])->name('destroy');
         Route::post('/bulk-delete', [App\Http\Controllers\Admin\AbsensiController::class, 'bulkDelete'])->name('bulkDelete');
     });
+
+    // Admin Help Center
+    Route::prefix('admin/help-center')->name('admin.help-center.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\HelpCenterController::class, 'dashboard'])->name('dashboard');
+        Route::get('/tickets', [App\Http\Controllers\Admin\HelpCenterController::class, 'tickets'])->name('tickets');
+        Route::get('/tickets/{id}', [App\Http\Controllers\Admin\HelpCenterController::class, 'ticketDetail'])->name('ticket-detail');
+        Route::put('/tickets/{id}', [App\Http\Controllers\Admin\HelpCenterController::class, 'updateTicketStatus'])->name('update-status');
+        Route::post('/tickets/{id}/close', [App\Http\Controllers\Admin\HelpCenterController::class, 'closeTicket'])->name('close');
+        Route::delete('/tickets/{id}', [App\Http\Controllers\Admin\HelpCenterController::class, 'deleteTicket'])->name('delete');
+    });
 });
 
 // ==========================================
@@ -178,7 +189,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
         Route::post('/{absensiId}/buka', [DosenAbsensiController::class, 'bukaSession'])->name('buka');
         Route::post('/{absensiId}/tutup', [DosenAbsensiController::class, 'tutupSession'])->name('tutup');
         Route::get('/{absensiId}/attendance', [DosenAbsensiController::class, 'editAttendance'])->name('attendance');
-        Route::put('/{absensiId}/attendance', [DosenAbsensiController::class, 'updateAttendance'])->name('updateAttendance');
+        Route::post('/{absensiId}/attendance', [DosenAbsensiController::class, 'updateAttendance'])->name('updateAttendance');
         Route::delete('/{absensiId}', [DosenAbsensiController::class, 'destroy'])->name('destroy');
         Route::get('/{absensiId}/export', [DosenAbsensiController::class, 'export'])->name('export');
     });
@@ -247,6 +258,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// ==========================================
+// HELP CENTER ROUTES (Accessible to All)
+// ==========================================
+Route::prefix('help-center')->name('help-center.')->group(function () {
+    Route::get('/', [HelpCenterController::class, 'index'])->name('index');
+    Route::get('/faq', [HelpCenterController::class, 'faqPage'])->name('faq');
+    Route::get('/search-faq', [HelpCenterController::class, 'searchFaq'])->name('search-faq');
+    Route::get('/faq/{faq}', [HelpCenterController::class, 'faqDetail'])->name('faq-detail');
+    Route::post('/faq/feedback', [HelpCenterController::class, 'faqFeedback'])->name('faq-feedback');
+    Route::get('/guides', [HelpCenterController::class, 'guides'])->name('guides');
+    Route::get('/guides/{id}', [HelpCenterController::class, 'guideDetail'])->name('guide-detail');
+    Route::post('/ticket', [HelpCenterController::class, 'storeTicket'])->name('store-ticket');
 });
 
 require __DIR__ . '/auth.php';

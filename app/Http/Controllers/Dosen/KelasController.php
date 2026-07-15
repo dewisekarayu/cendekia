@@ -41,11 +41,14 @@ class KelasController extends Controller
 
     public function show(Request $request, $id)
     {
-        $kelas = KelasPerkuliahan::with(['mataKuliah.programStudi', 'mahasiswa'])
+        $kelas = KelasPerkuliahan::with(['mataKuliah.programStudi', 'mahasiswa', 'semester'])
             ->where('dosen_id', $request->user()->id)
             ->findOrFail($id);
 
-        return view('dosen.kelas-detail', compact('kelas'));
+        // Get contextual help
+        $contextualHelp = \App\Helpers\HelpCenterHelper::getContextualHelp('kelas', 'detail');
+
+        return view('dosen.kelas-detail', compact('kelas', 'contextualHelp'));
     }
 
     public function tugas(Request $request, $id)

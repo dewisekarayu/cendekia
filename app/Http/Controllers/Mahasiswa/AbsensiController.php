@@ -23,8 +23,11 @@ class AbsensiController extends Controller
         $kelasList = $user->kelasDiikuti()
             ->with(['mataKuliah', 'dosen'])
             ->paginate(10);
+        
+        // Get contextual help
+        $contextualHelp = \App\Helpers\HelpCenterHelper::getContextualHelp('absensi', 'index');
 
-        return view('mahasiswa.absensi.index', compact('kelasList'));
+        return view('mahasiswa.absensi.index', compact('kelasList', 'contextualHelp'));
     }
 
     /**
@@ -54,8 +57,11 @@ class AbsensiController extends Controller
             ->orderByDesc('tanggal')
             ->limit(5)
             ->get();
+        
+        // Get contextual help
+        $contextualHelp = \App\Helpers\HelpCenterHelper::getContextualHelp('absensi', 'session');
 
-        return view('mahasiswa.absensi.kelas-absensi', compact('kelas', 'absensiAktif', 'sudahAbsen', 'riwayatAbsensi'));
+        return view('mahasiswa.absensi.kelas-absensi', compact('kelas', 'absensiAktif', 'sudahAbsen', 'riwayatAbsensi', 'contextualHelp'));
     }
 
     /**

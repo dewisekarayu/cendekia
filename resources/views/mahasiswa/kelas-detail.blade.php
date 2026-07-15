@@ -72,26 +72,39 @@
 </div>
 
 {{-- ===== MAIN CONTENT ===== --}}
-<<<<<<< HEAD
-<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua', showAbsenForm: false, selectedStatus: null }">
-=======
-<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua' }" x-init="tab = new URLSearchParams(window.location.search).get('tab') || 'semua'">
->>>>>>> b320d8c77ad2863bdc4c054486ac90e8e8d4a1d3
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
     {{-- Content Area --}}
     <div class="lg:col-span-2 space-y-4">
 
-        {{-- Tab buttons --}}
-        <div class="flex gap-2 overflow-x-auto pb-1">
-            @foreach (['semua' => 'Semua', 'materi' => 'Materi', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'forum' => 'Forum'] as $key => $label)
-                <button @click="tab = '{{ $key }}'"
-                        :class="tab === '{{ $key }}'
-                            ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20'
-                            : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]'"
-                        class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition">
-                    {{ $label }}
-                </button>
+        {{-- Help Center Contextual Help --}}
+        @if($contextualHelp ?? null)
+            @include('help-center.contextual-help', array_merge($contextualHelp, ['dismissible' => true]))
+        @endif
+
+        {{-- Tab buttons with links --}}
+        <div class="flex gap-2 overflow-x-auto pb-1 items-center">
+            @php
+                $currentTab = request()->get('tab', 'semua');
+                $tabs = [
+                    'semua' => ['label' => 'Semua', 'icon' => 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z'],
+                    'materi' => ['label' => 'Materi', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
+                    'tugas' => ['label' => 'Tugas', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+                    'absensi' => ['label' => 'Absensi', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+                    'forum' => ['label' => 'Forum', 'icon' => 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'],
+                ];
+            @endphp
+            
+            @foreach($tabs as $key => $tab)
+                <a href="{{ request()->fullUrlWithQuery(['tab' => $key]) }}"
+                   class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition inline-flex items-center gap-1.5 {{ $currentTab === $key ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20' : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $tab['icon'] }}"/>
+                    </svg>
+                    {{ $tab['label'] }}
+                </a>
             @endforeach
+            
             <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="ml-auto whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition inline-flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                 Pencet Absen
@@ -99,7 +112,8 @@
         </div>
 
         {{-- MATERI --}}
-        <div x-show="tab === 'semua' || tab === 'materi'" class="space-y-3">
+        @if ($currentTab === 'semua' || $currentTab === 'materi')
+        <div class="space-y-3">
             @forelse ($materiList as $materi)
                 <div class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center">
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#002B6B]">
@@ -132,14 +146,16 @@
                     @endif
                 </div>
             @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'materi'">
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400">
                     Belum ada materi untuk kelas ini.
                 </div>
             @endforelse
         </div>
+        @endif
 
         {{-- TUGAS --}}
-        <div x-show="tab === 'semua' || tab === 'tugas'" class="space-y-3">
+        @if ($currentTab === 'semua' || $currentTab === 'tugas')
+        <div class="space-y-3">
             @forelse ($tugasList as $tugas)
                 @php
                     $dl = \Carbon\Carbon::parse($tugas->deadline);
@@ -199,14 +215,16 @@
                     </div>
                 </div>
             @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'tugas'">
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400">
                     Belum ada tugas untuk kelas ini.
                 </div>
             @endforelse
         </div>
+        @endif
 
         {{-- ABSENSI --}}
-        <div x-show="tab === 'semua' || tab === 'absensi'" class="space-y-3">
+        @if ($currentTab === 'semua' || $currentTab === 'absensi')
+        <div class="space-y-3">
             @forelse ($rekapAbsen as $item)
                 @php
                     $absenMap = [
@@ -232,14 +250,16 @@
                     <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
                 </div>
             @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'absensi'">
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400">
                     Belum ada data absensi.
                 </div>
             @endforelse
         </div>
+        @endif
 
         {{-- FORUM --}}
-        <div x-show="tab === 'forum'" class="space-y-4">
+        @if ($currentTab === 'forum')
+        <div class="space-y-4">
             <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm text-center">
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600 mx-auto mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
@@ -253,6 +273,7 @@
                 </a>
             </div>
         </div>
+        @endif
     </div>
 
     {{-- Sidebar Progress --}}

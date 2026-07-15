@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
+use App\Helpers\HelpCenterHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AbsensiMahasiswa;
 use App\Models\KelasMahasiswa;
@@ -55,15 +56,19 @@ class KelasController extends Controller
             ->whereHas('absensi', fn ($q) => $q->where('kelas_perkuliahan_id', $kelas->id))
             ->where('mahasiswa_id', $request->user()->id)
             ->get()
-            ->sortByDesc(fn ($item) => $item->absensi->pertemuan_ke) // ← diubah dari sortBy jadi sortByDesc
+            ->sortByDesc(fn ($item) => $item->absensi->pertemuan_ke)
             ->values();
 
         $totalHadir = $rekapAbsen->where('status', 'hadir')->count();
         $totalPertemuan = $rekapAbsen->count();
+        
+        // Get contextual help
+        $contextualHelp = HelpCenterHelper::getContextualHelp('kelas', 'detail');
 
         return view('mahasiswa.kelas-detail', compact(
             'kelas', 'materiList', 'tugasList', 'rekapAbsen',
-            'progress', 'totalHadir', 'totalPertemuan', 'submitted', 'totalTugas'
+            'progress', 'totalHadir', 'totalPertemuan', 'submitted', 'totalTugas',
+            'contextualHelp'
         ));
     }
 

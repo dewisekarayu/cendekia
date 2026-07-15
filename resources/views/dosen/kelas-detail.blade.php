@@ -40,6 +40,12 @@
         'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
     ];
 @endphp
+
+{{-- Help Center Contextual Help --}}
+@if($contextualHelp ?? null)
+    @include('help-center.contextual-help', array_merge($contextualHelp, ['dismissible' => true]))
+@endif
+
 <div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-sm transition-colors duration-200">
     @foreach ($tabLinks as $label => $tab)
         <a href="{{ $tab['url'] }}"

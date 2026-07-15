@@ -65,6 +65,17 @@
             </a>
         </div>
 
+        <!-- Support -->
+        <div class="nav-section-title">SUPPORT</div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.help-center.dashboard') }}"
+               class="nav-link {{ request()->routeIs('admin.help-center.*') ? 'active' : '' }}">
+                <i class="bi bi-question-circle-fill"></i>
+                <span>Help Center</span>
+            </a>
+        </div>
+
         <hr style="border-color: rgba(255,255,255,0.08); margin: 1.5rem 12px;">
 
         <!-- Logout -->

@@ -27,7 +27,6 @@
 
 <body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
     @php
-        // Warna background sidebar per role
         $user = auth()->user();
         $hasDosen = $user && $user->hasRole('dosen');
         $hasAdmin = $user && $user->hasRole('admin');
@@ -51,7 +50,6 @@
             $activeBg = 'rgba(255,255,255,0.14)';
             $activeText = '#FFFFFF';
         } else {
-            // mahasiswa: sidebar terang
             $sidebarBg = '#F7F9FB';
             $sidebarText = '#4B5563';
             $sidebarTitle = '#1E3A8A';
@@ -106,7 +104,6 @@
             <nav class="flex-1 px-3 py-4 space-y-1">
                 @php
                     if (auth()->user()->hasRole('dosen')) {
-                        // SUDAH PERBAIKI: Duplikasi menu Forums di bawah ini sudah dibuang
                         $menu = [
                             ['label' => 'Dashboard', 'route' => 'dosen.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
                             ['label' => 'My Classes', 'route' => 'dosen.kelas-saya', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
@@ -155,7 +152,10 @@
                     </a>
                 @endforeach
 
+                {{-- ===== BOTTOM SECTION: Settings, Help Center, Logout ===== --}}
                 <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
+
+                    {{-- Profile / Settings per role --}}
                     @if (auth()->user()->hasRole('mahasiswa'))
                         @php $isSettingActive = request()->routeIs('mahasiswa.setting'); @endphp
                         <a
@@ -191,13 +191,19 @@
                         </a>
                     @endif
 
-                    <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};">
+                    {{-- ===== HELP CENTER LINK (FIXED) ===== --}}
+                    @php $isHelpActive = request()->routeIs('help-center.*'); @endphp
+                    <a
+                        href="{{ route('help-center.index') }}"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isHelpActive ? 'sidebar-link-active' : '' }}"
+                        style="{{ $isHelpActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Help Center
                     </a>
 
+                    {{-- Logout --}}
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};">
@@ -263,47 +269,37 @@
             background-color: var(--hover-bg) !important;
         }
 
-        /* Premium Dark Mode Sidebar Penyelarasan */
         html.dark aside {
-            background-color: #0f172a !important; /* Matches main dark mode background */
+            background-color: #0f172a !important;
             border-right: 1px solid #1e293b !important;
         }
-        
         html.dark aside .sidebar-link {
-            color: #94a3b8 !important; /* slate-400 */
+            color: #94a3b8 !important;
         }
-        
         html.dark aside .sidebar-link:hover {
             background-color: #1e293b !important;
-            color: #f8fafc !important; /* slate-50 */
+            color: #f8fafc !important;
         }
-        
         html.dark aside .sidebar-link-active {
-            background-color: #1e1b4b !important; /* indigo-950 dark */
-            color: #c084fc !important; /* purple-400 */
-            border-left: 3px solid #a855f7 !important; /* violet indicator */
+            background-color: #1e1b4b !important;
+            color: #c084fc !important;
+            border-left: 3px solid #a855f7 !important;
             padding-left: calc(0.75rem - 3px) !important;
         }
-
         html.dark aside .pt-4.mt-4 {
             border-top: 1px solid #1e293b !important;
         }
-
         html.dark aside div.px-6.py-5 {
             border-bottom: 1px solid #1e293b !important;
         }
-
         html.dark aside div.text-base {
             color: #f8fafc !important;
         }
-
         html.dark aside div.text-\[11px\] {
             color: #64748b !important;
         }
-
-        /* Universal Dark Mode Overrides for Dosen Portal Pages */
         html.dark .bg-white {
-            background-color: #1e293b !important; /* slate-800 */
+            background-color: #1e293b !important;
         }
         html.dark .border-gray-100,
         html.dark .border-slate-100,
@@ -312,7 +308,7 @@
         html.dark .border-slate-200\/60,
         html.dark .border-slate-200\/80,
         html.dark .border-gray-200 {
-            border-color: #334155 !important; /* slate-700 */
+            border-color: #334155 !important;
         }
         html.dark .bg-slate-50,
         html.dark .bg-gray-50,
@@ -321,7 +317,7 @@
         html.dark .bg-gray-50\/70,
         html.dark .bg-slate-50\/30,
         html.dark .bg-slate-100 {
-            background-color: #0f172a !important; /* slate-900 */
+            background-color: #0f172a !important;
             border-color: #334155 !important;
         }
         html.dark tbody {
@@ -345,8 +341,6 @@
         html.dark .text-gray-500 {
             color: #94a3b8 !important;
         }
-        
-        /* Form inputs, select box, and textareas - global overrides */
         html.dark input,
         html.dark select,
         html.dark textarea {
@@ -359,7 +353,7 @@
         html.dark textarea:focus {
             background-color: #0f172a !important;
             color: #f8fafc !important;
-            border-color: #a855f7 !important; /* violet border on focus */
+            border-color: #a855f7 !important;
             box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2) !important;
         }
         html.dark input:hover,
@@ -371,8 +365,6 @@
         html.dark textarea::placeholder {
             color: #475569 !important;
         }
-        
-        /* Buttons, breadcrumbs, link items */
         html.dark .bg-white.text-slate-700,
         html.dark .bg-white.text-gray-700,
         html.dark a.bg-white,
@@ -391,8 +383,6 @@
         html.dark .hover\:bg-gray-50:hover {
             background-color: #334155 !important;
         }
-        
-        /* Badges & Accent colors */
         html.dark .bg-blue-50,
         html.dark .bg-blue-50\/80 {
             background-color: #1e1b4b !important;
