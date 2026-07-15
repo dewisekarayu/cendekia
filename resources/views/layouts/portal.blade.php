@@ -171,19 +171,40 @@
         }
         html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 .font-bold {
             color: #fde047 !important;
+        }
 
         /* Schedule Timetable and mobile list overrides for Dark Mode */
         html.dark .border-l-4[class*="bg-"] {
-            background-color: #1e293b !important;
+            background-color: #334155 !important;
         }
+        html.dark .border-l-4.bg-blue-50\/80 {
+            background-color: rgba(30, 58, 138, 0.3) !important;
+        }
+        html.dark .border-l-4.bg-violet-50\/80 {
+            background-color: rgba(76, 29, 149, 0.3) !important;
+        }
+        html.dark .border-l-4.bg-emerald-50\/80 {
+            background-color: rgba(6, 78, 59, 0.3) !important;
+        }
+        html.dark .border-l-4.bg-amber-50\/80 {
+            background-color: rgba(120, 53, 15, 0.3) !important;
+        }
+        html.dark .border-l-4.bg-rose-50\/80 {
+            background-color: rgba(136, 19, 55, 0.3) !important;
+        }
+
         html.dark table,
         html.dark tr,
         html.dark th,
         html.dark td {
             border-color: #334155 !important;
         }
-        html.dark th.bg-gray-50\/80 {
+        html.dark th.bg-gray-50\/80,
+        html.dark th[class*="bg-gray-50"] {
             background-color: #1e293b !important;
+        }
+        html.dark th span.text-gray-600 {
+            color: #cbd5e1 !important;
         }
         html.dark .bg-gray-50 {
             background-color: #1e293b !important;
