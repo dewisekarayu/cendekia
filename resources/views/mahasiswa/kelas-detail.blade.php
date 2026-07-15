@@ -105,10 +105,19 @@
                 </a>
             @endforeach
             
-            <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="ml-auto whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition inline-flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                Pencet Absen
-            </a>
+            <div class="flex gap-2 ml-auto items-center">
+                <a href="{{ route('help-center.index') }}" 
+                   class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-blue-50 border border-blue-200 text-[#002B6B] hover:bg-blue-100 transition inline-flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Bantuan
+                </a>
+                <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition inline-flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    Pencet Absen
+                </a>
+            </div>
         </div>
 
         {{-- MATERI --}}
