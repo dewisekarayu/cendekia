@@ -530,4 +530,13 @@ return [
     'Sukses! Tiket Anda telah masuk sistem support Cendekia. ✓' => 'Success! Your ticket has been logged into the Cendekia support system. ✓',
     '❌ Validasi gagal. Pastikan seluruh input diisi dengan benar.' => '❌ Validation failed. Make sure all fields are filled correctly.',
     '❌ Terjadi gangguan jaringan internal. Silakan coba beberapa saat lagi.' => '❌ Internal network error. Please try again in a few moments.',
+
+    // Interactive Schedule / Jadwal Interaktif
+    'Weekly View' => 'Weekly View',
+    'Daily View' => 'Daily View',
+    'Jadwal Hari' => 'Schedule for',
+    'sampai' => 'until',
+    'Dosen Pengampu:' => 'Lecturer:',
+    'Tidak Ada Kelas' => 'No Classes',
+    'Kamu bebas hari ini. Tetap produktif!' => 'You have no classes today. Stay productive!',
 ];
