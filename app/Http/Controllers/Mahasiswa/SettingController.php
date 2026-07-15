@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\NilaiAkhir;
+use App\Models\NotificationPreference;
 
 class SettingController extends Controller
 {
@@ -17,6 +18,7 @@ class SettingController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $preferences = NotificationPreference::forUser($user->id);
         
         // Get stats for dashboard
         $totalKelas = $user->kelasDiikuti()->count();
@@ -26,6 +28,7 @@ class SettingController extends Controller
         
         return view('mahasiswa.setting', compact(
             'user',
+            'preferences',
             'totalKelas',
             'nilaiAkhirList',
             'rataRata',
@@ -93,5 +96,48 @@ class SettingController extends Controller
 
         return redirect()->route('mahasiswa.setting')
             ->with('success', 'Password berhasil diperbarui');
+    }
+
+    /**
+     * Update general settings (language and theme).
+     */
+    public function updateUmum(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'language' => ['required', 'string', 'in:id,en'],
+            'theme' => ['required', 'string', 'in:light,dark,auto'],
+        ]);
+
+        $user->update([
+            'language' => $validated['language'],
+            'theme' => $validated['theme'],
+        ]);
+
+        session(['locale' => $validated['language']]);
+
+        return back()->with('success', $validated['language'] === 'en' ? 'General settings updated successfully.' : 'Pengaturan umum berhasil diperbarui.');
+    }
+
+    /**
+     * Update notification preferences.
+     */
+    public function updateNotifikasi(Request $request)
+    {
+        $user = $request->user();
+        $preferences = NotificationPreference::forUser($user->id);
+
+        $preferences->update([
+            'tugas_baru' => $request->has('tugas_baru'),
+            'materi_baru' => $request->has('materi_baru'),
+            'pengumuman_baru' => $request->has('pengumuman_baru'),
+            'nilai_baru' => $request->has('nilai_baru'),
+            'absensi_dibuka' => $request->has('absensi_dibuka'),
+            'pesan_baru' => $request->has('pesan_baru'),
+        ]);
+
+        $lang = $user->language ?? 'id';
+        return back()->with('success', $lang === 'en' ? 'Notification preferences updated successfully.' : 'Preferensi notifikasi berhasil diperbarui.');
     }
 }

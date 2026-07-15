@@ -251,6 +251,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
     Route::put('/mahasiswa/setting/foto', [MahasiswaSettingController::class, 'updateFoto'])->name('mahasiswa.setting.foto');
     Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
+    Route::post('/mahasiswa/setting/umum', [MahasiswaSettingController::class, 'updateUmum'])->name('mahasiswa.setting.umum');
+    Route::post('/mahasiswa/setting/notifikasi', [MahasiswaSettingController::class, 'updateNotifikasi'])->name('mahasiswa.setting.notifikasi');
 });
 
 // Profile umum bawaan Laravel Breeze/Jetstream (opsional)
