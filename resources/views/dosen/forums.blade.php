@@ -420,7 +420,6 @@
         </a>
     @endforeach
 </div>
-</div>
 
 <div class="forum-chat-wrap">
 
