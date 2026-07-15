@@ -171,6 +171,25 @@
         }
         html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 .font-bold {
             color: #fde047 !important;
+
+        /* Schedule Timetable and mobile list overrides for Dark Mode */
+        html.dark .border-l-4[class*="bg-"] {
+            background-color: #1e293b !important;
+        }
+        html.dark table,
+        html.dark tr,
+        html.dark th,
+        html.dark td {
+            border-color: #334155 !important;
+        }
+        html.dark th.bg-gray-50\/80 {
+            background-color: #1e293b !important;
+        }
+        html.dark .bg-gray-50 {
+            background-color: #1e293b !important;
+        }
+        html.dark .divide-gray-50 > * {
+            border-color: #334155 !important;
         }
 
         /* Forums Dark Mode Overrides */
