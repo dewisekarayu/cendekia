@@ -157,15 +157,26 @@
 
                 <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
                     @if (auth()->user()->hasRole('mahasiswa'))
+                        @php $isProfilActive = request()->routeIs('mahasiswa.profil'); @endphp
+                        <a
+                            href="{{ route('mahasiswa.profil') }}"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isProfilActive ? 'sidebar-link-active' : '' }}"
+                            style="{{ $isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z" />
+                            </svg>
+                            Profile
+                        </a>
+
                         @php $isSettingActive = request()->routeIs('mahasiswa.setting'); @endphp
                         <a
                             href="{{ route('mahasiswa.setting') }}"
                             class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isSettingActive ? 'sidebar-link-active' : '' }}"
                             style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 9a3 3 0 100 6 3 3 0 000-6z" />
                             </svg>
-                            Profile
+                            Settings
                         </a>
                     @elseif (auth()->user()->hasRole('dosen'))
                         @php $isProfilActive = request()->routeIs('dosen.profil.index'); @endphp
@@ -186,6 +197,28 @@
                             style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            </svg>
+                            Settings
+                        </a>
+                    @elseif (auth()->user()->hasRole('admin'))
+                        @php $isProfilActive = request()->routeIs('admin.profil'); @endphp
+                        <a
+                            href="{{ route('admin.profil') }}"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isProfilActive ? 'sidebar-link-active' : '' }}"
+                            style="{{ $isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z" />
+                            </svg>
+                            Profile
+                        </a>
+
+                        @php $isSettingActive = request()->routeIs('admin.setting'); @endphp
+                        <a
+                            href="{{ route('admin.setting') }}"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isSettingActive ? 'sidebar-link-active' : '' }}"
+                            style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 9a3 3 0 100 6 3 3 0 000-6z" />
                             </svg>
                             Settings
                         </a>
@@ -418,6 +451,84 @@
             background-color: #4c0519 !important;
             color: #fda4af !important;
             border-color: #9f1239 !important;
+        }
+        
+        /* Additional Universal Dark Mode Overrides */
+        html.dark .bg-gray-50\/80 {
+            background-color: #0f172a !important; /* slate-900 */
+        }
+        html.dark .bg-sky-50\/40,
+        html.dark .bg-sky-50\/50,
+        html.dark .bg-sky-50 {
+            background-color: #0f172a !important; /* slate-900 */
+        }
+        html.dark .border-sky-100,
+        html.dark .border-sky-200 {
+            border-color: #334155 !important; /* slate-700 */
+        }
+
+        /* Calendar schedule items / badges in dark mode */
+        html.dark .bg-violet-50,
+        html.dark .bg-violet-50\/80 {
+            background-color: #2e1065 !important; /* violet-950 */
+            color: #c084fc !important;
+            border-color: #6d28d9 !important;
+        }
+        html.dark .bg-emerald-50\/80 {
+            background-color: #064e3b !important; /* emerald-950 */
+            color: #34d399 !important;
+            border-color: #047857 !important;
+        }
+        html.dark .bg-amber-50\/80 {
+            background-color: #78350f !important; /* amber-950 */
+            color: #fbbf24 !important;
+            border-color: #b45309 !important;
+        }
+        html.dark .bg-rose-50\/80 {
+            background-color: #4c0519 !important; /* rose-950 */
+            color: #f43f5e !important;
+            border-color: #be185d !important;
+        }
+        html.dark .bg-cyan-50,
+        html.dark .bg-cyan-50\/80 {
+            background-color: #164e63 !important; /* cyan-950 */
+            color: #22d3ee !important;
+            border-color: #0891b2 !important;
+        }
+
+        /* Dark Mode Contrast Overrides for Titles, Numbers, Hover and Accents */
+        html.dark .text-\[\#002B6B\],
+        html.dark .group:hover .group-hover\:text-\[\#002B6B\],
+        html.dark .text-blue-600,
+        html.dark .text-blue-700,
+        html.dark .text-sky-600,
+        html.dark .text-sky-700 {
+            color: #60a5fa !important; /* light blue-400 */
+        }
+        
+        html.dark .text-violet-600,
+        html.dark .text-violet-700 {
+            color: #c084fc !important; /* light violet-400 */
+        }
+        
+        html.dark .text-emerald-600,
+        html.dark .text-emerald-700 {
+            color: #34d399 !important; /* light emerald-400 */
+        }
+        
+        html.dark .text-amber-600,
+        html.dark .text-amber-700 {
+            color: #fbbf24 !important; /* light amber-400 */
+        }
+        
+        html.dark .text-rose-600,
+        html.dark .text-rose-700 {
+            color: #f87171 !important; /* light rose-400 */
+        }
+        
+        html.dark .text-cyan-600,
+        html.dark .text-cyan-700 {
+            color: #22d3ee !important; /* light cyan-400 */
         }
     </style>
 

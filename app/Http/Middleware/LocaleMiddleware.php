@@ -28,9 +28,9 @@ class LocaleMiddleware
 
         $response = $next($request);
 
-        // Dynamic HTML content post-processing translations for Dosen portal
+        // Dynamic HTML content post-processing translations for Dosen, Mahasiswa, & Admin portal
         if (method_exists($response, 'getContent') && str_contains($response->headers->get('Content-Type') ?? '', 'text/html')) {
-            if ($request->is('dosen*')) {
+            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*')) {
                 $content = $response->getContent();
                 if ($locale === 'en') {
                     $translations = include base_path('lang/en_translations.php');

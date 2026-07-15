@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\NilaiAkhir;
 use App\Models\Pengumuman;
+use App\Models\NotificationPreference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,7 @@ use Illuminate\Validation\Rules\Password;
 
 class SettingController extends Controller
 {
-    public function index(Request $request)
+    public function profil(Request $request)
     {
         $user = $request->user()->load('programStudi');
 
@@ -31,7 +32,7 @@ class SettingController extends Controller
         $nilaiAkhirList = NilaiAkhir::where('mahasiswa_id', $user->id)->get();
         $rataRata      = $nilaiAkhirList->avg('nilai_akhir');
 
-        return view('mahasiswa.setting', compact(
+        return view('mahasiswa.profil', compact(
             'user',
             'announcements',
             'totalKelas',
@@ -40,27 +41,33 @@ class SettingController extends Controller
         ));
     }
 
-    public function updateProfile(Request $request)
+    public function setting(Request $request)
     {
-        $user = $request->user();
+        $user = $request->user()->load('programStudi');
+        $preferences = NotificationPreference::forUser($user->id);
 
-        $validated = $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-        ], [
-            'name.required'  => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email'    => 'Format email tidak valid.',
-            'email.unique'   => 'Email sudah digunakan akun lain.',
-        ]);
+        // Pengumuman terbaru
+        $kelasIds = $user->kelasDiikuti()->pluck('kelas_perkuliahan.id');
+        $announcements = Pengumuman::where(function ($q) use ($kelasIds) {
+                $q->whereIn('kelas_perkuliahan_id', $kelasIds)->orWhere('untuk_semua', true);
+            })
+            ->latest()
+            ->take(6)
+            ->get();
 
-        if ($user->email !== $validated['email']) {
-            $user->email_verified_at = null;
-        }
+        // Statistik akademik
+        $totalKelas    = $user->kelasDiikuti()->count();
+        $nilaiAkhirList = NilaiAkhir::where('mahasiswa_id', $user->id)->get();
+        $rataRata      = $nilaiAkhirList->avg('nilai_akhir');
 
-        $user->update($validated);
-
-        return back()->with('success', 'Profil berhasil diperbarui.');
+        return view('mahasiswa.setting', compact(
+            'user',
+            'preferences',
+            'announcements',
+            'totalKelas',
+            'nilaiAkhirList',
+            'rataRata'
+        ));
     }
 
     public function updateFoto(Request $request)
@@ -103,5 +110,48 @@ class SettingController extends Controller
         ]);
 
         return back()->with('success', 'Password berhasil diperbarui.');
+    }
+
+    /**
+     * Update general settings (language and theme).
+     */
+    public function updateUmum(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'language' => ['required', 'string', 'in:id,en'],
+            'theme' => ['required', 'string', 'in:light,dark,auto'],
+        ]);
+
+        $user->update([
+            'language' => $validated['language'],
+            'theme' => $validated['theme'],
+        ]);
+
+        session(['locale' => $validated['language']]);
+
+        return back()->with('success', $validated['language'] === 'en' ? 'General settings updated successfully.' : 'Pengaturan umum berhasil diperbarui.');
+    }
+
+    /**
+     * Update notification preferences.
+     */
+    public function updateNotifikasi(Request $request)
+    {
+        $user = $request->user();
+        $preferences = NotificationPreference::forUser($user->id);
+
+        $preferences->update([
+            'materi_baru' => $request->has('materi_baru'),
+            'tugas_baru' => $request->has('tugas_baru'),
+            'pengumuman_baru' => $request->has('pengumuman_baru'),
+            'nilai_baru' => $request->has('nilai_baru'),
+            'absensi_dibuka' => $request->has('absensi_dibuka'),
+            'pesan_baru' => $request->has('pesan_baru'),
+        ]);
+
+        $lang = $user->language ?? 'id';
+        return back()->with('success', $lang === 'en' ? 'Notification preferences updated successfully.' : 'Preferensi notifikasi berhasil diperbarui.');
     }
 }

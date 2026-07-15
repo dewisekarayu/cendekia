@@ -117,6 +117,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{absensi}', [App\Http\Controllers\Admin\AbsensiController::class, 'destroy'])->name('destroy');
         Route::post('/bulk-delete', [App\Http\Controllers\Admin\AbsensiController::class, 'bulkDelete'])->name('bulkDelete');
     });
+
+
 });
 
 // ==========================================
@@ -237,10 +239,12 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     });
 
     // Pengaturan & Profil Mahasiswa
-    Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
-    Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
-    Route::put('/mahasiswa/setting/foto', [MahasiswaSettingController::class, 'updateFoto'])->name('mahasiswa.setting.foto');
-    Route::patch('/mahasiswa/setting/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
+    Route::get('/mahasiswa/profil', [MahasiswaSettingController::class, 'profil'])->name('mahasiswa.profil');
+    Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'setting'])->name('mahasiswa.setting');
+    Route::put('/mahasiswa/profil/foto', [MahasiswaSettingController::class, 'updateFoto'])->name('mahasiswa.setting.foto');
+    Route::patch('/mahasiswa/profil/password', [MahasiswaSettingController::class, 'updatePassword'])->name('mahasiswa.setting.password');
+    Route::post('/mahasiswa/setting/umum', [MahasiswaSettingController::class, 'updateUmum'])->name('mahasiswa.setting.umum');
+    Route::post('/mahasiswa/setting/notifikasi', [MahasiswaSettingController::class, 'updateNotifikasi'])->name('mahasiswa.setting.notifikasi');
 });
 
 // Profile umum bawaan Laravel Breeze/Jetstream (opsional)
