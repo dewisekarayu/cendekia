@@ -66,113 +66,104 @@
 </div>
 
 {{-- ===== MAIN CONTENT ===== --}}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="space-y-6">
 
-    {{-- LEFT: Nilai Akhir Per Kelas --}}
-    <div class="lg:col-span-2 space-y-4">
-
-        <div class="flex items-center justify-between">
-            <h2 class="text-base font-bold text-slate-800">Nilai Akhir Per Kelas</h2>
-            @if ($nilaiAkhirList->isNotEmpty())
-                <span class="text-xs text-gray-400">{{ $nilaiAkhirList->count() }} mata kuliah</span>
-            @endif
+    {{-- TABLE: Nilai Seluruh Mata Pelajaran --}}
+    <div class="rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
+        <div class="border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-base font-bold text-slate-800">Nilai Seluruh Mata Pelajaran</h2>
+            <span class="text-xs text-gray-400 font-semibold">{{ $kelasList->count() }} Mata Pelajaran</span>
         </div>
-
-        @if ($nilaiAkhirList->isEmpty())
-            <div class="flex min-h-[220px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center shadow-sm">
-                <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                    </svg>
-                </div>
-                <h3 class="font-bold text-gray-600">Belum Ada Nilai Akhir</h3>
-                <p class="mt-1 max-w-xs text-xs text-gray-400 leading-relaxed">Nilai akhir akan muncul setelah dosen atau admin menginput penilaian untuk kelas ini.</p>
-            </div>
-        @else
-            @foreach ($nilaiAkhirList as $nilai)
-                @php
-                    $grade  = $nilai->grade ?? 'E';
-                    $gc     = $gradeColors[$grade] ?? $gradeColors['E'];
-                    $persen = min(100, (float) $nilai->nilai_akhir);
-
-                    $komponen = [
-                        ['label' => 'Kehadiran', 'nilai' => $nilai->nilai_kehadiran, 'bobot' => 10, 'color' => 'bg-blue-400'],
-                        ['label' => 'Tugas',     'nilai' => $nilai->nilai_tugas,     'bobot' => 20, 'color' => 'bg-violet-400'],
-                        ['label' => 'Quiz',      'nilai' => $nilai->nilai_quiz,      'bobot' => 10, 'color' => 'bg-amber-400'],
-                        ['label' => 'Project',   'nilai' => $nilai->nilai_project,   'bobot' => 20, 'color' => 'bg-emerald-400'],
-                        ['label' => 'UTS',       'nilai' => $nilai->nilai_uts,       'bobot' => 20, 'color' => 'bg-cyan-400'],
-                        ['label' => 'UAS',       'nilai' => $nilai->nilai_uas,       'bobot' => 20, 'color' => 'bg-rose-400'],
-                    ];
-                @endphp
-
-                <div class="rounded-2xl border border-slate-200/80 bg-white shadow-sm overflow-hidden">
-                    {{-- Top bar warna grade --}}
-                    <div class="h-1 w-full {{ $gc['bar'] }}"></div>
-
-                    <div class="p-5">
-                        {{-- Header row --}}
-                        <div class="flex items-start justify-between gap-3 mb-4">
-                            <div class="min-w-0 flex-1">
-                                <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400 mb-0.5">
-                                    {{ $nilai->kelasPerkuliahan?->mataKuliah?->kode_mk ?? '-' }}
-                                </p>
-                                <h3 class="font-bold text-slate-800 text-sm leading-snug">
-                                    {{ $nilai->kelasPerkuliahan?->mataKuliah?->nama_mk ?? 'Mata Kuliah' }}
-                                </h3>
-                                <p class="text-xs text-gray-400 mt-0.5">
-                                    {{ $nilai->kelasPerkuliahan?->dosen?->name ?? '-' }}
-                                </p>
-                            </div>
-
-                            {{-- Grade badge --}}
-                            <div class="shrink-0 flex flex-col items-center justify-center rounded-2xl {{ $gc['bg'] }} {{ $gc['border'] }} border px-4 py-2 min-w-[64px]">
-                                <span class="text-2xl font-extrabold {{ $gc['text'] }} leading-none">{{ $grade }}</span>
-                                <span class="text-[10px] font-semibold {{ $gc['text'] }} mt-0.5 opacity-70">
-                                    {{ number_format($nilai->nilai_akhir, 1) }}
-                                </span>
-                            </div>
-                        </div>
-
-                        {{-- Progress bar nilai akhir --}}
-                        <div class="mb-4">
-                            <div class="flex items-center justify-between text-[11px] font-semibold text-gray-500 mb-1.5">
-                                <span>Nilai Akhir</span>
-                                <span class="{{ $gc['text'] }} font-bold">{{ number_format($nilai->nilai_akhir, 2) }} / 100</span>
-                            </div>
-                            <div class="h-2 w-full rounded-full bg-gray-100 overflow-hidden">
-                                <div class="h-full rounded-full {{ $gc['bar'] }} transition-all duration-500"
-                                     style="width: {{ $persen }}%"></div>
-                            </div>
-                        </div>
-
-                        {{-- Komponen nilai --}}
-                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                            @foreach ($komponen as $k)
-                                <div class="rounded-xl bg-gray-50 border border-gray-100 px-2 py-2 text-center">
-                                    <p class="text-[9px] font-bold uppercase tracking-wide text-gray-400 leading-tight">{{ $k['label'] }}</p>
-                                    <p class="mt-1 text-sm font-extrabold text-slate-700">{{ number_format($k['nilai'], 0) }}</p>
-                                    <p class="text-[9px] text-gray-400 font-medium">bobot {{ $k['bobot'] }}%</p>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[900px]">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-[10px] sm:text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        <th class="px-4 py-3.5 text-center">No</th>
+                        <th class="px-4 py-3.5">Kode</th>
+                        <th class="px-4 py-3.5">Mata Kuliah / Dosen</th>
+                        <th class="px-3 py-3.5 text-center">Kehadiran<br><span class="text-[9px] text-gray-400 lowercase font-normal">(10%)</span></th>
+                        <th class="px-3 py-3.5 text-center">Tugas<br><span class="text-[9px] text-gray-400 lowercase font-normal">(20%)</span></th>
+                        <th class="px-3 py-3.5 text-center">Kuis<br><span class="text-[9px] text-gray-400 lowercase font-normal">(10%)</span></th>
+                        <th class="px-3 py-3.5 text-center">Project<br><span class="text-[9px] text-gray-400 lowercase font-normal">(20%)</span></th>
+                        <th class="px-3 py-3.5 text-center">UTS<br><span class="text-[9px] text-gray-400 lowercase font-normal">(20%)</span></th>
+                        <th class="px-3 py-3.5 text-center">UAS<br><span class="text-[9px] text-gray-400 lowercase font-normal">(20%)</span></th>
+                        <th class="px-4 py-3.5 text-center">Nilai Akhir</th>
+                        <th class="px-4 py-3.5 text-center">Grade</th>
+                        <th class="px-4 py-3.5">Catatan</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-xs text-slate-700">
+                    @if ($kelasList->isEmpty())
+                        <tr>
+                            <td colspan="12" class="px-6 py-12 text-center text-gray-400">
+                                <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-gray-300 mx-auto">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                                    </svg>
                                 </div>
-                            @endforeach
-                        </div>
-
-                        @if ($nilai->catatan)
-                            <div class="mt-3 flex items-start gap-2 rounded-xl bg-amber-50 border border-amber-100 px-3 py-2.5 text-xs text-amber-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                <span>{{ $nilai->catatan }}</span>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            @endforeach
-        @endif
+                                <h3 class="font-bold text-gray-600">Belum Mengikuti Kelas</h3>
+                                <p class="mt-1 max-w-xs text-xs text-gray-400 leading-relaxed mx-auto">Kamu belum terdaftar di kelas perkuliahan manapun.</p>
+                            </td>
+                        </tr>
+                    @else
+                        @foreach ($kelasList as $index => $kelas)
+                            @php
+                                $nilai = $nilaiAkhirMap->get($kelas->id);
+                                $grade = $nilai?->grade;
+                                $gc = $grade ? ($gradeColors[$grade] ?? null) : null;
+                            @endphp
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-4 py-4 text-center font-medium text-slate-400">{{ $index + 1 }}</td>
+                                <td class="px-4 py-4 font-mono font-semibold text-slate-600">{{ $kelas->mataKuliah?->kode_mk ?? '-' }}</td>
+                                <td class="px-4 py-4">
+                                    <p class="font-bold text-slate-800 text-sm mb-0.5">{{ $kelas->mataKuliah?->nama_mk ?? '-' }}</p>
+                                    <p class="text-[11px] text-gray-400">{{ $kelas->dosen?->name ?? '-' }}</p>
+                                </td>
+                                <td class="px-3 py-4 text-center font-semibold text-slate-600">
+                                    {{ $nilai && $nilai->nilai_kehadiran !== null ? number_format($nilai->nilai_kehadiran, 0) : '-' }}
+                                </td>
+                                <td class="px-3 py-4 text-center font-semibold text-slate-600">
+                                    {{ $nilai && $nilai->nilai_tugas !== null ? number_format($nilai->nilai_tugas, 0) : '-' }}
+                                </td>
+                                <td class="px-3 py-4 text-center font-semibold text-slate-600">
+                                    {{ $nilai && $nilai->nilai_quiz !== null ? number_format($nilai->nilai_quiz, 0) : '-' }}
+                                </td>
+                                <td class="px-3 py-4 text-center font-semibold text-slate-600">
+                                    {{ $nilai && $nilai->nilai_project !== null ? number_format($nilai->nilai_project, 0) : '-' }}
+                                </td>
+                                <td class="px-3 py-4 text-center font-semibold text-slate-600">
+                                    {{ $nilai && $nilai->nilai_uts !== null ? number_format($nilai->nilai_uts, 0) : '-' }}
+                                </td>
+                                <td class="px-3 py-4 text-center font-semibold text-slate-600">
+                                    {{ $nilai && $nilai->nilai_uas !== null ? number_format($nilai->nilai_uas, 0) : '-' }}
+                                </td>
+                                <td class="px-4 py-4 text-center font-bold text-slate-900 text-sm">
+                                    {{ $nilai && $nilai->nilai_akhir !== null ? number_format($nilai->nilai_akhir, 1) : '-' }}
+                                </td>
+                                <td class="px-4 py-4 text-center">
+                                    @if ($gc)
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg {{ $gc['bg'] }} {{ $gc['text'] }} {{ $gc['border'] }} border text-xs font-extrabold shadow-sm">
+                                            {{ $grade }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center justify-center px-2 py-1 rounded-md bg-gray-100 text-gray-500 border border-gray-200 text-[10px] font-semibold uppercase tracking-wide">
+                                            Belum Dinilai
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-4 max-w-[200px] truncate text-gray-500" title="{{ $nilai?->catatan ?? '' }}">
+                                    {{ $nilai?->catatan ?? '-' }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    {{-- RIGHT: Distribusi Grade + Nilai Tugas --}}
-    <div class="space-y-5">
-
+    {{-- TWO COLUMN LAYOUT AT BOTTOM --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {{-- Grade Distribution --}}
         <div class="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm">
             <h3 class="text-sm font-bold text-slate-800 mb-4">Distribusi Grade</h3>
@@ -206,11 +197,11 @@
                 {{-- Summary --}}
                 <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-3 text-center">
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">Total Kelas</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">Total Kelas Diikuti</p>
                         <p class="text-xl font-extrabold text-[#002B6B] mt-1">{{ $totalKelas }}</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">Rata-rata</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">Rata-rata Nilai</p>
                         <p class="text-xl font-extrabold text-emerald-600 mt-1">
                             {{ $rataRata ? number_format($rataRata, 1) : '-' }}
                         </p>
@@ -272,8 +263,8 @@
                 @endif
             @endif
         </div>
-
     </div>
+
 </div>
 
 @endsection
