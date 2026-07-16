@@ -20,7 +20,7 @@
 
         <h2>Tanggapan Admin:</h2>
         <div class="info-box" style="border-left-color: #10B981; background-color: #F0FDF4;">
-            <p>{!! nl2br(e($ticket->admin_response)) !!}</p>
+            <p>{!! nl2br(e($reply->message)) !!}</p>
         </div>
 
         <p>Jika Anda masih memiliki pertanyaan atau kendala lain, silakan balas email ini atau buat tiket bantuan baru di portal Cendekia.</p>

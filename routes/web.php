@@ -118,14 +118,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/bulk-delete', [App\Http\Controllers\Admin\AbsensiController::class, 'bulkDelete'])->name('bulkDelete');
     });
 
-    // Admin Help Center
+    // Admin Help Center (Overhauled with TicketController)
     Route::prefix('admin/help-center')->name('admin.help-center.')->group(function () {
-        Route::get('/', [App\Http\Controllers\Admin\HelpCenterController::class, 'dashboard'])->name('dashboard');
-        Route::get('/tickets', [App\Http\Controllers\Admin\HelpCenterController::class, 'tickets'])->name('tickets');
-        Route::get('/tickets/{id}', [App\Http\Controllers\Admin\HelpCenterController::class, 'ticketDetail'])->name('ticket-detail');
-        Route::put('/tickets/{id}', [App\Http\Controllers\Admin\HelpCenterController::class, 'updateTicketStatus'])->name('update-status');
-        Route::post('/tickets/{id}/close', [App\Http\Controllers\Admin\HelpCenterController::class, 'closeTicket'])->name('close');
-        Route::delete('/tickets/{id}', [App\Http\Controllers\Admin\HelpCenterController::class, 'deleteTicket'])->name('delete');
+        Route::get('/', [\App\Http\Controllers\TicketController::class, 'index'])->name('dashboard');
+        Route::get('/tickets', [\App\Http\Controllers\TicketController::class, 'index'])->name('tickets');
+        Route::get('/tickets/{id}', [\App\Http\Controllers\TicketController::class, 'show'])->name('ticket-detail');
+        Route::post('/tickets/{id}/reply', [\App\Http\Controllers\TicketController::class, 'reply'])->name('reply');
+        Route::post('/tickets/{id}/close', [\App\Http\Controllers\TicketController::class, 'close'])->name('close');
     });
 });
 

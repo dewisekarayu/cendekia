@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HelpTicket;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -330,7 +330,7 @@ class HelpCenterController extends Controller
             $attachmentPath = $request->file('attachment')->store('help-tickets', 'public');
         }
 
-        $ticket = HelpTicket::create([
+        $ticket = \App\Models\Ticket::create([
             'user_id'         => auth()->id(),
             'name'            => $data['name'],
             'email'           => $data['email'],
