@@ -213,3 +213,66 @@
     }
 }
 
+
+
+/* ===== ADDITIONAL DARK MODE FIXES ===== */
+
+/* Ensure all white containers turn dark */
+html.dark .bg-white:not([class*="dark:bg"]) {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+/* White text containers */
+html.dark [class*="white"]:not([class*="text-white"]):not([class*="dark:bg"]) {
+    background-color: #1e293b !important;
+}
+
+/* Modal overlays and dialogs */
+html.dark .fixed.inset-0.bg-white,
+html.dark [role="dialog"] .bg-white {
+    background-color: #1e293b !important;
+}
+
+/* Light gray backgrounds - convert to dark gray/slate */
+html.dark .bg-gray-50:not([class*="dark:bg"]),
+html.dark .bg-slate-50:not([class*="dark:bg"]),
+html.dark .bg-gray-100:not([class*="dark:bg"]),
+html.dark .bg-gray-200:not([class*="dark:bg"]) {
+    background-color: #0f172a !important;
+}
+
+/* Ensure card borders are dark */
+html.dark [class*="border-"].border-gray-100:not([class*="dark:border"]),
+html.dark [class*="border-"].border-gray-200:not([class*="dark:border"]),
+html.dark [class*="border-"].border-slate-100:not([class*="dark:border"]),
+html.dark [class*="border-"].border-slate-200:not([class*="dark:border"]) {
+    border-color: #334155 !important;
+}
+
+/* Make all buttons accessible in dark mode */
+html.dark button.bg-white:not([class*="dark:bg"]),
+html.dark a.bg-white:not([class*="dark:bg"]) {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* Floating action buttons */
+html.dark [class*="fixed"].bg-white:not([class*="dark:bg"]) {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+/* Dropdown menus and popovers */
+html.dark [class*="absolute"].bg-white:not([class*="dark:bg"]) {
+    background-color: #1e293b !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Empty states */
+html.dark .empty-state,
+html.dark [class*="no-data"],
+html.dark [class*="empty"] {
+    background-color: #0f172a !important;
+    color: #cbd5e1 !important;
+}
