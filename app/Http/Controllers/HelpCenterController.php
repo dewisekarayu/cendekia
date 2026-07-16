@@ -25,28 +25,10 @@ class HelpCenterController extends Controller
         return [
             'akun' => [
                 [
-                    'id' => 1,
-                    'category' => 'akun',
-                    'question' => 'Akun saya tidak terverifikasi, berapa lama prosesnya?',
-                    'answer' => 'Proses verifikasi akun biasanya memakan waktu 1-2 hari kerja. Admin akan mengecek data akademik Anda terlebih dahulu. Pastikan data yang Anda daftarkan sudah sesuai dengan data di sistem akademik kampus.',
-                ],
-                [
                     'id' => 2,
                     'category' => 'akun',
                     'question' => 'Bagaimana cara reset password?',
                     'answer' => 'Klik tombol "Lupa Password" di halaman login. Masukkan email terdaftar Anda, kemudian cek email untuk tautan reset password. Jika tidak menerima email, periksa folder spam atau hubungi admin.',
-                ],
-                [
-                    'id' => 3,
-                    'category' => 'akun',
-                    'question' => 'Mengapa profil saya tidak bisa diedit?',
-                    'answer' => 'Beberapa field seperti NIM/NPP bersifat read-only karena sudah tersinkronisasi dari sistem akademik. Hubungi bagian akademik jika ingin mengubah data tersebut.',
-                ],
-                [
-                    'id' => 4,
-                    'category' => 'akun',
-                    'question' => 'Upload avatar/foto profil selalu error, apa penyebabnya?',
-                    'answer' => 'Pastikan ukuran file tidak lebih dari 2MB dan format yang didukung (JPG, PNG). Coba refresh halaman dan upload ulang. Jika tetap error, coba browser lain atau hapus cache.',
                 ],
             ],
             'absensi' => [
@@ -56,24 +38,6 @@ class HelpCenterController extends Controller
                     'question' => 'Halaman absensi tidak muncul atau error "tidak diizinkan"?',
                     'answer' => 'Ini terjadi jika Anda belum terdaftar di kelas tersebut atau dosen belum membuka absensi. Pastikan Anda sudah mendaftar kelas melalui menu Kelas. Hubungi dosen jika masih error.',
                 ],
-                [
-                    'id' => 6,
-                    'category' => 'absensi',
-                    'question' => 'Absensi sudah saya isi tapi tidak tersimpan, kenapa?',
-                    'answer' => 'Pastikan koneksi internet stabil. Tunggu tombol "Simpan" berubah warna (berhasil) sebelum keluar halaman. Jika masih gagal, refresh halaman dan coba lagi.',
-                ],
-                [
-                    'id' => 7,
-                    'category' => 'absensi',
-                    'question' => 'Absensi saya tiba-tiba hilang atau berubah dari hadir jadi izin?',
-                    'answer' => 'Kemungkinan dosen sedang melakukan editing. Tunggu beberapa saat atau refresh halaman. Jika masalah persisten, hubungi dosen atau admin untuk pengecekan.',
-                ],
-                [
-                    'id' => 8,
-                    'category' => 'absensi',
-                    'question' => 'Tombol absensi tidak bisa diklik saat sesi kelas berlangsung, kenapa?',
-                    'answer' => 'Pastikan dosen sudah membuka sesi absensi untuk pertemuan tersebut, dan coba refresh halaman. Jika tombol tetap tidak aktif, coba browser lain atau minta dosen untuk mengecek status sesi.',
-                ],
             ],
             'nilai' => [
                 [
@@ -81,18 +45,6 @@ class HelpCenterController extends Controller
                     'category' => 'nilai',
                     'question' => 'Nilai saya belum keluar atau gradeBook masih kosong?',
                     'answer' => 'Dosen mungkin masih belum menginput nilai. Cek kalender akademik untuk deadline pengumpulan nilai. Jika sudah lewat deadline, hubungi dosen untuk pengecekan.',
-                ],
-                [
-                    'id' => 10,
-                    'category' => 'nilai',
-                    'question' => 'Nilai yang ditampilkan berbeda dengan yang diberitahu dosen?',
-                    'answer' => 'Kemungkinan nilai masih dalam proses pembaruan atau ada kesalahan input. Tunggu beberapa jam kemudian refresh halaman. Jika masih berbeda, hubungi dosen langsung.',
-                ],
-                [
-                    'id' => 11,
-                    'category' => 'nilai',
-                    'question' => 'Nilai akhir saya tidak muncul, bagaimana cara mengeceknya?',
-                    'answer' => 'Nilai akhir biasanya muncul setelah semua komponen penilaian (UTS, UAS, tugas) selesai dinilai. Cek kembali minggu berikutnya. Hubungi admin jika sudah saatnya tapi masih kosong.',
                 ],
             ],
             'tugas' => [
@@ -102,43 +54,13 @@ class HelpCenterController extends Controller
                     'question' => 'Tidak bisa upload tugas, selalu gagal dengan error?',
                     'answer' => 'Pastikan file tidak melampaui ukuran maksimal yang ditentukan dosen (biasanya 10-20MB). Coba format file lain (PDF, DOC). Jika error persisten, coba browser berbeda atau hubungi admin.',
                 ],
-                [
-                    'id' => 13,
-                    'category' => 'tugas',
-                    'question' => 'Tugas sudah saya upload tapi masih dianggap belum dikumpulkan?',
-                    'answer' => 'Tunggu hingga status berubah menjadi "Sudah Dikumpulkan". Jika masih "Belum Dikumpulkan" setelah 5 menit, refresh halaman. Hubungi dosen jika bug persisten.',
-                ],
-                [
-                    'id' => 14,
-                    'category' => 'tugas',
-                    'question' => 'Batas waktu pengumpulan tugas sudah lewat, masih bisa upload?',
-                    'answer' => 'Sistem akan mengunci pengumpulan setelah batas waktu. Hubungi dosen untuk minta perpanjangan atau upload manual melalui email jika diperbolehkan.',
-                ],
-                [
-                    'id' => 15,
-                    'category' => 'tugas',
-                    'question' => 'Saya tidak melihat tugas baru dari dosen?',
-                    'answer' => 'Refresh halaman atau logout-login kembali. Tugas yang baru diupload kadang perlu beberapa saat untuk muncul. Jika masih tidak terlihat, minta dosen untuk memastikan tugas sudah di-publish.',
-                ],
             ],
             'kelas' => [
-                [
-                    'id' => 16,
-                    'category' => 'kelas',
-                    'question' => 'Tidak bisa akses kelas tertentu, padahal sudah daftar?',
-                    'answer' => 'Coba logout dan login kembali. Jika masih tidak bisa, mungkin pendaftaran belum disetujui admin. Hubungi admin atau bagian akademik untuk konfirmasi.',
-                ],
                 [
                     'id' => 17,
                     'category' => 'kelas',
                     'question' => 'Materi kelas tidak muncul, hanya terlihat pengumuman?',
                     'answer' => 'Dosen mungkin belum upload materi. Cek tanggal posting pengumuman. Jika dosen sudah harusnya upload tapi masih kosong, hubungi dosen untuk konfirmasi.',
-                ],
-                [
-                    'id' => 18,
-                    'category' => 'kelas',
-                    'question' => 'Video/PDF dari dosen tidak bisa dibuka?',
-                    'answer' => 'Cek koneksi internet Anda. Coba buka dengan browser lain. Jika formatnya PDF/MP4, mungkin file terlalu besar atau corrupt. Hubungi dosen untuk re-upload.',
                 ],
             ],
             'teknis' => [
@@ -148,32 +70,8 @@ class HelpCenterController extends Controller
                     'question' => 'Halaman blank atau tidak muncul apa-apa, hanya loading?',
                     'answer' => 'Coba refresh halaman (F5 atau Ctrl+Shift+R untuk hard refresh). Jika tetap blank, coba browser lain atau device berbeda. Jika masalah berlanjut di semua device, hubungi admin.',
                 ],
-                [
-                    'id' => 20,
-                    'category' => 'teknis',
-                    'question' => 'Tombol tidak bisa diklik atau responsive?',
-                    'answer' => 'Update browser Anda ke versi terbaru. Hapus cache dan cookies browser. Coba di browser incognito. Jika masih bermasalah, hubungi admin dengan screenshot error.',
-                ],
-                [
-                    'id' => 21,
-                    'category' => 'teknis',
-                    'question' => 'Aplikasi selalu logout otomatis, bagaimana?',
-                    'answer' => 'Ini terjadi jika sesi sudah expired (biasanya 24 jam). Login kembali dan pastikan tidak membuka tab lain dengan akun yang sama. Hubungi admin jika auto-logout terjadi dalam waktu singkat.',
-                ],
-                [
-                    'id' => 22,
-                    'category' => 'teknis',
-                    'question' => 'Chat/forum tidak bisa mengirim pesan atau loading terus?',
-                    'answer' => 'Periksa koneksi internet Anda. Coba refresh halaman atau tutup chat kemudian buka lagi. Jika masih error, dosen mungkin sudah menutup forum. Hubungi dosen untuk konfirmasi.',
-                ],
             ],
             'lainnya' => [
-                [
-                    'id' => 25,
-                    'category' => 'lainnya',
-                    'question' => 'Bagaimana cara menghubungi admin atau support?',
-                    'answer' => 'Anda bisa mengirim pertanyaan melalui form "Hubungi Tim Support" di bagian bawah halaman ini. Tim kami akan merespons melalui email dalam waktu 1-2 jam kerja. Atau langsung visit kantor Bagian Akademik.',
-                ],
                 [
                     'id' => 26,
                     'category' => 'lainnya',

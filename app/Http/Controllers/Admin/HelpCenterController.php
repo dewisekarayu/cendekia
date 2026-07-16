@@ -87,8 +87,15 @@ class HelpCenterController extends Controller
             'responded_at' => now(),
         ]);
 
+        // Kirim email ke pembuat tiket jika admin memasukkan balasan jawaban
+        if ($request->filled('response')) {
+            \Illuminate\Support\Facades\Mail::to($ticket->email)->send(new \App\Mail\TiketDibalas($ticket));
+        }
+
         return redirect()->route('admin.help-center.ticket-detail', $id)
-            ->with('success', 'Tiket berhasil diperbarui');
+            ->with('success', $request->filled('response') 
+                ? 'Tiket berhasil diperbarui dan email balasan telah dikirim ke pengguna.' 
+                : 'Tiket berhasil diperbarui.');
     }
 
     /**
