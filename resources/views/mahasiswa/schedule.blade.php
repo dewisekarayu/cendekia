@@ -48,102 +48,7 @@
     ]);
 @endphp
 
-<div x-data="{ 
-    viewMode: 'weekly', 
-    activeDay: '{{ $hariIni }}',
-    currentYear: new Date().getFullYear(),
-    currentMonth: new Date().getMonth(),
-    months: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-    events: @json($kelasListJson),
-    selectedDayObj: null,
-
-    getDays() {
-        const days = [];
-        const firstDayIndex = new Date(this.currentYear, this.currentMonth, 1).getDay();
-        const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
-        const prevLastDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
-        
-        // Pad previous month
-        for (let i = firstDayIndex; i > 0; i--) {
-            const d = prevLastDay - i + 1;
-            const m = this.currentMonth === 0 ? 11 : this.currentMonth - 1;
-            const y = this.currentMonth === 0 ? this.currentYear - 1 : this.currentYear;
-            const date = new Date(y, m, d);
-            days.push({
-                day: d,
-                isCurrentMonth: false,
-                dayOfWeek: date.getDay(),
-                dateStr: `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
-            });
-        }
-        
-        // Current month
-        for (let i = 1; i <= lastDay; i++) {
-            const date = new Date(this.currentYear, this.currentMonth, i);
-            days.push({
-                day: i,
-                isCurrentMonth: true,
-                dayOfWeek: date.getDay(),
-                dateStr: `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
-            });
-        }
-        
-        // Pad next month
-        const totalCells = days.length > 35 ? 42 : 35;
-        const nextDaysCount = totalCells - days.length;
-        for (let i = 1; i <= nextDaysCount; i++) {
-            const m = this.currentMonth === 11 ? 0 : this.currentMonth + 1;
-            const y = this.currentMonth === 11 ? this.currentYear + 1 : this.currentYear;
-            const date = new Date(y, m, i);
-            days.push({
-                day: i,
-                isCurrentMonth: false,
-                dayOfWeek: date.getDay(),
-                dateStr: `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
-            });
-        }
-        
-        return days;
-    },
-
-    getEventsForDayOfWeek(dayOfWeek) {
-        const dayMapping = {
-            1: 'Senin',
-            2: 'Selasa',
-            3: 'Rabu',
-            4: 'Kamis',
-            5: 'Jumat',
-            6: 'Sabtu',
-            0: 'Minggu'
-        };
-        const indonesianDayName = dayMapping[dayOfWeek];
-        return this.events.filter(e => e.hari === indonesianDayName);
-    },
-
-    prevMonth() {
-        if (this.currentMonth === 0) {
-            this.currentMonth = 11;
-            this.currentYear--;
-        } else {
-            this.currentMonth--;
-        }
-        this.selectedDayObj = null;
-    },
-
-    nextMonth() {
-        if (this.currentMonth === 11) {
-            this.currentMonth = 0;
-            this.currentYear++;
-        } else {
-            this.currentMonth++;
-        }
-        this.selectedDayObj = null;
-    },
-
-    selectDay(dayObj) {
-        this.selectedDayObj = dayObj;
-    }
-}" class="space-y-6">
+<div x-data="scheduleData()" class="space-y-6">
 
     {{-- HEADER CARD --}}
     <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] px-6 py-6 sm:px-8 shadow-lg shadow-blue-950/15 relative">
@@ -461,5 +366,106 @@
 
     @endif
 </div>
+
+<script>
+function scheduleData() {
+    return {
+        viewMode: 'weekly',
+        activeDay: '{{ $hariIni }}',
+        currentYear: new Date().getFullYear(),
+        currentMonth: new Date().getMonth(),
+        months: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+        events: @json($kelasListJson),
+        selectedDayObj: null,
+
+        getDays() {
+            const days = [];
+            const firstDayIndex = new Date(this.currentYear, this.currentMonth, 1).getDay();
+            const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+            const prevLastDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
+            
+            // Pad previous month
+            for (let i = firstDayIndex; i > 0; i--) {
+                const d = prevLastDay - i + 1;
+                const m = this.currentMonth === 0 ? 11 : this.currentMonth - 1;
+                const y = this.currentMonth === 0 ? this.currentYear - 1 : this.currentYear;
+                const date = new Date(y, m, d);
+                days.push({
+                    day: d,
+                    isCurrentMonth: false,
+                    dayOfWeek: date.getDay(),
+                    dateStr: `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+                });
+            }
+            
+            // Current month
+            for (let i = 1; i <= lastDay; i++) {
+                const date = new Date(this.currentYear, this.currentMonth, i);
+                days.push({
+                    day: i,
+                    isCurrentMonth: true,
+                    dayOfWeek: date.getDay(),
+                    dateStr: `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
+                });
+            }
+            
+            // Pad next month
+            const totalCells = days.length > 35 ? 42 : 35;
+            const nextDaysCount = totalCells - days.length;
+            for (let i = 1; i <= nextDaysCount; i++) {
+                const m = this.currentMonth === 11 ? 0 : this.currentMonth + 1;
+                const y = this.currentMonth === 11 ? this.currentYear + 1 : this.currentYear;
+                const date = new Date(y, m, i);
+                days.push({
+                    day: i,
+                    isCurrentMonth: false,
+                    dayOfWeek: date.getDay(),
+                    dateStr: `${y}-${String(m + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
+                });
+            }
+            
+            return days;
+        },
+
+        getEventsForDayOfWeek(dayOfWeek) {
+            const dayMapping = {
+                1: 'Senin',
+                2: 'Selasa',
+                3: 'Rabu',
+                4: 'Kamis',
+                5: 'Jumat',
+                6: 'Sabtu',
+                0: 'Minggu'
+            };
+            const indonesianDayName = dayMapping[dayOfWeek];
+            return this.events.filter(e => e.hari === indonesianDayName);
+        },
+
+        prevMonth() {
+            if (this.currentMonth === 0) {
+                this.currentMonth = 11;
+                this.currentYear--;
+            } else {
+                this.currentMonth--;
+            }
+            this.selectedDayObj = null;
+        },
+
+        nextMonth() {
+            if (this.currentMonth === 11) {
+                this.currentMonth = 0;
+                this.currentYear++;
+            } else {
+                this.currentMonth++;
+            }
+            this.selectedDayObj = null;
+        },
+
+        selectDay(dayObj) {
+            this.selectedDayObj = dayObj;
+        }
+    };
+}
+</script>
 
 @endsection
