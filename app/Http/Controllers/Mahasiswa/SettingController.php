@@ -76,6 +76,7 @@ class SettingController extends Controller
 
     /**
      * Update user photo/avatar
+     * (versi form submit biasa — redirect balik ke halaman profil, bukan JSON)
      */
     public function updateFoto(Request $request)
     {
@@ -94,11 +95,8 @@ class SettingController extends Controller
         $path = $request->file('foto')->store('avatars/mahasiswa', 'public');
         $user->update(['foto' => $path]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Foto profil berhasil diperbarui',
-            'foto_url' => asset('storage/' . $path),
-        ]);
+        return redirect()->route('mahasiswa.profil')
+            ->with('success', 'Foto profil berhasil diperbarui');
     }
 
     /**
