@@ -6,10 +6,10 @@
 @section('title', 'Pusat Bantuan')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-0 my-6 sm:my-10 animate-fade-in">
+<div class="max-w-6xl mx-auto px-4 sm:px-0 my-6 sm:my-10 animate-fade-in">
 
     {{-- ===== HERO SECTION ===== --}}
-    <div class="relative overflow-hidden rounded-3xl bg-[#002B6B] px-6 sm:px-10 py-12 sm:py-16 mb-10 shadow-xl shadow-blue-950/10 border border-slate-100 dark:border-slate-800">
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#002B6B] via-indigo-700 to-purple-600 px-5 sm:px-7 py-12 sm:py-16 mb-10 shadow-xl shadow-blue-950/10 border border-slate-100 dark:border-slate-800">
         <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-white/10 to-transparent rounded-full -mr-20 -mt-20 blur-2xl pointer-events-none"></div>
         <div class="absolute -bottom-10 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
         
@@ -163,7 +163,7 @@
             <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Pilih cara yang paling sesuai untuk menghubungi tim support</p>
         </div>
 
-        <div class="grid sm:grid-cols-3 gap-6">
+        <div class="grid sm:grid-cols-2 gap-6">
             {{-- Card 1: Buat Tiket --}}
             <div class="group/card rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:border-[#002B6B]/30 dark:hover:border-blue-500/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
                 <div>
@@ -195,16 +195,16 @@
                     ✉️ Kirim Email
                 </a>
             </div>
-
-    
-            </div>
         </div>
     </div>
 
-
+</div>
+{{-- Modal diletakkan di luar wrapper .animate-fade-in supaya position:fixed-nya
+     nempel ke viewport, bukan ke wrapper (animasi transform di wrapper bikin
+     'fixed' di dalamnya jadi ngikut wrapper, bukan layar). --}}
 {{-- ===== TICKET MODAL ===== --}}
 <div id="ticketModal" class="hidden fixed inset-0 z-50 items-center justify-center px-4 transition-all duration-300">
-    <div id="ticketOverlay" class="absolute inset-0 bg-slate-955/40 backdrop-blur-sm transition-opacity duration-300"></div>
+    <div id="ticketOverlay" class="absolute inset-0 bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300"></div>
     <div class="relative bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md p-6 sm:p-7 shadow-2xl border border-slate-100 dark:border-slate-800 transform scale-95 opacity-0 transition-all duration-300" id="modalContainer">
         <div class="flex items-center justify-between mb-5">
             <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">

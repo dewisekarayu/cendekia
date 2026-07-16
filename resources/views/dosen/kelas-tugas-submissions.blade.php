@@ -42,7 +42,7 @@
         <div class="ml-auto">
             <button type="submit" form="formNilaiSemua"
                     class="text-sm font-semibold text-white bg-[#321270] dark:bg-[#6c2bd9] hover:bg-opacity-90 dark:hover:bg-[#5b21b6] px-5 py-2.5 rounded-lg transition duration-150 shadow-sm">
-                Simpan Semua Nilai
+                Simpan Nilai
             </button>
         </div>
     </div>

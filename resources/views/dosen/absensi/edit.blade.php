@@ -35,7 +35,7 @@
 
     <form action="{{ route('dosen.absensi.update', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST">
         @csrf
-        @submit('PUT')
+        @method('PUT')
 
         <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 overflow-hidden transition-all duration-300 hover:shadow-md">
             <div class="bg-gradient-to-r from-slate-50 to-blue-50/30 px-6 py-4 border-b border-slate-100 flex items-center gap-2">
@@ -182,7 +182,7 @@
               method="POST" 
               onsubmit="return confirm('Apakah Anda benar-benar yakin ingin menghapus data presensi pertemuan ini beserta seluruh riwayat rekap mahasiswa di dalamnya?');">
             @csrf
-            @submit('DELETE')
+            @method('DELETE')
             <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 font-bold text-sm rounded-xl shadow-sm transition-all duration-300 hover:scale-[1.01] outline-none">
                 Hapus Permanen Sesi Presensi
             </button>
