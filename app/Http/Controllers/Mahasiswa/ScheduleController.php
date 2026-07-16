@@ -9,7 +9,7 @@ class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
-        $kelasList = $request->user()->kelasDiikuti()->with(['mataKuliah', 'dosen'])->get();
+        $kelasList = $request->user()->kelasDiikuti()->with('mataKuliah')->get();
 
         return view('mahasiswa.schedule', compact('kelasList'));
     }
