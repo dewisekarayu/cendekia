@@ -29,7 +29,7 @@
             'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
             'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
             'Forum'        => ['url' => route('dosen.kelas-forum', $kelas->id),  'active' => request()->routeIs('dosen.kelas-forum')],
-            'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
+            'Penilaian'    => ['url' => route('dosen.kelas-tugas.rekap', $kelas->id), 'active' => request()->routeIs('dosen.kelas-tugas.rekap')],
         ];
     @endphp
     <div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-sm transition-colors duration-200">
@@ -72,15 +72,6 @@
 
         {{-- Sisi Kanan: Aksi (Tombol-Tombol) --}}
         <div class="flex flex-wrap items-center gap-3">
-            {{-- Tombol Rekap Nilai --}}
-            <a href="{{ route('dosen.kelas-tugas.rekap', $kelas->id) }}"
-            class="inline-flex items-center text-xs font-semibold text-[#321270] dark:text-purple-300 bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 dark:hover:bg-purple-900/40 px-4 py-2.5 rounded-xl transition-all duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Lihat Rekap Nilai
-            </a>
-
             {{-- Tombol Tambah Tugas Baru --}}
             <button onclick="toggleModal('modalTugas')" 
                     class="inline-flex items-center gap-2 bg-[#321270] dark:bg-[#6c2bd9] hover:bg-[#230c50] dark:hover:bg-[#5b21b6] text-white text-sm font-semibold px-[18px] py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]">
@@ -137,10 +128,101 @@
                                     <span class="inline-block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-1 rounded">Open</span>
                                 @endif
                             </td>
-                            <td class="px-5 py-3 text-right space-x-2 whitespace-nowrap">
-                                <a href="{{ route('dosen.tugas.submissions', [$kelas->id, $tugas->id]) }}" class="inline-block text-xs font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-3 py-1.5 rounded-md transition duration-150">
-                                    View Submissions
-                                </a>
+                            <td class="px-5 py-3 text-right whitespace-nowrap">
+                                <div class="inline-flex items-center gap-2">
+                                    <a href="{{ route('dosen.tugas.submissions', [$kelas->id, $tugas->id]) }}"
+                                    class="inline-block text-xs font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-3 py-1.5 rounded-md transition duration-150">
+                                        View Submissions
+                                    </a>
+
+                                    <div class="relative inline-block text-left">
+                                        <button type="button" onclick="toggleDropdown('dropdownTugas{{ $tugas->id }}')"
+                                                class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700 transition align-middle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 dark:text-slate-300" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                            </svg>
+                                        </button>
+
+                                        <div id="dropdownTugas{{ $tugas->id }}"
+                                            class="dropdown-tugas hidden absolute right-0 mt-2 w-40 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg z-20 overflow-hidden">
+
+                                            <button type="button" onclick="confirmEdit('{{ $tugas->id }}')"
+                                                    class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
+                                                Edit
+                                            </button>
+
+                                            <form action="{{ route('dosen.kelas-tugas.destroy', [$kelas->id, $tugas->id]) }}" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menghapus tugas ini? Semua data pengumpulan dan lampiran terkait juga akan ikut terhapus dan tidak bisa dikembalikan.');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                            <td colspan="5" class="p-0 border-0">
+                                <div id="modalEditTugas{{ $tugas->id }}" class="fixed inset-0 z-50 hidden overflow-y-auto">
+                                    <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onclick="toggleModal('modalEditTugas{{ $tugas->id }}')"></div>
+
+                                    <div class="relative min-h-screen flex items-center justify-center p-4">
+                                        <div class="relative bg-white dark:bg-slate-850 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
+
+                                            <div class="px-8 py-6 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-4">
+                                                <div class="bg-[#321270] dark:bg-purple-650 p-2 rounded-lg text-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </div>
+                                                <h3 class="text-xl font-bold text-[#1e293b] dark:text-white">Edit Tugas</h3>
+                                            </div>
+
+                                            <form action="{{ route('dosen.kelas-tugas.update', [$kelas->id, $tugas->id]) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="px-8 py-6 space-y-6">
+                                                    <div class="space-y-2">
+                                                        <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Assignment Title</label>
+                                                        <input type="text" name="judul" value="{{ $tugas->judul }}" required maxlength="255"
+                                                            class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                                    </div>
+
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                        <div class="space-y-2">
+                                                            <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Deadline</label>
+                                                            <input type="datetime-local" name="deadline" value="{{ $tugas->deadline->format('Y-m-d\TH:i') }}" required
+                                                                class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                                        </div>
+                                                        <div class="space-y-2">
+                                                            <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Total Points</label>
+                                                            <input type="number" name="poin" value="{{ $tugas->bobot_nilai }}" required min="1" max="100"
+                                                                class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="space-y-2">
+                                                        <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instructions</label>
+                                                        <textarea name="instruksi" rows="5" required maxlength="5000"
+                                                            class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none resize-none">{{ $tugas->instruksi }}</textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-gray-50/50 dark:bg-slate-900 px-8 py-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
+                                                    <button type="button" onclick="toggleModal('modalEditTugas{{ $tugas->id }}')" class="px-6 py-2.5 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 font-semibold hover:bg-gray-100 dark:hover:bg-slate-850 transition">
+                                                        Batal
+                                                    </button>
+                                                    <button type="submit" class="px-6 py-2.5 rounded-lg bg-[#321270] dark:bg-[#6c2bd9] text-white font-semibold hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
+                                                        Simpan Perubahan
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -262,16 +344,18 @@
 
         // Perbaikan: Menutup modal ketika user mengklik area background luar (overlay)
         window.onclick = function(event) {
-            // Jika Anda punya lebih dari satu modal, masukkan ID-nya ke dalam array ini
-            const modalIds = ['modalTugas', 'modalMateri']; 
-            
+            const modalIds = ['modalTugas', 'modalMateri'];
             modalIds.forEach(id => {
                 const modal = document.getElementById(id);
-                // Jika yang diklik adalah kontainer utama (overlay-nya) dan modal sedang tidak tersembunyi
                 if (modal && event.target === modal && !modal.classList.contains('hidden')) {
                     toggleModal(id);
                 }
             });
+
+            // Tutup dropdown titik tiga kalau klik di luar dropdown/tombolnya
+            if (!event.target.closest('.dropdown-tugas') && !event.target.closest('[onclick^="toggleDropdown"]')) {
+                document.querySelectorAll('.dropdown-tugas').forEach(el => el.classList.add('hidden'));
+            }
         }
 
         // Fungsi menampilkan daftar nama file yang diunggah
@@ -295,6 +379,23 @@
                 display.classList.remove('hidden');
             } else {
                 display.classList.add('hidden');
+            }
+        }
+
+        // Buka/tutup dropdown titik tiga, tutup dropdown lain yang lagi terbuka
+        function toggleDropdown(id) {
+            document.querySelectorAll('.dropdown-tugas').forEach(el => {
+                if (el.id !== id) el.classList.add('hidden');
+            });
+            const dropdown = document.getElementById(id);
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
+        // Konfirmasi sebelum membuka modal edit
+        function confirmEdit(tugasId) {
+            document.querySelectorAll('.dropdown-tugas').forEach(el => el.classList.add('hidden'));
+            if (confirm('Yakin ingin mengedit tugas ini?')) {
+                toggleModal('modalEditTugas' + tugasId);
             }
         }
     </script>

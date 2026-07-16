@@ -59,7 +59,7 @@
                         <th class="px-5 py-3 font-medium">File Jawaban</th>
                         <th class="px-5 py-3 font-medium">Status</th>
                         <th class="px-5 py-3 font-medium">Nilai</th>
-                        <th class="px-5 py-3 font-medium text-right">Catatan / Simpan</th>
+                        <th class="px-5 py-3 font-medium text-right">Catatan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50 dark:divide-slate-700/50">
@@ -130,12 +130,6 @@
                                 @else
                                     <span class="invisible text-xs px-2.5 py-1.5 mr-1">Catatan</span>
                                 @endif
-                                <button type="button"
-                                        data-url="{{ route('dosen.tugas.nilai', [$kelas->id, $tugas->id, $p->id]) }}"
-                                        onclick="simpanSatu('{{ $p->id }}', this.dataset.url)"
-                                        class="text-xs font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-2.5 py-1.5 rounded-md transition">
-                                    Simpan
-                                </button>
                             </td>
                         </tr>
 
@@ -226,9 +220,6 @@
 
     @push('scripts')
     <script>
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
-            ?? "{{ csrf_token() }}";
-
         function toggleModal(modalID) {
             document.getElementById(modalID).classList.toggle("hidden");
             document.body.classList.toggle("overflow-hidden");
@@ -322,60 +313,6 @@
             document.getElementById('feedback-' + id).value = textareaVal;
             toggleModal('modalCatatan' + id);
         }
-
-        async function simpanSatu(id, url) {
-            const input = document.getElementById('nilai-' + id);
-            const nilai = input.value;
-            const feedback = document.getElementById('feedback-' + id).value;
-            const belumKumpul = input.dataset.status === 'belum';
-            const nama = input.dataset.nama;
-
-            if (nilai === '') {
-                showToast('Isi nilai dulu sebelum simpan.', 'error');
-                return;
-            }
-
-            if (belumKumpul) {
-                const isDark = document.documentElement.classList.contains('dark');
-                const result = await Swal.fire({
-                    title: 'Belum mengumpulkan tugas',
-                    html: `<b>${nama}</b> belum mengumpulkan tugas ini. Yakin ingin menyimpan nilai <b>${nilai}</b>?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, simpan',
-                    cancelButtonText: 'Batal',
-                    confirmButtonColor: '#6c2bd9',
-                    cancelButtonColor: '#6b7280',
-                    background: isDark ? '#1e293b' : '#ffffff',
-                    color: isDark ? '#ffffff' : '#000000',
-                    reverseButtons: true,
-                });
-
-                if (!result.isConfirmed) return;
-            }
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify({ nilai, feedback_dosen: feedback }),
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Gagal menyimpan');
-                return res.json();
-            })
-            .then(data => {
-                const statusEl = document.getElementById('status-' + id);
-                statusEl.textContent = 'Dinilai';
-                statusEl.className = 'inline-block text-[10px] font-semibold px-2 py-1 rounded text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/40';
-                showToast(`Nilai untuk ${nama} berhasil disimpan.`, 'success');
-            })
-            .catch(() => showToast('Gagal menyimpan nilai, coba lagi.', 'error'));
-        }
     </script>
     @endpush
-
 @endsection

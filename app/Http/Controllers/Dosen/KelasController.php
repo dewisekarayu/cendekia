@@ -113,6 +113,56 @@ class KelasController extends Controller
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil dipublikasikan.');
     }
+
+    public function updateTugas(Request $request, $id, $tugasId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($id);
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+
+        $validated = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'instruksi' => ['required', 'string', 'max:5000'],
+            'deadline' => ['required', 'date'],
+            'poin' => ['required', 'integer', 'min:1', 'max:100'],
+        ]);
+
+        $tugas->update([
+            'judul' => $validated['judul'],
+            'instruksi' => $validated['instruksi'],
+            'deadline' => $validated['deadline'],
+            'bobot_nilai' => $validated['poin'],
+        ]);
+
+        return redirect()->route('dosen.kelas-tugas', $kelas->id)
+            ->with('success', 'Tugas berhasil diperbarui.');
+    }
+
+    public function hapusTugas(Request $request, $id, $tugasId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($id);
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+
+        // Hapus file lampiran soal tugas dari storage
+        foreach ($tugas->files as $file) {
+            Storage::disk('public')->delete($file->file_path);
+        }
+        $tugas->files()->delete();
+
+        // Hapus file jawaban mahasiswa + record pengumpulan
+        foreach ($tugas->pengumpulan as $pengumpulan) {
+            foreach ($pengumpulan->files as $file) {
+                Storage::disk('public')->delete($file->file_path);
+            }
+            $pengumpulan->files()->delete();
+        }
+        $tugas->pengumpulan()->delete();
+
+        $judul = $tugas->judul;
+        $tugas->delete();
+
+        return redirect()->route('dosen.kelas-tugas', $kelas->id)
+            ->with('success', "Tugas \"{$judul}\" berhasil dihapus.");
+    }
     
     public function bukaMateri(Request $request, $kelasId, $materiId)
     {
@@ -207,6 +257,45 @@ class KelasController extends Controller
             ->with('success', 'Materi berhasil ditambahkan.');
     }
 
+    public function updateMateri(Request $request, $id, $materiId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($id);
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+
+        $validated = $request->validate([
+            'judul' => ['required', 'string', 'max:255'],
+            'deskripsi' => ['nullable', 'string', 'max:5000'],
+            'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:32'],
+        ]);
+
+        $materi->update([
+            'judul' => $validated['judul'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'pertemuan_ke' => $validated['pertemuan_ke'],
+        ]);
+
+        return redirect()->route('dosen.kelas-materi', $kelas->id)
+            ->with('success', 'Materi berhasil diperbarui.');
+    }
+
+    public function hapusMateri(Request $request, $id, $materiId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($id);
+        $materi = Materi::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($materiId);
+
+        // Hapus semua file materi dari storage
+        foreach ($materi->files as $file) {
+            Storage::disk('public')->delete($file->file_path);
+        }
+        $materi->files()->delete();
+
+        $judul = $materi->judul;
+        $materi->delete();
+
+        return redirect()->route('dosen.kelas-materi', $kelas->id)
+            ->with('success', "Materi \"{$judul}\" berhasil dihapus.");
+    }
+    
     public function submissions(Request $request, $kelasId, $tugasId)
     {
         $kelas = KelasPerkuliahan::with(['mataKuliah', 'mahasiswa'])
