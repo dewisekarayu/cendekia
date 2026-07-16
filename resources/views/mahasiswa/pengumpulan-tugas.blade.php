@@ -5,8 +5,7 @@
 
 @section('content')
 <div class="w-full px-4 py-8 sm:px-6 lg:px-8">
-
-    <a href="{{ route('mahasiswa.kelas-detail', $tugas->kelas_perkuliahan_id) }}"
+    <a href="{{ route('mahasiswa.kelas-detail', $tugas->kelas_perkuliahan_id) }}?tab=tugas"
        class="inline-flex items-center gap-1.5 mb-4 text-sm font-medium text-slate-500 hover:text-[#002B6B] transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>

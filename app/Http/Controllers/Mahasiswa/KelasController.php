@@ -52,14 +52,15 @@ class KelasController extends Controller
             ->count();
         $progress = $totalTugas > 0 ? round(($submitted / $totalTugas) * 100) : 0;
 
-        $rekapAbsen = AbsensiMahasiswa::with('absensi')
-            ->whereHas('absensi', fn ($q) => $q->where('kelas_perkuliahan_id', $kelas->id))
-            ->where('mahasiswa_id', $request->user()->id)
-            ->get()
-            ->sortByDesc(fn ($item) => $item->absensi->pertemuan_ke)
-            ->values();
+        $rekapAbsen = \App\Models\Absensi::where('kelas_perkuliahan_id', $kelas->id)
+            ->with(['absensiMahasiswa' => fn ($q) => $q->where('mahasiswa_id', $request->user()->id)])
+            ->latest('pertemuan_ke')
+            ->get();
 
-        $totalHadir = $rekapAbsen->where('status', 'hadir')->count();
+        $totalHadir = AbsensiMahasiswa::whereIn('absensi_id', $rekapAbsen->pluck('id'))
+            ->where('mahasiswa_id', $request->user()->id)
+            ->where('status', 'hadir')
+            ->count();
         $totalPertemuan = $rekapAbsen->count();
         
         // Get contextual help
