@@ -27,7 +27,7 @@
     </div>
 
     <div class="text-center" style="margin-top: 30px;">
-        <a href="{{ route('help-center.index') }}" class="cta-button">Kunjungi Pusat Bantuan</a>
+        <a href="{{ url('/') }}" class="cta-button">Kembali ke Beranda</a>
     </div>
 </div>
 @endsection
