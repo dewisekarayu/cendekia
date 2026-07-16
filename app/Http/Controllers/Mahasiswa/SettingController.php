@@ -13,26 +13,47 @@ use App\Models\NotificationPreference;
 class SettingController extends Controller
 {
     /**
-     * Display settings page
+     * Shared stats used by both the Profil and Setting pages
+     * so the summary cards stay identical on both.
+     */
+    protected function getStats($user): array
+    {
+        $totalKelas = $user->kelasDiikuti()->count();
+        $nilaiAkhirList = NilaiAkhir::where('mahasiswa_id', $user->id)->get();
+        $rataRata = $nilaiAkhirList->avg('nilai_akhir');
+        $announcements = collect([]);
+
+        return compact('totalKelas', 'nilaiAkhirList', 'rataRata', 'announcements');
+    }
+
+    /**
+     * Display settings page (Umum & Notifikasi)
      */
     public function index(Request $request)
     {
         $user = $request->user();
         $preferences = NotificationPreference::forUser($user->id);
-        
-        // Get stats for dashboard
-        $totalKelas = $user->kelasDiikuti()->count();
-        $nilaiAkhirList = NilaiAkhir::where('mahasiswa_id', $user->id)->get();
-        $rataRata = $nilaiAkhirList->avg('nilai_akhir');
-        $announcements = collect([]);
-        
-        return view('mahasiswa.setting', compact(
-            'user',
-            'preferences',
-            'totalKelas',
-            'nilaiAkhirList',
-            'rataRata',
-            'announcements'
+
+        $stats = $this->getStats($user);
+
+        return view('mahasiswa.setting', array_merge(
+            compact('user', 'preferences'),
+            $stats
+        ));
+    }
+
+    /**
+     * Display profil page (Keamanan)
+     */
+    public function profil(Request $request)
+    {
+        $user = $request->user();
+
+        $stats = $this->getStats($user);
+
+        return view('mahasiswa.profil', array_merge(
+            compact('user'),
+            $stats
         ));
     }
 
@@ -49,7 +70,7 @@ class SettingController extends Controller
 
         $request->user()->update($validated);
 
-        return redirect()->route('mahasiswa.setting')
+        return redirect()->route('mahasiswa.profil')
             ->with('success', 'Profil berhasil diperbarui');
     }
 
@@ -94,7 +115,7 @@ class SettingController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect()->route('mahasiswa.setting')
+        return redirect()->route('mahasiswa.profil')
             ->with('success', 'Password berhasil diperbarui');
     }
 

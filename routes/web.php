@@ -255,6 +255,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     });
 
     // Pengaturan & Profil Mahasiswa
+    Route::get('/mahasiswa/profil', [MahasiswaSettingController::class, 'profil'])->name('mahasiswa.profil');
     Route::get('/mahasiswa/setting', [MahasiswaSettingController::class, 'index'])->name('mahasiswa.setting');
     Route::patch('/mahasiswa/setting/profile', [MahasiswaSettingController::class, 'updateProfile'])->name('mahasiswa.setting.profile');
     Route::put('/mahasiswa/setting/foto', [MahasiswaSettingController::class, 'updateFoto'])->name('mahasiswa.setting.foto');
