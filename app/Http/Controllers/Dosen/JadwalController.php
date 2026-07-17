@@ -24,16 +24,21 @@ class JadwalController extends Controller
             ->with(['mataKuliah.programStudi', 'semester', 'mahasiswa'])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
-            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu')")
+            ->orderByRaw("FIELD(LOWER(TRIM(hari)), 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu')")
             ->orderBy('jam_mulai')
             ->get();
 
-        // Kelompokkan berdasarkan hari
+        // Kelompokkan berdasarkan hari (case-insensitive & trim, agar data seperti "selasa" atau " Selasa " tetap cocok)
         $jadwalByDay = [];
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-        
+
         foreach ($days as $day) {
-            $jadwalByDay[$day] = $kelasPerkuliahan->where('hari', $day)->sortBy('jam_mulai')->values();
+            $jadwalByDay[$day] = $kelasPerkuliahan
+                ->filter(function ($kelas) use ($day) {
+                    return strtolower(trim($kelas->hari)) === strtolower($day);
+                })
+                ->sortBy('jam_mulai')
+                ->values();
         }
 
         // Hitung statistik
@@ -88,18 +93,19 @@ class JadwalController extends Controller
         $calendarEvents = [];
         
         foreach ($kelasPerkuliahan as $kelas) {
-            // Map hari ke format day-of-week
+            // Map hari ke format day-of-week (case-insensitive & trim)
             $dayMap = [
-                'Senin' => 1,
-                'Selasa' => 2,
-                'Rabu' => 3,
-                'Kamis' => 4,
-                'Jumat' => 5,
-                'Sabtu' => 6,
-                'Minggu' => 7
+                'senin' => 1,
+                'selasa' => 2,
+                'rabu' => 3,
+                'kamis' => 4,
+                'jumat' => 5,
+                'sabtu' => 6,
+                'minggu' => 7,
             ];
-            
-            $dayOfWeek = $dayMap[$kelas->hari] ?? 1;
+
+            $hariKey = strtolower(trim($kelas->hari));
+            $dayOfWeek = $dayMap[$hariKey] ?? 1;
             
             $calendarEvents[] = [
                 'id' => $kelas->id,
@@ -134,7 +140,7 @@ class JadwalController extends Controller
             ->with(['mataKuliah.programStudi', 'semester'])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
-            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu')")
+            ->orderByRaw("FIELD(LOWER(TRIM(hari)), 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu')")
             ->orderBy('jam_mulai')
             ->get();
 

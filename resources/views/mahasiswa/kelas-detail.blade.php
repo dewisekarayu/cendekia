@@ -72,7 +72,7 @@
 </div>
 
 {{-- ===== MAIN CONTENT ===== --}}
-<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3" x-data="{ tab: 'semua' }" x-init="tab = new URLSearchParams(window.location.search).get('tab') || 'semua'">
 
     {{-- Content Area --}}
     <div class="lg:col-span-2 space-y-4">
@@ -82,47 +82,41 @@
             @include('help-center.contextual-help', array_merge($contextualHelp, ['dismissible' => true]))
         @endif
 
-        {{-- Tab buttons with links --}}
+        {{-- Tab buttons (Alpine, tanpa reload halaman) --}}
         <div class="flex gap-2 overflow-x-auto pb-1 items-center">
             @php
-                $currentTab = request()->get('tab', 'semua');
                 $tabs = [
-                    'semua' => ['label' => 'Semua', 'icon' => 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z'],
-                    'materi' => ['label' => 'Materi', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                    'tugas' => ['label' => 'Tugas', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+                    'semua'   => ['label' => 'Semua', 'icon' => 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z'],
+                    'materi'  => ['label' => 'Materi', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
+                    'tugas'   => ['label' => 'Tugas', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
                     'absensi' => ['label' => 'Absensi', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-                    'forum' => ['label' => 'Forum', 'icon' => 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'],
+                    'forum'   => ['label' => 'Forum', 'icon' => 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'],
                 ];
             @endphp
-            
-            @foreach($tabs as $key => $tab)
-                <a href="{{ request()->fullUrlWithQuery(['tab' => $key]) }}"
-                   class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition inline-flex items-center gap-1.5 {{ $currentTab === $key ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20' : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]' }}">
+
+            @foreach ($tabs as $key => $t)
+                <button @click="tab = '{{ $key }}'"
+                        :class="tab === '{{ $key }}'
+                            ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20'
+                            : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]'"
+                        class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition inline-flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $tab['icon'] }}"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $t['icon'] }}"/>
                     </svg>
-                    {{ $tab['label'] }}
-                </a>
+                    {{ $t['label'] }}
+                </button>
             @endforeach
-            
-            <div class="flex gap-2 ml-auto items-center">
-                <a href="{{ route('help-center.index') }}" 
-                   class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-blue-50 border border-blue-200 text-[#002B6B] hover:bg-blue-100 transition inline-flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Bantuan
-                </a>
+
+            <!-- <div class="flex gap-2 ml-auto items-center">
                 <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition inline-flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                     Pencet Absen
                 </a>
-            </div>
+            </div> -->
         </div>
 
         {{-- MATERI --}}
-        @if ($currentTab === 'semua' || $currentTab === 'materi')
-        <div class="space-y-3">
+        <div x-show="tab === 'semua' || tab === 'materi'" class="space-y-3">
             @forelse ($materiList as $materi)
                 <div class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center">
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#002B6B]">
@@ -155,16 +149,14 @@
                     @endif
                 </div>
             @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400">
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'materi'">
                     Belum ada materi untuk kelas ini.
                 </div>
             @endforelse
         </div>
-        @endif
 
         {{-- TUGAS --}}
-        @if ($currentTab === 'semua' || $currentTab === 'tugas')
-        <div class="space-y-3">
+        <div x-show="tab === 'semua' || tab === 'tugas'" class="space-y-3">
             @forelse ($tugasList as $tugas)
                 @php
                     $dl = \Carbon\Carbon::parse($tugas->deadline);
@@ -224,51 +216,68 @@
                     </div>
                 </div>
             @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400">
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'tugas'">
                     Belum ada tugas untuk kelas ini.
                 </div>
             @endforelse
         </div>
-        @endif
 
         {{-- ABSENSI --}}
-        @if ($currentTab === 'semua' || $currentTab === 'absensi')
-        <div class="space-y-3">
+        <div x-show="tab === 'semua' || tab === 'absensi'" class="space-y-3">
             @forelse ($rekapAbsen as $item)
                 @php
+                    $attendance = $item->absensiMahasiswa->first();
+                    $status = $attendance?->status;
+                    if (!$status) {
+                        if ($item->isBuka()) {
+                            $status = 'terbuka';
+                        } elseif ($item->isDraft()) {
+                            $status = 'draft';
+                        } else {
+                            $status = 'alpha';
+                        }
+                    }
+
                     $absenMap = [
-                        'hadir'  => ['label' => 'Hadir',       'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200', 'icon' => 'M5 13l4 4L19 7'],
-                        'izin'   => ['label' => 'Izin',         'class' => 'bg-blue-50 text-blue-700 border-blue-200',         'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'sakit'  => ['label' => 'Sakit',        'class' => 'bg-amber-50 text-amber-700 border-amber-200',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'alpha'  => ['label' => 'Tidak Hadir',  'class' => 'bg-red-50 text-red-700 border-red-200',            'icon' => 'M6 18L18 6M6 6l12 12'],
+                        'hadir'    => ['label' => 'Hadir',         'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/30', 'icon' => 'M5 13l4 4L19 7'],
+                        'izin'     => ['label' => 'Izin',           'class' => 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30',           'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'sakit'    => ['label' => 'Sakit',          'class' => 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/30',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'alpha'    => ['label' => 'Tidak Hadir',    'class' => 'bg-red-50 text-red-700 border-red-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/30',              'icon' => 'M6 18L18 6M6 6l12 12'],
+                        'terbuka'  => ['label' => 'Terbuka',        'class' => 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-900/30',  'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        'draft'    => ['label' => 'Belum Dimulai',  'class' => 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-900/40 dark:text-slate-400 dark:border-slate-800',        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
                     ];
-                    $ab = $absenMap[$item->status] ?? $absenMap['alpha'];
+                    $ab = $absenMap[$status] ?? $absenMap['alpha'];
                 @endphp
-                <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+                <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm transition-colors duration-200">
                     <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border {{ $ab['class'] }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $ab['icon'] }}"/></svg>
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-sm font-semibold text-gray-800">Pertemuan {{ $item->absensi->pertemuan_ke }}</p>
-                        <p class="text-xs text-gray-400">{{ $item->absensi->tanggal->format('d M Y') }}
-                            @if ($item->absensi->rangkuman)
-                                · {{ Str::limit($item->absensi->rangkuman, 80) }}
+                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-250">Pertemuan {{ $item->pertemuan_ke }}</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-450">{{ $item->tanggal->format('d M Y') }}
+                            @if ($item->rangkuman)
+                                · {{ Str::limit($item->rangkuman, 80) }}
                             @endif
                         </p>
                     </div>
-                    <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
+                    <div class="flex items-center gap-2">
+                        @if($status === 'terbuka')
+                            <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white hover:text-white text-decoration-none transition shadow-sm">
+                                Absen Masuk
+                            </a>
+                        @endif
+                        <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
+                    </div>
                 </div>
             @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400">
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'absensi'">
                     Belum ada data absensi.
                 </div>
             @endforelse
         </div>
-        @endif
 
         {{-- FORUM --}}
-        @if ($currentTab === 'forum')
-        <div class="space-y-4">
+        <div x-show="tab === 'forum'" class="space-y-4">
             <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm text-center">
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600 mx-auto mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
@@ -282,40 +291,66 @@
                 </a>
             </div>
         </div>
-        @endif
     </div>
 
-    {{-- Sidebar Progress --}}
-    <div>
-        <div class="sticky top-24 space-y-4">
-            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
-                <h3 class="mb-4 text-sm font-bold text-slate-800">Progress Kelas</h3>
+    {{-- Sidebar Container --}}
+    <div class="sticky top-24 space-y-4">
+        {{-- Progress Kelas Card --}}
+        <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <h3 class="mb-4 text-sm font-bold text-slate-800">Progress Kelas</h3>
 
-                <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
-                    <span class="text-gray-500">Penyelesaian</span>
-                    <span class="font-bold text-[#002B6B]">{{ $progress }}%</span>
-                </div>
-                <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
-                    <div class="h-full rounded-full bg-[#002B6B] transition-all" style="width: {{ $progress }}%"></div>
-                </div>
-
-                <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
-                    <span class="text-gray-500">Kehadiran</span>
-                    <span class="font-bold text-emerald-600">{{ $totalHadir }}/{{ $totalPertemuan }}</span>
-                </div>
-                <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
-                    <div class="h-full rounded-full bg-emerald-500 transition-all" style="width: {{ $totalPertemuan > 0 ? round(($totalHadir/$totalPertemuan)*100) : 0 }}%"></div>
-                </div>
-
-                <div class="space-y-2.5 border-t border-gray-100 pt-4">
-                    @foreach ([['label' => 'Tugas Selesai', 'value' => $submitted.'/'.$totalTugas], ['label' => 'Total Materi', 'value' => $materiList->count().' modul'], ['label' => 'Total Pertemuan', 'value' => $totalPertemuan.' kali']] as $row)
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="text-gray-500">{{ $row['label'] }}</span>
-                            <span class="font-semibold text-gray-800">{{ $row['value'] }}</span>
-                        </div>
-                    @endforeach
-                </div>
+            {{-- Penyelesaian --}}
+            <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
+                <span class="text-gray-500">Penyelesaian</span>
+                <span class="font-bold text-[#002B6B]">{{ $progress }}%</span>
             </div>
+            <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                <div class="h-full rounded-full bg-[#002B6B] transition-all" style="width: {{ $progress }}%"></div>
+            </div>
+
+            {{-- Kehadiran --}}
+            <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
+                <span class="text-gray-500">Kehadiran</span>
+                <span class="font-bold text-emerald-600">{{ $totalHadir }}/{{ $totalPertemuan }}</span>
+            </div>
+            <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
+                @php
+                    $persenHadir = $totalPertemuan > 0 ? round(($totalHadir / $totalPertemuan) * 100) : 0;
+                @endphp
+                <div class="h-full rounded-full bg-emerald-500 transition-all" style="width: {{ $persenHadir }}%"></div>
+            </div>
+
+            {{-- Detail Informasi --}}
+            <div class="space-y-2.5 border-t border-gray-100 pt-4">
+                @foreach ([
+                    ['label' => 'Tugas Selesai', 'value' => $submitted.'/'.$totalTugas], 
+                    ['label' => 'Total Materi', 'value' => $materiList->count().' modul'], 
+                    ['label' => 'Total Pertemuan', 'value' => $totalPertemuan.' kali']
+                ] as $row)
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-gray-500">{{ $row['label'] }}</span>
+                        <span class="font-semibold text-gray-800">{{ $row['value'] }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Ringkasan Card --}}
+        <div class="bg-gradient-to-br from-[#002B6B]/5 to-blue-50 rounded-2xl border border-blue-100 p-5 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+                <div class="w-7 h-7 rounded-lg bg-[#002B6B] flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-blue-900 text-sm">Ringkasan</h3>
+            </div>
+            <a href="{{ route('mahasiswa.absensi.show', $kelas->id) }}" class="flex items-center justify-between text-sm font-bold text-blue-700 hover:text-blue-900 transition-colors duration-200 group">
+                <span>Lihat Riwayat Lengkap</span>
+                <svg class="w-4 h-4 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
         </div>
     </div>
 </div>

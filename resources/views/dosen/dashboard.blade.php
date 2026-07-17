@@ -143,7 +143,7 @@
         <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 px-5 py-4 bg-slate-50/50 dark:bg-slate-900/30">
             <h2 class="text-sm font-bold text-slate-800 dark:text-white tracking-tight">Pengumpulan Tugas Terbaru</h2>
             @if ($submissions->isNotEmpty())
-                <a href="{{ route('dosen.gradebook') }}" class="text-xs font-bold text-[#321270] dark:text-purple-400 hover:underline">Buka Lembar Nilai &rarr;</a>
+                <a href="{{ route('dosen.kelas-tugas.rekap', ['id' => $submissions->first()->tugas?->kelas_perkuliahan_id]) }}" class="inline-flex items-center gap-1 text-xs font-bold text-[#321270] dark:text-purple-400 hover:underline">Buka Lembar Nilai &rarr;</a>
             @endif
         </div>
 
@@ -182,8 +182,8 @@
                                     </span>
                                 </td>
                                 <td class="px-5 py-3.5 text-center">
-                                    <a href="{{ route('dosen.gradebook', ['kelas_id' => $item->tugas?->kelas_perkuliahan_id]) }}"
-                                       class="inline-flex items-center rounded-xl bg-[#321270]/10 dark:bg-purple-950/40 px-4 py-1.5 text-xs font-bold text-[#321270] dark:text-purple-300 hover:bg-[#321270] dark:hover:bg-[#6c2bd9] hover:text-white dark:hover:text-white transition duration-150">
+                                    <a href="{{ route('dosen.kelas-tugas.rekap', ['id' => $item->tugas?->kelas_perkuliahan_id]) }}"
+                                        class="inline-flex items-center rounded-xl bg-[#321270]/10 dark:bg-purple-950/40 px-4 py-1.5 text-xs font-bold text-[#321270] dark:text-purple-300 hover:bg-[#321270] dark:hover:bg-[#6c2bd9] hover:text-white dark:hover:text-white transition duration-150">
                                         Buka Evaluasi
                                     </a>
                                 </td>
