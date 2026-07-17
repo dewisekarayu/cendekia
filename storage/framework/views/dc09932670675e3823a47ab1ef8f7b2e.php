@@ -1,17 +1,16 @@
-@extends('layouts.admin')
-@section('title', 'Kalender Akademik')
-@section('activeMenu', 'Kalender Akademik')
-@section('content')
+<?php $__env->startSection('title', 'Kalender Akademik'); ?>
+<?php $__env->startSection('activeMenu', 'Kalender Akademik'); ?>
+<?php $__env->startSection('content'); ?>
 
 <style>[x-cloak]{ display:none !important; }</style>
 
 <div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4" x-data="kalenderData()">
 
-    {{-- ═══════════════════════════════ HEADER SECTION ═══════════════════════════════ --}}
+    
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div class="min-w-0">
             <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400 mb-2">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors">Dashboard</a>
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="hover:text-gray-900 dark:hover:text-white transition-colors">Dashboard</a>
                 <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 <span class="text-gray-900 dark:text-white font-medium truncate">Kalender Akademik</span>
             </div>
@@ -23,24 +22,25 @@
                 </div>
                 <span>Kalender Akademik</span>
             </h1>
-            @php
+            <?php
                 $activeSem = $semesters->firstWhere('id', $selectedSemesterId);
-            @endphp
-            @if($activeSem)
+            ?>
+            <?php if($activeSem): ?>
             <p class="mt-2 flex items-center gap-2 flex-wrap">
                 <span class="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold">
-                    {{ $activeSem->tahun_ajaran }} – {{ $activeSem->nama_semester }}
+                    <?php echo e($activeSem->tahun_ajaran); ?> – <?php echo e($activeSem->nama_semester); ?>
+
                 </span>
-                @if($activeSem->is_active)
+                <?php if($activeSem->is_active): ?>
                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold">
                         <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Aktif
                     </span>
-                @endif
+                <?php endif; ?>
             </p>
-            @endif
+            <?php endif; ?>
         </div>
         <div class="flex items-center gap-2 self-start sm:self-auto flex-wrap sm:flex-nowrap w-full sm:w-auto">
-            <a href="{{ route('admin.kalender-akademik.create') }}"
+            <a href="<?php echo e(route('admin.kalender-akademik.create')); ?>"
                class="inline-flex items-center gap-2 px-4 py-2 bg-[#002B6B] hover:bg-[#003a88] text-white rounded-xl font-medium text-sm transition-all duration-200 shadow-md hover:shadow-lg flex-1 sm:flex-initial justify-center">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 <span>Tambah Agenda</span>
@@ -48,26 +48,26 @@
         </div>
     </div>
 
-    {{-- Alert --}}
-    @if(session('success'))
+    
+    <?php if(session('success')): ?>
     <div class="bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800 rounded-xl p-4 flex items-start gap-3">
         <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-        <p class="text-green-800 dark:text-green-300 text-sm font-medium">{{ session('success') }}</p>
+        <p class="text-green-800 dark:text-green-300 text-sm font-medium"><?php echo e(session('success')); ?></p>
     </div>
-    @endif
+    <?php endif; ?>
 
-    {{-- Main Grid --}}
+    
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-        {{-- ═══════════════════════════════ CALENDAR SECTION (LEFT) ═══════════════════════════════ --}}
+        
         <div class="lg:col-span-3 space-y-5">
 
-            {{-- Controls & Filters Card --}}
+            
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-700">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
-                        {{-- Navigasi bulan --}}
+                        
                         <div class="flex items-center justify-between sm:justify-start gap-2">
                             <div class="flex items-center gap-1">
                                 <button @click="prevMonth()"
@@ -92,22 +92,22 @@
                             </button>
                         </div>
 
-                        {{-- Filter semester --}}
+                        
                         <div class="w-full sm:w-auto relative flex items-center">
                             <select x-model="selectedSemester"
                                 @change="navigateWithFilter()"
                                 class="w-full sm:min-w-[260px] pl-3 pr-7 py-2 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition appearance-none cursor-pointer">
                                 <option value="">Semua Semester</option>
-                                @foreach($semesters as $sem)
-                                    <option value="{{ $sem->id }}">
-                                        {{ $sem->tahun_ajaran }} – {{ $sem->nama_semester }} @if($sem->is_active)(Aktif)@endif
+                                <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($sem->id); ?>">
+                                        <?php echo e($sem->tahun_ajaran); ?> – <?php echo e($sem->nama_semester); ?> <?php if($sem->is_active): ?>(Aktif)<?php endif; ?>
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                     </div>
 
-                    {{-- Filter kategori badge --}}
+                    
                     <div class="mt-4 flex flex-col gap-2 bg-gray-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-gray-100 dark:border-slate-700">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-gray-500 dark:text-slate-400 tracking-wide uppercase flex items-center gap-1.5">
@@ -122,7 +122,7 @@
                         </div>
                         
                         <div class="flex flex-wrap gap-2 pt-1">
-                            @php
+                            <?php
                                 $kategoriList = [
                                     'uts'              => ['label' => 'UTS',      'color' => '#DC2626'],
                                     'uas'              => ['label' => 'UAS',      'color' => '#DC2626'],
@@ -138,33 +138,34 @@
                                     'pengisian_khs'    => ['label' => 'KHS',      'color' => '#002B6B'],
                                     'lainnya'          => ['label' => 'Lainnya',  'color' => '#64748B'],
                                 ];
-                            @endphp
-                            @foreach($kategoriList as $key => $info)
+                            ?>
+                            <?php $__currentLoopData = $kategoriList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $info): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <button type="button"
-                                        @click="toggleCategory('{{ $key }}')"
+                                        @click="toggleCategory('<?php echo e($key); ?>')"
                                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer border shadow-sm select-none"
-                                        :style="isCategoryVisible('{{ $key }}')
-                                            ? 'background-color: {{ $info['color'] }}10; color: {{ $info['color'] }}; border-color: {{ $info['color'] }}30;'
+                                        :style="isCategoryVisible('<?php echo e($key); ?>')
+                                            ? 'background-color: <?php echo e($info['color']); ?>10; color: <?php echo e($info['color']); ?>; border-color: <?php echo e($info['color']); ?>30;'
                                             : 'background-color: #f3f4f6; color: #9ca3af; border-color: #e5e7eb; opacity: 0.6; text-decoration: line-through;'">
                                     <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" 
-                                        :style="isCategoryVisible('{{ $key }}') ? 'background-color: {{ $info['color'] }}' : 'background-color: #9ca3af'"></span>
-                                    {{ $info['label'] }}
+                                        :style="isCategoryVisible('<?php echo e($key); ?>') ? 'background-color: <?php echo e($info['color']); ?>' : 'background-color: #9ca3af'"></span>
+                                    <?php echo e($info['label']); ?>
+
                                 </button>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
                 </div>
 
-                {{-- Calendar Grid Content --}}
+                
                 <div class="p-3 sm:p-4">
-                    {{-- Header Nama Hari --}}
+                    
                     <div class="grid grid-cols-7 mb-1 bg-gray-50 dark:bg-slate-900/40 rounded-xl">
-                        @foreach(['Min','Sen','Sel','Rab','Kam','Jum','Sab'] as $d)
-                            <div class="text-center py-2 text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{{ $d }}</div>
-                        @endforeach
+                        <?php $__currentLoopData = ['Min','Sen','Sel','Rab','Kam','Jum','Sab']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $d): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="text-center py-2 text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider"><?php echo e($d); ?></div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
 
-                    {{-- Grid Tanggal-Tanggal --}}
+                    
                     <div class="grid grid-cols-7 gap-1">
                         <template x-for="(day, idx) in calendarDays" :key="idx">
                             <div class="relative rounded-xl cursor-pointer select-none transition-all duration-150 border flex flex-col justify-between"
@@ -180,7 +181,7 @@
                                 @keydown.space.prevent="selectDay(day)"
                                 tabindex="0">
 
-                                {{-- Header Kotak Tanggal --}}
+                                
                                 <div class="p-2 pb-0 flex justify-between items-start">
                                     <span class="text-xs font-bold tracking-tight"
                                           :class="day.isSelected ? 'text-white' : (day.isToday ? 'text-blue-600 dark:text-blue-400' : (day.isCurrentMonth ? 'text-gray-800 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600'))"
@@ -191,7 +192,7 @@
                                           x-text="day.filteredEvents.length"></span>
                                 </div>
 
-                                {{-- Agenda List Preview di dalam tanggal (Maksimal 2 baris agar rapi) --}}
+                                
                                 <div class="px-1.5 pb-1.5 pt-1 space-y-1 overflow-hidden mt-auto">
                                     <template x-for="event in day.filteredEvents.slice(0, 2)" :key="event.id">
                                         <div class="px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-medium truncate border"
@@ -214,7 +215,7 @@
                 </div>
             </div>
 
-            {{-- ═══ Agenda Hari Ini ═══ --}}
+            
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center justify-between">
                     <div class="flex items-center gap-3">
@@ -254,8 +255,8 @@
                 </div>
             </div>
 
-            {{-- ═══ Riwayat Agenda ═══ --}}
-            @if($historyEvents->count() > 0)
+            
+            <?php if($historyEvents->count() > 0): ?>
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
                     <div class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
@@ -263,37 +264,39 @@
                     </div>
                     <h3 class="font-bold text-gray-900 dark:text-white">Riwayat Agenda</h3>
                     <span class="ml-auto px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-bold">
-                        {{ $historyEvents->count() }} agenda
+                        <?php echo e($historyEvents->count()); ?> agenda
                     </span>
                 </div>
                 <div class="divide-y divide-gray-50 dark:divide-slate-700/50 max-h-64 overflow-y-auto">
-                    @foreach($historyEvents as $event)
+                    <?php $__currentLoopData = $historyEvents; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="flex items-start gap-3 p-4 opacity-70 hover:opacity-100 transition-all duration-150"
-                         style="border-left: 4px solid {{ $event->warna }}">
+                         style="border-left: 4px solid <?php echo e($event->warna); ?>">
                         <div class="flex-1 min-w-0">
-                            <p class="font-medium text-gray-800 dark:text-gray-200 text-sm truncate">{{ $event->judul }}</p>
+                            <p class="font-medium text-gray-800 dark:text-gray-200 text-sm truncate"><?php echo e($event->judul); ?></p>
                             <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                                {{ $event->tanggal_mulai->format('d M Y') }}
-                                @if($event->tanggal_selesai && !$event->tanggal_mulai->eq($event->tanggal_selesai))
-                                    – {{ $event->tanggal_selesai->format('d M Y') }}
-                                @endif
+                                <?php echo e($event->tanggal_mulai->format('d M Y')); ?>
+
+                                <?php if($event->tanggal_selesai && !$event->tanggal_mulai->eq($event->tanggal_selesai)): ?>
+                                    – <?php echo e($event->tanggal_selesai->format('d M Y')); ?>
+
+                                <?php endif; ?>
                             </p>
                         </div>
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400">
                             Selesai
                         </span>
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
-            @endif
+            <?php endif; ?>
 
-        </div>{{-- /col-span-3 --}}
+        </div>
 
-        {{-- ═══════════════════════════════ SIDEBAR SECTION (RIGHT) ═══════════════════════════════ --}}
+        
         <div class="lg:col-span-1 space-y-5">
 
-            {{-- Detail Hari Terpilih --}}
+            
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden"
                  x-show="selectedDay !== null" x-cloak>
                 <div class="px-4 py-3 border-b border-gray-100 dark:border-slate-700 bg-blue-50 dark:bg-blue-900/20 flex items-center justify-between">
@@ -323,7 +326,7 @@
                 </div>
             </div>
 
-            {{-- Agenda Mendatang --}}
+            
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10">
                     <div class="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
@@ -352,43 +355,43 @@
                 </div>
             </div>
 
-            {{-- Ringkasan Kuantitas --}}
+            
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700">
                     <h3 class="font-bold text-gray-900 dark:text-white text-sm">Ringkasan Semester</h3>
                 </div>
                 <div class="p-4 space-y-2">
-                    @php
+                    <?php
                         $totalAgenda  = $events->count();
                         $totalExam    = $events->whereIn('jenis_kegiatan', ['uts','uas'])->count();
                         $totalLibur   = $events->whereIn('jenis_kegiatan', ['libur_nasional','libur_akademik','cuti_akademik'])->count();
                         $totalDeadline= $events->whereIn('jenis_kegiatan', ['deadline_tugas','deadline_skripsi'])->count();
                         $totalLain    = $totalAgenda - $totalExam - $totalLibur - $totalDeadline;
-                    @endphp
+                    ?>
                     <div class="flex justify-between items-center p-2.5 rounded-xl bg-gray-50 dark:bg-slate-900/50">
                         <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Total Agenda</span>
-                        <span class="text-sm font-bold text-gray-900 dark:text-white">{{ $totalAgenda }}</span>
+                        <span class="text-sm font-bold text-gray-900 dark:text-white"><?php echo e($totalAgenda); ?></span>
                     </div>
                     <div class="flex justify-between items-center p-2.5 rounded-xl bg-red-50 dark:bg-red-950/20">
                         <span class="text-xs font-medium text-red-700 dark:text-red-400">UTS & UAS</span>
-                        <span class="text-sm font-bold text-red-700 dark:text-red-400">{{ $totalExam }}</span>
+                        <span class="text-sm font-bold text-red-700 dark:text-red-400"><?php echo e($totalExam); ?></span>
                     </div>
                     <div class="flex justify-between items-center p-2.5 rounded-xl bg-green-50 dark:bg-green-950/20">
                         <span class="text-xs font-medium text-green-700 dark:text-green-400">Libur & Cuti</span>
-                        <span class="text-sm font-bold text-green-700 dark:text-green-400">{{ $totalLibur }}</span>
+                        <span class="text-sm font-bold text-green-700 dark:text-green-400"><?php echo e($totalLibur); ?></span>
                     </div>
                     <div class="flex justify-between items-center p-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/20">
                         <span class="text-xs font-medium text-orange-700 dark:text-orange-400">Deadline</span>
-                        <span class="text-sm font-bold text-orange-700 dark:text-orange-400">{{ $totalDeadline }}</span>
+                        <span class="text-sm font-bold text-orange-700 dark:text-orange-400"><?php echo e($totalDeadline); ?></span>
                     </div>
                     <div class="flex justify-between items-center p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/20">
                         <span class="text-xs font-medium text-purple-700 dark:text-purple-400">Lainnya</span>
-                        <span class="text-sm font-bold text-purple-700 dark:text-purple-400">{{ max(0,$totalLain) }}</span>
+                        <span class="text-sm font-bold text-purple-700 dark:text-purple-400"><?php echo e(max(0,$totalLain)); ?></span>
                     </div>
                 </div>
             </div>
 
-            {{-- Panduan Singkat --}}
+            
             <div class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/30 dark:to-blue-950/30 rounded-2xl border border-indigo-100/50 dark:border-indigo-900/50 p-4">
                 <div class="flex items-start gap-3">
                     <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
@@ -404,19 +407,19 @@
                     </div>
                 </div>
             </div>
-        </div>{{-- /sidebar --}}
-    </div>{{-- /Main Grid --}}
-</div>{{-- /Main x-data --}}
+        </div>
+    </div>
+</div>
 
-{{-- ═══════════════════════════════ EVENT DETAIL MODAL ═══════════════════════════════ --}}
+
 <div x-show="modalOpen"
      x-cloak
      class="fixed inset-0 z-50 flex items-center justify-center p-4"
      role="dialog" aria-modal="true">
-    {{-- Backdrop --}}
+    
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="closeModal()"></div>
 
-    {{-- Modal box --}}
+    
     <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden z-10 border border-gray-100 dark:border-slate-700 transform transition-all"
          x-show="modalOpen"
          x-transition:enter="transition ease-out duration-200"
@@ -426,7 +429,7 @@
          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
          x-transition:leave-end="opacity-0 translate-y-4 scale-95">
 
-        {{-- Header modal dengan aksen border atas dinamis --}}
+        
         <div class="flex items-center gap-3 p-5 border-b border-gray-100 dark:border-slate-700" :style="'border-top: 4px solid ' + (selectedEvent?.warna ?? '#3b82f6')">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
                  :style="'background-color:' + (selectedEvent?.warna ?? '#3b82f6') + '20'">
@@ -442,9 +445,9 @@
             </button>
         </div>
 
-        {{-- Body modal --}}
+        
         <div class="p-5 space-y-4 overflow-y-auto max-h-[calc(90vh-140px)] text-sm">
-            {{-- Tanggal Pelaksanaan --}}
+            
             <div class="flex items-start gap-3 text-gray-700 dark:text-gray-300">
                 <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 <div>
@@ -453,7 +456,7 @@
                 </div>
             </div>
 
-            {{-- Lokasi --}}
+            
             <div class="flex items-start gap-3 text-gray-700 dark:text-gray-300" x-show="selectedEvent?.lokasi">
                 <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                 <div>
@@ -462,13 +465,13 @@
                 </div>
             </div>
 
-            {{-- Deskripsi Kegiatan --}}
+            
             <div class="pt-3 border-t border-gray-100 dark:border-slate-700" x-show="selectedEvent?.deskripsi">
                 <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase mb-1.5">Deskripsi Detail</p>
                 <p class="text-gray-600 dark:text-slate-300 whitespace-pre-wrap leading-relaxed bg-gray-50 dark:bg-slate-900/50 p-3 rounded-xl border border-gray-100 dark:border-slate-700" x-text="selectedEvent?.deskripsi ?? ''"></p>
             </div>
 
-            {{-- Info Tambahan Semester --}}
+            
             <div class="pt-3 border-t border-gray-100 dark:border-slate-700 grid grid-cols-2 gap-4">
                 <div>
                     <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Semester</p>
@@ -483,7 +486,7 @@
             </div>
         </div>
 
-        {{-- Footer modal tindakan --}}
+        
         <div class="p-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/30 flex justify-end gap-2">
             <template x-if="selectedEvent?.id">
                 <a :href="'/admin/kalender-akademik/' + selectedEvent.id + '/edit'" 
@@ -500,20 +503,20 @@
     </div>
 </div>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 function kalenderData() {
     return {
-        currentMonth: {{ $selectedMonth }},
-        currentYear:  {{ $selectedYear }},
-        eventsByDate:   @json($eventsByDate),
-        todaysEvents:   @json($todaysEvents),
-        upcomingEvents: @json($upcomingEvents),
+        currentMonth: <?php echo e($selectedMonth); ?>,
+        currentYear:  <?php echo e($selectedYear); ?>,
+        eventsByDate:   <?php echo json_encode($eventsByDate, 15, 512) ?>,
+        todaysEvents:   <?php echo json_encode($todaysEvents, 15, 512) ?>,
+        upcomingEvents: <?php echo json_encode($upcomingEvents, 15, 512) ?>,
         hiddenCategories: [],
         selectedDay: null,
         selectedEvent: null,
         modalOpen: false,
-        selectedSemester: '{{ $selectedSemesterId ?? "" }}',
+        selectedSemester: '<?php echo e($selectedSemesterId ?? ""); ?>',
 
         init() {
             // Menghilangkan duplikasi berdasarkan judul dan tanggal untuk Agenda Mendatang (Sidebar)
@@ -655,5 +658,6 @@ function kalenderData() {
     };
 }
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\cendekia\resources\views/admin/kalender-akademik/index.blade.php ENDPATH**/ ?>

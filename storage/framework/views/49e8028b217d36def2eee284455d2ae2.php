@@ -1,14 +1,13 @@
-@extends('layouts.portal')
-@section('title', 'Kalender Akademik')
-@section('activeMenu', 'Jadwal')
-@section('content')
+<?php $__env->startSection('title', 'Kalender Akademik'); ?>
+<?php $__env->startSection('activeMenu', 'Jadwal'); ?>
+<?php $__env->startSection('content'); ?>
 
 <div x-data="calendar()" class="min-h-screen bg-slate-50 dark:bg-slate-900 py-6 px-4 sm:px-6 lg:px-8 mb-12">
     <div class="max-w-7xl mx-auto space-y-6">
-        {{-- Breadcrumb & Header Modern --}}
+        
         <div class="space-y-4">
             <nav class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">
-                <a href="{{ route('mahasiswa.dashboard') }}" class="hover:text-[#002B6B] dark:hover:text-blue-400 transition-colors">Dashboard</a>
+                <a href="<?php echo e(route('mahasiswa.dashboard')); ?>" class="hover:text-[#002B6B] dark:hover:text-blue-400 transition-colors">Dashboard</a>
                 <svg class="w-3 h-3 flex-shrink-0 text-gray-300 dark:text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 <span class="text-gray-600 dark:text-slate-300">Kalender Akademik</span>
             </nav>
@@ -27,7 +26,7 @@
                             <p class="text-xs text-blue-100/80 mt-0.5">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini.</p>
                         </div>
                     </div>
-                    <a href="{{ route('mahasiswa.dashboard') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/10 rounded-xl font-bold text-xs uppercase tracking-wider transition-all backdrop-blur-sm active:scale-95">
+                    <a href="<?php echo e(route('mahasiswa.dashboard')); ?>" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/10 rounded-xl font-bold text-xs uppercase tracking-wider transition-all backdrop-blur-sm active:scale-95">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                         Kembali
                     </a>
@@ -35,15 +34,15 @@
             </div>
         </div>
 
-        {{-- Main Grid Layout --}}
+        
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-            {{-- Calendar Main Block --}}
+            
             <div class="lg:col-span-3 space-y-6">
                 <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
-                    {{-- Controls Bar --}}
+                    
                     <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-slate-700/60 space-y-4">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            {{-- Month Nav --}}
+                            
                             <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-900 p-1 rounded-xl w-fit border border-gray-100 dark:border-slate-800">
                                 <button @click="changeMonth(-1)" class="p-2 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition shadow-sm hover:shadow-none">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
@@ -58,47 +57,47 @@
                                 <button @click="goToToday()" class="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl bg-slate-100 dark:bg-slate-900 text-[#002B6B] dark:text-blue-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition active:scale-95 shadow-sm border border-gray-200/50 dark:border-0">
                                     Hari Ini
                                 </button>
-                                {{-- Semester Selector Custom --}}
+                                
                                 <div class="relative flex items-center">
                                     <select x-model="selectedSemesterId" @change="updateURL()" class="pl-4 pr-10 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#002B6B] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-[#002B6B]/10 outline-none transition appearance-none cursor-pointer">
                                         <option value="">Semua Semester</option>
-                                        @foreach($semesters as $sem)
-                                            <option value="{{ $sem->id }}">{{ $sem->tahun_ajaran }} - {{ $sem->nama_semester }} @if($sem->is_active) (Aktif) @endif</option>
-                                        @endforeach
+                                        <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($sem->id); ?>"><?php echo e($sem->tahun_ajaran); ?> - <?php echo e($sem->nama_semester); ?> <?php if($sem->is_active): ?> (Aktif) <?php endif; ?></option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                     <div class="absolute right-3 pointer-events-none text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg></div>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Elegant Category Badges Filter --}}
+                        
                         <div class="overflow-x-auto scrollbar-none -mx-5 px-5 sm:mx-0 sm:px-0">
                             <div class="flex gap-2 pb-1 flex-nowrap">
-                                @foreach([
+                                <?php $__currentLoopData = [
                                     'uts' => 'UTS', 'uas' => 'UAS', 'libur_nasional' => 'Libur', 'libur_akademik' => 'Akademik', 
                                     'deadline_tugas' => 'Tugas', 'deadline_skripsi' => 'Skripsi', 'pengumuman_nilai' => 'Nilai', 
                                     'praktikum' => 'Praktikum', 'wisuda' => 'Wisuda', 'seminar' => 'Seminar', 'workshop' => 'Workshop',
                                     'presentasi_proyek' => 'Presentasi', 'sidang' => 'Sidang', 'orientasi_mahasiswa_baru' => 'Orientasi',
                                     'pembayaran_ukt' => 'UKT', 'pengisian_krs' => 'KRS', 'pengisian_khs' => 'KHS', 'cuti_akademik' => 'Cuti',
                                     'pengumuman_akademik' => 'Pengumuman', 'lainnya' => 'Lainnya'
-                                ] as $cat => $label)
+                                ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <label class="flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-xl border transition-all text-xs font-bold whitespace-nowrap flex-shrink-0 select-none active:scale-95 shadow-sm" 
-                                           :class="visibleCategories.has('{{ $cat }}') ? 'bg-[#002B6B] border-[#002B6B] text-white shadow-[#002B6B]/10' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'">
-                                        <input type="checkbox" @click="toggleCategory('{{ $cat }}')" :checked="visibleCategories.has('{{ $cat }}')" class="sr-only">
-                                        <span class="w-1.5 h-1.5 rounded-full" :class="visibleCategories.has('{{ $cat }}') ? 'bg-white' : 'bg-gray-400 dark:bg-slate-600'"></span>
-                                        <span>{{ $label }}</span>
+                                           :class="visibleCategories.has('<?php echo e($cat); ?>') ? 'bg-[#002B6B] border-[#002B6B] text-white shadow-[#002B6B]/10' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'">
+                                        <input type="checkbox" @click="toggleCategory('<?php echo e($cat); ?>')" :checked="visibleCategories.has('<?php echo e($cat); ?>')" class="sr-only">
+                                        <span class="w-1.5 h-1.5 rounded-full" :class="visibleCategories.has('<?php echo e($cat); ?>') ? 'bg-white' : 'bg-gray-400 dark:bg-slate-600'"></span>
+                                        <span><?php echo e($label); ?></span>
                                     </label>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Calendar Matrix Rendering --}}
+                    
                     <div class="p-4 sm:p-6 overflow-x-auto">
                         <div class="grid grid-cols-7 gap-1 mb-2 min-w-[700px]">
-                            @foreach(['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $day)
-                                <div class="text-center text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 py-2">{{ $day }}</div>
-                            @endforeach
+                            <?php $__currentLoopData = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $day): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <div class="text-center text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 py-2"><?php echo e($day); ?></div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
 
                         <div class="grid grid-cols-7 gap-1.5 min-w-[700px]">
@@ -128,7 +127,7 @@
                                             </template>
                                         </div>
 
-                                        {{-- Blok List Event --}}
+                                        
                                         <div class="flex-1 space-y-1 min-w-0 overflow-hidden">
                                             <template x-for="(event, idx) in day.events.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).slice(0, 1)" :key="event.id">
                                                 <div @click.stop="showEventDetail(event)"
@@ -156,7 +155,7 @@
                     </div>
                 </div>
 
-                {{-- Agenda Hari Ini Section --}}
+                
                 <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
                     <div class="bg-slate-50/60 dark:bg-slate-900/40 px-5 py-4 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -207,9 +206,9 @@
                 </div>
             </div>
 
-            {{-- Sidebar Blocks --}}
+            
             <div class="lg:col-span-1 space-y-6">
-                {{-- Upcoming Events --}}
+                
                 <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
                     <div class="bg-slate-50/60 dark:bg-slate-900/40 px-5 py-4 border-b border-gray-100 dark:border-slate-700/60">
                         <div class="flex items-center gap-3">
@@ -242,7 +241,7 @@
                     </div>
                 </div>
 
-                {{-- Semester Statistics Bar --}}
+                
                 <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
                     <div class="bg-slate-50/60 dark:bg-slate-900/40 px-5 py-4 border-b border-gray-100 dark:border-slate-700/60">
                         <h3 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Ringkasan Smt</h3>
@@ -266,7 +265,7 @@
     </div>
 </div>
 
-{{-- Detail Agenda Modal Custom Modern --}}
+
 <div id="eventModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md">
     <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transform transition-all">
         <div class="p-5 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/20">
@@ -290,8 +289,8 @@
     </div>
 </div>
 
-@push('scripts')
-    @include('mahasiswa.kalender-akademik.calendar-script')
+<?php $__env->startPush('scripts'); ?>
+    <?php echo $__env->make('mahasiswa.kalender-akademik.calendar-script', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <script>
     document.addEventListener('alpine:initialized', () => {
@@ -382,6 +381,7 @@
         };
     });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.portal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\cendekia\resources\views/mahasiswa/kalender-akademik/index.blade.php ENDPATH**/ ?>

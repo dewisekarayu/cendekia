@@ -1,4 +1,4 @@
-@extends('layouts.portal')
+@extends('layouts.admin')
 @section('title', 'Edit Agenda: ' . $kalenderAkademik->judul)
 @section('activeMenu', 'Kalender Akademik')
 @section('content')

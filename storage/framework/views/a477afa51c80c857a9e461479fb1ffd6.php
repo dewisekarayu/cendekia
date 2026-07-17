@@ -1,6 +1,6 @@
 <!-- Menggunakan w-80 untuk ruang sidebar yang jauh lebih luas -->
 <aside class="admin-sidebar w-80 bg-[#002B6B] text-white/75 h-screen flex flex-col p-4 border-r border-white/10 select-none" id="adminSidebar">
-    {{-- Trik rahasia buat ngilangin scrollbar bawaan browser tapi menu tetep bisa di-scroll --}}
+    
     <style>
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -27,11 +27,11 @@
             Menu Utama
         </div>
         <div class="nav-item">
-            <a href="{{ route('admin.dashboard') }}"
+            <a href="<?php echo e(route('admin.dashboard')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.dashboard') 
+               <?php echo e(request()->routeIs('admin.dashboard') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-speedometer2 text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Dashboard</span>
             </a>
@@ -42,55 +42,55 @@
             Master Data
         </div>
         <div class="nav-item">
-            <a href="{{ route('admin.dosen.index') }}"
+            <a href="<?php echo e(route('admin.dosen.index')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.dosen.*') 
+               <?php echo e(request()->routeIs('admin.dosen.*') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-person-badge text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Data Dosen</span>
             </a>
         </div>
 
         <div class="nav-item">
-            <a href="{{ route('admin.mahasiswa.index') }}"
+            <a href="<?php echo e(route('admin.mahasiswa.index')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.mahasiswa.*') 
+               <?php echo e(request()->routeIs('admin.mahasiswa.*') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-people-fill text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Data Mahasiswa</span>
             </a>
         </div>
 
         <div class="nav-item">
-            <a href="{{ route('admin.mata-kuliah.index') }}"
+            <a href="<?php echo e(route('admin.mata-kuliah.index')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.mata-kuliah.*') 
+               <?php echo e(request()->routeIs('admin.mata-kuliah.*') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-book-fill text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Mata Kuliah</span>
             </a>
         </div>
 
         <div class="nav-item">
-            <a href="{{ route('admin.program-studi.index') }}"
+            <a href="<?php echo e(route('admin.program-studi.index')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.program-studi.*') 
+               <?php echo e(request()->routeIs('admin.program-studi.*') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-diagram-3 text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Program Studi</span>
             </a>
         </div>
 
         <div class="nav-item">
-            <a href="{{ route('admin.kalender-akademik.index') }}"
+            <a href="<?php echo e(route('admin.kalender-akademik.index')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.kalender-akademik.*') 
+               <?php echo e(request()->routeIs('admin.kalender-akademik.*') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-calendar3 text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Kalender Akademik</span>
             </a>
@@ -101,11 +101,11 @@
             Konten
         </div>
         <div class="nav-item">
-            <a href="{{ route('admin.pengumuman.index') }}"
+            <a href="<?php echo e(route('admin.pengumuman.index')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.pengumuman.*') 
+               <?php echo e(request()->routeIs('admin.pengumuman.*') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-megaphone-fill text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Pengumuman</span>
             </a>
@@ -116,11 +116,11 @@
             Support
         </div>
         <div class="nav-item">
-            <a href="{{ route('admin.help-center.dashboard') }}"
+            <a href="<?php echo e(route('admin.help-center.dashboard')); ?>"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.help-center.*') 
+               <?php echo e(request()->routeIs('admin.help-center.*') 
                   ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'); ?>">
                 <i class="bi bi-question-circle-fill text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Pusat Bantuan</span>
             </a>
@@ -130,8 +130,8 @@
     <!-- Bagian bawah: Keluar -->
     <div class="pt-2 border-t border-white/10 flex-shrink-0 mt-auto">
         <div class="nav-item">
-            <form method="POST" action="{{ route('logout') }}" id="logout-form" class="m-0">
-                @csrf
+            <form method="POST" action="<?php echo e(route('logout')); ?>" id="logout-form" class="m-0">
+                <?php echo csrf_field(); ?>
                 <button type="submit" class="nav-link w-full flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 text-white/70 hover:bg-red-500/10 hover:text-red-400 border-none bg-transparent cursor-pointer text-left">
                     <i class="bi bi-box-arrow-right text-base w-5 flex justify-center flex-shrink-0"></i>
                     <span>Keluar</span>
@@ -139,4 +139,4 @@
             </form>
         </div>
     </div>
-</aside>
+</aside><?php /**PATH C:\laragon\www\cendekia\resources\views/admin/components/sidebar.blade.php ENDPATH**/ ?>
