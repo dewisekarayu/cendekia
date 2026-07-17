@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
+$this->call([
             RoleSeeder::class,
             ProgramStudiSeeder::class,
             EnhancedUserSeeder::class,
@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             EnhancedMataKuliahSeeder::class,
             EnhancedKelasPerkuliahanSeeder::class,
             ComprehensiveAcademicSeeder::class,
+            KalenderAkademikSeeder::class,
         ]);
     }
 }

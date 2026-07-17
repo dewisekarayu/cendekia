@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
-    <title>@yield('title', 'Dashboard') - Cendekia</title>
+    <title><?php echo $__env->yieldContent('title', 'Dashboard'); ?> - Cendekia</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
     <script>
         (function() {
-            const theme = "{{ auth()->check() ? auth()->user()->theme : 'light' }}";
+            const theme = "<?php echo e(auth()->check() ? auth()->user()->theme : 'light'); ?>";
             if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             } else {
@@ -22,7 +22,7 @@
         })();
     </script>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <style>
         /* Dark Mode overrides for Student/Dosen portal */
         html.dark body {
@@ -266,7 +266,7 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
-    @php
+    <?php
         $user = auth()->user();
         $hasDosen = $user && $user->hasRole('dosen');
         $hasAdmin = $user && $user->hasRole('admin');
@@ -299,7 +299,7 @@
             $activeBg = '#1E3A8A';
             $activeText = '#FFFFFF';
         }
-    @endphp
+    ?>
 
     <div x-data="{ sidebarOpen: window.innerWidth >= 1024 }" class="min-h-screen flex overflow-x-hidden">
 
@@ -314,17 +314,17 @@
         <aside
             class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:-translate-x-full'"
-            style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
+            style="background-color: <?php echo e($sidebarBg); ?>; border-right: 1px solid <?php echo e($sidebarBorder); ?>;">
 
-            <div class="px-6 py-5" style="border-bottom: 1px solid {{ $sidebarBorder }};">
+            <div class="px-6 py-5" style="border-bottom: 1px solid <?php echo e($sidebarBorder); ?>;">
                 <div class="flex items-center justify-between gap-3">
                     <a href="/" class="flex min-w-0 items-center gap-2">
                         <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
-                            <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="" />
+                            <img src="<?php echo e(asset('images/logo.png')); ?>" alt="Cendekia" class="" />
                         </div>
                         <div class="min-w-0">
-                            <div class="text-base font-bold leading-tight truncate" style="color: {{ $sidebarTitle }};">Cendekia</div>
-                            <div class="text-[11px] leading-tight truncate" style="color: {{ $sidebarMuted }};">Academic Portal</div>
+                            <div class="text-base font-bold leading-tight truncate" style="color: <?php echo e($sidebarTitle); ?>;">Cendekia</div>
+                            <div class="text-[11px] leading-tight truncate" style="color: <?php echo e($sidebarMuted); ?>;">Academic Portal</div>
                         </div>
                     </a>
 
@@ -332,7 +332,7 @@
                         type="button"
                         @click="sidebarOpen = false"
                         class="inline-flex h-9 w-9 items-center justify-center rounded-lg lg:hidden"
-                        style="color: {{ $sidebarText }};"
+                        style="color: <?php echo e($sidebarText); ?>;"
                         aria-label="Tutup menu">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -342,7 +342,7 @@
             </div>
 
             <nav class="flex-1 px-3 py-4 space-y-1">
-                @php
+                <?php
                     if (auth()->user()->hasRole('dosen')) {
                         $menu = [
                             ['label' => 'Dashboard', 'route' => 'dosen.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
@@ -375,90 +375,90 @@
                             ];
                         }
                     }
-                @endphp
+                ?>
 
-                @foreach ($menu as $item)
-                    @php
+                <?php $__currentLoopData = $menu; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
                         $activeLabel = View::yieldContent('activeMenu') ?: '';
                         $isActive = $item['label'] === $activeLabel;
-                    @endphp
+                    ?>
                     <a
-                        href="{{ $item['route'] === '#' ? '#' : route($item['route'], $item['param'] ?? []) }}"
-                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isActive ? 'sidebar-link-active' : '' }}"
-                        style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
+                        href="<?php echo e($item['route'] === '#' ? '#' : route($item['route'], $item['param'] ?? [])); ?>"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?php echo e($isActive ? 'sidebar-link-active' : ''); ?>"
+                        style="<?php echo e($isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';'); ?> --hover-bg: <?php echo e($sidebarHover); ?>;">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo e($item['icon']); ?>" />
                         </svg>
-                        <span>{{ $item['label'] }}</span>
+                        <span><?php echo e($item['label']); ?></span>
                     </a>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-                {{-- ===== BOTTOM SECTION: Settings, Help Center, Logout ===== --}}
-                <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
+                
+                <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid <?php echo e($sidebarBorder); ?>;">
 
-                    {{-- Profile / Settings per role --}}
-                    @if (auth()->user()->hasRole('mahasiswa'))
-                        @php $isProfilActive = request()->routeIs('mahasiswa.profil'); @endphp
+                    
+                    <?php if(auth()->user()->hasRole('mahasiswa')): ?>
+                        <?php $isProfilActive = request()->routeIs('mahasiswa.profil'); ?>
                         <a
-                            href="{{ route('mahasiswa.profil') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isProfilActive ? 'sidebar-link-active' : '' }}"
-                            style="{{ $isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
+                            href="<?php echo e(route('mahasiswa.profil')); ?>"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?php echo e($isProfilActive ? 'sidebar-link-active' : ''); ?>"
+                            style="<?php echo e($isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';'); ?> --hover-bg: <?php echo e($sidebarHover); ?>;">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z" />
                             </svg>
                             Profil
                         </a>
 
-                        @php $isSettingActive = request()->routeIs('mahasiswa.setting'); @endphp
+                        <?php $isSettingActive = request()->routeIs('mahasiswa.setting'); ?>
                         <a
-                            href="{{ route('mahasiswa.setting') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isSettingActive ? 'sidebar-link-active' : '' }}"
-                            style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
+                            href="<?php echo e(route('mahasiswa.setting')); ?>"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?php echo e($isSettingActive ? 'sidebar-link-active' : ''); ?>"
+                            style="<?php echo e($isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';'); ?> --hover-bg: <?php echo e($sidebarHover); ?>;">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                             </svg>
                             Setting
                         </a>
-                    @elseif (auth()->user()->hasRole('dosen'))
-                        @php $isProfilActive = request()->routeIs('dosen.profil.index'); @endphp
+                    <?php elseif(auth()->user()->hasRole('dosen')): ?>
+                        <?php $isProfilActive = request()->routeIs('dosen.profil.index'); ?>
                         <a
-                            href="{{ route('dosen.profil.index') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isProfilActive ? 'sidebar-link-active' : '' }}"
-                            style="{{ $isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
+                            href="<?php echo e(route('dosen.profil.index')); ?>"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?php echo e($isProfilActive ? 'sidebar-link-active' : ''); ?>"
+                            style="<?php echo e($isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';'); ?> --hover-bg: <?php echo e($sidebarHover); ?>;">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z" />
                             </svg>
                             Profile
                         </a>
 
-                        @php $isSettingActive = request()->routeIs('dosen.setting'); @endphp
+                        <?php $isSettingActive = request()->routeIs('dosen.setting'); ?>
                         <a
-                            href="{{ route('dosen.setting') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isSettingActive ? 'sidebar-link-active' : '' }}"
-                            style="{{ $isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
+                            href="<?php echo e(route('dosen.setting')); ?>"
+                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?php echo e($isSettingActive ? 'sidebar-link-active' : ''); ?>"
+                            style="<?php echo e($isSettingActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';'); ?> --hover-bg: <?php echo e($sidebarHover); ?>;">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                             </svg>
                             Settings
                         </a>
-                    @endif
+                    <?php endif; ?>
 
-                    {{-- ===== HELP CENTER LINK (FIXED) ===== --}}
-                    @php $isHelpActive = request()->routeIs('help-center.*'); @endphp
+                    
+                    <?php $isHelpActive = request()->routeIs('help-center.*'); ?>
                     <a
-                        href="{{ route('help-center.index') }}"
-                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isHelpActive ? 'sidebar-link-active' : '' }}"
-                        style="{{ $isHelpActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
+                        href="<?php echo e(route('help-center.index')); ?>"
+                        class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?php echo e($isHelpActive ? 'sidebar-link-active' : ''); ?>"
+                        style="<?php echo e($isHelpActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';'); ?> --hover-bg: <?php echo e($sidebarHover); ?>;">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Help Center
                     </a>
 
-                    {{-- Logout --}}
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};">
+                    
+                    <form method="POST" action="<?php echo e(route('logout')); ?>">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition" style="color: <?php echo e($sidebarText); ?>; --hover-bg: <?php echo e($sidebarHover); ?>;">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
@@ -484,7 +484,7 @@
                 </button>
 
                 <div class="min-w-0 flex-1 lg:hidden">
-                    <p class="truncate text-sm font-bold text-gray-800 dark:text-white">@yield('title', 'Dashboard')</p>
+                    <p class="truncate text-sm font-bold text-gray-800 dark:text-white"><?php echo $__env->yieldContent('title', 'Dashboard'); ?></p>
                 </div>
 
                 <div class="hidden lg:block flex-1"></div>
@@ -499,15 +499,16 @@
 
                     <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
                         <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
-                            {{ substr(auth()->user()->name, 0, 1) }}
+                            <?php echo e(substr(auth()->user()->name, 0, 1)); ?>
+
                         </div>
-                        <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 dark:text-gray-200 sm:inline">{{ auth()->user()->name }}</span>
+                        <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 dark:text-gray-200 sm:inline"><?php echo e(auth()->user()->name); ?></span>
                     </div>
                 </div>
             </header>
 
             <main class="w-full min-w-0 overflow-x-hidden p-4 sm:p-6 lg:p-8">
-                @yield('content')
+                <?php echo $__env->yieldContent('content'); ?>
             </main>
         </div>
     </div>
@@ -664,7 +665,7 @@
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 
-</html>
+</html><?php /**PATH D:\laragon\www\cendekia\resources\views/layouts/portal.blade.php ENDPATH**/ ?>

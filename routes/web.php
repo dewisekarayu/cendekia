@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\DosenController as AdminDosenController;
 use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
 use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController;
+use App\Http\Controllers\Admin\KalenderAkademikController;
 use App\Http\Controllers\Dosen\PengumumanController as DosenPengumumanController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\KelasController;
@@ -117,6 +118,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{absensi}', [App\Http\Controllers\Admin\AbsensiController::class, 'destroy'])->name('destroy');
         Route::post('/bulk-delete', [App\Http\Controllers\Admin\AbsensiController::class, 'bulkDelete'])->name('bulkDelete');
     });
+
+    // Kalender Akademik
+    Route::resource('admin/kalender-akademik', KalenderAkademikController::class)
+        ->names('admin.kalender-akademik')
+        ->parameters(['kalender-akademik' => 'kalenderAkademik']);
+    Route::get('admin/kalender-akademik/{kalenderAkademik}/activities', [KalenderAkademikController::class, 'activities'])->name('admin.kalender-akademik.activities');
+    Route::post('admin/kalender-akademik/bulk-action', [KalenderAkademikController::class, 'bulkAction'])->name('admin.kalender-akademik.bulk-action');
 
     // Admin Help Center (Overhauled with TicketController)
     Route::prefix('admin/help-center')->name('admin.help-center.')->group(function () {
@@ -251,6 +259,11 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
         Route::get('/kelas/{kelasId}/masuk', [MahasiswaAbsensiController::class, 'kelasAbsensi'])->name('kelas');
         Route::post('/kelas/{kelasId}/masuk/{absensiId}', [MahasiswaAbsensiController::class, 'absenMasuk'])->name('masuk');
         Route::get('/{kelasId}', [MahasiswaAbsensiController::class, 'show'])->name('show');
+    });
+
+    // Kalender Akademik Mahasiswa
+    Route::prefix('mahasiswa/kalender-akademik')->name('mahasiswa.kalender-akademik.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Mahasiswa\KalenderAkademikController::class, 'index'])->name('index');
     });
 
     // Pengaturan & Profil Mahasiswa
