@@ -2,6 +2,66 @@
 
 <?php $__env->startSection('content'); ?>
 
+    
+    <style>
+        .welcome-banner {
+            background: linear-gradient(135deg, #002B6B 0%, #0B192C 100%);
+            padding: 24px 32px;
+            border-radius: 16px;
+            color: #ffffff;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 43, 107, 0.1);
+        }
+        /* Memperkecil judul selamat datang agar proporsional */
+        .welcome-banner h2 {
+            font-size: 22px !important;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+        .welcome-banner p {
+            font-size: 13.5px;
+            opacity: 0.85;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Layout Grid untuk Stat Cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        /* Penyelarasan Tipografi di Komponen Grafik dan Konten */
+        .chart-card-header h3, 
+        .insight-card-header h3 {
+            font-size: 16px !important;
+            font-weight: 700;
+            color: #0F172A;
+            margin: 0 0 4px 0;
+        }
+        .chart-card-header p, 
+        .insight-card-header p {
+            font-size: 12px;
+            color: #64748B;
+            margin: 0;
+        }
+        
+        /* Setelan teks ringkasan grafik */
+        .chart-summary-item .summary-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748B;
+        }
+        .chart-summary-item strong {
+            font-size: 18px;
+            color: #0F172A;
+        }
+    </style>
+
     <div class="welcome-banner">
         <h2>Selamat Datang, <?php echo e(auth()->user()->name ?? 'Admin'); ?></h2>
         <p>

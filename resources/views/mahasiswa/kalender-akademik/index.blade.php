@@ -27,10 +27,7 @@
                             <p class="text-xs text-blue-100/80 mt-0.5">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini.</p>
                         </div>
                     </div>
-                    <a href="{{ route('mahasiswa.dashboard') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/10 rounded-xl font-bold text-xs uppercase tracking-wider transition-all backdrop-blur-sm active:scale-95">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                        Kembali
-                    </a>
+                    
                 </div>
             </div>
         </div>
@@ -156,55 +153,39 @@
                     </div>
                 </div>
 
-                {{-- Agenda Hari Ini Section --}}
-                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
-                    <div class="bg-slate-50/60 dark:bg-slate-900/40 px-5 py-4 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-[#002B6B] dark:text-blue-400">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </div>
-                            <h3 class="font-bold text-gray-900 dark:text-white text-base">Agenda Hari Ini</h3>
+                {{-- Riwayat Agenda Section --}}
+                @if($historyEvents->count() > 0)
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <span class="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 text-[#002B6B] dark:text-blue-400 text-xs font-extrabold" x-text="todaysEvents.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length"></span>
+                        <h3 class="font-bold text-gray-900 dark:text-white">Riwayat Agenda</h3>
+                        <span class="ml-auto px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-bold">
+                            {{ $historyEvents->count() }} agenda
+                        </span>
                     </div>
-                    <div class="p-5">
-                        <template x-if="todaysEvents.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length > 0">
-                            <div class="space-y-3">
-                                <template x-for="event in todaysEvents.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i)" :key="event.id">
-                                    <div class="p-4 rounded-2xl border border-gray-100 dark:border-slate-700/60 hover:shadow-md transition-all cursor-pointer bg-slate-50/30 dark:bg-slate-900/10" :style="'border-left: 4px solid ' + event.warna" @click="showEventDetail(event)">
-                                        <div class="flex items-start justify-between gap-4">
-                                            <div class="space-y-1">
-                                                <div class="flex items-center gap-2">
-                                                    <span class="w-1.5 h-1.5 rounded-full" :style="'background-color: ' + event.warna"></span>
-                                                    <h4 class="font-bold text-gray-900 dark:text-white text-sm" x-text="event.judul"></h4>
-                                                </div>
-                                                <div class="flex items-center gap-3 text-xs text-gray-500 dark:text-slate-400">
-                                                    <span class="font-medium" x-text="event.waktu_formatted"></span>
-                                                    <template x-if="event.lokasi">
-                                                        <span class="flex items-center gap-1">
-                                                            <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                                            <span x-text="event.lokasi"></span>
-                                                        </span>
-                                                    </template>
-                                                </div>
-                                            </div>
-                                            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider" :style="'background-color: ' + event.warna + '15; color: ' + event.warna" x-text="event.jenis_kegiatan_label"></span>
-                                        </div>
-                                    </div>
-                                </template>
+                    <div class="divide-y divide-gray-50 dark:divide-slate-700/50 max-h-64 overflow-y-auto">
+                        @foreach($historyEvents as $event)
+                        <div class="flex items-start gap-3 p-4 opacity-70 hover:opacity-100 transition-all duration-150"
+                             style="border-left: 4px solid {{ $event->warna }}">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-gray-800 dark:text-gray-200 text-sm truncate">{{ $event->judul }}</p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                    {{ $event->tanggal_mulai->format('d M Y') }}
+                                    @if($event->tanggal_selesai && !$event->tanggal_mulai->eq($event->tanggal_selesai))
+                                        – {{ $event->tanggal_selesai->format('d M Y') }}
+                                    @endif
+                                </p>
                             </div>
-                        </template>
-                        <template x-if="todaysEvents.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length === 0">
-                            <div class="text-center py-8 space-y-2">
-                                <div class="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 flex items-center justify-center mx-auto text-gray-300 dark:text-slate-600">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                                </div>
-                                <p class="text-sm font-bold text-gray-700 dark:text-slate-400">Jadwal Kosong</p>
-                                <p class="text-xs text-gray-400 dark:text-slate-500">Tidak ada agenda wajib untuk hari ini.</p>
-                            </div>
-                        </template>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400">
+                                Selesai
+                            </span>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
+                @endif
             </div>
 
             {{-- Sidebar Blocks --}}
