@@ -124,19 +124,55 @@ class KelasController extends Controller
             'instruksi' => ['required', 'string', 'max:5000'],
             'deadline' => ['required', 'date'],
             'poin' => ['required', 'integer', 'min:1', 'max:100'],
+            'hapus_files' => ['nullable', 'array'],
+            'hapus_files.*' => ['integer'],
+            'template' => ['nullable', 'array', 'max:5'],
+            'template.*' => [
+                'file',
+                'mimes:pdf,doc,docx,zip,ppt,pptx,jpg,jpeg,png',
+                'max:25600', // 25MB
+            ],
+        ], [
+            'template.*.max' => 'Ukuran setiap lampiran maksimal 25MB.',
         ]);
 
+        // 1. Update data utama tugas
         $tugas->update([
             'judul' => $validated['judul'],
-            'instruksi' => $validated['instruksi'],
+            'instruksi' => $validated['instruksi'], // PENTING: Bersihkan via XSS Purifier di level Request/Model jika ini Rich Text!
             'deadline' => $validated['deadline'],
             'bobot_nilai' => $validated['poin'],
         ]);
 
+        // 2. Hapus file lama yang dicentang oleh dosen
+        if (!empty($validated['hapus_files'])) {
+            // Pastikan file yang dihapus memang milik tugas ini (mencegah ID Injection)
+            $filesToDelete = TugasFile::where('tugas_id', $tugas->id)
+                ->whereIn('id', $validated['hapus_files'])
+                ->get();
+
+            foreach ($filesToDelete as $file) {
+                Storage::disk('public')->delete($file->file_path);
+                $file->delete();
+            }
+        }
+
+        // 3. Simpan file baru yang diunggah
+        if ($request->hasFile('template')) {
+            foreach ($request->file('template') as $file) {
+                $path = $file->store('tugas/' . $kelas->id, 'public');
+
+                $tugas->files()->create([
+                    'file_path' => $path,
+                    'nama_asli' => $file->getClientOriginalName(),
+                ]);
+            }
+        }
+
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil diperbarui.');
     }
-
+    
     public function hapusTugas(Request $request, $id, $tugasId)
     {
         $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($id);
@@ -149,6 +185,7 @@ class KelasController extends Controller
         $tugas->files()->delete();
 
         // Hapus file jawaban mahasiswa + record pengumpulan
+        // Gunakan eager load 'pengumpulan.files' di controller jika data banyak agar efisien
         foreach ($tugas->pengumpulan as $pengumpulan) {
             foreach ($pengumpulan->files as $file) {
                 Storage::disk('public')->delete($file->file_path);
@@ -163,7 +200,7 @@ class KelasController extends Controller
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', "Tugas \"{$judul}\" berhasil dihapus.");
     }
-    
+
     public function bukaMateri(Request $request, $kelasId, $materiId)
     {
         $kelas = KelasPerkuliahan::with('mataKuliah.programStudi')
@@ -266,6 +303,12 @@ class KelasController extends Controller
             'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string', 'max:5000'],
             'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:32'],
+            'hapus_files' => ['nullable', 'array'],
+            'hapus_files.*' => ['integer'],
+            'file_materi' => ['nullable', 'array', 'max:5'],
+            'file_materi.*' => ['file', 'mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,mp4,zip,jpg,jpeg,png', 'max:102400'],
+        ], [
+            'file_materi.*.max' => 'Ukuran setiap file materi maksimal 100MB.',
         ]);
 
         $materi->update([
@@ -273,6 +316,31 @@ class KelasController extends Controller
             'deskripsi' => $validated['deskripsi'] ?? null,
             'pertemuan_ke' => $validated['pertemuan_ke'],
         ]);
+
+        // Hapus file lama yang dicentang
+        if (!empty($validated['hapus_files'])) {
+            $filesToDelete = MateriFile::where('materi_id', $materi->id)
+                ->whereIn('id', $validated['hapus_files'])
+                ->get();
+
+            foreach ($filesToDelete as $file) {
+                Storage::disk('public')->delete($file->file_path);
+                $file->delete();
+            }
+        }
+
+        // Simpan file baru yang diunggah
+        if ($request->hasFile('file_materi')) {
+            foreach ($request->file('file_materi') as $file) {
+                $path = $file->store('materi/' . $kelas->id, 'public');
+
+                $materi->files()->create([
+                    'file_path' => $path,
+                    'nama_asli' => $file->getClientOriginalName(),
+                    'tipe_file' => strtolower($file->getClientOriginalExtension()),
+                ]);
+            }
+        }
 
         return redirect()->route('dosen.kelas-materi', $kelas->id)
             ->with('success', 'Materi berhasil diperbarui.');

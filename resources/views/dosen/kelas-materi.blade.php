@@ -36,7 +36,7 @@
             <a href="{{ $tab['url'] }}"
             class="whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition
                 {{ $tab['active']
-                    ? 'bg-[#321270] dark:bg-purple-650 text-white shadow-sm shadow-purple-900/20'
+                    ? 'bg-[#321270] dark:bg-purple-700 text-white shadow-sm shadow-purple-900/20'
                     : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-white' }}">
                 {{ $label }}
             </a>
@@ -46,58 +46,127 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
             <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm transition-colors duration-200">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-base font-bold text-gray-800 dark:text-white">Materi</h2>
-                    <button onclick="toggleMateriModal('modalMateri')" class="text-xs font-bold bg-[#321270] dark:bg-[#6c2bd9] text-white px-3 py-2 rounded-lg hover:bg-[#321270]/90 dark:hover:bg-[#5b21b6] transition flex items-center gap-1.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        Tambah Materi
-                    </button>
+
+                {{-- HEADER + TOOLBAR (rapi & konsisten, aman di kolom sempit) --}}
+                <div class="mb-5">
+                    <div class="mb-3">
+                        <h2 class="text-base font-bold text-gray-800 dark:text-white">Materi</h2>
+                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Cari materi berdasarkan judul, kategori, atau pertemuan.</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        {{-- Search --}}
+                        <label class="relative flex-1 min-w-[160px]">
+                            <span class="sr-only">Cari materi</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input id="searchMateri" type="text" placeholder="Cari materi..."
+                                class="w-full h-10 pl-9 pr-3 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition">
+                        </label>
+
+                        {{-- Filter Pertemuan --}}
+                        <div class="relative w-full xs:w-auto sm:w-44">
+                            <select id="filterPertemuan"
+                                class="w-full h-10 pl-3 pr-8 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none appearance-none transition">
+                                <option value="">Semua Pertemuan</option>
+                                @for ($i = 1; $i <= 16; $i++)
+                                    <option value="{{ $i }}">Pertemuan {{ $i }}</option>
+                                @endfor
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                <svg class="fill-current h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+
+                        {{-- Tombol Aksi --}}
+                        <button onclick="toggleMateriModal('modalMateri')"
+                            class="h-10 shrink-0 text-xs font-bold bg-[#321270] dark:bg-[#6c2bd9] text-white px-4 rounded-lg hover:bg-[#321270]/90 dark:hover:bg-[#5b21b6] transition flex items-center justify-center gap-1.5 whitespace-nowrap w-full xs:w-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Tambah Materi
+                        </button>
+                    </div>
                 </div>
 
                 @if ($materiList->isEmpty())
-                    <div class="text-sm text-gray-500 dark:text-slate-400 py-4">Belum ada materi untuk kelas ini.</div>
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-gray-300 dark:text-slate-600 mb-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                        </svg>
+                        <div class="text-sm font-semibold text-gray-500 dark:text-slate-400">Belum ada materi untuk kelas ini.</div>
+                        <p class="text-xs text-gray-400 dark:text-slate-500 mt-1">Silakan klik tombol "Tambah Materi" di atas untuk menambahkan.</p>
+                    </div>
                 @else
-                    <ul class="space-y-3">
+                    <div id="materiListWrapper" class="space-y-4">
                         @foreach($materiList as $m)
-                            <li class="p-4 border dark:border-slate-700 rounded-lg">
-                                <div class="flex items-start justify-between gap-4">
-                                    <div class="min-w-0 flex-1">
-                                        <div class="text-sm font-bold text-gray-800 dark:text-white">Pertemuan {{ $m->pertemuan_ke }} - {{ $m->judul }}</div>
-                                        <div class="text-xs text-gray-500 dark:text-slate-400 mt-1">{{ Str::limit($m->deskripsi, 200) }}</div>
+                            <div class="materi-card p-5 border border-gray-100 dark:border-slate-700/60 bg-slate-50/30 dark:bg-slate-900/10 rounded-xl hover:shadow-md hover:border-purple-200 dark:hover:border-purple-900/50 transition-all duration-200"
+                                data-search="{{ strtolower($m->judul . ' ' . ($m->deskripsi ?? '') . ' ' . ($m->kategori ?? '') . ' pertemuan ' . $m->pertemuan_ke) }}"
+                                data-pertemuan="{{ $m->pertemuan_ke }}">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+                                    {{-- Info Kiri: Detail Pertemuan & Judul --}}
+                                    <div class="min-w-0 flex-1 space-y-2">
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">
+                                                Pertemuan {{ $m->pertemuan_ke }}
+                                            </span>
+                                            @if(isset($m->kategori))
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                                    {{ $m->kategori }}
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <h3 class="text-sm font-bold text-gray-800 dark:text-white leading-snug">
+                                            {{ $m->judul }}
+                                        </h3>
+
+                                        @if($m->deskripsi)
+                                            <p class="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                                {{ $m->deskripsi }}
+                                            </p>
+                                        @endif
                                     </div>
 
-                                    <div class="flex items-start gap-3 flex-shrink-0">
-                                        <div class="text-right space-y-1">
+                                    {{-- Bagian Kanan: List File & Tombol Aksi --}}
+                                    <div class="flex items-center justify-between md:justify-end gap-4 border-t md:border-t-0 pt-3 md:pt-0 border-gray-100 dark:border-slate-800 flex-shrink-0">
+
+                                        {{-- List Files --}}
+                                        <div class="flex flex-col gap-1.5 min-w-[150px] max-w-[200px]">
                                             @forelse($m->files as $file)
                                                 <a href="{{ route('dosen.materi.buka', [$kelas->id, $m->id, $file->id]) }}"
-                                                class="block text-xs px-3 py-1 bg-[#321270] dark:bg-purple-950/40 text-white dark:text-purple-300 rounded hover:bg-[#250d54] dark:hover:bg-purple-600 dark:hover:text-white truncate max-w-[160px] transition duration-150">
-                                                    {{ $file->nama_asli ?? 'Buka File' }}
+                                                class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-purple-500 dark:hover:border-purple-500 hover:text-purple-700 dark:hover:text-purple-300 transition duration-150 shadow-sm"
+                                                title="{{ $file->nama_asli }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-gray-400 group-hover:text-purple-500 flex-shrink-0">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                                    </svg>
+                                                    <span class="truncate text-[11px] font-semibold">{{ $file->nama_asli ?? 'Unduh File' }}</span>
                                                 </a>
                                             @empty
-                                                <span class="text-xs text-gray-400 dark:text-slate-500 whitespace-nowrap">Tidak ada file</span>
+                                                <span class="text-xs text-gray-400 dark:text-slate-500 italic text-center md:text-right">Tidak ada lampiran file</span>
                                             @endforelse
                                         </div>
 
-                                        {{-- Menu titik tiga --}}
+                                        {{-- Action Button (Dropdown Titik Tiga) --}}
                                         <div class="relative">
                                             <button type="button" onclick="toggleMateriDropdown('dropdownMateri{{ $m->id }}')"
-                                                class="p-1.5 rounded-lg text-gray-800 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-black dark:hover:text-white transition">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                                    <path d="M12 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4z" />
+                                                    class="p-2 rounded-lg text-gray-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-white transition border border-transparent hover:border-gray-200 dark:hover:border-slate-600">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
                                                 </svg>
                                             </button>
 
                                             <div id="dropdownMateri{{ $m->id }}"
-                                                class="materi-dropdown hidden absolute right-0 mt-1 w-36 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg z-20 overflow-hidden">
+                                                class="materi-dropdown hidden absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 border border-gray-150 dark:border-slate-700 rounded-xl shadow-xl z-20 overflow-hidden divide-y divide-gray-100 dark:divide-slate-700/50">
                                                 <button type="button"
                                                         onclick="toggleMateriModal('modalEditMateri{{ $m->id }}'); toggleMateriDropdown('dropdownMateri{{ $m->id }}')"
-                                                        class="w-full text-left px-4 py-2 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition flex items-center gap-2">
+                                                        class="w-full text-left px-4 py-2.5 text-xs font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition flex items-center gap-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                     </svg>
-                                                    Edit
+                                                    Edit Materi
                                                 </button>
 
                                                 <form action="{{ route('dosen.kelas-materi.hapus', [$kelas->id, $m->id]) }}" method="POST"
@@ -105,20 +174,26 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
-                                                            class="w-full text-left px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition flex items-center gap-2">
+                                                            class="w-full text-left px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/25 transition flex items-center gap-2">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                         </svg>
-                                                        Hapus
+                                                        Hapus Materi
                                                     </button>
                                                 </form>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
-                            </li>
+                            </div>
                         @endforeach
-                    </ul>
+
+                        <div id="materiNoResults" class="hidden rounded-xl border border-dashed border-gray-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/30 px-4 py-8 text-center">
+                            <p class="text-sm font-semibold text-gray-600 dark:text-slate-300">Tidak ada materi yang cocok dengan pencarian Anda.</p>
+                            <p class="text-xs text-gray-400 dark:text-slate-500 mt-1">Coba ubah kata kunci atau pilih pertemuan lain.</p>
+                        </div>
+                    </div>
                 @endif
             </div>
 
@@ -127,7 +202,7 @@
                     <div class="fixed inset-0 bg-black bg-opacity-40 transition-opacity" onclick="toggleMateriModal('modalEditMateri{{ $m->id }}')"></div>
 
                     <div class="relative min-h-screen flex items-center justify-center p-4">
-                        <div class="relative bg-white dark:bg-slate-850 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
+                        <div class="relative bg-white dark:bg-slate-800 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
 
                             <div class="px-8 py-5 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
                                 <div class="bg-[#1e293b] dark:bg-purple-650 p-2 rounded-lg text-white">
@@ -138,7 +213,7 @@
                                 <h3 class="text-lg font-bold text-[#1e293b] dark:text-white">Edit Materi</h3>
                             </div>
 
-                            <form action="{{ route('dosen.kelas-materi.update', [$kelas->id, $m->id]) }}" method="POST">
+                            <form action="{{ route('dosen.kelas-materi.update', [$kelas->id, $m->id]) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="px-8 py-6 space-y-5">
@@ -166,6 +241,28 @@
                                         <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
                                         <textarea name="deskripsi" rows="4" maxlength="5000"
                                             class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none resize-none transition text-gray-800 dark:text-gray-100">{{ $m->deskripsi }}</textarea>
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300">File Lampiran Saat Ini</label>
+                                        <div class="space-y-2">
+                                            @forelse($m->files as $file)
+                                                <div class="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+                                                    <span class="text-xs font-semibold truncate max-w-[200px] text-gray-700 dark:text-slate-300">{{ $file->nama_asli }}</span>
+                                                    <label class="inline-flex items-center gap-1 text-xs text-red-600 cursor-pointer">
+                                                        <input type="checkbox" name="hapus_files[]" value="{{ $file->id }}" class="rounded text-red-600 focus:ring-red-500">
+                                                        Hapus
+                                                    </label>
+                                                </div>
+                                            @empty
+                                                <p class="text-xs italic text-gray-400">Tidak ada lampiran saat ini.</p>
+                                            @endforelse
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-1.5 mt-3">
+                                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Tambah File Baru (Optional)</label>
+                                        <input type="file" name="file_materi[]" multiple class="w-full text-sm text-gray-500 dark:text-gray-400">
                                     </div>
                                 </div>
 
@@ -204,12 +301,13 @@
         </div>
     </div>
 
+    {{-- MODAL TAMBAH MATERI --}}
     <div id="modalMateri" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="fixed inset-0 bg-black bg-opacity-40 transition-opacity" onclick="toggleMateriModal('modalMateri')"></div>
 
         <div class="relative min-h-screen flex items-center justify-center p-4">
-            <div class="relative bg-white dark:bg-slate-850 w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
-                
+            <div class="relative bg-white dark:bg-slate-800 w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
+
                 <div class="px-8 py-5 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
                     <div class="bg-[#1e293b] dark:bg-purple-650 p-2 rounded-lg text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -222,7 +320,7 @@
                 <form action="{{ route('dosen.kelas-materi.store', $kelas->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="px-8 py-6 space-y-5">
-                        
+
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Judul Materi</label>
                             <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="255" placeholder="Contoh: Pengenalan Struktur Data Lanjut" class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100 font-medium">
@@ -271,22 +369,20 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-bold text-slate-800 dark:text-slate-200">Seret dan lepas file di sini</p>
-                                <p class="text-xs text-gray-400 dark:text-slate-500 mt-0.5">atau <span class="text-blue-600 dark:text-purple-400 underline font-medium">pilih file</span> dari komputer Anda</p>
-                                <p class="text-[11px] text-gray-400 dark:text-slate-500 mt-3">PDF, PPT, DOCX, XLS, MP4, ZIP, JPG, PNG (Maksimal 100MB/file)</p>
-                                <input type="file" id="materiFileInput" name="file_materi[]" multiple class="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.mp4,.zip,.jpg,.jpeg,.png" onchange="updateFileName(this)">
-                                <ul id="fileNameDisplay" class="text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-2 hidden space-y-0.5 text-left"></ul>
+                                <p class="text-sm font-bold text-slate-800 dark:text-slate-200">Klik atau seret file ke area ini untuk memilih</p>
+                                <p class="text-xs text-gray-400 dark:text-slate-500 mt-1">Sistem mendukung banyak file sekaligus</p>
+                                <input id="materiFileInput" type="file" name="file_materi[]" multiple class="hidden" onchange="updateFileLabel(this)">
+                                <div id="selectedFilesContainer" class="mt-3 text-xs font-semibold text-purple-700 dark:text-purple-300"></div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="bg-gray-50/70 dark:bg-slate-900 px-8 py-4 border-t border-gray-100 dark:border-slate-800 flex justify-end gap-3">
                         <button type="button" onclick="toggleMateriModal('modalMateri')" class="px-5 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition">
                             Batal
                         </button>
-                        <button type="submit" class="px-5 py-2 rounded-lg bg-[#0f172a] dark:bg-[#6c2bd9] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
-                            Simpan Materi
+                        <button type="submit" class="px-5 py-2 rounded-lg bg-[#321270] dark:bg-[#6c2bd9] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
+                            Unggah Materi
                         </button>
                     </div>
                 </form>
@@ -294,50 +390,97 @@
         </div>
     </div>
 
-    <script>
-        function toggleMateriModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.toggle("hidden");
-            document.body.classList.toggle("overflow-hidden");
+@endsection
+
+@push('scripts')
+<script>
+    // Fungsi untuk membuka / menutup modal
+    function toggleMateriModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.toggle('hidden');
         }
+    }
 
-        function updateFileName(input) {
-            const display = document.getElementById('fileNameDisplay');
-            display.innerHTML = '';
+    // Fungsi untuk membuka / menutup dropdown titik tiga
+    function toggleMateriDropdown(dropdownId) {
+        const targetDropdown = document.getElementById(dropdownId);
 
-            if (input.files.length > 0) {
-                Array.from(input.files).forEach(file => {
-                    const li = document.createElement('li');
-                    li.textContent = file.name;
-                    display.appendChild(li);
-                });
-                display.classList.remove('hidden');
-            } else {
-                display.classList.add('hidden');
-            }
-        }
-
-        function toggleMateriDropdown(dropdownId) {
-            const dropdown = document.getElementById(dropdownId);
-            const isHidden = dropdown.classList.contains('hidden');
-
-            // tutup semua dropdown lain yang mungkin masih terbuka
-            document.querySelectorAll('.materi-dropdown').forEach(el => {
-                if (el.id !== dropdownId) el.classList.add('hidden');
-            });
-
-            dropdown.classList.toggle('hidden', !isHidden ? true : false);
-        }
-
-        // klik di luar dropdown -> tutup semua
-        document.addEventListener('click', function (event) {
-            const isToggleBtn = event.target.closest('button[onclick^="toggleMateriDropdown"]');
-            const isDropdown = event.target.closest('.materi-dropdown');
-
-            if (!isToggleBtn && !isDropdown) {
-                document.querySelectorAll('.materi-dropdown').forEach(el => el.classList.add('hidden'));
+        // Sembunyikan dropdown lainnya yang sedang terbuka
+        document.querySelectorAll('.materi-dropdown').forEach(dropdown => {
+            if (dropdown.id !== dropdownId) {
+                dropdown.classList.add('hidden');
             }
         });
-    </script>
 
-@endsection
+        if (targetDropdown) {
+            targetDropdown.classList.toggle('hidden');
+        }
+    }
+
+    // Event listener untuk menutup dropdown apabila pengguna mengklik di luar area dropdown
+    window.addEventListener('click', function(e) {
+        if (!e.target.closest('.relative')) {
+            document.querySelectorAll('.materi-dropdown').forEach(dropdown => {
+                dropdown.classList.add('hidden');
+            });
+        }
+    });
+
+    // Menampilkan daftar nama file yang dipilih di modal Tambah Materi
+    function updateFileLabel(input) {
+        const container = document.getElementById('selectedFilesContainer');
+        container.innerHTML = '';
+        if (input.files.length > 0) {
+            const list = document.createElement('ul');
+            list.className = 'list-disc list-inside text-left space-y-1';
+            for (let i = 0; i < input.files.length; i++) {
+                const li = document.createElement('li');
+                li.innerText = input.files[i].name;
+                list.appendChild(li);
+            }
+            container.appendChild(list);
+        }
+    }
+
+    // JS Fitur Filter Pencarian & Pertemuan (Instan / Real-time)
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchMateri');
+        const filterSelect = document.getElementById('filterPertemuan');
+        const cards = document.querySelectorAll('.materi-card');
+        const noResults = document.getElementById('materiNoResults');
+
+        function filterMateri() {
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const selectedPertemuan = filterSelect ? filterSelect.value : '';
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const searchData = card.getAttribute('data-search') || '';
+                const cardPertemuan = card.getAttribute('data-pertemuan') || '';
+
+                const matchesQuery = query === '' || searchData.includes(query);
+                const matchesPertemuan = selectedPertemuan === '' || cardPertemuan === selectedPertemuan;
+
+                if (matchesQuery && matchesPertemuan) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            if (noResults) {
+                if (visibleCount === 0 && cards.length > 0) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                }
+            }
+        }
+
+        if (searchInput) searchInput.addEventListener('input', filterMateri);
+        if (filterSelect) filterSelect.addEventListener('change', filterMateri);
+    });
+</script>
+@endpush

@@ -1,192 +1,305 @@
 @extends('layouts.portal')
 
-@section('title', 'Edit Presensi - Pertemuan ' . $absensi->pertemuan_ke)
+@section('title', 'Edit Sesi Presensi - Pertemuan ' . $absensi->pertemuan_ke)
 
 @section('content')
-<div class="space-y-6 max-w-4xl mx-auto">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/60">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 flex items-center gap-3">
-                <div class="p-2 bg-blue-50 text-blue-600 rounded-xl border border-blue-100 shadow-sm">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                </div>
-                <span>Edit Konfigurasi Presensi</span>
-            </h1>
-            <p class="mt-2 text-sm text-slate-500 flex items-center flex-wrap gap-2">
-                <span class="font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100/70">{{ $kelas->mataKuliah->nama_mk }}</span>
-                <span class="text-slate-400">•</span>
-                <span class="font-medium text-slate-600">Kelas {{ $kelas->kode_kelas }}</span>
-                <span class="text-slate-400">•</span>
-                <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md font-medium">Pertemuan {{ $absensi->pertemuan_ke }}</span>
-            </p>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+    .font-display { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
+    .font-mono-tix { font-family: 'JetBrains Mono', monospace; }
+    .rail-dot { box-shadow: 0 0 0 4px #FBF9F6; }
+    .rail-line { background-image: repeating-linear-gradient(to bottom, #321270 0, #321270 4px, transparent 4px, transparent 9px); }
+</style>
+
+<div class="max-w-7xl mx-auto" style="font-family: 'Inter', sans-serif;">
+
+    {{-- HEADER: STAMP + TITLE --}}
+    <div class="flex flex-row items-center gap-3 sm:gap-5 pb-5 sm:pb-6 mb-5 sm:mb-6 border-b-2 border-dashed border-slate-200">
+        <div class="shrink-0 relative">
+            <div class="w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-full border-2 border-[#321270] flex flex-col items-center justify-center rotate-[-4deg] bg-[#321270]/[0.03]">
+                <span class="text-[6px] sm:text-[8px] font-bold text-[#321270]/70 uppercase tracking-wider -mb-0.5">Sesi ke</span>
+                <span class="font-display text-lg sm:text-2xl font-semibold text-[#321270] leading-none">{{ $absensi->pertemuan_ke }}</span>
+            </div>
         </div>
-        <div class="flex items-center">
-            <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" 
-               class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold text-sm shadow-sm hover:shadow transition-all duration-300">
-                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <div class="min-w-0 flex-1">
+            <h1 class="font-display text-lg sm:text-[30px] font-semibold text-[#1E1B2E] leading-tight truncate">
+                Edit Sesi Presensi
+            </h1>
+            <p class="mt-1 sm:mt-1.5 text-xs sm:text-sm text-slate-500 flex items-center flex-wrap gap-1.5 sm:gap-2">
+                <span class="font-mono-tix font-bold text-[#321270] bg-[#321270]/[0.06] px-1.5 sm:px-2 py-0.5 rounded border border-[#321270]/10 text-[10px] sm:text-xs">{{ $kelas->kode_kelas }}</span>
+                <span class="italic font-display text-slate-400 text-xs sm:text-sm truncate">{{ $kelas->mataKuliah->nama_mk }}</span>
+            </p>
+            <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}"
+               class="sm:hidden inline-flex items-center gap-1 mt-1.5 text-[#321270] font-bold text-[11px] uppercase tracking-wider">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Kembali</span>
+            </a>
+        </div>
+        <div class="hidden sm:block shrink-0">
+            <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}"
+               class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#321270] hover:bg-[#3d1690] text-white rounded-xl font-bold text-xs shadow-md hover:shadow-lg transition-all duration-200">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M15 19l-7-7 7-7" />
                 </svg>
                 <span>Kembali</span>
             </a>
         </div>
     </div>
 
-    <form action="{{ route('dosen.absensi.update', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200/80 overflow-hidden transition-all duration-300 hover:shadow-md">
-            <div class="bg-gradient-to-r from-slate-50 to-blue-50/30 px-6 py-4 border-b border-slate-100 flex items-center gap-2">
-                <span class="w-2 h-4 bg-blue-500 rounded-full"></span>
-                <h2 class="text-base font-bold text-slate-800">Detail Informasi Parameter Presensi</h2>
+    @if ($errors->any())
+        <div class="mb-6 bg-rose-50 border-l-4 border-rose-500 rounded-r-lg p-4 flex items-start gap-3 shadow-sm">
+            <svg class="w-4.5 h-4.5 text-rose-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex-1 min-w-0">
+                <p class="font-display font-semibold text-rose-900 text-sm">Beberapa bagian formulir perlu diperbaiki</p>
+                <ul class="text-xs text-rose-700 mt-1.5 space-y-0.5 list-disc pl-4">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
+        </div>
+    @endif
 
-            <div class="p-6 space-y-5">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="pertemuan_ke" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1">
-                            <span>Pertemuan Ke</span>
-                            <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="number" id="pertemuan_ke" name="pertemuan_ke" 
-                            value="{{ old('pertemuan_ke', $absensi->pertemuan_ke) }}" 
-                            min="1" max="16" required
-                            class="w-full px-3.5 py-2.5 text-sm text-slate-700 rounded-xl border @error('pertemuan_ke') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-blue-500 @enderror focus:bg-white focus:ring-2 focus:ring-blue-500/20 outline-none transition duration-200 shadow-sm">
-                        @error('pertemuan_ke')
-                            <p class="mt-1 text-xs text-rose-600 font-semibold">{{ $message }}</p>
-                        @enderror
-                    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
 
-                    <div>
-                        <label for="tanggal" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1">
-                            <span>Tanggal Pelaksanaan</span>
-                            <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="date" id="tanggal" name="tanggal" 
-                            value="{{ old('tanggal', $absensi->tanggal->format('Y-m-d')) }}" 
-                            required
-                            class="w-full px-3.5 py-2.5 text-sm text-slate-700 rounded-xl border @error('tanggal') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-blue-500 @enderror focus:bg-white focus:ring-2 focus:ring-blue-500/20 outline-none transition duration-200 shadow-sm">
-                        @error('tanggal')
-                            <p class="mt-1 text-xs text-rose-600 font-semibold">{{ $message }}</p>
-                        @enderror
-                    </div>
+        {{-- FORM WITH STEP RAIL --}}
+        <form action="{{ route('dosen.absensi.update', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST" class="space-y-2">
+            @csrf
+            @method('PUT')
+
+            {{-- STEP 1: JADWAL & AKSES --}}
+            <div class="flex gap-4">
+                <div class="flex flex-col items-center shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-[#321270] text-white font-display font-semibold text-sm flex items-center justify-center rail-dot">1</div>
+                    <div class="w-px flex-1 rail-line mt-1 mb-1"></div>
                 </div>
+                <div class="flex-1 min-w-0 pb-6">
+                    <h2 class="font-display text-lg font-semibold text-[#1E1B2E] mb-0.5">Jadwal & Akses Sesi</h2>
+                    <p class="text-xs text-slate-500 mb-4">Atur nomor urut, waktu pelaksanaan, serta hak akses presensi mahasiswa</p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="jam_mulai" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1">
-                            <span>Jam Mulai Kuliah</span>
-                            <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="time" id="jam_mulai" name="jam_mulai" 
-                            value="{{ old('jam_mulai', $absensi->jam_mulai) }}" 
-                            required
-                            class="w-full px-3.5 py-2.5 text-sm text-slate-700 rounded-xl border @error('jam_mulai') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-blue-500 @enderror focus:bg-white focus:ring-2 focus:ring-blue-500/20 outline-none transition duration-200 shadow-sm">
-                        @error('jam_mulai')
-                            <p class="mt-1 text-xs text-rose-600 font-semibold">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="pertemuan_ke" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    Pertemuan Ke <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="number" id="pertemuan_ke" name="pertemuan_ke"
+                                    value="{{ old('pertemuan_ke', $absensi->pertemuan_ke) }}"
+                                    min="1" max="99" required
+                                    class="w-full px-3.5 py-2.5 text-sm font-mono-tix font-bold text-[#1E1B2E] rounded-xl border-2 @error('pertemuan_ke') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-[#321270] @enderror focus:bg-white outline-none transition duration-200">
+                                @error('pertemuan_ke')
+                                    <p class="mt-1 text-[11px] text-rose-600 font-semibold">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                    <div>
-                        <label for="jam_selesai" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1">
-                            <span>Jam Selesai Kuliah</span>
-                            <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="time" id="jam_selesai" name="jam_selesai" 
-                            value="{{ old('jam_selesai', $absensi->jam_selesai) }}" 
-                            required
-                            class="w-full px-3.5 py-2.5 text-sm text-slate-700 rounded-xl border @error('jam_selesai') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-blue-500 @enderror focus:bg-white focus:ring-2 focus:ring-blue-500/20 outline-none transition duration-200 shadow-sm">
-                        @error('jam_selesai')
-                            <p class="mt-1 text-xs text-rose-600 font-semibold">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
+                            <div>
+                                <label for="tanggal" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    Tanggal Pelaksanaan <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="date" id="tanggal" name="tanggal"
+                                    value="{{ old('tanggal', $absensi->tanggal->format('Y-m-d')) }}"
+                                    required
+                                    class="w-full px-3.5 py-2.5 text-sm text-[#1E1B2E] rounded-xl border-2 @error('tanggal') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-[#321270] @enderror focus:bg-white outline-none transition duration-200">
+                                @error('tanggal')
+                                    <p class="mt-1 text-[11px] text-rose-600 font-semibold">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
 
-                <div>
-                    <label for="session_status" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1">
-                        <span>Status Akses Sesi Absensi</span>
-                        <span class="text-rose-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <select id="session_status" name="session_status" required
-                            class="w-full pl-3.5 pr-10 py-2.5 text-sm font-semibold text-slate-700 bg-slate-50 focus:bg-white rounded-xl border @error('session_status') border-rose-300 focus:border-rose-500 @else border-slate-200 focus:border-blue-500 @enderror focus:ring-2 focus:ring-blue-500/20 outline-none transition duration-200 appearance-none shadow-sm cursor-pointer">
-                            <option value="draft" class="text-amber-600 font-semibold" {{ old('session_status', $absensi->session_status) === 'draft' ? 'selected' : '' }}>◴ Draft (Sesi Belum Diaktifkan / Mahasiswa Dikunci)</option>
-                            <option value="buka" class="text-emerald-600 font-semibold" {{ old('session_status', $absensi->session_status) === 'buka' ? 'selected' : '' }}>✓ Dibuka (Sesi Aktif / Mahasiswa Dapat Melakukan Presensi)</option>
-                            <option value="tutup" class="text-rose-600 font-semibold" {{ old('session_status', $absensi->session_status) === 'tutup' ? 'selected' : '' }}>✗ Ditutup (Sesi Selesai / Sistem Presensi Dikunci Semuanya)</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-                            </svg>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="jam_mulai" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    Jam Mulai Kuliah <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="time" id="jam_mulai" name="jam_mulai"
+                                    value="{{ old('jam_mulai', $absensi->jam_mulai) }}"
+                                    required
+                                    class="w-full px-3.5 py-2.5 text-sm font-mono-tix text-[#1E1B2E] rounded-xl border-2 @error('jam_mulai') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-[#321270] @enderror focus:bg-white outline-none transition duration-200">
+                                @error('jam_mulai')
+                                    <p class="mt-1 text-[11px] text-rose-600 font-semibold">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="jam_selesai" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                    Jam Selesai Kuliah <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="time" id="jam_selesai" name="jam_selesai"
+                                    value="{{ old('jam_selesai', $absensi->jam_selesai) }}"
+                                    required
+                                    class="w-full px-3.5 py-2.5 text-sm font-mono-tix text-[#1E1B2E] rounded-xl border-2 @error('jam_selesai') border-rose-300 bg-rose-50/30 focus:border-rose-500 @else border-slate-200 bg-slate-50 focus:border-[#321270] @enderror focus:bg-white outline-none transition duration-200">
+                                @error('jam_selesai')
+                                    <p class="mt-1 text-[11px] text-rose-600 font-semibold">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="session_status" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                Status Akses Sesi Absensi <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="session_status" name="session_status" required
+                                    class="w-full pl-3.5 pr-10 py-2.5 text-sm font-bold text-[#1E1B2E] bg-slate-50 rounded-xl border-2 @error('session_status') border-rose-300 focus:border-rose-500 @else border-slate-200 focus:border-[#321270] @enderror focus:bg-white outline-none transition duration-200 appearance-none cursor-pointer">
+                                    <option value="draft" class="text-amber-600 font-bold" {{ old('session_status', $absensi->session_status) === 'draft' ? 'selected' : '' }}>◴ Draft (Sesi Belum Diaktifkan / Mahasiswa Dikunci)</option>
+                                    <option value="buka" class="text-emerald-600 font-bold" {{ old('session_status', $absensi->session_status) === 'buka' ? 'selected' : '' }}>✓ Dibuka (Mahasiswa Dapat Melakukan Presensi)</option>
+                                    <option value="tutup" class="text-rose-600 font-bold" {{ old('session_status', $absensi->session_status) === 'tutup' ? 'selected' : '' }}>✗ Ditutup (Sistem Presensi Dikunci Semuanya)</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            @error('session_status')
+                                <p class="mt-1 text-[11px] text-rose-600 font-semibold">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
-                    @error('session_status')
-                        <p class="mt-1 text-xs text-rose-600 font-semibold">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="border-t border-slate-100 my-2"></div>
-
-                <div>
-                    <label for="rangkuman" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Ringkasan Pokok Bahasan materi <span class="text-slate-400 font-medium lowercase">(opsional)</span>
-                    </label>
-                    <textarea id="rangkuman" name="rangkuman" rows="3"
-                        placeholder="Tulis ringkasan pokok materi perkuliahan..."
-                        class="w-full px-4 py-3 text-sm text-slate-700 bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition duration-200 shadow-sm resize-none">{{ old('rangkuman', $absensi->rangkuman) }}</textarea>
-                </div>
-
-                <div>
-                    <label for="berita_acara" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Berita Acara Jalannya Kelas <span class="text-slate-400 font-medium lowercase">(opsional)</span>
-                    </label>
-                    <textarea id="berita_acara" name="berita_acara" rows="3"
-                        placeholder="Tulis hambatan, penyimpangan, atau kejadian khusus perkuliahan..."
-                        class="w-full px-4 py-3 text-sm text-slate-700 bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition duration-200 shadow-sm resize-none">{{ old('berita_acara', $absensi->berita_acara) }}</textarea>
-                </div>
-
-                <div>
-                    <label for="catatan" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Catatan Internal Tambahan Dosen <span class="text-slate-400 font-medium lowercase">(opsional)</span>
-                    </label>
-                    <textarea id="catatan" name="catatan" rows="2"
-                        placeholder="Catatan pendelegasian tugas tambahan mahasiswa atau lainnya..."
-                        class="w-full px-4 py-3 text-sm text-slate-700 bg-slate-50 hover:bg-white focus:bg-white rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition duration-200 shadow-sm resize-none">{{ old('catatan', $absensi->catatan) }}</textarea>
-                </div>
-
-                <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                    <button type="reset" 
-                            class="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm shadow-sm transition-all duration-300 hover:scale-[1.01]">
-                        Reset Form
-                    </button>
-                    <button type="submit" 
-                            class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
-                        Simpan Perubahan
-                    </button>
                 </div>
             </div>
-        </div>
-    </form>
 
-    <div class="bg-white rounded-xl border border-rose-150 p-6 shadow-sm transition duration-300 hover:border-rose-300">
-        <div class="flex items-center gap-2 mb-2">
-            <span class="w-2 h-4 bg-rose-500 rounded-full"></span>
-            <h3 class="text-base font-extrabold text-rose-900">Zona Bahaya (Danger Zone)</h3>
-        </div>
-        <p class="text-sm text-slate-500 mb-4 leading-relaxed">
-            Menghapus data sesi presensi pertemuan ini akan melenyapkan <span class="font-bold text-rose-600">seluruh rekapitulasi kehadiran mahasiswa</span> yang telah terarsip masuk ke database secara permanen. Tindakan sistem ini tidak dapat dikembalikan.
-        </p>
-        <form action="{{ route('dosen.absensi.destroy', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" 
-              method="POST" 
-              onsubmit="return confirm('Apakah Anda benar-benar yakin ingin menghapus data presensi pertemuan ini beserta seluruh riwayat rekap mahasiswa di dalamnya?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 font-bold text-sm rounded-xl shadow-sm transition-all duration-300 hover:scale-[1.01] outline-none">
-                Hapus Permanen Sesi Presensi
-            </button>
+            {{-- STEP 2: DOKUMENTASI --}}
+            <div class="flex gap-4">
+                <div class="flex flex-col items-center shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-[#321270] text-white font-display font-semibold text-sm flex items-center justify-center rail-dot">2</div>
+                    <div class="w-px flex-1 rail-line mt-1 mb-1"></div>
+                </div>
+                <div class="flex-1 min-w-0 pb-6">
+                    <h2 class="font-display text-lg font-semibold text-[#1E1B2E] mb-0.5">Dokumentasi Sesi</h2>
+                    <p class="text-xs text-slate-500 mb-4">Ringkasan materi dan catatan perkuliahan — semua kolom opsional</p>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                        <div>
+                            <label for="rangkuman" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                Ringkasan Pokok Bahasan Materi
+                            </label>
+                            <textarea id="rangkuman" name="rangkuman" rows="3"
+                                placeholder="Tulis poin-poin materi utama yang akan dipaparkan..."
+                                class="w-full px-3.5 py-2.5 text-sm text-[#1E1B2E] bg-slate-50 hover:bg-white focus:bg-white rounded-xl border-2 border-slate-200 focus:border-[#321270] outline-none transition duration-200 resize-none">{{ old('rangkuman', $absensi->rangkuman) }}</textarea>
+                        </div>
+
+                        <div>
+                            <label for="berita_acara" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                Berita Acara Perkuliahan
+                            </label>
+                            <textarea id="berita_acara" name="berita_acara" rows="3"
+                                placeholder="Tulis pokok kejadian, hambatan kelas, atau catatan berita acara..."
+                                class="w-full px-3.5 py-2.5 text-sm text-[#1E1B2E] bg-slate-50 hover:bg-white focus:bg-white rounded-xl border-2 border-slate-200 focus:border-[#321270] outline-none transition duration-200 resize-none">{{ old('berita_acara', $absensi->berita_acara) }}</textarea>
+                        </div>
+
+                        <div>
+                            <label for="catatan" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                                Catatan Tambahan Khusus
+                            </label>
+                            <textarea id="catatan" name="catatan" rows="2"
+                                placeholder="Catatan pendelegasian tugas mandiri mahasiswa atau lainnya..."
+                                class="w-full px-3.5 py-2.5 text-sm text-[#1E1B2E] bg-slate-50 hover:bg-white focus:bg-white rounded-xl border-2 border-slate-200 focus:border-[#321270] outline-none transition duration-200 resize-none">{{ old('catatan', $absensi->catatan) }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- STEP 3 (final marker, no line after) --}}
+            <div class="flex gap-4">
+                <div class="flex flex-col items-center shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-[#321270] text-white flex items-center justify-center rail-dot">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#321270]/[0.04] border border-[#321270]/10 rounded-2xl p-4">
+                        <p class="text-xs text-slate-500">Pastikan data yang Anda perbarui telah sesuai dengan berita acara fisik.</p>
+                        <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                            <button type="reset"
+                                    class="flex-1 sm:flex-none px-5 py-2.5 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-xl font-bold text-xs shadow-sm transition-all duration-200">
+                                Reset
+                            </button>
+                            <button type="submit"
+                                    class="flex-1 sm:flex-none px-6 py-2.5 bg-[#321270] hover:bg-[#3d1690] text-white rounded-xl font-bold text-xs shadow-md hover:shadow-lg transition-all duration-200">
+                                Simpan Perubahan →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
+
+        {{-- SIDEBAR: INDEX CARD STYLE --}}
+        <div class="space-y-5">
+
+            {{-- alur presensi --}}
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-display font-semibold text-[#1E1B2E] text-base mb-3 pb-2.5 border-b border-dashed border-slate-200">Alur Presensi</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-2.5">
+                        <span class="mt-1 w-1.5 h-1.5 rounded-full bg-[#321270] shrink-0"></span>
+                        <span class="text-xs text-slate-600 leading-relaxed"><strong class="text-[#1E1B2E]">Akses Draft:</strong> Sesi berstatus draft menyembunyikan form presensi di sisi mahasiswa.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="mt-1 w-1.5 h-1.5 rounded-full bg-[#321270] shrink-0"></span>
+                        <span class="text-xs text-slate-600 leading-relaxed"><strong class="text-[#1E1B2E]">Sesi Dibuka:</strong> Mahasiswa dapat mengisi daftar hadir secara mandiri di rentang jam aktif.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="mt-1 w-1.5 h-1.5 rounded-full bg-[#321270] shrink-0"></span>
+                        <span class="text-xs text-slate-600 leading-relaxed"><strong class="text-[#1E1B2E]">Sesi Ditutup:</strong> Mengunci seluruh manipulasi kehadiran kecuali dilakukan manual oleh dosen.</span>
+                    </li>
+                </ul>
+            </div>
+
+            {{-- kelas record card --}}
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="bg-[#321270] px-5 py-3">
+                    <p class="text-[10px] font-bold text-white/60 uppercase tracking-[0.15em]">Kartu Kelas</p>
+                    <p class="font-display text-white font-semibold text-base truncate">{{ $kelas->mataKuliah->nama_mk }}</p>
+                </div>
+                <div class="p-5 space-y-3.5">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-400 font-semibold uppercase tracking-wider text-[10px]">Kode Akses</span>
+                        <span class="font-mono-tix font-bold text-[#321270] bg-[#321270]/[0.06] px-2 py-0.5 rounded border border-[#321270]/10">{{ $kelas->kode_kelas }}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-400 font-semibold uppercase tracking-wider text-[10px]">Ruangan</span>
+                        <span class="font-semibold text-slate-700">{{ $kelas->ruangan ?? 'Online/Hybrid' }}</span>
+                    </div>
+                    <div class="pt-3 border-t border-dashed border-slate-200 flex items-center justify-between">
+                        <span class="text-slate-400 font-semibold uppercase tracking-wider text-[10px]">Mahasiswa Terdaftar</span>
+                        <span class="font-display text-2xl font-semibold text-[#321270]">{{ $kelas->mahasiswa->count() }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Danger Zone Card --}}
+            <div class="bg-rose-50/30 rounded-2xl border border-dashed border-rose-300 p-5">
+                <p class="text-[10px] font-bold text-rose-700 uppercase tracking-[0.15em] mb-2 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>Danger Zone</span>
+                </p>
+                <p class="text-xs text-slate-500 mb-4 leading-relaxed">
+                    Menghapus sesi ini akan melenyapkan seluruh arsip kehadiran mahasiswa di pertemuan ini secara permanen.
+                </p>
+                <form action="{{ route('dosen.absensi.destroy', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" 
+                      method="POST" 
+                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus permanen sesi presensi pertemuan ini?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full px-4 py-2 bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 hover:border-rose-600 transition-all duration-300 text-xs font-bold rounded-xl shadow-sm">
+                        Hapus Sesi Presensi
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
