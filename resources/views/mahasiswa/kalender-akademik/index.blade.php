@@ -27,7 +27,10 @@
                             <p class="text-xs text-blue-100/80 mt-0.5">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini.</p>
                         </div>
                     </div>
-                    
+                    <a href="{{ route('mahasiswa.dashboard') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/10 rounded-xl font-bold text-xs uppercase tracking-wider transition-all backdrop-blur-sm active:scale-95">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                        Kembali
+                    </a>
                 </div>
             </div>
         </div>
@@ -91,14 +94,14 @@
                     </div>
 
                     {{-- Calendar Matrix Rendering --}}
-                    <div class="p-4 sm:p-6 overflow-x-auto">
-                        <div class="grid grid-cols-7 gap-1 mb-2 min-w-[700px]">
+                    <div class="p-2 sm:p-6">
+                        <div class="grid grid-cols-7 gap-0.5 sm:gap-1 mb-2">
                             @foreach(['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $day)
-                                <div class="text-center text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 py-2">{{ $day }}</div>
+                                <div class="text-center text-[9px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 py-1 sm:py-2 truncate">{{ $day }}</div>
                             @endforeach
                         </div>
 
-                        <div class="grid grid-cols-7 gap-1.5 min-w-[700px]">
+                        <div class="grid grid-cols-7 gap-0.5 sm:gap-1.5">
                             <template x-for="week in calendarWeeks" :key="JSON.stringify(week)">
                                 <template x-for="day in week" :key="day.dateStr">
                                     <div @click="$dispatch('select-day', {day: day})"
@@ -108,41 +111,41 @@
                                              'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700/60': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                              'bg-slate-50/50 dark:bg-slate-900/40 border-gray-100 dark:border-slate-800/40 opacity-40': !day.isCurrentMonth,
                                          }"
-                                         class="min-h-[105px] p-2.5 rounded-2xl border transition-all duration-200 hover:shadow-md hover:border-gray-300 dark:hover:border-slate-600 cursor-pointer flex flex-col relative group">
+                                         class="min-h-[64px] sm:min-h-[105px] p-1 sm:p-2.5 rounded-lg sm:rounded-2xl border transition-all duration-200 hover:shadow-md hover:border-gray-300 dark:hover:border-slate-600 cursor-pointer flex flex-col relative group min-w-0">
                                         
-                                        <div class="flex items-start justify-between gap-1 mb-2 relative z-10">
+                                        <div class="flex items-start justify-between gap-1 mb-1 sm:mb-2 relative z-10">
                                             <span :class="{
-                                                      'text-[#002B6B] dark:text-blue-400 font-extrabold text-base bg-slate-200/60 dark:bg-slate-800 px-1.5 py-0.5 rounded-lg': day.isToday,
+                                                      'text-[#002B6B] dark:text-blue-400 font-extrabold bg-slate-200/60 dark:bg-slate-800 px-1 sm:px-1.5 py-0.5 rounded-md sm:rounded-lg': day.isToday,
                                                       'text-rose-600 dark:text-rose-500 font-bold': day.isWeekend && !day.isToday && day.isCurrentMonth,
                                                       'text-gray-800 dark:text-slate-200 font-bold': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                                       'text-gray-400 dark:text-slate-600 font-medium': !day.isCurrentMonth,
                                                   }"
-                                                  class="text-sm" x-text="day.date"></span>
+                                                  class="text-[11px] sm:text-sm" x-text="day.date"></span>
                                             
                                             <template x-if="day.events.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length > 0">
-                                                <span class="text-[10px] font-extrabold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-1.5 py-0.5 rounded-md" 
+                                                <span class="text-[8px] sm:text-[10px] font-extrabold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-1 sm:px-1.5 py-0.5 rounded-md" 
                                                       x-text="day.events.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length"></span>
                                             </template>
                                         </div>
 
                                         {{-- Blok List Event --}}
-                                        <div class="flex-1 space-y-1 min-w-0 overflow-hidden">
+                                        <div class="flex-1 space-y-0.5 sm:space-y-1 min-w-0 overflow-hidden">
                                             <template x-for="(event, idx) in day.events.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).slice(0, 1)" :key="event.id">
                                                 <div @click.stop="showEventDetail(event)"
                                                      :style="'background-color: ' + event.warna + '10; border-left: 3px solid ' + event.warna"
-                                                     class="px-2 py-1 rounded-lg text-[11px] font-bold truncate cursor-pointer hover:brightness-95 dark:hover:brightness-110 transition shadow-xs flex flex-col gap-0.5">
-                                                    <span class="inline-flex items-center gap-1 w-full text-gray-800 dark:text-slate-200 truncate">
-                                                        <span class="w-1 h-1 rounded-full flex-shrink-0" :style="'background-color: ' + event.warna"></span>
+                                                     class="px-1 sm:px-2 py-0.5 sm:py-1 rounded sm:rounded-lg text-[8px] sm:text-[11px] font-bold truncate cursor-pointer hover:brightness-95 dark:hover:brightness-110 transition shadow-xs flex flex-col gap-0.5 min-w-0">
+                                                    <span class="inline-flex items-center gap-1 w-full text-gray-800 dark:text-slate-200 truncate min-w-0">
+                                                        <span class="w-1 h-1 rounded-full flex-shrink-0 hidden sm:inline-block" :style="'background-color: ' + event.warna"></span>
                                                         <span class="truncate" x-text="event.judul"></span>
                                                     </span>
                                                     <template x-if="event.waktu_mulai && !event.is_all_day">
-                                                        <span class="text-[9px] opacity-60 font-semibold tracking-wide" :style="'color: ' + event.warna" x-text="event.waktu_mulai.substring(0, 5)"></span>
+                                                        <span class="hidden sm:inline text-[9px] opacity-60 font-semibold tracking-wide" :style="'color: ' + event.warna" x-text="event.waktu_mulai.substring(0, 5)"></span>
                                                     </template>
                                                 </div>
                                             </template>
                                             
                                             <template x-if="day.events.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length > 1">
-                                                <div class="text-[10px] font-bold text-center py-0.5 bg-slate-50 dark:bg-slate-900 text-gray-500 rounded-md border border-dashed border-gray-200 dark:border-slate-700" 
+                                                <div class="text-[8px] sm:text-[10px] font-bold text-center py-0.5 bg-slate-50 dark:bg-slate-900 text-gray-500 rounded sm:rounded-md border border-dashed border-gray-200 dark:border-slate-700" 
                                                      x-text="'+' + (day.events.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length - 1) + ' lagi'"></div>
                                             </template>
                                         </div>
