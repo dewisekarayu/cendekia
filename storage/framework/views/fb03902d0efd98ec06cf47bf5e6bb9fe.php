@@ -26,10 +26,6 @@
                             <p class="text-xs text-blue-100/80 mt-0.5">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini.</p>
                         </div>
                     </div>
-                    <a href="<?php echo e(route('mahasiswa.dashboard')); ?>" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/10 rounded-xl font-bold text-xs uppercase tracking-wider transition-all backdrop-blur-sm active:scale-95">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                        Kembali
-                    </a>
                 </div>
             </div>
         </div>
@@ -369,5 +365,5 @@
     </script>
 <?php $__env->stopPush(); ?>
 
-<?php $__env->stopSection(); ?>
+<?php $__env->stopSection(); ?> 
 <?php echo $__env->make('layouts.portal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\laragon\www\cendekia\resources\views/mahasiswa/kalender-akademik/index.blade.php ENDPATH**/ ?>
