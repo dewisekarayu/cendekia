@@ -247,121 +247,77 @@
 </div>
 
 {{-- Detail Agenda Modal Custom Modern --}}
-<div id="eventModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md">
-    <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transform transition-all">
-        <div class="p-5 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/20">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" id="modalColorBox">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+<div x-show="selectedEvent" x-cloak
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-md"
+     style="display: none;">
+    <div @click.outside="closeEventModal()"
+         class="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden transform transition-all">
+
+        <template x-if="selectedEvent">
+            <div>
+                <div class="p-5 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/20">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                             :style="'background-color: ' + (selectedEvent.warna || '#002B6B')">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+                        </div>
+                        <h3 class="font-extrabold text-gray-900 dark:text-white text-sm truncate" x-text="selectedEvent.judul"></h3>
+                    </div>
+                    <button @click="closeEventModal()" class="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition active:scale-90">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
                 </div>
-                <h3 class="font-extrabold text-gray-900 dark:text-white text-sm truncate" id="modalTitle"></h3>
+
+                <div class="p-6 space-y-4 text-sm">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 rounded-lg text-xs font-bold"
+                              :style="'background-color: ' + (selectedEvent.warna || '#002B6B') + '15; color: ' + (selectedEvent.warna || '#002B6B')"
+                              x-text="selectedEvent.jenis_kegiatan_label || 'Kegiatan'"></span>
+                        <span x-show="selectedEvent.is_all_day"
+                              class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+                            Sepanjang Hari
+                        </span>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-none rounded-2xl p-4 text-xs space-y-1">
+                        <div class="flex items-center gap-2 text-gray-800 dark:text-slate-200 font-bold">
+                            <svg class="w-4 h-4 text-[#002B6B] dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                            <span>
+                                <span x-text="selectedEvent.tanggal_mulai"></span>
+                                <template x-if="selectedEvent.tanggal_selesai && selectedEvent.tanggal_selesai !== selectedEvent.tanggal_mulai">
+                                    <span x-text="' s/d ' + selectedEvent.tanggal_selesai"></span>
+                                </template>
+                            </span>
+                        </div>
+                        <template x-if="!selectedEvent.is_all_day && selectedEvent.waktu_formatted">
+                            <div class="text-[11px] font-semibold text-gray-400 pl-6" x-text="selectedEvent.waktu_formatted"></div>
+                        </template>
+                    </div>
+
+                    <template x-if="selectedEvent.lokasi">
+                        <div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
+                            <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Lokasi Ruangan</p>
+                            <p class="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                                <span x-text="selectedEvent.lokasi"></span>
+                            </p>
+                        </div>
+                    </template>
+
+                    <template x-if="selectedEvent.deskripsi">
+                        <div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
+                            <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Keterangan Detail</p>
+                            <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed font-medium whitespace-pre-wrap" x-text="selectedEvent.deskripsi"></p>
+                        </div>
+                    </template>
+                </div>
             </div>
-            <button @click="closeEventModal()" class="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition active:scale-90">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-        <div class="p-6 space-y-4 text-sm">
-            <div class="flex flex-wrap gap-2" id="modalBadges"></div>
-            <div id="modalDateRange" class="bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-none rounded-2xl p-4 text-xs space-y-1"></div>
-            <div id="modalLocation" class="hidden"></div>
-            <div id="modalDescription" class="hidden"></div>
-            <div id="modalSemester" class="hidden"></div>
-        </div>
+        </template>
     </div>
 </div>
 
 @push('scripts')
     @include('mahasiswa.kalender-akademik.calendar-script')
-
-    <script>
-    document.addEventListener('alpine:initialized', () => {
-        const modal = document.getElementById('eventModal');
-        const calendar = document.querySelector('[x-data="calendar"]');
-        if (!calendar) return;
-        
-        const calendarData = Alpine.raw(calendar).__x.getUnobservedData();
-        
-        // 1. Fungsi Buka Modal yang Lebih Aman (Pake Try-Catch)
-        calendarData.showEventDetail = function(event) {
-            try {
-                if (!event) return;
-
-                // Amankan warna bawaan jika null
-                const eventColor = event.warna || '#002B6B';
-
-                const colorBox = document.getElementById('modalColorBox');
-                if (colorBox) colorBox.style.backgroundColor = eventColor;
-
-                const titleEl = document.getElementById('modalTitle');
-                if (titleEl) titleEl.textContent = event.judul || 'Detail Agenda';
-
-                const badges = document.getElementById('modalBadges');
-                if (badges) {
-                    let badgesHTML = `<span class="px-2.5 py-1 rounded-lg text-xs font-bold" style="background-color: ${eventColor}15; color: ${eventColor}">${event.jenis_kegiatan_label || 'Kegiatan'}</span>`;
-                    if (event.is_all_day) {
-                        badgesHTML += `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>`;
-                    }
-                    badges.innerHTML = badgesHTML;
-                }
-
-                const dateRange = document.getElementById('modalDateRange');
-                if (dateRange) {
-                    let dateHTML = `<div class="flex items-center gap-2 text-gray-800 dark:text-slate-200 font-bold">
-                        <svg class="w-4 h-4 text-[#002B6B] dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                        <span>${event.tanggal_mulai || ''}`;
-                    if (event.tanggal_selesai && event.tanggal_selesai !== event.tanggal_mulai) {
-                        dateHTML += ` s/d ${event.tanggal_selesai}`;
-                    }
-                    dateHTML += `</span></div>`;
-                    if (!event.is_all_day && event.waktu_formatted) {
-                        dateHTML += `<div class="text-[11px] font-semibold text-gray-400 pl-6">${event.waktu_formatted}</div>`;
-                    }
-                    dateRange.innerHTML = dateHTML;
-                }
-
-                const locEl = document.getElementById('modalLocation');
-                if (locEl) {
-                    if (event.lokasi) {
-                        locEl.classList.remove('hidden');
-                        locEl.innerHTML = `<div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
-                            <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Lokasi Ruangan</p>
-                            <p class="text-xs font-bold text-gray-800 dark:text-slate-200 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-                                <span>${event.lokasi}</span>
-                            </p>
-                        </div>`;
-                    } else { locEl.classList.add('hidden'); }
-                }
-
-                const descEl = document.getElementById('modalDescription');
-                if (descEl) {
-                    if (event.deskripsi) {
-                        descEl.classList.remove('hidden');
-                        descEl.innerHTML = `<div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
-                            <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Keterangan Detail</p>
-                            <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed font-medium whitespace-pre-wrap">${event.deskripsi}</p>
-                        </div>`;
-                    } else { descEl.classList.add('hidden'); }
-                }
-
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
-                }
-            } catch (error) {
-                console.error("Error menampilkan detail agenda:", error);
-            }
-        };
-
-        // 2. Fungsi Tutup Modal Resmi Berbasis Alpine & Window Escape
-        calendarData.closeEventModal = function() {
-            if (modal) {
-                modal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }
-        };
-    });
-    </script>
 @endpush
 
-@endsection 
+@endsection
