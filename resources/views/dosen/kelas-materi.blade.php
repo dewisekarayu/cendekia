@@ -601,7 +601,14 @@
                 body: JSON.stringify({ title: judul, tipe_soal: combinedTipeSoal })
             });
             
-            if (!response.ok) throw new Error('Gagal membuat PDF');
+            if (!response.ok) {
+                let errMessage = 'Gagal membuat PDF';
+                try {
+                    const errData = await response.json();
+                    if (errData.error) errMessage = errData.error;
+                } catch (e) {}
+                throw new Error(errMessage);
+            }
             
             const blob = await response.blob();
             const fileName = judul.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-soal.pdf';

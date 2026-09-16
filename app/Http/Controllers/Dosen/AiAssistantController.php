@@ -41,11 +41,14 @@ class AiAssistantController extends Controller
 
         $lastError = 'Semua API key tidak valid atau kosong.';
 
+        // Prevent PHP from timing out when AI takes a long time
+        set_time_limit(180);
+
         foreach ($providers as $provider) {
             if (empty($provider['key'])) continue;
 
             try {
-                $response = Http::withHeaders([
+                $response = Http::timeout(120)->withHeaders([
                     'Authorization' => 'Bearer ' . $provider['key'],
                     'Content-Type' => 'application/json',
                     'HTTP-Referer' => url('/'),
