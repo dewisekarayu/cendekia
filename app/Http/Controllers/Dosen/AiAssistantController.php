@@ -172,7 +172,8 @@ class AiAssistantController extends Controller
                 . "1. LANGSUNG tuliskan poin-poin instruksi pengerjaan tugasnya (apa yang harus dikerjakan dan format pengumpulannya).\n"
                 . "2. JANGAN menulis ulang Judul Tugas, Bobot Poin, atau Waktu Pengumpulan di dalam teks, karena sudah ada kolomnya tersendiri di sistem.\n"
                 . "3. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah instruksi...' atau 'Selamat mengerjakan'.\n"
-                . "4. Gunakan bahasa Indonesia yang baku, terstruktur (gunakan bullet/numbering), ringkas, dan profesional ala dosen perguruan tinggi.";
+                . "4. Gunakan bahasa Indonesia yang baku, ringkas, dan profesional ala dosen perguruan tinggi.\n"
+                . "5. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*). Gunakan teks murni biasa. Untuk list, cukup gunakan angka 1. 2. 3. atau strip (-).";
 
         $messages = [
             ['role' => 'user', 'content' => $prompt]
