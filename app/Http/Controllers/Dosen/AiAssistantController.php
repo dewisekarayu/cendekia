@@ -205,4 +205,47 @@ class AiAssistantController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Generate PDF dari teks AI
+     */
+    public function generatePdf(Request $request)
+    {
+        $request->validate([
+            'content' => 'required|string',
+            'title' => 'required|string'
+        ]);
+
+        $title = $request->title;
+        
+        // Bersihkan teks dan ubah baris baru menjadi tag <br>
+        $content = strip_tags($request->content);
+        $contentHTML = nl2br($content);
+
+        $html = "
+            <html>
+            <head>
+                <style>
+                    body { font-family: 'Helvetica', 'Arial', sans-serif; line-height: 1.6; font-size: 11pt; padding: 30px; color: #333; }
+                    h2 { text-align: center; text-transform: uppercase; margin-bottom: 25px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+                    .content { margin-top: 20px; text-align: justify; }
+                </style>
+            </head>
+            <body>
+                <h2>{$title}</h2>
+                <div class='content'>
+                    {$contentHTML}
+                </div>
+            </body>
+            </html>
+        ";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+        $pdf->setPaper('A4', 'portrait');
+        
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . \Illuminate\Support\Str::slug($title) . '.pdf"',
+        ]);
+    }
 }

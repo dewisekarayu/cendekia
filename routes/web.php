@@ -146,6 +146,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::post('/dosen/ai-assistant/chat', [DosenAiAssistantController::class, 'chat'])->name('dosen.ai-assistant.chat');
     Route::post('/dosen/ai-assistant/generate-desc', [DosenAiAssistantController::class, 'generateDescription'])->name('dosen.ai-assistant.generate-desc');
     Route::post('/dosen/ai-assistant/generate-instruksi', [DosenAiAssistantController::class, 'generateInstruksi'])->name('dosen.ai-assistant.generate-instruksi');
+    Route::post('/dosen/ai-assistant/generate-pdf', [DosenAiAssistantController::class, 'generatePdf'])->name('dosen.ai-assistant.generate-pdf');
     Route::get('/dosen/kelas-saya', [DosenKelasController::class, 'kelasSaya'])->name('dosen.kelas-saya');
     Route::get('/dosen/kelas/{id}', [DosenKelasController::class, 'show'])->name('dosen.kelas-detail');
 

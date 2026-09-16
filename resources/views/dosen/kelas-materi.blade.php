@@ -373,10 +373,15 @@
                         <div class="space-y-1.5">
                             <div class="flex justify-between items-center">
                                 <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
-                                <button type="button" onclick="generateAiDescription(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                    Generate dengan AI
-                                </button>
+                                <div class="flex gap-2">
+                                    <button type="button" onclick="generateAiDescription(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                        Generate dengan AI
+                                    </button>
+                                    <button type="button" onclick="generatePdfFromText(this, 'materi')" class="text-xs flex items-center gap-1 bg-red-100 text-red-700 hover:bg-red-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
+                                        📄 Jadikan PDF & Lampirkan
+                                    </button>
+                                </div>
                             </div>
                             <textarea id="deskripsi_materi" name="deskripsi" rows="4" maxlength="5000" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none resize-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100">{{ old('deskripsi') }}</textarea>
                         </div>
@@ -552,6 +557,60 @@
             }
         } catch (error) {
             alert('Terjadi kesalahan jaringan.');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    async function generatePdfFromText(btn, type) {
+        const form = btn.closest('form') || btn.closest('.space-y-6') || btn.closest('.space-y-5');
+        const judul = form.querySelector('input[name="judul"]').value;
+        const contentInput = form.querySelector(type === 'tugas' ? 'textarea[name="instruksi"]' : 'textarea[name="deskripsi"]');
+        const content = contentInput.value;
+        const fileInput = form.querySelector('input[type="file"]');
+        
+        if (!judul || !content) {
+            alert('Silakan pastikan Judul dan teks (Instruksi/Deskripsi) sudah terisi!');
+            return;
+        }
+        
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Membuat PDF...';
+        btn.disabled = true;
+        
+        try {
+            const response = await fetch('{{ route("dosen.ai-assistant.generate-pdf") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ title: judul, content: content })
+            });
+            
+            if (!response.ok) throw new Error('Gagal membuat PDF');
+            
+            const blob = await response.blob();
+            const fileName = judul.toLowerCase().replace(/[^a-z0-9]/g, '-') + '.pdf';
+            const file = new File([blob], fileName, { type: "application/pdf" });
+            
+            const dt = new DataTransfer();
+            if (fileInput.files.length > 0) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    dt.items.add(fileInput.files[i]);
+                }
+            }
+            dt.items.add(file);
+            fileInput.files = dt.files;
+            
+            // Trigger change event to update the UI
+            const event = new Event('change');
+            fileInput.dispatchEvent(event);
+            
+            alert('Berhasil! File PDF telah dibuat dan otomatis dilampirkan ke form.');
+        } catch (error) {
+            alert('Terjadi kesalahan: ' + error.message);
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;
