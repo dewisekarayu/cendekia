@@ -520,9 +520,10 @@
     });
 
     async function generateAiDescription(btn) {
-        const judul = document.querySelector('input[name="judul"]').value;
-        const kategori = document.querySelector('select[name="kategori"]').value;
-        const deskripsiInput = document.getElementById('deskripsi_materi');
+        const form = btn.closest('form') || btn.closest('.space-y-5'); // Fallback if form not wrapping closely
+        const judul = form.querySelector('input[name="judul"]').value;
+        const kategori = form.querySelector('select[name="kategori"]').value;
+        const deskripsiInput = form.querySelector('textarea[name="deskripsi"]');
         
         if (!judul) {
             alert('Silakan isi "Judul Materi" terlebih dahulu agar AI memahami konteksnya!');
