@@ -538,32 +538,32 @@
             const form = btn.closest('form') || btn.closest('.space-y-6') || btn.closest('.space-y-5');
             const judul = form.querySelector('input[name="judul"]').value;
             const contentInput = form.querySelector(type === 'tugas' ? 'textarea[name="instruksi"]' : 'textarea[name="deskripsi"]');
-            const content = contentInput.value;
             const fileInput = form.querySelector('input[type="file"]');
             
-            if (!judul || !content) {
-                alert('Silakan pastikan Judul dan teks (Instruksi/Deskripsi) sudah terisi!');
+            if (!judul) {
+                alert('Silakan isi Judul terlebih dahulu agar AI mengetahui topik soal yang akan dibuat!');
                 return;
             }
             
             const originalText = btn.innerHTML;
-            btn.innerHTML = 'Membuat PDF...';
+            btn.innerHTML = 'AI Sedang Menyusun Soal...';
             btn.disabled = true;
             
             try {
-                const response = await fetch('{{ route("dosen.ai-assistant.generate-pdf") }}', {
+                // Panggil endpoint baru yang akan generate soal menggunakan AI lalu mereturn PDF
+                const response = await fetch('{{ route("dosen.ai-assistant.generate-ai-pdf-soal") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({ title: judul, content: content })
+                    body: JSON.stringify({ title: judul })
                 });
                 
                 if (!response.ok) throw new Error('Gagal membuat PDF');
                 
                 const blob = await response.blob();
-                const fileName = judul.toLowerCase().replace(/[^a-z0-9]/g, '-') + '.pdf';
+                const fileName = judul.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-soal.pdf';
                 const file = new File([blob], fileName, { type: "application/pdf" });
                 
                 const dt = new DataTransfer();
@@ -579,7 +579,12 @@
                 const event = new Event('change');
                 fileInput.dispatchEvent(event);
                 
-                alert('Berhasil! File PDF telah dibuat dan otomatis dilampirkan ke form.');
+                // Isi textarea dengan instruksi otomatis jika kosong
+                if (!contentInput.value) {
+                    contentInput.value = "Silakan unduh file PDF terlampir untuk melihat daftar soal. Kerjakan dengan teliti dan kumpulkan jawaban Anda sesuai dengan batas waktu yang ditentukan.";
+                }
+                
+                alert('Berhasil! AI telah membuatkan soal dalam bentuk PDF dan melampirkannya ke form.');
             } catch (error) {
                 alert('Terjadi kesalahan: ' + error.message);
             } finally {

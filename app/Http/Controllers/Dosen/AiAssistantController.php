@@ -249,4 +249,72 @@ class AiAssistantController extends Controller
             'Content-Disposition' => 'attachment; filename="' . \Illuminate\Support\Str::slug($title) . '.pdf"',
         ]);
     }
+
+    /**
+     * Generate PDF berisi Soal langsung dari AI
+     */
+    public function generateAiPdfSoal(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string'
+        ]);
+
+        $title = $request->title;
+        
+        $prompt = "Buatkan daftar soal-soal untuk tugas/materi perkuliahan dengan judul '$title'.\n"
+                . "PENTING:\n"
+                . "1. LANGSUNG berikan daftar soalnya (dan sedikit penjelasan konteks jika perlu).\n"
+                . "2. JANGAN menulis ulang Judul Tugas.\n"
+                . "3. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah daftar soal...'.\n"
+                . "4. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*). Gunakan teks murni biasa.";
+
+        $messages = [
+            ['role' => 'user', 'content' => $prompt]
+        ];
+
+        try {
+            $content = $this->callAiApi($messages);
+            if (!$content) {
+                throw new \Exception('Respons kosong dari AI');
+            }
+            
+            // Clean markdown
+            $content = str_replace('**', '', $content);
+            $content = preg_replace('/^\s*\*\s+/m', '- ', $content);
+            $content = preg_replace('/^\s*#+\s+/m', '', $content);
+            $contentHTML = nl2br(strip_tags(trim($content)));
+
+            $html = "
+                <html>
+                <head>
+                    <style>
+                        body { font-family: 'Helvetica', 'Arial', sans-serif; line-height: 1.6; font-size: 11pt; padding: 30px; color: #333; }
+                        h2 { text-align: center; text-transform: uppercase; margin-bottom: 25px; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+                        .content { margin-top: 20px; text-align: justify; }
+                    </style>
+                </head>
+                <body>
+                    <h2>{$title}</h2>
+                    <div class='content'>
+                        {$contentHTML}
+                    </div>
+                </body>
+                </html>
+            ";
+
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html);
+            $pdf->setPaper('A4', 'portrait');
+            
+            return response($pdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="' . \Illuminate\Support\Str::slug($title) . '.pdf"',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
