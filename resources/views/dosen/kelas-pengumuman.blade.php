@@ -128,7 +128,13 @@
                         </div>
 
                         <div class="space-y-1">
-                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Isi Pesan Pengumuman</label>
+                            <div class="flex justify-between items-center">
+                                <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Isi Pesan Pengumuman</label>
+                                <button type="button" onclick="generateAiPengumuman(this, '')" class="text-[10px] flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2 py-1 rounded-md font-bold transition-all shadow-sm">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    Draf AI
+                                </button>
+                            </div>
                             <textarea name="isi" rows="5" required placeholder="Tulis rincian info instruksi kuliah di sini..." class="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-purple-500/10 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none transition resize-none placeholder-gray-300 dark:placeholder-gray-600 text-slate-700 dark:text-gray-100"></textarea>
                         </div>
                     </div>
@@ -176,7 +182,13 @@
                         </div>
 
                         <div class="space-y-1">
-                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Isi Pesan Pengumuman</label>
+                            <div class="flex justify-between items-center">
+                                <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Isi Pesan Pengumuman</label>
+                                <button type="button" onclick="generateAiPengumuman(this, 'edit_')" class="text-[10px] flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2 py-1 rounded-md font-bold transition-all shadow-sm">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    Draf AI
+                                </button>
+                            </div>
                             <textarea name="isi" id="edit_isi" rows="5" required class="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-purple-500/10 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none transition resize-none text-slate-700 dark:text-gray-100"></textarea>
                         </div>
                     </div>
@@ -213,6 +225,48 @@
                 document.getElementById('edit_untuk_semua').checked = untukSemua;
 
                 toggleAnnouncementModal('modalEditAnnouncement');
+            }
+        }
+
+        async function generateAiPengumuman(btn, prefix) {
+            const form = btn.closest('form');
+            const judul = form.querySelector('input[name="judul"]').value;
+            
+            if (!judul) {
+                alert('Silakan isi Judul Pengumuman terlebih dahulu agar AI mengetahui konteks pesan yang akan dibuat!');
+                return;
+            }
+            
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Menyusun...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('{{ route("dosen.ai-assistant.generate-pengumuman") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ judul: judul })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const textarea = form.querySelector('textarea[name="isi"]');
+                    textarea.value = data.message;
+                    // Trigger input event to resize textarea if any auto-resize script is used
+                    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                } else {
+                    alert('Gagal menyusun draf: ' + (data.error || 'Terjadi kesalahan tidak dikenal'));
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Terjadi kesalahan koneksi ke server AI.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
     </script>
