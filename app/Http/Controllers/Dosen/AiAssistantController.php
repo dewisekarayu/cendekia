@@ -201,6 +201,53 @@ class AiAssistantController extends Controller
     }
 
     /**
+     * Generate Dashboard Insight
+     */
+    public function generateDashboardInsight(Request $request)
+    {
+        $user = $request->user();
+        $firstName = explode(' ', $user->name)[0];
+        
+        $jumlahKelas = $user->kelasDiampu()->count();
+        $tugasPerluDinilai = \App\Models\PengumpulanTugas::whereHas('tugas.kelasPerkuliahan', fn ($q) => $q->where('dosen_id', $user->id))
+            ->where('status', 'dikumpulkan')
+            ->count();
+        
+        $prompt = "Sapa dosen ini dengan nama '$firstName' secara profesional (misal: 'Selamat pagi, Prof/Bapak/Ibu $firstName!'). Berikan sapaan yang hangat dan memotivasi. Sebutkan bahwa hari ini ia memiliki $jumlahKelas kelas aktif yang diampu.";
+        
+        if ($tugasPerluDinilai > 0) {
+            $prompt .= " Juga, ingatkan dengan ramah bahwa ada $tugasPerluDinilai berkas tugas mahasiswa yang menunggu untuk dinilai, dan tanyakan apakah ia ingin menyelesaikannya hari ini.";
+        } else {
+            $prompt .= " Berikan apresiasi karena saat ini tidak ada tumpukan tugas mahasiswa yang perlu dinilai (semua sudah beres).";
+        }
+        
+        $prompt .= " Buat ringkas dalam 2-3 kalimat saja. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*), gunakan teks murni.";
+
+        $messages = [
+            ['role' => 'user', 'content' => $prompt]
+        ];
+
+        try {
+            $content = $this->callAiApi($messages);
+            if ($content) {
+                $content = str_replace('**', '', $content);
+                $content = preg_replace('/^\s*\*\s+/m', '- ', $content);
+                $content = preg_replace('/^\s*#+\s+/m', '', $content);
+                return response()->json([
+                    'success' => true,
+                    'message' => trim($content)
+                ]);
+            }
+            throw new \Exception('Respons kosong');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Generate Instruksi Tugas
      */
     public function generateInstruksi(Request $request)

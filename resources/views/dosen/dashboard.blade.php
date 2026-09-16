@@ -21,15 +21,21 @@
         <div class="relative z-10 gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <p class="text-[11px] font-bold uppercase tracking-widest text-purple-200/90">{{ $greeting }}, Dosen</p>
-                <h1 class="mt-1 text-2xl font-extrabold text-white tracking-tight sm:text-3xl">{{ $firstName }} 👋</h1>
-                <p class="mt-2 max-w-md text-sm leading-relaxed text-purple-100/80">
-                    Kamu mengampu <span class="font-bold text-white">{{ $kelasList->count() }} kelas</span> aktif semester ini
-                    @if ($tugasPerluDinilai > 0)
-                        dengan <span class="font-bold text-amber-300">{{ $tugasPerluDinilai }} berkas tugas</span> menunggu penilaian Anda.
-                    @else
-                        . Luar biasa! Semua tugas mahasiswa telah selesai dinilai. 🎉
-                    @endif
-                </p>
+                <div id="ai_insight_container" class="mt-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 flex items-start gap-3 transition-opacity duration-300">
+                    <div class="bg-purple-300/20 p-2 rounded-lg shrink-0 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-purple-200/90 uppercase tracking-widest mb-1">Cendekia AI Insight</p>
+                        <p id="ai_insight_text" class="text-sm font-medium leading-relaxed text-white">
+                            <span class="animate-pulse inline-flex items-center gap-2">
+                                Menyusun ringkasan aktivitas Anda hari ini...
+                            </span>
+                        </p>
+                    </div>
+                </div>
             </div>
             
             <div class="grid grid-cols-3 gap-3 w-full sm:w-80 shrink-0">
@@ -195,5 +201,30 @@
         @endif
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            const response = await fetch('{{ route("dosen.ai-assistant.generate-dashboard-insight") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+            const data = await response.json();
+            
+            const insightText = document.getElementById('ai_insight_text');
+            if (data.success) {
+                insightText.innerHTML = data.message;
+            } else {
+                insightText.innerHTML = 'AI Insight sedang tidak tersedia saat ini.';
+            }
+        } catch (error) {
+            console.error('Failed to load AI Insight:', error);
+            document.getElementById('ai_insight_text').innerHTML = 'Gagal memuat AI Insight.';
+        }
+    });
+</script>
 
 @endsection
