@@ -334,13 +334,20 @@
                         <div class="space-y-2">
                             <div class="flex justify-between items-center">
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instruksi Tugas</label>
-                                <div class="flex gap-2">
+                                <div class="flex items-center gap-2">
+                                    <select id="ai_tipe_soal" class="text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                        <option value="5 Soal Essay">5 Soal Essay</option>
+                                        <option value="10 Soal Essay">10 Soal Essay</option>
+                                        <option value="10 Soal Pilihan Ganda">10 Pilihan Ganda</option>
+                                        <option value="10 Soal Pilihan Ganda Kompleks (Banyak Jawaban Benar)">10 Pilihan Ganda Kompleks</option>
+                                        <option value="Campuran (Pilihan Ganda & Essay)">Campuran</option>
+                                    </select>
                                     <button type="button" onclick="generateAiInstruksi(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                        Generate dengan AI
+                                        Instruksi AI
                                     </button>
                                     <button type="button" onclick="generatePdfFromText(this, 'tugas')" class="text-xs flex items-center gap-1 bg-red-100 text-red-700 hover:bg-red-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
-                                        📄 Jadikan PDF & Lampirkan
+                                        📄 Jadikan PDF
                                     </button>
                                 </div>
                             </div>
@@ -545,13 +552,11 @@
                 return;
             }
             
-            const tipeSoal = prompt("Bentuk soal seperti apa yang Anda inginkan?\nContoh: 10 Soal Pilihan Ganda (dengan opsi A-E), 5 Soal Essay, atau Campuran.", "5 Soal Essay");
-            if (tipeSoal === null) {
-                return; // Batalkan jika user klik cancel
-            }
+            const dropdown = form.querySelector('#ai_tipe_soal');
+            const tipeSoal = dropdown ? dropdown.value : '5 Soal Essay';
             
             const originalText = btn.innerHTML;
-            btn.innerHTML = 'AI Sedang Menyusun Soal...';
+            btn.innerHTML = 'AI Menyusun...';
             btn.disabled = true;
             
             try {
