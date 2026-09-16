@@ -52,19 +52,19 @@ class AiAssistantController extends Controller
 
         $providers = [
             [
-                'url' => 'https://openrouter.ai/api/v1/chat/completions',
-                'key' => env('OPENROUTER_API_KEY'),
-                'model' => 'google/gemini-flash-1.5'
+                'url' => 'https://api.groq.com/openai/v1/chat/completions',
+                'key' => env('GROQ_API_KEY'),
+                'model' => 'llama3-70b-8192'
             ],
             [
                 'url' => 'https://api.groq.com/openai/v1/chat/completions',
                 'key' => env('GROQ_API_KEY'),
-                'model' => 'mixtral-8x7b-32768'
+                'model' => 'gemma2-9b-it'
             ],
             [
                 'url' => 'https://openrouter.ai/api/v1/chat/completions',
                 'key' => env('OPENROUTER_API_KEY'),
-                'model' => 'meta-llama/llama-3.1-8b-instruct:free'
+                'model' => 'meta-llama/llama-3.1-8b-instruct'
             ]
         ];
 
