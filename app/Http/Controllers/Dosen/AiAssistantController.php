@@ -17,39 +17,10 @@ class AiAssistantController extends Controller
     }
 
     /**
-     * Tangani request chat ke AI API.
+     * Helper: Kirim request ke AI providers dengan fallback.
      */
-    public function chat(Request $request)
+    private function callAiApi($messages)
     {
-        $request->validate([
-            'message' => 'required|string',
-            'history' => 'array'
-        ]);
-
-        $messages = [];
-        // Add system prompt
-        $messages[] = [
-            'role' => 'system',
-            'content' => 'Anda adalah Asisten AI untuk dosen di Universitas Cendekia. Berikan jawaban yang profesional, informatif, dan membantu dosen dalam mengelola perkuliahan, RPS, atau materi ajar.'
-        ];
-
-        // Add history
-        if ($request->has('history')) {
-            foreach ($request->input('history') as $msg) {
-                // Ensure we only pass role and content to the API
-                $messages[] = [
-                    'role' => $msg['role'] === 'user' ? 'user' : 'assistant',
-                    'content' => $msg['content']
-                ];
-            }
-        }
-
-        // Add current message
-        $messages[] = [
-            'role' => 'user',
-            'content' => $request->input('message')
-        ];
-
         $providers = [
             [
                 'url' => 'https://api.groq.com/openai/v1/chat/completions',
@@ -87,10 +58,7 @@ class AiAssistantController extends Controller
 
                 if ($response->successful()) {
                     $data = $response->json();
-                    return response()->json([
-                        'success' => true,
-                        'message' => $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak dapat menghasilkan respons.'
-                    ]);
+                    return $data['choices'][0]['message']['content'] ?? null;
                 }
                 
                 $lastError = 'Status: ' . $response->status() . '. ' . $response->body();
@@ -100,9 +68,89 @@ class AiAssistantController extends Controller
             }
         }
 
-        return response()->json([
-            'success' => false,
-            'error' => 'Gagal menghubungi semua API AI fallback. Terakhir: ' . $lastError
-        ], 500);
+        throw new \Exception('Gagal menghubungi semua API AI fallback. Terakhir: ' . $lastError);
+    }
+
+    /**
+     * Tangani request chat ke AI API.
+     */
+    public function chat(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string',
+            'history' => 'array'
+        ]);
+
+        $messages = [];
+        $messages[] = [
+            'role' => 'system',
+            'content' => 'Anda adalah Asisten AI untuk dosen di Universitas Cendekia. Berikan jawaban yang profesional, informatif, dan membantu dosen dalam mengelola perkuliahan, RPS, atau materi ajar.'
+        ];
+
+        if ($request->has('history')) {
+            foreach ($request->input('history') as $msg) {
+                $messages[] = [
+                    'role' => $msg['role'] === 'user' ? 'user' : 'assistant',
+                    'content' => $msg['content']
+                ];
+            }
+        }
+
+        $messages[] = [
+            'role' => 'user',
+            'content' => $request->input('message')
+        ];
+
+        try {
+            $content = $this->callAiApi($messages);
+            if ($content) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $content
+                ]);
+            }
+            throw new \Exception('Respons kosong');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Generate Deskripsi Materi
+     */
+    public function generateDescription(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string',
+            'kategori' => 'nullable|string'
+        ]);
+
+        $judul = $request->judul;
+        $kategori = $request->kategori ?? 'Umum';
+
+        $prompt = "Buatkan deskripsi singkat (1 paragraf ringkas) untuk materi kuliah berjudul '$judul' dengan kategori '$kategori'. Deskripsi ini akan langsung dimasukkan ke form LMS, jangan ada kalimat pembuka/penutup seperti 'Berikut adalah...'";
+
+        $messages = [
+            ['role' => 'user', 'content' => $prompt]
+        ];
+
+        try {
+            $content = $this->callAiApi($messages);
+            if ($content) {
+                return response()->json([
+                    'success' => true,
+                    'description' => trim($content)
+                ]);
+            }
+            throw new \Exception('Respons kosong');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -395,8 +395,14 @@
                         </div>
 
                         <div class="space-y-1.5">
-                            <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
-                            <textarea name="deskripsi" rows="4" maxlength="5000" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none resize-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100"><?php echo e(old('deskripsi')); ?></textarea>
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
+                                <button type="button" onclick="generateAiDescription(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    Generate dengan AI
+                                </button>
+                            </div>
+                            <textarea id="deskripsi_materi" name="deskripsi" rows="4" maxlength="5000" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none resize-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100"><?php echo e(old('deskripsi')); ?></textarea>
                         </div>
 
                         <div class="space-y-1.5">
@@ -536,6 +542,44 @@
         if (searchInput) searchInput.addEventListener('input', filterMateri);
         if (filterSelect) filterSelect.addEventListener('change', filterMateri);
     });
+
+    async function generateAiDescription(btn) {
+        const judul = document.querySelector('input[name="judul"]').value;
+        const kategori = document.querySelector('select[name="kategori"]').value;
+        const deskripsiInput = document.getElementById('deskripsi_materi');
+        
+        if (!judul) {
+            alert('Silakan isi "Judul Materi" terlebih dahulu agar AI memahami konteksnya!');
+            return;
+        }
+        
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Sedang memikirkan...';
+        btn.disabled = true;
+        
+        try {
+            const response = await fetch('<?php echo e(route("dosen.ai-assistant.generate-desc")); ?>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+                },
+                body: JSON.stringify({ judul, kategori })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                deskripsiInput.value = data.description;
+            } else {
+                alert('Gagal: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            alert('Terjadi kesalahan jaringan.');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
 </script>
 <?php $__env->stopPush(); ?>
 <?php echo $__env->make('layouts.portal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\laragon\www\cendekia\resources\views/dosen/kelas-materi.blade.php ENDPATH**/ ?>
