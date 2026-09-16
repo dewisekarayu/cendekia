@@ -96,7 +96,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('admin/aktivitas', [\App\Http\Controllers\Admin\AktivitasPenggunaController::class, 'index'])->name('admin.aktivitas.index');
 
     // Impor CSV
+    Route::get('admin/mahasiswa/import', [AdminMahasiswaController::class, 'importView'])->name('admin.mahasiswa.import.view');
     Route::post('admin/mahasiswa/import', [AdminMahasiswaController::class, 'importCsv'])->name('admin.mahasiswa.import');
+    Route::get('admin/dosen/import', [AdminDosenController::class, 'importView'])->name('admin.dosen.import.view');
     Route::post('admin/dosen/import', [AdminDosenController::class, 'importCsv'])->name('admin.dosen.import');
 
     Route::resource('admin/kelas', KelasController::class)
@@ -285,6 +287,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     // Absensi Mahasiswa (Terintegrasi penuh dengan tombol absen masuk)
     Route::prefix('mahasiswa/absensi')->name('mahasiswa.absensi.')->group(function () {
         Route::get('/', [MahasiswaAbsensiController::class, 'index'])->name('index');
+        Route::get('/scan/{token}', [MahasiswaAbsensiController::class, 'scanQr'])->name('scan');
         Route::get('/kelas/{kelasId}/masuk', [MahasiswaAbsensiController::class, 'kelasAbsensi'])->name('kelas');
         Route::post('/kelas/{kelasId}/masuk/{absensiId}', [MahasiswaAbsensiController::class, 'absenMasuk'])->name('masuk');
         Route::get('/{kelasId}', [MahasiswaAbsensiController::class, 'show'])->name('show');

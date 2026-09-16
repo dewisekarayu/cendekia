@@ -1,837 +1,1143 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', $title ?? 'Admin Dashboard') - Cendekia</title>
+    <title>{{ $title ?? 'Admin Dashboard' }} - {{ config('app.name', 'Cendekia') }}</title>
 
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <script>
-        (function() {
-            const theme = "{{ auth()->check() ? auth()->user()->theme : 'light' }}";
-            if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        })();
-    </script>
-
+    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
         :root {
             --primary-blue: #002B6B;
             --secondary-blue: #002B6B;
             --navy-blue: #002B6B;
-            --light-blue: #CDDCFF;
+            --light-blue: #E6EEFF;
             --border-light: rgba(0, 43, 107, 0.08);
         }
 
+        * {
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+        }
+
         body {
-            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-            background-color: #f8fafc;
-            color: #1e293b;
+            background-color: #F4F7FB;
             overflow-x: hidden;
         }
 
-        /* Hide scrollbar on sidebar for clean modern look */
-        aside {
-            -ms-overflow-style: none !important; /* IE and Edge */
-            scrollbar-width: none !important; /* Firefox */
-        }
-        aside::-webkit-scrollbar {
-            display: none !important;
-            width: 0 !important;
-            height: 0 !important;
-        }
-
-        h1, h2, h3, h4, h5, h6, .page-title, .welcome-banner h2 {
-            font-family: 'Figtree', sans-serif !important;
-            letter-spacing: -0.025em;
-        }
-
-        /* Dark mode compatibility */
-        html.dark body {
-            background-color: #0f172a !important;
-            color: #cbd5e1 !important;
+        /* Sidebar */
+        .admin-sidebar {
+            background: #002B6B;
+            height: 100vh;
+            padding: 1.5rem 1rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            color: white;
+            box-shadow: 4px 0 25px rgba(0, 43, 107, 0.18);
+            z-index: 1050;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
         }
 
-        html.dark .bg-white {
-            background-color: #1e293b !important;
+        /* Custom scrollbar for sidebar */
+        .admin-sidebar::-webkit-scrollbar {
+            width: 6px;
         }
 
-        html.dark .border-slate-200,
-        html.dark .border-gray-200 {
-            border-color: #334155 !important;
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        html.dark .text-slate-800,
-        html.dark .text-gray-900,
-        html.dark .text-gray-800 {
-            color: #f8fafc !important;
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: transparent;
+            border-radius: 4px;
         }
 
-        html.dark .text-slate-500,
-        html.dark .text-gray-500 {
-            color: #94a3b8 !important;
+        .admin-sidebar:hover::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        /* =========================================================
-           PREMIUM TABLE & CARD STYLING FOR ALL ADMIN MODULES
-           ========================================================= */
-        .page-title {
-            font-size: 1.65rem;
-            font-weight: 800;
-            color: #002B6B;
-            letter-spacing: -0.02em;
-        }
-        html.dark .page-title {
-            color: #f8fafc;
+        .admin-sidebar .nav-menu {
+            flex: 1;
+            padding-bottom: 1rem;
         }
 
-        .breadcrumb {
-            font-size: 0.825rem;
-            font-weight: 500;
-        }
-        .breadcrumb-item a {
-            color: #64748b;
-            text-decoration: none;
-            transition: color 0.15s;
-        }
-        .breadcrumb-item a:hover {
-            color: #002B6B;
-        }
-        .breadcrumb-item.active {
-            color: #002B6B;
+        .admin-sidebar .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
             font-weight: 700;
-        }
-        html.dark .breadcrumb-item a {
-            color: #94a3b8;
-        }
-        html.dark .breadcrumb-item.active {
-            color: #93c5fd;
+            font-size: 1.35rem;
+            gap: 0.75rem;
+            padding-left: 0.5rem;
         }
 
-        /* Stat Cards */
-        .stat-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 1rem;
-            padding: 1.25rem 1.5rem;
-            box-shadow: 0 4px 16px -2px rgba(0, 43, 107, 0.04);
+        .admin-sidebar .logo i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .admin-sidebar .logo .logo-sub {
+            display: block;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: -2px;
+        }
+
+        .admin-sidebar .nav-item {
+            margin-bottom: 0.35rem;
+        }
+
+        .admin-sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
             transition: all 0.2s ease;
-            overflow: hidden;
+            font-size: 0.9rem;
         }
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px -4px rgba(0, 43, 107, 0.08);
-            border-color: #cbd5e1;
+
+        .admin-sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: white;
         }
-        html.dark .stat-card {
-            background: #1e293b;
-            border-color: #334155;
-            box-shadow: none;
+
+        .admin-sidebar .nav-link.active {
+            background-color: white !important;
+            color: var(--navy-blue) !important;
+            font-weight: 600;
+            border-left: none;
+            box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);
         }
-        .stat-card-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 0.85rem;
+
+        .admin-sidebar .nav-link.active i {
+            color: var(--secondary-blue) !important;
+        }
+
+        .admin-sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .admin-sidebar .nav-section-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.45);
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+        }
+
+        /* Overlay backdrop untuk sidebar mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1040;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .admin-content {
+            margin-left: 280px;
+            padding: 0;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        .admin-topbar {
+            background: #002B6B;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 43, 107, 0.18);
+            color: white;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+
+        .admin-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 0;
+        }
+
+        /* Tombol hamburger (khusus mobile) */
+        .sidebar-toggle-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .admin-topbar-search {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            width: 280px;
+            max-width: 100%;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .admin-topbar-search:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+        }
+
+        .admin-topbar-search::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .admin-topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .topbar-notif {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
+            transition: color 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
         }
-        .stat-card .d-flex {
+
+        .topbar-notif:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .topbar-notif .dot {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            background-color: #ef4444;
+            border: 1.5px solid var(--secondary-blue);
+            border-radius: 50%;
+        }
+
+        .admin-topbar-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: background-color 0.2s;
+        }
+
+        .admin-topbar-profile:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-topbar-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #CDDCFF;
+            padding: 0.15rem;
+        }
+
+        .admin-topbar-profile-text {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .admin-topbar-profile-text .name {
+            font-weight: 600;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .admin-topbar-profile-text .role {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 1px;
+        }
+
+        .admin-topbar-profile i {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .admin-main {
+            padding: 2rem;
             min-width: 0;
         }
-        .stat-card-icon.blue {
-            background-color: #eff6ff;
+
+        .admin-dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.9fr) minmax(280px, 0.9fr);
+            gap: 1.5rem;
+            align-items: stretch;
+            margin-top: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
             color: #002B6B;
-            border: 1px solid #dbeafe;
+            margin-bottom: 0.5rem;
         }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: #002B6B;
+            border-radius: 1rem;
+            padding: 2.25rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 43, 107, 0.1);
+        }
+
+        .welcome-banner h2 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-banner p {
+            font-size: 0.975rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 0;
+            max-width: 650px;
+            line-height: 1.5;
+        }
+
+        /* Stat Grid */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 576px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .stat-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 43, 107, 0.05);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 43, 107, 0.1);
+        }
+
+        .stat-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            width: 100%;
+        }
+
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .stat-card-icon.blue {
+            background-color: #E6EEFF;
+            color: #002B6B;
+        }
+
         .stat-card-icon.green {
-            background-color: #ecfdf5;
-            color: #059669;
-            border: 1px solid #a7f3d0;
+            background-color: #E6FAF0;
+            color: #10b981;
         }
+
+        .stat-card-icon.orange {
+            background-color: #FFF3EB;
+            color: #f97316;
+        }
+
         .stat-card-icon.red {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
+            background-color: #FFEBEB;
+            color: #ef4444;
         }
-        .stat-card-icon.amber, .stat-card-icon.yellow {
-            background-color: #fffbeb;
-            color: #d97706;
-            border: 1px solid #fde68a;
+
+        .stat-card-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
-        html.dark .stat-card-icon.blue { background-color: rgba(30, 58, 138, 0.3); color: #93c5fd; border-color: rgba(59, 130, 246, 0.3); }
-        html.dark .stat-card-icon.green { background-color: rgba(6, 78, 59, 0.3); color: #6ee7b7; border-color: rgba(5, 150, 105, 0.3); }
-        html.dark .stat-card-icon.red { background-color: rgba(153, 27, 27, 0.3); color: #fca5a5; border-color: rgba(220, 38, 38, 0.3); }
+
+        .stat-card-badge.up {
+            background-color: #E6FAF0;
+            color: #10b981;
+        }
+
+        .stat-card-badge.down {
+            background-color: #FFEBEB;
+            color: #ef4444;
+        }
+
+        .stat-card-badge.flat {
+            background-color: #F1F3F9;
+            color: #8A94A6;
+        }
 
         .stat-card .label {
             font-size: 0.75rem;
-            font-weight: 700;
+            color: #8A94A6;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
+            letter-spacing: 0.5px;
+            font-weight: 600;
             margin-bottom: 0.25rem;
         }
+
         .stat-card .number {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.1;
-        }
-        html.dark .stat-card .label { color: #94a3b8; }
-        html.dark .stat-card .number { color: #f8fafc; }
-
-        /* Per-page select styling - fix for "10" being clipped, no double arrow */
-        select[name="per_page"],
-        select#perPageSelect {
-            width: 80px !important;
-            min-height: 36px !important;
-            height: 36px !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            padding-left: 10px !important;
-            padding-right: 28px !important;
-            font-size: 0.875rem !important;
-            font-weight: 600 !important;
-            line-height: 36px !important;
-            border-radius: 0.5rem !important;
-            -webkit-appearance: none !important;
-            appearance: none !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: right 8px center !important;
-            background-size: 14px 14px !important;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #002B6B;
         }
 
-        /* Table Card Container */
-        .table-card {
-            background: #ffffff;
-            border-radius: 1.25rem;
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 4px 20px -2px rgba(0, 43, 107, 0.04);
+        /* Chart Container */
+        .chart-card {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+            border-radius: 1rem;
+            padding: 1.75rem;
+            border: 1px solid rgba(0, 43, 107, 0.08);
+            box-shadow: 0 16px 45px rgba(0, 43, 107, 0.08);
+            margin-top: 0;
+            position: relative;
             overflow: hidden;
-            transition: all 0.2s ease;
-        }
-        html.dark .table-card {
-            background: #1e293b;
-            border-color: #334155;
-            box-shadow: none;
+            min-width: 0;
         }
 
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 0;
-            border-collapse: collapse;
-            color: #334155;
-            vertical-align: middle;
-        }
-        html.dark .table {
-            color: #cbd5e1;
-        }
-
-        .table thead th {
-            background-color: #f8fafc;
-            color: #475569;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 1.1rem 1.25rem;
-            border-bottom: 1.5px solid #e2e8f0;
-            white-space: nowrap;
-        }
-        html.dark .table thead th {
-            background-color: #0f172a;
-            color: #94a3b8;
-            border-bottom-color: #334155;
-        }
-
-        .table tbody tr {
-            transition: all 0.15s ease;
-        }
-        .table tbody td {
-            padding: 1.1rem 1.25rem;
-            font-size: 0.875rem;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
-        }
-        html.dark .table tbody td {
-            border-bottom-color: #334155;
-        }
-
-        .table tbody tr:hover {
-            background-color: rgba(240, 246, 255, 0.6) !important;
-        }
-        html.dark .table tbody tr:hover {
-            background-color: rgba(30, 41, 59, 0.7) !important;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .action-btn {
-            width: 34px;
-            height: 34px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.625rem;
-            border: 1px solid transparent;
-            font-size: 0.875rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.15s ease;
-        }
-        .action-btn-edit {
-            background-color: #eff6ff;
-            color: #2563eb;
-            border-color: #dbeafe;
-        }
-        .action-btn-edit:hover {
-            background-color: #2563eb;
-            color: #ffffff;
-            border-color: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-        }
-        .action-btn-delete {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border-color: #fee2e2;
-        }
-        .action-btn-delete:hover {
-            background-color: #dc2626;
-            color: #ffffff;
-            border-color: #dc2626;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
-        }
-        .action-btn-view {
-            background-color: #f8fafc;
-            color: #475569;
-            border-color: #e2e8f0;
-        }
-        .action-btn-view:hover {
-            background-color: #334155;
-            color: #ffffff;
-            border-color: #334155;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(51, 65, 85, 0.25);
-        }
-        html.dark .action-btn-edit {
-            background-color: rgba(37, 99, 235, 0.15);
-            color: #93c5fd;
-            border-color: rgba(37, 99, 235, 0.3);
-        }
-        html.dark .action-btn-delete {
-            background-color: rgba(220, 38, 38, 0.15);
-            color: #fca5a5;
-            border-color: rgba(220, 38, 38, 0.3);
-        }
-        html.dark .action-btn-view {
-            background-color: rgba(148, 163, 184, 0.15);
-            color: #cbd5e1;
-            border-color: rgba(148, 163, 184, 0.3);
-        }
-
-        /* Modern Status & Meta Badges */
-        .badge-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            line-height: 1;
-        }
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .badge-status-aktif {
-            background-color: #ecfdf5;
-            color: #059669;
-            border: 1px solid #a7f3d0;
-        }
-        .badge-status-aktif .status-dot {
-            background-color: #10b981;
-            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-        }
-        .badge-status-nonaktif {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-        .badge-status-nonaktif .status-dot {
-            background-color: #ef4444;
-            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
-        }
-        .badge-status-cuti {
-            background-color: #fffbeb;
-            color: #d97706;
-            border: 1px solid #fde68a;
-        }
-        .badge-status-cuti .status-dot {
-            background-color: #f59e0b;
-            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
-        }
-        html.dark .badge-status-aktif {
-            background-color: rgba(6, 78, 59, 0.3);
-            color: #6ee7b7;
-            border-color: rgba(5, 150, 105, 0.4);
-        }
-        html.dark .badge-status-nonaktif {
-            background-color: rgba(153, 27, 27, 0.3);
-            color: #fca5a5;
-            border-color: rgba(220, 38, 38, 0.4);
-        }
-        html.dark .badge-status-cuti {
-            background-color: rgba(180, 83, 9, 0.3);
-            color: #fcd34d;
-            border-color: rgba(217, 119, 6, 0.4);
-        }
-
-        /* Pill Kode & Akreditasi */
-        .badge-code {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.6rem;
-            border-radius: 0.5rem;
-            background-color: #eff6ff;
-            color: #002B6B;
-            font-weight: 700;
-            font-size: 0.8rem;
-            border: 1px solid #dbeafe;
-        }
-        html.dark .badge-code {
-            background-color: rgba(30, 58, 138, 0.3);
-            color: #93c5fd;
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-
-        .badge-akreditasi {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.3rem 0.65rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            background-color: #f8fafc;
-            color: #334155;
-            border: 1px solid #e2e8f0;
-        }
-        html.dark .badge-akreditasi {
-            background-color: #0f172a;
-            color: #cbd5e1;
-            border-color: #334155;
-        }
-
-        /* Form Controls & Buttons */
-        .form-control, .form-select {
-            border: 1.5px solid #e2e8f0;
-            border-radius: 0.75rem;
-            font-size: 0.875rem;
-            padding: 0.65rem 1rem;
-            color: #1e293b;
-            background-color: #ffffff;
-            transition: all 0.2s ease;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #002B6B;
-            box-shadow: 0 0 0 3.5px rgba(0, 43, 107, 0.1);
-            outline: none;
-        }
-        html.dark .form-control, html.dark .form-select {
-            background-color: #0f172a;
-            border-color: #334155;
-            color: #f8fafc;
-        }
-        html.dark .form-control:focus, html.dark .form-select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3.5px rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #002B6B 0%, #001f4d 100%) !important;
-            border: none !important;
-            font-weight: 700 !important;
-            border-radius: 0.75rem !important;
-            padding: 0.65rem 1.25rem !important;
-            box-shadow: 0 4px 14px rgba(0, 43, 107, 0.2) !important;
-            transition: all 0.2s ease !important;
-        }
-        .btn-primary:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(0, 43, 107, 0.28) !important;
-        }
-
-        /* Modern Pagination */
-        .pagination {
-            display: flex;
-            gap: 0.35rem;
-            align-items: center;
-            margin-bottom: 0;
-        }
-        .page-item .page-link {
-            border-radius: 0.5rem !important;
-            border: 1px solid #e2e8f0;
-            color: #475569;
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 0.45rem 0.85rem;
-            transition: all 0.15s;
-        }
-        .page-item .page-link:hover {
-            background-color: #f1f5f9;
-            color: #002B6B;
-            border-color: #cbd5e1;
-        }
-        .page-item.active .page-link {
-            background-color: #002B6B !important;
-            border-color: #002B6B !important;
-            color: #ffffff !important;
-            box-shadow: 0 4px 10px rgba(0, 43, 107, 0.2);
-        }
-        .page-item.disabled .page-link {
-            color: #94a3b8;
-            background-color: #f8fafc;
-            border-color: #e2e8f0;
-        }
-        html.dark .page-item .page-link {
-            background-color: #1e293b;
-            border-color: #334155;
-            color: #94a3b8;
-        }
-        html.dark .page-item .page-link:hover {
-            background-color: #334155;
-            color: #f8fafc;
-        }
-        html.dark .page-item.active .page-link {
-            background-color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
-            color: #ffffff !important;
-        }
-
-        /* Chart & Insight Card */
-        .chart-card, .insight-card {
-            background: #ffffff;
-            border-radius: 1.25rem;
-            padding: 1.5rem;
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 4px 20px -2px rgba(0, 43, 107, 0.04);
-        }
-
-        html.dark .chart-card, html.dark .insight-card {
-            background: #1e293b;
-            border-color: #334155;
-            box-shadow: none;
-        }
-
-        .chart-card-header, .insight-card-header {
+        .chart-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(241, 245, 249, 1);
+            margin-bottom: 1.5rem;
         }
 
-        html.dark .chart-card-header, html.dark .insight-card-header {
-            border-bottom-color: #334155;
+        .chart-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #002B6B;
+            margin-bottom: 0.25rem;
+        }
+
+        .chart-card p {
+            color: #8A94A6;
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        .chart-summary {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-left: auto;
+        }
+
+        .chart-summary-item {
+            min-width: 108px;
+            padding: 0.65rem 0.8rem;
+            border: 1px solid rgba(0, 43, 107, 0.08);
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .chart-summary-item .summary-label {
+            display: block;
+            color: #64748B;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.35px;
+            line-height: 1;
+            margin-bottom: 0.35rem;
+        }
+
+        .chart-summary-item strong {
+            display: block;
+            color: #002B6B;
+            font-size: 1.15rem;
+            line-height: 1.1;
         }
 
         .chart-toggle {
             display: flex;
-            background-color: #f1f5f9;
+            background-color: #EAF1FF;
             padding: 0.25rem;
             border-radius: 0.75rem;
             gap: 0.25rem;
-        }
-
-        html.dark .chart-toggle {
-            background-color: #0f172a;
+            border: 1px solid rgba(0, 43, 107, 0.08);
         }
 
         .chart-toggle button {
             border: none;
             background: transparent;
-            padding: 0.4rem 0.85rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #64748b;
-            border-radius: 0.5rem;
-            transition: all 0.15s;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #50627D;
+            border-radius: 0.55rem;
+            transition: all 0.2s;
         }
 
         .chart-toggle button.active {
             background-color: #002B6B;
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);
+            box-shadow: 0 8px 18px rgba(0, 43, 107, 0.18);
         }
 
-        html.dark .chart-toggle button.active {
-            background-color: #3b82f6;
+        .chart-canvas-wrap {
+            position: relative;
+            height: 340px;
+            width: 100%;
+            padding: 0.75rem 0.25rem 0;
         }
 
-        /* Sidebar link active & hover */
-        .sidebar-link {
-            transition: all 0.15s ease;
-        }
-        .sidebar-link:hover {
-            background-color: var(--hover-bg, rgba(255, 255, 255, 0.08)) !important;
-            color: #ffffff !important;
+        .insight-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 43, 107, 0.08);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06);
+            min-width: 0;
         }
 
-        html.dark aside {
-            background-color: #0f172a !important;
-            border-right: 1px solid #1e293b !important;
+        .insight-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
         }
-        html.dark aside .sidebar-link {
-            color: #94a3b8 !important;
+
+        .insight-card-header h3 {
+            color: #0F172A;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
         }
-        html.dark aside .sidebar-link:hover {
-            background-color: #1e293b !important;
-            color: #f8fafc !important;
+
+        .insight-card-header p {
+            color: #64748B;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            line-height: 1.4;
         }
-        html.dark aside .sidebar-link-active {
-            background-color: rgba(255, 255, 255, 0.14) !important;
-            color: #ffffff !important;
+
+        .insight-card-header span {
+            display: inline-flex;
+            min-width: 58px;
+            justify-content: center;
+            border-radius: 0.75rem;
+            background: #EEF4FF;
+            color: #002B6B;
+            padding: 0.55rem 0.75rem;
+            font-weight: 800;
+        }
+
+        .insight-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .insight-row span {
+            color: #475569;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .insight-row strong {
+            color: #0F172A;
+            font-size: 0.9rem;
+        }
+
+        .insight-progress {
+            height: 0.55rem;
+            background: #E8EEF8;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .insight-progress div {
+            height: 100%;
+            min-width: 0.4rem;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #002B6B 0%, #0EA5E9 55%, #10B981 100%);
+        }
+
+        /* Table Styles */
+        .table-card {
+            background: white;
+            border-radius: 1rem;
+            border: none;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 43, 107, 0.05);
+            margin-top: 1.5rem;
+        }
+
+        .table-card-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .table-card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            color: #002B6B;
+        }
+
+        /* Wrapper agar tabel bisa di-scroll horizontal di layar kecil */
+        .table-responsive-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-card .table {
+            margin-bottom: 0;
+            min-width: 600px;
+        }
+
+        .table-card .table th {
+            background-color: #F8FAFC;
+            border-top: none;
+            border-bottom: 2px solid var(--border-light);
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem 1.5rem;
+            white-space: nowrap;
+        }
+
+        .table-card .table td {
+            vertical-align: middle;
+            border-color: var(--border-light);
+            padding: 1rem 1.5rem;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+
+        .table-card .table tr:hover {
+            background-color: #F8FAFC;
+        }
+
+        /* Badge Styles */
+        .badge-status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-aktif {
+            background-color: #E6FAF0;
+            color: #10b981;
+        }
+
+        .badge-tidak-aktif {
+            background-color: #FFEBEB;
+            color: #ef4444;
+        }
+
+        .badge-high {
+            background-color: #FFEBEB;
+            color: #ef4444;
+        }
+
+        .badge-medium {
+            background-color: #FFF3EB;
+            color: #f97316;
+        }
+
+        .badge-low {
+            background-color: #E6EEFF;
+            color: #002B6B;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background-color: #002B6B;
+            border-color: #002B6B;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #001f4d;
+            border-color: #001f4d;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .action-btn-view {
+            background-color: #E6EEFF;
+            color: #002B6B;
+        }
+
+        .action-btn-view:hover {
+            background-color: #cddcff;
+        }
+
+        .action-btn-edit {
+            background-color: #FFF3EB;
+            color: #f97316;
+        }
+
+        .action-btn-edit:hover {
+            background-color: #fed7aa;
+        }
+
+        .action-btn-delete {
+            background-color: #FFEBEB;
+            color: #ef4444;
+        }
+
+        .action-btn-delete:hover {
+            background-color: #fecaca;
+        }
+
+        /* Pagination */
+        .pagination {
+            margin-top: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .pagination .page-link {
+            color: #002B6B;
+            border-color: #e2e8f0;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #E6EEFF;
+            border-color: #002B6B;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #002B6B;
+            border-color: #002B6B;
+            color: white;
+        }
+
+        /* Form Styles */
+        .form-label {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control, .form-select {
+            border-color: #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.6rem 1rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #002B6B;
+            box-shadow: 0 0 0 0.2rem rgba(0, 43, 107, 0.15);
+        }
+
+        /* Modal */
+        .modal-content {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #F8FAFC;
+        }
+
+        /* ============ RESPONSIVE (TABLET) ============ */
+        @media (max-width: 991px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .admin-content {
+                margin-left: 0;
+            }
+
+            .sidebar-toggle-btn {
+                display: flex;
+            }
+
+            .admin-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============ RESPONSIVE (MOBILE) ============ */
+        @media (max-width: 768px) {
+            .admin-topbar {
+                padding: 0.75rem 1rem;
+            }
+
+            .admin-topbar-left {
+                order: 1;
+                flex: 1 1 auto;
+            }
+
+            .admin-topbar-right {
+                order: 2;
+                gap: 0.5rem;
+            }
+
+            /* Search bar pindah ke baris sendiri di HP */
+            .admin-topbar-search {
+                order: 3;
+                width: 100%;
+                flex-basis: 100%;
+            }
+
+            .admin-topbar-profile-text {
+                display: none;
+            }
+
+            .admin-main {
+                padding: 1rem;
+            }
+
+            .container-fluid {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .admin-main > .container-fluid > .d-flex:first-child,
+            .admin-main > .container-fluid > .mb-4.d-flex,
+            .admin-main > .container-fluid > .row > [class*="col-"] > .mb-4.d-flex {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 1rem;
+            }
+
+            .admin-main > .container-fluid > .d-flex:first-child .btn,
+            .admin-main > .container-fluid > .mb-4.d-flex .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .welcome-banner {
+                padding: 1.5rem;
+            }
+
+            .welcome-banner h2 {
+                font-size: 1.4rem;
+            }
+
+            .chart-card {
+                padding: 1.25rem;
+            }
+
+            .chart-card-header {
+                align-items: stretch;
+            }
+
+            .chart-summary {
+                order: 2;
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .chart-summary-item {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .chart-toggle {
+                order: 3;
+                width: 100%;
+            }
+
+            .chart-toggle button {
+                flex: 1;
+            }
+
+            .action-buttons {
+                flex-wrap: nowrap;
+            }
+
+            .table-card-header {
+                padding: 1rem;
+            }
+
+            .table-card {
+                border-radius: 0.85rem;
+                margin-top: 1rem;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table-responsive > .table {
+                min-width: 760px;
+            }
+
+            .table-card .table th,
+            .table-card .table td {
+                padding: 0.85rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .form-select,
+            .form-control {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+                gap: 0.35rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .admin-topbar-right {
+                gap: 0.35rem;
+            }
+
+            .admin-topbar-profile {
+                padding: 0.3rem 0.5rem;
+            }
         }
     </style>
 </head>
-
-<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
-    @php
-        $sidebarBg = '#002B6B';
-        $sidebarText = 'rgba(255,255,255,0.75)';
-        $sidebarTitle = '#FFFFFF';
-        $sidebarMuted = 'rgba(255,255,255,0.5)';
-        $sidebarBorder = 'rgba(255,255,255,0.12)';
-        $sidebarHover = 'rgba(255,255,255,0.08)';
-        $activeBg = 'rgba(255,255,255,0.14)';
-        $activeText = '#FFFFFF';
-    @endphp
-
-    <div x-data="{ sidebarOpen: window.innerWidth >= 1024 }" class="min-h-screen flex overflow-x-hidden">
-
-        <!-- Mobile Backdrop Overlay -->
-        <div
-            x-cloak
-            x-show="sidebarOpen"
-            x-transition.opacity
-            @click="sidebarOpen = false"
-            class="fixed inset-0 z-40 bg-gray-900/45 lg:hidden"
-            aria-hidden="true"></div>
+<body>
+    <div class="d-flex" style="min-height: 100vh;">
+        <!-- Overlay gelap saat sidebar terbuka di mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
         <!-- Sidebar -->
-        <aside
-            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:-translate-x-full'"
-            style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
+        @include('admin.components.sidebar')
 
-            <!-- Logo Header -->
-            <div class="px-6 py-4" style="border-bottom: 1px solid {{ $sidebarBorder }};">
-                <div class="flex items-center justify-between gap-3">
-                    <a href="/" class="flex min-w-0 items-center gap-2 text-decoration-none" style="gap: 0.5rem;">
-                        <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
-                            <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="" />
-                        </div>
-                        <div class="min-w-0">
-                            <div class="text-base font-bold leading-tight truncate" style="color: {{ $sidebarTitle }};">Cendekia</div>
-                            <div class="text-[11px] leading-tight truncate" style="color: {{ $sidebarMuted }};">Academic Portal</div>
-                        </div>
-                    </a>
+        <!-- Main Content -->
+        <div class="admin-content w-100">
+            <!-- Top Bar -->
+            @include('admin.components.topbar')
 
-                    <button
-                        type="button"
-                        @click="sidebarOpen = false"
-                        class="inline-flex h-9 w-9 items-center justify-center rounded-lg lg:hidden"
-                        style="color: {{ $sidebarText }};"
-                        aria-label="Tutup menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
+            <!-- Page Content -->
+            <div class="admin-main">
+                @yield('content')
             </div>
-
-            <!-- Navigation Menu -->
-            <nav class="flex-1 px-3 py-4 space-y-1">
-                @php
-                    $menu = [
-                        ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                        ['label' => 'Data Dosen', 'route' => 'admin.dosen.index', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
-                        ['label' => 'Data Mahasiswa', 'route' => 'admin.mahasiswa.index', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
-                        ['label' => 'Mata Kuliah', 'route' => 'admin.mata-kuliah.index', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                        ['label' => 'Program Studi', 'route' => 'admin.program-studi.index', 'icon' => 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.42A12.02 12.02 0 0112 21.5a12.02 12.02 0 01-6.16-10.92L12 14z'],
-                        ['label' => 'Kalender Akademik', 'route' => 'admin.kalender-akademik.index', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                        ['label' => 'Pengumuman', 'route' => 'admin.pengumuman.index', 'icon' => 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z'],
-                    ];
-                @endphp
-
-                @foreach ($menu as $item)
-                    @php
-                        $activeLabel = View::yieldContent('activeMenu') ?: '';
-                        $isActive = ($item['label'] === $activeLabel) || (
-                            ($item['route'] === 'admin.dashboard' && request()->routeIs('admin.dashboard')) ||
-                            ($item['route'] === 'admin.dosen.index' && request()->routeIs('admin.dosen.*')) ||
-                            ($item['route'] === 'admin.mahasiswa.index' && request()->routeIs('admin.mahasiswa.*')) ||
-                            ($item['route'] === 'admin.mata-kuliah.index' && request()->routeIs('admin.mata-kuliah.*')) ||
-                            ($item['route'] === 'admin.program-studi.index' && request()->routeIs('admin.program-studi.*')) ||
-                            ($item['route'] === 'admin.kalender-akademik.index' && request()->routeIs('admin.kalender-akademik.*')) ||
-                            ($item['route'] === 'admin.pengumuman.index' && request()->routeIs('admin.pengumuman.*'))
-                        );
-                    @endphp
-                    <a
-                        href="{{ route($item['route']) }}"
-                        class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isActive ? 'sidebar-link-active' : '' }}"
-                        style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
-                        </svg>
-                        <span>{{ $item['label'] }}</span>
-                    </a>
-                @endforeach
-
-                <!-- Bottom Links Section (Matching Dosen layout) -->
-                <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
-                    @php $isPrefActive = request()->routeIs('admin.setting*') || request()->routeIs('admin.notification-preferences.*') || request()->routeIs('admin.user.*') || request()->routeIs('profile.*'); @endphp
-                    <a
-                        href="{{ route('admin.setting') }}"
-                        class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isPrefActive ? 'sidebar-link-active' : '' }}"
-                        style="{{ $isPrefActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        </svg>
-                        <span>Pengaturan</span>
-                    </a>
-
-                    @php $isHelpActive = request()->routeIs('admin.help-center.*') || request()->routeIs('help-center.*'); @endphp
-                    <a
-                        href="{{ route('admin.help-center.dashboard') }}"
-                        class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isHelpActive ? 'sidebar-link-active' : '' }}"
-                        style="{{ $isHelpActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Pusat Bantuan</span>
-                    </a>
-
-                    <!-- Logout -->
-                    <form method="POST" action="{{ route('logout') }}" class="m-0">
-                        @csrf
-                        <button type="submit" class="sidebar-link w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition border-none bg-transparent cursor-pointer text-left" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                            <span>Keluar</span>
-                        </button>
-                    </form>
-                </div>
-            </nav>
-        </aside>
-
-        <!-- Main Content Area -->
-        <div class="flex-1 min-w-0 w-full transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
-
-            <!-- Topbar Header -->
-            <header class="sticky top-0 z-30 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 px-4 py-3 sm:px-6 lg:px-8 lg:py-4 flex items-center justify-between gap-3 transition-colors duration-200">
-
-                <button
-                    type="button"
-                    @click="sidebarOpen = !sidebarOpen"
-                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
-                    aria-label="Toggle menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-
-                <div class="min-w-0 flex-1 lg:hidden">
-                    <p class="truncate text-sm font-bold text-gray-800 dark:text-white m-0">@yield('title', 'Admin Dashboard')</p>
-                </div>
-
-                <div class="hidden lg:block flex-1"></div>
-
-                <div class="flex items-center justify-end gap-2 sm:gap-4">
-                    <button class="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-                    </button>
-
-                    <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
-                        <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
-                            {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
-                        </div>
-                        <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 dark:text-gray-200 sm:inline">{{ auth()->user()->name ?? 'Admin' }}</span>
-                    </div>
-                </div>
-            </header>
-
-            <main class="w-full min-w-0 overflow-x-hidden p-4 sm:p-6 lg:p-8">
-                @if(isset($slot))
-                    {{ $slot }}
-                @else
-                    @yield('content')
-                @endif
-            </main>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
-            <div class="modal-content text-center p-4 shadow-lg" style="border-radius: 1.25rem; border: none;">
+            <div class="modal-content text-center p-4 shadow-lg" style="border-radius: 1rem; border: none;">
                 <div class="modal-body p-0">
                     <div class="mb-3 d-inline-flex align-items-center justify-content-center" style="width: 56px; height: 56px; background-color: #FEE2E2; border-radius: 50%;">
                         <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.5rem; color: #dc2626;"></i>
                     </div>
-                    <h5 class="mb-2 font-bold text-slate-800">Hapus Data?</h5>
-                    <p class="text-slate-500 mb-4 text-sm leading-relaxed">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+                    <h5 class="mb-2" style="font-weight: 700; color: #1e293b;">Hapus Data?</h5>
+                    <p class="text-muted mb-4" style="font-size: 0.9rem; line-height: 1.5;">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
                     <div class="d-flex gap-2 w-100">
-                        <button type="button" class="btn btn-light flex-grow-1 py-2 text-sm font-semibold" data-bs-dismiss="modal" style="border: 1px solid #cbd5e1; border-radius: 0.6rem; color: #475569;">Batal</button>
-                        <button type="button" id="confirmDeleteBtn" class="btn btn-danger flex-grow-1 py-2 text-sm font-semibold" style="background-color: #dc2626; border: none; border-radius: 0.6rem;">Ya, Hapus</button>
+                        <button type="button" class="btn btn-light flex-grow-1 py-2.5" data-bs-dismiss="modal" style="border: 1px solid #cbd5e1; border-radius: 0.5rem; font-weight: 600; color: #475569; background-color: white; font-size: 0.9rem;">Batal</button>
+                        <button type="button" id="confirmDeleteBtn" class="btn btn-danger flex-grow-1 py-2.5" style="background-color: #991b1b; border: none; border-radius: 0.5rem; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(153, 27, 27, 0.15);">Ya, Hapus</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap 5 Bundle JS -->
+    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Toggle sidebar on mobile
         document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.querySelector('[data-sidebar-toggle]');
+            const sidebar = document.querySelector('.admin-sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    if (sidebar.classList.contains('show')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                });
+            }
+
+            // Klik overlay untuk menutup sidebar
+            overlay.addEventListener('click', closeSidebar);
+
+            // Tutup sidebar otomatis saat memilih menu (di mobile)
+            sidebar.addEventListener('click', function(e) {
+                if (e.target.closest('.nav-link') && window.innerWidth <= 991) {
+                    closeSidebar();
+                }
+            });
+
+            // Reset state kalau layar di-resize ke desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 991) {
+                    closeSidebar();
+                }
+            });
+
+            // Listen to delete action buttons to show custom delete modal
             document.addEventListener('click', function(e) {
                 const deleteBtn = e.target.closest('.action-btn-delete');
                 if (deleteBtn) {
@@ -851,7 +1157,6 @@
             });
         });
     </script>
-
     @stack('scripts')
 </body>
 </html>

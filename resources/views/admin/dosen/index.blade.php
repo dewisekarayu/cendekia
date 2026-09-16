@@ -26,9 +26,9 @@
 <<<<<<< HEAD
             <!-- Tambah Dosen Button & Import CSV -->
             <div class="d-flex gap-2">
-                <button type="button" class="btn btn-outline-success d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importDosenModal">
+                <a href="{{ route('admin.dosen.import.view') }}" class="btn btn-outline-success d-flex align-items-center">
                     <i class="bi bi-file-earmark-excel me-2"></i> Impor CSV
-                </button>
+                </a>
                 <a href="{{ route('admin.dosen.create') }}" class="btn btn-primary d-flex align-items-center gap-2" style="background-color: #002B6B; border: none;">
                     <i class="bi bi-person-plus-fill"></i> Tambah Dosen
                 </a>
@@ -82,38 +82,6 @@
             <div id="tableContainer">
                 @include('admin.dosen.table')
             </div>
-        </div>
-    </div>
-
-    <!-- Modal Import CSV Dosen -->
-    <div class="modal fade" id="importDosenModal" tabindex="-1" aria-labelledby="importDosenModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="{{ route('admin.dosen.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header border-0 pb-0">
-                        <h5 class="modal-title fw-bold" id="importDosenModalLabel">📥 Impor Data Dosen</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                        <div class="alert alert-info border-0 mb-3" style="background-color: #f0f7ff; color: #002B6B;">
-                            <h6 class="fw-bold mb-2" style="font-size: 0.9rem;"><i class="bi bi-info-circle-fill me-1"></i> SOP Impor Dosen:</h6>
-                            <ol class="mb-2 text-muted" style="font-size: 0.85rem; padding-left: 1.2rem;">
-                                <li class="mb-1">Pastikan file Anda berekstensi <strong>.csv</strong>.</li>
-                                <li class="mb-1">Baris paling atas (judul kolom) akan diabaikan oleh sistem.</li>
-                                <li class="mb-1">Urutan 4 kolom wajib dari kiri ke kanan: <br><strong class="text-dark">Nama Lengkap &rarr; NIP &rarr; Email &rarr; ID Program Studi</strong></li>
-                                <li>Password otomatis (*default*) disetel sama persis dengan angka NIP.</li>
-                            </ol>
-                            <a href="data:text/csv;charset=utf-8,Nama Lengkap,NIP,Email,ID Program Studi%0AProf. Budi,19790001,budi@dosen.cendekia.ac.id,1" download="template_dosen.csv" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center mt-2" style="font-size: 0.8rem; font-weight: 600;">
-                                <i class="bi bi-download me-2"></i> Download Template CSV (Sudah Ada Isinya)
-                            </a>
-                        </div>
-                        <input type="file" class="form-control" name="file_csv" accept=".csv, .txt" required>
-                    <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary px-4" style="background-color: #002B6B; border: none;">Mulai Impor</button>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </x-admin-layout>

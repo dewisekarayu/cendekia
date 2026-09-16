@@ -168,6 +168,35 @@
                     <span>Tutup Akses Sesi</span>
                 </button>
             </form>
+
+            <button type="button" onclick="document.getElementById('qrModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white border border-indigo-200 rounded-lg text-[11px] font-bold shadow-sm transition-all">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                </svg>
+                <span>Tampilkan QR Code</span>
+            </button>
+
+            <!-- Modal QR -->
+            <div id="qrModal" class="hidden fixed inset-0 z-[100] overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
+                    <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-slate-800">QR Code Presensi</h3>
+                        <button type="button" onclick="document.getElementById('qrModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                    <div class="p-6 text-center">
+                        <p class="text-sm text-slate-600 mb-4">Minta mahasiswa untuk memindai kode QR ini agar otomatis terhitung hadir.</p>
+                        <div class="inline-block p-2 bg-white rounded-xl shadow-sm border border-slate-200">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ urlencode(route('mahasiswa.absensi.scan', $absensi->qr_token)) }}" alt="QR Code" class="w-64 h-64 mx-auto">
+                        </div>
+                        <p class="mt-4 font-mono text-[10px] text-slate-500 bg-slate-50 py-1.5 px-3 rounded text-center break-all">{{ route('mahasiswa.absensi.scan', $absensi->qr_token) }}</p>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 text-right">
+                        <button type="button" onclick="document.getElementById('qrModal').classList.add('hidden')" class="px-4 py-2 text-sm font-bold text-slate-600 hover:text-slate-800 focus:outline-none">Tutup</button>
+                    </div>
+                </div>
+            </div>
         @endif
 
         <a href="{{ route('dosen.absensi.edit', [$kelas->id, $absensi->id]) }}"

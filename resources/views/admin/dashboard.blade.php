@@ -1,23 +1,21 @@
 @extends('layouts.admin')
 
 @section('title', 'Dashboard Admin')
-@section('activeMenu', 'Dashboard')
 
 @section('content')
 
-<<<<<<< HEAD
     {{-- Kumpulan Style Khusus Pembenahan Tipografi Dashboard --}}
     <style>
         .welcome-banner {
             position: relative;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
-            padding: 32px 40px;
+            background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+            padding: 36px 48px;
             border-radius: 20px;
             color: #ffffff;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.4);
+            margin-bottom: 32px;
+            box-shadow: 0 12px 35px -5px rgba(76, 29, 149, 0.4);
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         /* Glassmorphism decorative circles */
@@ -25,22 +23,22 @@
             content: '';
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
             backdrop-filter: blur(10px);
             z-index: 0;
             animation: float 6s ease-in-out infinite;
         }
         .welcome-banner::before {
-            width: 250px;
-            height: 250px;
-            top: -100px;
+            width: 300px;
+            height: 300px;
+            top: -120px;
             right: -50px;
         }
         .welcome-banner::after {
             width: 150px;
             height: 150px;
-            bottom: -50px;
-            right: 150px;
+            bottom: -30px;
+            right: 200px;
             animation-delay: -3s;
         }
         
@@ -54,51 +52,173 @@
             position: relative;
             z-index: 1;
         }
-        /* Memperkecil judul selamat datang agar proporsional */
         .welcome-banner h2 {
-            font-size: 26px !important;
+            font-size: 28px !important;
             font-weight: 800;
-            margin: 0 0 10px 0;
+            margin: 0 0 12px 0;
             letter-spacing: -0.5px;
-            background: linear-gradient(to right, #fff, #a5b4fc);
+            background: linear-gradient(to right, #ffffff, #d8b4fe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .welcome-banner p {
-            font-size: 14.5px;
-            color: #cbd5e1;
+            font-size: 15px;
+            color: #e2e8f0;
             margin: 0;
             line-height: 1.6;
-            max-width: 600px;
+            max-width: 650px;
         }
-=======
-<div class="space-y-6">
->>>>>>> a3574bb (feat: perbarui ui dosen, admin, tata letak tabel, pagination, dan dropdown serta mempefeat: perbarui ui dosen, admin, tata let)
 
-    {{-- HERO WELCOME BANNER --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] via-[#09357a] to-[#144896] dark:from-slate-900 dark:via-indigo-950 dark:to-blue-950 px-6 py-7 sm:px-8 shadow-md text-white">
-        <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
-        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-blue-400/10 blur-xl"></div>
+        /* Layout Grid untuk Stat Cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* Stat Card Premium Override */
+        .stat-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(76,29,149,0.08);
+            border-color: #d8b4fe;
+        }
+
+        /* Chart & Insight Card */
+        .admin-dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 992px) {
+            .admin-dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .chart-card, .insight-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            padding: 24px;
+            transition: box-shadow 0.2s ease;
+        }
+        .chart-card:hover, .insight-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+
+        .chart-card-header, .insight-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .chart-card-header h3, 
+        .insight-card-header h3 {
+            font-size: 18px !important;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0 0 6px 0;
+        }
+        .chart-card-header p, 
+        .insight-card-header p {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0;
+        }
         
-        <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div class="min-w-0 flex-1">
-                <div class="mb-2 flex flex-wrap items-center gap-2">
-                    <span class="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/15 px-3 py-1 text-xs font-bold tracking-wide text-white backdrop-blur-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        {{ now()->translatedFormat('l, d F Y') }}
-                    </span>
-                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-blue-100 backdrop-blur-sm">
-                        Live Administration
-                    </span>
-                    <span class="inline-flex items-center gap-1 rounded-lg border border-emerald-400/30 bg-emerald-500/20 px-2.5 py-1 text-xs font-bold text-emerald-200">
-                        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        Uptime {{ $uptime ?? '99.9' }}%
-                    </span>
-                </div>
+        /* Setelan teks ringkasan grafik */
+        .chart-summary {
+            display: flex;
+            gap: 24px;
+            background: #f8fafc;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .chart-summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-summary-item .summary-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748B;
+            font-weight: 600;
+        }
+        .chart-summary-item strong {
+            font-size: 20px;
+            color: #4c1d95;
+            font-weight: 800;
+        }
 
-<<<<<<< HEAD
+        .chart-toggle button {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chart-toggle button:hover {
+            background: #e2e8f0;
+        }
+        .chart-toggle button.active {
+            background: #4c1d95;
+            color: white;
+            border-color: #4c1d95;
+            box-shadow: 0 4px 10px rgba(76, 29, 149, 0.2);
+        }
+
+        .insight-list .insight-row {
+            padding: 12px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .insight-list .insight-row:last-child {
+            border-bottom: none;
+        }
+        .insight-row span {
+            font-weight: 600;
+            color: #475569;
+            font-size: 14px;
+        }
+        .insight-row strong {
+            color: #1e293b;
+            font-weight: 800;
+            font-size: 15px;
+        }
+        .insight-progress {
+            height: 6px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .insight-progress div {
+            height: 100%;
+            background: linear-gradient(to right, #8b5cf6, #6d28d9);
+            border-radius: 6px;
+        }
+        
+        .chart-canvas-wrap {
+            height: 300px;
+            width: 100%;
+        }
+    </style>
+
     <div class="welcome-banner">
         <div class="welcome-banner-content">
             <h2>Selamat Datang, {{ auth()->user()->name ?? 'Admin' }} ✨</h2>
@@ -106,189 +226,103 @@
                 Pusat Kendali Utama Cendekia memantau <strong>{{ number_format($totalAktivitas ?? rand(1500, 5000)) }}</strong> interaksi belajar hari ini.
                 Semua server dan sistem berjalan stabil dan optimal di tingkat uptime <strong>{{ $uptime ?? '99.9' }}%</strong>.
             </p>
-=======
-                <h1 class="text-2xl font-black text-white sm:text-3xl tracking-tight leading-tight">
-                    Selamat Datang, {{ auth()->user()->name ?? 'Admin Cendekia' }}
-                </h1>
-
-                <p class="mt-2 text-xs sm:text-sm text-blue-100/90 leading-relaxed max-w-2xl font-medium">
-                    Platform Cendekia memantau <strong class="text-white">{{ number_format($totalAktivitas ?? 0) }} aktivitas</strong> perkuliahan hari ini. Seluruh operasional akademik berjalan normal dan terpantau dengan optimal.
-                </p>
-            </div>
-
-            {{-- Quick Action Buttons in Hero --}}
-            <div class="flex flex-row lg:flex-col gap-2.5 shrink-0">
-                <a href="{{ route('admin.dosen.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition text-decoration-none">
-                    <i class="bi bi-person-badge text-blue-200"></i>
-                    Data Dosen
-                </a>
-                <a href="{{ route('admin.mahasiswa.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition text-decoration-none">
-                    <i class="bi bi-people-fill text-blue-200"></i>
-                    Data Mahasiswa
-                </a>
-                <a href="{{ route('admin.program-studi.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition text-decoration-none">
-                    <i class="bi bi-diagram-3 text-blue-200"></i>
-                    Program Studi
-                </a>
-            </div>
->>>>>>> a3574bb (feat: perbarui ui dosen, admin, tata letak tabel, pagination, dan dropdown serta mempefeat: perbarui ui dosen, admin, tata let)
         </div>
     </div>
 
-    {{-- STATS SUMMARY KPI CARDS --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {{-- Total Mahasiswa --}}
-        <a href="{{ route('admin.mahasiswa.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#002B6B] dark:text-blue-300 border border-blue-100 dark:border-blue-900/50 group-hover:scale-105 transition-transform">
-                    <i class="bi bi-people-fill text-lg"></i>
-                </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
-                    Aktif
-                </span>
-            </div>
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Total Mahasiswa</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalMahasiswa ?? 0) }}</p>
-                <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
-                    <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Kelola Mahasiswa</span>
-                    <i class="bi bi-arrow-right text-xs text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-            </div>
-        </a>
+    <div class="stat-grid">
+        <x-stat-card
+            icon="people-fill"
+            color="blue"
+            label="Total Mahasiswa"
+            :value="number_format($totalMahasiswa ?? 0)"
+            :change="$perubahanMahasiswa ?? null"
+        />
 
-        {{-- Total Dosen --}}
-        <a href="{{ route('admin.dosen.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50 group-hover:scale-105 transition-transform">
-                    <i class="bi bi-person-badge text-lg"></i>
-                </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
-                    Pengajar
-                </span>
-            </div>
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Total Dosen</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalDosen ?? 0) }}</p>
-                <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
-                    <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Kelola Dosen</span>
-                    <i class="bi bi-arrow-right text-xs text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-            </div>
-        </a>
+        <x-stat-card
+            icon="person-badge"
+            color="green"
+            label="Total Dosen"
+            :value="number_format($totalDosen ?? 0)"
+            :change="$perubahanDosen ?? null"
+        />
 
-        {{-- Mata Kuliah --}}
-        <a href="{{ route('admin.mata-kuliah.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-amber-400 dark:hover:border-amber-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 border border-amber-100 dark:border-amber-900/50 group-hover:scale-105 transition-transform">
-                    <i class="bi bi-book-fill text-lg"></i>
-                </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
-                    Kurikulum
-                </span>
-            </div>
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Mata Kuliah</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalMataKuliah ?? $totalMatkul ?? 0) }}</p>
-                <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
-                    <span class="text-xs font-semibold text-amber-600 dark:text-amber-400">Daftar Kurikulum</span>
-                    <i class="bi bi-arrow-right text-xs text-amber-600 dark:text-amber-400 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-            </div>
-        </a>
+        <x-stat-card
+            icon="book-fill"
+            color="orange"
+            label="Mata Kuliah"
+            :value="number_format($totalMataKuliah ?? 0)"
+            :change="$perubahanMataKuliah ?? null"
+        />
 
-        {{-- Program Studi --}}
-        <a href="{{ route('admin.program-studi.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-rose-400 dark:hover:border-rose-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border border-rose-100 dark:border-rose-900/50 group-hover:scale-105 transition-transform">
-                    <i class="bi bi-diagram-3 text-lg"></i>
-                </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-rose-50 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
-                    Jurusan
-                </span>
-            </div>
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Program Studi</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalProgramStudi ?? $totalProdi ?? 0) }}</p>
-                <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
-                    <span class="text-xs font-semibold text-rose-600 dark:text-rose-400">Kelola Program Studi</span>
-                    <i class="bi bi-arrow-right text-xs text-rose-600 dark:text-rose-400 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-            </div>
-        </a>
+        <x-stat-card
+            icon="diagram-3"
+            color="red"
+            label="Program Studi"
+            :value="number_format($totalProgramStudi ?? 0)"
+            :change="$perubahanProgramStudi ?? null"
+        />
     </div>
 
-    {{-- 2-COLUMN ANALYTICS GRID --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        {{-- Aktivitas Pengguna (Chart Card - 2 Cols) --}}
-        <div class="lg:col-span-2 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm transition-colors duration-200">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100 dark:border-slate-700/60">
+    <div class="admin-dashboard-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
                 <div>
-                    <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-blue-600"></span>
-                        Aktivitas Pengguna
-                    </h2>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Grafik interaksi mahasiswa dan dosen berdasarkan data aktivitas portal LMS</p>
+                    <h3>Aktivitas Pengguna</h3>
+                    <p>Grafik interaksi mahasiswa dan dosen berdasarkan data aktivitas LMS</p>
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total:</span>
-                        <strong id="chartTotalValue" class="text-xs font-black text-[#002B6B] dark:text-blue-400">0</strong>
+                <div class="chart-summary">
+                    <div class="chart-summary-item">
+                        <span class="summary-label">Total</span>
+                        <strong id="chartTotalValue">0</strong>
                     </div>
+                    <div class="chart-summary-item">
+                        <span class="summary-label">Tertinggi</span>
+                        <strong id="chartPeakValue">0</strong>
+                    </div>
+                </div>
 
-                    <div class="chart-toggle" id="chartRangeToggle">
-                        <button type="button" data-range="mingguan">Mingguan</button>
-                        <button type="button" data-range="bulanan" class="active">Bulanan</button>
-                    </div>
+                <div class="chart-toggle" id="chartRangeToggle">
+                    <button type="button" data-range="mingguan">Mingguan</button>
+                    <button type="button" data-range="bulanan" class="active">Bulanan</button>
                 </div>
             </div>
 
-            <div class="chart-canvas-wrap" style="height: 320px;">
+            <div class="chart-canvas-wrap">
                 <canvas id="aktivitasChart"></canvas>
             </div>
         </div>
 
-        {{-- Sebaran Mahasiswa (Insight Card - 1 Col) --}}
-        <div class="rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm transition-colors duration-200">
-            <div class="flex items-center justify-between mb-5 pb-4 border-b border-slate-100 dark:border-slate-700/60">
+        <div class="insight-card">
+            <div class="insight-card-header">
                 <div>
-                    <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-                        Sebaran Mahasiswa
-                    </h2>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Jumlah mahasiswa per prodi</p>
+                    <h3>Sebaran Mahasiswa</h3>
+                    <p>Jumlah mahasiswa aktif per program studi</p>
                 </div>
-                <span class="rounded-xl bg-blue-50 dark:bg-blue-950/50 px-3 py-1 text-xs font-bold text-[#002B6B] dark:text-blue-300">
-                    {{ number_format($totalMahasiswa ?? 0) }} Total
-                </span>
+                <span>{{ number_format($totalMahasiswa ?? 0) }}</span>
             </div>
 
-            <div class="space-y-4">
+            <div class="insight-list">
                 @forelse ($mahasiswaPerProdi as $prodi)
                     @php
                         $value = (int) ($prodi['value'] ?? 0);
                         $percentage = ($totalMahasiswa ?? 0) > 0 ? round(($value / $totalMahasiswa) * 100) : 0;
                     @endphp
-                    <div class="p-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40">
-                        <div class="flex items-center justify-between text-xs font-bold mb-1.5">
-                            <span class="text-slate-700 dark:text-slate-300 truncate pr-2">{{ $prodi['label'] }}</span>
-                            <span class="text-[#002B6B] dark:text-blue-400 shrink-0">{{ number_format($value) }} ({{ $percentage }}%)</span>
+                    <div class="insight-row">
+                        <div class="d-flex justify-content-between gap-3">
+                            <span>{{ $prodi['label'] }}</span>
+                            <strong>{{ number_format($value) }}</strong>
                         </div>
-                        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                            <div class="bg-gradient-to-r from-[#002B6B] to-[#38BDF8] h-2 rounded-full" style="width: {{ $percentage }}%"></div>
+                        <div class="insight-progress">
+                            <div style="width: {{ $percentage }}%"></div>
                         </div>
                     </div>
                 @empty
-                    <p class="text-slate-400 dark:text-slate-500 text-xs text-center py-6">Belum ada data program studi.</p>
+                    <p class="text-muted mb-0">Belum ada data program studi.</p>
                 @endforelse
             </div>
         </div>
-
     </div>
-
-</div>
 
 @endsection
 
@@ -303,6 +337,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const palette = ['#002B6B', '#0EA5E9', '#10B981', '#F59E0B', '#EF4444', '#7C3AED', '#14B8A6'];
     const muted = '#E8EEF8';
     const totalValue = document.getElementById('chartTotalValue');
+    const peakValue = document.getElementById('chartPeakValue');
 
     function formatNumber(value) {
         return new Intl.NumberFormat('id-ID').format(value ?? 0);
@@ -318,9 +353,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateSummary(rows) {
         const values = rows.map(row => Number(row.value || 0));
-        if (totalValue) {
-            totalValue.textContent = formatNumber(values.reduce((sum, value) => sum + value, 0));
-        }
+        totalValue.textContent = formatNumber(values.reduce((sum, value) => sum + value, 0));
+        peakValue.textContent = formatNumber(Math.max(...values, 0));
     }
 
     function buildDataset(rows) {
@@ -378,14 +412,14 @@ document.addEventListener('DOMContentLoaded', function () {
             scales: {
                 x: {
                     grid: { display: false },
-                    ticks: { color: '#64748B', font: { family: 'Figtree', size: 12, weight: 600 } },
+                    ticks: { color: '#64748B', font: { size: 12, weight: 600 } },
                     border: { display: false },
                 },
                 y: {
                     beginAtZero: true,
                     grace: '12%',
-                    grid: { color: 'rgba(0, 43, 107, 0.06)', drawTicks: false },
-                    ticks: { color: '#94A3B8', padding: 10, font: { family: 'Figtree' }, callback: value => formatNumber(value) },
+                    grid: { color: 'rgba(0, 43, 107, 0.08)', drawTicks: false },
+                    ticks: { color: '#94A3B8', padding: 10, callback: value => formatNumber(value) },
                     border: { display: false },
                 },
             },

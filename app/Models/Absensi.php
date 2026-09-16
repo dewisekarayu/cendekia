@@ -19,6 +19,7 @@ class Absensi extends Model
         'jam_mulai',
         'jam_selesai',
         'session_status',
+        'qr_token',
         'rangkuman',
         'berita_acara',
         'catatan',
@@ -73,6 +74,11 @@ class Absensi extends Model
     {
         $this->session_status = 'buka';
         $this->waktu_buka = now();
+        
+        if (empty($this->qr_token)) {
+            $this->qr_token = \Illuminate\Support\Str::random(40);
+        }
+        
         return $this->save();
     }
 

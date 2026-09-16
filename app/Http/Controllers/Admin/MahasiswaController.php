@@ -198,6 +198,15 @@ class MahasiswaController extends Controller
     }
 
     /**
+     * Tampilkan halaman UI Impor Data Mahasiswa
+     */
+    public function importView()
+    {
+        $prodis = \App\Models\ProgramStudi::all();
+        return view('admin.mahasiswa.import', compact('prodis'));
+    }
+
+    /**
      * Import Data Mahasiswa dari file CSV
      */
     public function importCsv(Request $request)
