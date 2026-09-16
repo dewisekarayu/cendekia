@@ -50,34 +50,59 @@ class AiAssistantController extends Controller
             'content' => $request->input('message')
         ];
 
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
-                'Content-Type' => 'application/json',
-            ])->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama-3.1-8b-instant', // Fast model on Groq
-                'messages' => $messages,
-                'temperature' => 0.7,
-            ]);
+        $providers = [
+            [
+                'url' => 'https://openrouter.ai/api/v1/chat/completions',
+                'key' => env('OPENROUTER_API_KEY'),
+                'model' => 'google/gemini-flash-1.5'
+            ],
+            [
+                'url' => 'https://api.groq.com/openai/v1/chat/completions',
+                'key' => env('GROQ_API_KEY'),
+                'model' => 'mixtral-8x7b-32768'
+            ],
+            [
+                'url' => 'https://openrouter.ai/api/v1/chat/completions',
+                'key' => env('OPENROUTER_API_KEY'),
+                'model' => 'meta-llama/llama-3.1-8b-instruct:free'
+            ]
+        ];
 
-            if ($response->successful()) {
-                $data = $response->json();
-                return response()->json([
-                    'success' => true,
-                    'message' => $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak dapat menghasilkan respons.'
+        $lastError = 'Semua API key tidak valid atau kosong.';
+
+        foreach ($providers as $provider) {
+            if (empty($provider['key'])) continue;
+
+            try {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $provider['key'],
+                    'Content-Type' => 'application/json',
+                    'HTTP-Referer' => url('/'),
+                    'X-Title' => 'Cendekia AI'
+                ])->post($provider['url'], [
+                    'model' => $provider['model'],
+                    'messages' => $messages,
+                    'temperature' => 0.7,
                 ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    return response()->json([
+                        'success' => true,
+                        'message' => $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak dapat menghasilkan respons.'
+                    ]);
+                }
+                
+                $lastError = 'Status: ' . $response->status() . '. ' . $response->body();
+            } catch (\Exception $e) {
+                $lastError = $e->getMessage();
+                continue;
             }
-
-            return response()->json([
-                'success' => false,
-                'error' => 'Gagal menghubungi API AI (Status: ' . $response->status() . '). ' . $response->body()
-            ], 500);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
         }
+
+        return response()->json([
+            'success' => false,
+            'error' => 'Gagal menghubungi semua API AI fallback. Terakhir: ' . $lastError
+        ], 500);
     }
 }
