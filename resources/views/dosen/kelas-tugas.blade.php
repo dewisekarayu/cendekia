@@ -336,10 +336,9 @@
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instruksi Tugas</label>
                                 <div class="flex items-center gap-2">
                                     <select id="ai_tipe_soal" class="text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                        <option value="5 Soal Essay">5 Soal Essay</option>
-                                        <option value="10 Soal Essay">10 Soal Essay</option>
-                                        <option value="10 Soal Pilihan Ganda">10 Pilihan Ganda</option>
-                                        <option value="10 Soal Pilihan Ganda Kompleks (Banyak Jawaban Benar)">10 Pilihan Ganda Kompleks</option>
+                                        <option value="Soal Essay">Soal Essay</option>
+                                        <option value="Soal Pilihan Ganda">Soal Pilihan Ganda</option>
+                                        <option value="Soal Pilihan Ganda Kompleks (Lebih dari 1 Jawaban Benar)">Soal Pilihan Ganda Kompleks</option>
                                         <option value="Campuran (Pilihan Ganda & Essay)">Campuran</option>
                                     </select>
                                     <button type="button" onclick="generateAiInstruksi(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
@@ -553,7 +552,7 @@
             }
             
             const dropdown = form.querySelector('#ai_tipe_soal');
-            const tipeSoal = dropdown ? dropdown.value : '5 Soal Essay';
+            const tipeSoal = dropdown ? dropdown.value : 'Soal Essay';
             
             const originalText = btn.innerHTML;
             btn.innerHTML = 'AI Menyusun...';
