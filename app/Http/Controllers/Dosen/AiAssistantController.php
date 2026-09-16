@@ -267,9 +267,10 @@ class AiAssistantController extends Controller
                 . $tipeSoal
                 . "PENTING:\n"
                 . "1. LANGSUNG berikan isinya (daftar soal atau materi penjelasan yang padat dan terstruktur).\n"
-                . "2. JANGAN menulis ulang Judul Tugas.\n"
-                . "3. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah daftar soal...'.\n"
-                . "4. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*). Gunakan teks murni biasa.";
+                . "2. JIKA Anda membuat soal, DILARANG KERAS menyertakan kunci jawaban, pembahasan, atau 'Jawaban: ...'. Ini adalah dokumen lembar soal murni yang akan dikerjakan mahasiswa.\n"
+                . "3. JANGAN menulis ulang Judul Tugas.\n"
+                . "4. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah daftar soal...'.\n"
+                . "5. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*). Gunakan teks murni biasa.";
 
         $messages = [
             ['role' => 'user', 'content' => $prompt]

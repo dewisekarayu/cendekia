@@ -374,6 +374,7 @@
                             <div class="flex justify-between items-center">
                                 <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
                                 <div class="flex items-center gap-2">
+                                    <input type="number" id="ai_jumlah_soal" class="w-16 text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Jml" value="5" min="1" max="50" title="Jumlah Soal (jika generate soal)">
                                     <select id="ai_tipe_soal" class="text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500">
                                         <option value="Ringkasan Materi">Ringkasan Materi</option>
                                         <option value="Soal Essay">Soal Essay</option>
@@ -580,8 +581,11 @@
             return;
         }
         
+        const inputJumlah = form.querySelector('#ai_jumlah_soal');
+        const jumlahSoal = inputJumlah ? inputJumlah.value : '5';
         const dropdown = form.querySelector('#ai_tipe_soal');
         const tipeSoal = dropdown ? dropdown.value : 'Ringkasan Materi';
+        const combinedTipeSoal = tipeSoal.includes('Soal') ? (jumlahSoal + ' ' + tipeSoal) : tipeSoal;
         
         const originalText = btn.innerHTML;
         btn.innerHTML = 'AI Menyusun...';
@@ -594,7 +598,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({ title: judul, tipe_soal: tipeSoal })
+                body: JSON.stringify({ title: judul, tipe_soal: combinedTipeSoal })
             });
             
             if (!response.ok) throw new Error('Gagal membuat PDF');
