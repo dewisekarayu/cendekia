@@ -20,6 +20,7 @@ use App\Http\Controllers\Dosen\ForumController as DosenForumController;
 use App\Http\Controllers\Dosen\AbsensiController as DosenAbsensiController;
 use App\Http\Controllers\Dosen\JadwalController as DosenJadwalController;
 use App\Http\Controllers\Dosen\MateriController as DosenMateriController;
+use App\Http\Controllers\Dosen\AiAssistantController as DosenAiAssistantController;
 
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
@@ -141,6 +142,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // ==========================================
 Route::middleware(['auth', 'role:dosen'])->group(function () {
     Route::get('/dosen/dashboard', [DosenDashboardController::class, 'index'])->name('dosen.dashboard');
+    Route::get('/dosen/ai-assistant', [DosenAiAssistantController::class, 'index'])->name('dosen.ai-assistant');
+    Route::post('/dosen/ai-assistant/chat', [DosenAiAssistantController::class, 'chat'])->name('dosen.ai-assistant.chat');
     Route::get('/dosen/kelas-saya', [DosenKelasController::class, 'kelasSaya'])->name('dosen.kelas-saya');
     Route::get('/dosen/kelas/{id}', [DosenKelasController::class, 'show'])->name('dosen.kelas-detail');
 
