@@ -43,28 +43,6 @@ class DashboardController extends Controller
             ];
         });
 
-<<<<<<< HEAD
-        // Inisialisasi variabel mockup chart tambahan agar dashboard tidak komplain undefined
-        $aktivitasBulanan = [
-            ['label' => 'Jan', 'value' => rand(500, 1000)],
-            ['label' => 'Feb', 'value' => rand(500, 1000)],
-            ['label' => 'Mar', 'value' => rand(500, 1000)],
-            ['label' => 'Apr', 'value' => rand(500, 1000)],
-            ['label' => 'Mei', 'value' => rand(500, 1000)],
-            ['label' => 'Jun', 'value' => rand(500, 1000)],
-        ];
-        
-        $aktivitasMingguan = [
-            ['label' => 'Senin', 'value' => rand(100, 300)],
-            ['label' => 'Selasa', 'value' => rand(100, 300)],
-            ['label' => 'Rabu', 'value' => rand(100, 300)],
-            ['label' => 'Kamis', 'value' => rand(100, 300)],
-            ['label' => 'Jumat', 'value' => rand(100, 300)],
-            ['label' => 'Sabtu', 'value' => rand(20, 80)],
-            ['label' => 'Minggu', 'value' => rand(10, 50)],
-        ];
-        
-=======
         // Mahasiswa yang belum memiliki asosiasi prodi
         $unassignedMahasiswa = User::role('mahasiswa')->whereNull('program_studi_id')->count();
         if ($unassignedMahasiswa > 0) {
@@ -127,7 +105,6 @@ class DashboardController extends Controller
             ];
         }
 
->>>>>>> a3574bb (feat: perbarui ui dosen, admin, tata letak tabel, pagination, dan dropdown serta mempefeat: perbarui ui dosen, admin, tata let)
         $recentUsers = User::latest()->take(5)->get();
         $uptime = '99.9';
 
