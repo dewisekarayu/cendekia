@@ -55,7 +55,7 @@ class AiAssistantController extends Controller
                 'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
                 'Content-Type' => 'application/json',
             ])->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama3-8b-8192', // Fast model on Groq
+                'model' => 'llama-3.1-8b-instant', // Fast model on Groq
                 'messages' => $messages,
                 'temperature' => 0.7,
             ]);
