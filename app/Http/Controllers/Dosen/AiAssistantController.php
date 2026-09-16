@@ -140,6 +140,11 @@ class AiAssistantController extends Controller
         try {
             $content = $this->callAiApi($messages);
             if ($content) {
+                // Strip markdown formatting explicitly because LLMs are stubborn
+                $content = str_replace('**', '', $content);
+                $content = preg_replace('/^\s*\*\s+/m', '- ', $content);
+                $content = preg_replace('/^\s*#+\s+/m', '', $content);
+                
                 return response()->json([
                     'success' => true,
                     'description' => trim($content)
@@ -182,6 +187,11 @@ class AiAssistantController extends Controller
         try {
             $content = $this->callAiApi($messages);
             if ($content) {
+                // Strip markdown formatting explicitly because LLMs are stubborn
+                $content = str_replace('**', '', $content);
+                $content = preg_replace('/^\s*\*\s+/m', '- ', $content);
+                $content = preg_replace('/^\s*#+\s+/m', '', $content);
+                
                 return response()->json([
                     'success' => true,
                     'instruksi' => trim($content)
