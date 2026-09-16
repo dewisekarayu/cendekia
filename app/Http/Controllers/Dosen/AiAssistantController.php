@@ -153,4 +153,40 @@ class AiAssistantController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Generate Instruksi Tugas
+     */
+    public function generateInstruksi(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string',
+            'poin' => 'nullable|integer'
+        ]);
+
+        $judul = $request->judul;
+        $poin = $request->poin ?? 100;
+
+        $prompt = "Buatkan instruksi tugas perkuliahan untuk mahasiswa dengan judul tugas '$judul' dan bobot $poin poin. Instruksi harus jelas, terstruktur (bisa menggunakan poin/numbering), berisi deskripsi apa yang harus dikerjakan, dan ketentuan format pengumpulan. Jangan gunakan bahasa pengantar seperti 'Berikut adalah', langsung saja isinya.";
+
+        $messages = [
+            ['role' => 'user', 'content' => $prompt]
+        ];
+
+        try {
+            $content = $this->callAiApi($messages);
+            if ($content) {
+                return response()->json([
+                    'success' => true,
+                    'instruksi' => trim($content)
+                ]);
+            }
+            throw new \Exception('Respons kosong');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

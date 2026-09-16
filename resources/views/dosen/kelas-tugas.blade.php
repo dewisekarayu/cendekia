@@ -332,7 +332,13 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instruksi Tugas</label>
+                            <div class="flex justify-between items-center">
+                                <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instruksi Tugas</label>
+                                <button type="button" onclick="generateAiInstruksi(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    Generate dengan AI
+                                </button>
+                            </div>
                             <textarea name="instruksi" rows="5" required maxlength="5000" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none resize-none">{{ old('instruksi') }}</textarea>
                         </div>
 
@@ -483,6 +489,45 @@
                 });
             }
         });
+
+        async function generateAiInstruksi(btn) {
+            const form = btn.closest('form') || btn.closest('.space-y-6');
+            const judul = form.querySelector('input[name="judul"]').value;
+            const poin = form.querySelector('input[name="poin"]')?.value || '100';
+            const instruksiInput = form.querySelector('textarea[name="instruksi"]');
+            
+            if (!judul) {
+                alert('Silakan isi "Judul Tugas" terlebih dahulu agar AI memahami tugasnya!');
+                return;
+            }
+            
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Menyusun instruksi...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('{{ route("dosen.ai-assistant.generate-instruksi") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ judul, poin })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    instruksiInput.value = data.instruksi;
+                } else {
+                    alert('Gagal: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Terjadi kesalahan jaringan.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
     </script>
 
     <style>
