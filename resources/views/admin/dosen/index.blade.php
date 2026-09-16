@@ -1,24 +1,29 @@
 <x-admin-layout>
-    <div class="container-fluid py-3">
+    <div class="container-fluid px-0">
         {{-- Flash Message Success Alert --}}
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert" style="border-radius: 8px;">
-                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+            <div class="alert alert-success d-flex align-items-center justify-content-between border-0 shadow-sm mb-4" style="border-radius: 0.85rem; background-color: #ecfdf5; color: #065f46;" role="alert">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-check-circle-fill fs-5 text-success"></i>
+                    <span class="fw-semibold">{{ session('success') }}</span>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
-        <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="mb-4 d-flex justify-content-between align-items-start flex-wrap gap-3">
             <div>
-                <h1 class="page-title mb-0" style="font-size: 1.75rem; font-weight: 700; color: #002B6B;">Manajemen Dosen</h1>
-                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="mt-2">
-                    <ol class="breadcrumb mb-0" style="font-size: 0.85rem;">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="color: #6b7280; text-decoration: none;">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="#" style="color: #6b7280; text-decoration: none;">Master Data</a></li>
-                        <li class="breadcrumb-item active" style="color: #002B6B; font-weight: 500;">Data Dosen</li>
+                <h1 class="page-title mb-1">Manajemen Dosen</h1>
+                <p class="text-muted mb-2" style="font-size: 0.875rem;">Kelola seluruh profil dosen, nomor induk (NIDN), dan status penugasan program studi.</p>
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><span class="text-slate-500">Master Data</span></li>
+                        <li class="breadcrumb-item active" aria-current="page">Data Dosen</li>
                     </ol>
                 </nav>
             </div>
+<<<<<<< HEAD
             <!-- Tambah Dosen Button & Import CSV -->
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-outline-success d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importDosenModal">
@@ -28,30 +33,33 @@
                     <i class="bi bi-person-plus-fill"></i> Tambah Dosen
                 </a>
             </div>
+=======
+            <a href="{{ route('admin.dosen.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg"></i>
+                <span>Tambah Dosen</span>
+            </a>
+>>>>>>> a3574bb (feat: perbarui ui dosen, admin, tata letak tabel, pagination, dan dropdown serta mempefeat: perbarui ui dosen, admin, tata let)
         </div>
 
-        <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden; background: white;">
+        <div class="table-card">
             {{-- Bagian Form Filter & Pencarian Aktif --}}
-            <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
-                <div class="row g-3">
+            <div class="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/50">
+                <div class="row g-3 align-items-center">
                     {{-- Input Pencarian Otomatis (Live Search) --}}
-                    <div class="col-md-6">
-                        <div style="position: relative;">
-                            <input type="text" id="liveSearchInput" name="search" class="form-control" value="{{ $search ?? '' }}" placeholder="Cari Nama / NIDN / Email..." style="border-radius: 8px; padding: 0.6rem 2.5rem 0.6rem 1rem;" autocomplete="off">
-                            
-                            {{-- Spinner Loading kecil saat mengetik --}}
+                    <div class="col-md-7">
+                        <div class="position-relative">
+                            <input type="text" id="liveSearchInput" name="search" class="form-control ps-4" value="{{ $search ?? '' }}" placeholder="Cari Nama, NIDN, atau Email Dosen..." style="height: 44px; padding-right: 2.75rem;" autocomplete="off">
                             <div id="searchSpinner" class="spinner-border spinner-border-sm text-secondary d-none" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);" role="status"></div>
-                            <i id="searchIcon" class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                            <i id="searchIcon" class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1rem;"></i>
                         </div>
                     </div>
                     
                     {{-- Dropdown Filter Program Studi --}}
-                    <div class="col-md-6">
-                        <form method="GET" action="{{ route('admin.dosen.index') }}" id="filterForm" class="d-flex gap-2">
-                            {{-- Input hidden untuk tetap membawa value search yang sedang diketik ketika prodi diubah --}}
+                    <div class="col-md-5 d-flex align-items-center justify-content-md-end gap-2 flex-wrap">
+                        <form method="GET" action="{{ route('admin.dosen.index') }}" id="filterForm" class="d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0">
                             <input type="hidden" name="search" id="hiddenSearchInput" value="{{ $search ?? '' }}">
                             
-                            <select name="program_studi_id" id="prodiSelect" class="form-select" style="border-radius: 8px;">
+                            <select name="program_studi_id" id="prodiSelect" class="form-select" style="height: 44px; min-width: 180px;">
                                 <option value="">Semua Program Studi</option>
                                 @foreach ($programStudiList as $prodi)
                                     <option value="{{ $prodi->id }}" {{ ($prodiFilter ?? '') == $prodi->id ? 'selected' : '' }}>
@@ -60,12 +68,8 @@
                                 @endforeach
                             </select>
                             
-                            <button type="submit" class="btn btn-outline-secondary d-flex align-items-center gap-2" style="border-radius: 8px; white-space: nowrap; color: #475569;">
-                                <i class="bi bi-funnel"></i> Filter
-                            </button>
-                            
-                            @if(($search ?? '') || ($prodiFilter ?? ''))
-                                <a href="{{ route('admin.dosen.index') }}" class="btn btn-light border d-flex align-items-center justify-content-center" style="border-radius: 8px;" title="Reset Filter">
+                            @if(($search ?? '') || ($prodiFilter ?? '') || request('per_page'))
+                                <a href="{{ route('admin.dosen.index') }}" class="btn btn-light border d-flex align-items-center justify-content-center px-3" style="border-radius: 0.75rem; height: 44px;" title="Reset Filter">
                                     <i class="bi bi-arrow-clockwise"></i>
                                 </a>
                             @endif
@@ -125,14 +129,11 @@
         const spinner = document.getElementById('searchSpinner');
         
         let typingTimer;
-        const doneTypingInterval = 350; // Jeda waktu tunggu setelah ketikan terakhir (350 milidetik)
+        const doneTypingInterval = 350;
 
         searchInput.addEventListener('keyup', function () {
             clearTimeout(typingTimer);
-            
-            // Salin teks ke input tersembunyi agar form filter prodi tetap sinkron
             hiddenSearchInput.value = searchInput.value;
-
             typingTimer = setTimeout(performSearch, doneTypingInterval);
         });
 
@@ -140,33 +141,39 @@
             clearTimeout(typingTimer);
         });
 
-        function performSearch() {
-            // Tampilkan animasi loading spinner menggantikan icon kaca pembesar
+        prodiSelect.addEventListener('change', performSearch);
+
+        document.addEventListener('change', function (e) {
+            if (e.target && e.target.id === 'perPageSelect') {
+                performSearch(1);
+            }
+        });
+
+        function performSearch(page = 1) {
             searchIcon.classList.add('d-none');
             spinner.classList.remove('d-none');
 
             const searchValue = searchInput.value;
             const prodiValue = prodiSelect.value;
+            const perPageEl = document.getElementById('perPageSelect');
+            const perPageValue = perPageEl ? perPageEl.value : 10;
 
-            // Susun URL query string secara dinamis
             const url = new URL(window.location.origin + window.location.pathname);
             url.searchParams.set('search', searchValue);
+            url.searchParams.set('page', page);
+            url.searchParams.set('per_page', perPageValue);
             if (prodiValue) {
                 url.searchParams.set('program_studi_id', prodiValue);
             }
-            url.searchParams.set('ajax', '1'); // Penanda request backend via AJAX
+            url.searchParams.set('ajax', '1');
 
             fetch(url)
                 .then(response => response.text())
                 .then(data => {
-                    // Masukkan potongan HTML tabel baru ke dalam container
                     tableContainer.innerHTML = data;
-
-                    // Sembunyikan loading spinner kembali
                     spinner.classList.add('d-none');
                     searchIcon.classList.remove('d-none');
 
-                    // Ubah URL browser tanpa reload halaman agar link pencarian bisa dibagikan/di-bookmark
                     const browserUrl = new URL(url);
                     browserUrl.searchParams.delete('ajax');
                     window.history.pushState({}, '', browserUrl);
@@ -177,5 +184,16 @@
                     searchIcon.classList.remove('d-none');
                 });
         }
+
+        // Intercept pagination clicks
+        document.addEventListener('click', function (e) {
+            const paginationLink = e.target.closest('#tableContainer .pagination a');
+            if (paginationLink) {
+                e.preventDefault();
+                const urlParams = new URLSearchParams(paginationLink.getAttribute('href').split('?')[1]);
+                const page = urlParams.get('page') || 1;
+                performSearch(page);
+            }
+        });
     });
 </script>

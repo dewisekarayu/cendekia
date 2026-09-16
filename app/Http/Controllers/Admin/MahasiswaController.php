@@ -43,7 +43,9 @@ class MahasiswaController extends Controller
         }
 
         // Penomoran Halaman (Pagination)
-        $mahasiswa = $query->latest()->paginate(10)->withQueryString();
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
+        $mahasiswa = $query->latest()->paginate($perPage)->withQueryString();
 
         // FITUR AJAX: Jika request meminta potongan tabel saja (live search/filter)
         if ($request->has('ajax')) {

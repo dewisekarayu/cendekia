@@ -24,10 +24,13 @@
         @endif
 
         <div class="d-flex flex-column gap-3 mb-4">
-            @forelse ($pengumuman as $item)
+            @forelse ($pengumuman as $index => $item)
                 <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 12px; border-left: 5px solid #e2e8f0 !important;">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div class="d-flex align-items-center flex-wrap gap-2">
+                            <span class="badge bg-light text-dark border font-monospace px-2 py-1" style="font-size: 0.75rem;">
+                                #{{ ($pengumuman->currentPage() - 1) * $pengumuman->perPage() + $index + 1 }}
+                            </span>
                             @if ($item->untuk_semua)
                                 <span class="badge fw-bold px-2 py-1" style="background-color: #ECFDF5; color: #059669; font-size: 0.7rem; border-radius: 6px; letter-spacing: 0.5px;">
                                     <i class="bi bi-people-fill me-1"></i> UNTUK SEMUA
@@ -133,11 +136,25 @@
             @endforelse
         </div>
 
-        @if ($pengumuman->hasPages())
-            <div class="d-flex justify-content-center">
-                {{ $pengumuman->links() }}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-2 pb-4 flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <form method="GET" action="{{ route('admin.pengumuman.index') }}" class="d-flex align-items-center gap-2">
+                    <span class="text-xs fw-bold text-secondary text-nowrap">Show:</span>
+                    <select name="per_page" class="form-select form-select-sm" style="width: 80px; border-radius: 0.5rem;" onchange="this.form.submit()">
+                        <option value="10" @selected(($perPage ?? 10) == 10)>10</option>
+                        <option value="25" @selected(($perPage ?? 10) == 25)>25</option>
+                        <option value="50" @selected(($perPage ?? 10) == 50)>50</option>
+                        <option value="100" @selected(($perPage ?? 10) == 100)>100</option>
+                    </select>
+                </form>
+                <small class="text-muted">Menampilkan {{ $pengumuman->firstItem() ?? 0 }}-{{ $pengumuman->lastItem() ?? 0 }} dari {{ $pengumuman->total() }} pengumuman</small>
             </div>
-        @endif
+            @if ($pengumuman->hasPages())
+                <div>
+                    {{ $pengumuman->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
+        </div>
     </div>
 
     {{-- Modal Buat Pengumuman --}}

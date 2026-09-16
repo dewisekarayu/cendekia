@@ -84,7 +84,7 @@
 
     <!-- Daftar Sesi -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="bg-gradient-to-r from-purple-500 to-blue-600 px-6 py-4 text-white flex items-center justify-between">
+        <div class="bg-gradient-to-r from-purple-500 to-blue-600 px-6 py-4 text-white flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center gap-3">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -98,6 +98,7 @@
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 border-b border-gray-100">
                         <tr>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-600 uppercase tracking-wider w-16">NO</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Kelas</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Pertemuan</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Tanggal</th>
@@ -109,6 +110,9 @@
                     <tbody class="divide-y divide-gray-100">
                         @foreach($absensiList as $absensi)
                             <tr class="hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 transition-colors">
+                                <td class="px-6 py-4 text-center font-mono font-bold text-gray-500">
+                                    {{ ($absensiList->currentPage() - 1) * $absensiList->perPage() + $loop->iteration }}
+                                </td>
                                 <td class="px-6 py-4">
                                     <span class="font-semibold text-gray-900">{{ $absensi->kelasPerkuliahan->mataKuliah->kode_mk }}</span>
                                     <p class="text-xs text-gray-500">{{ $absensi->kelasPerkuliahan->kode_kelas }}</p>
@@ -177,8 +181,24 @@
                     </tbody>
                 </table>
             </div>
-            <div class="flex justify-center py-6 border-t border-gray-100 bg-gray-50">
-                {{ $absensiList->links() }}
+            <div class="flex items-center justify-between flex-wrap gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <form method="GET" action="{{ route('admin.absensi.index') }}" class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Show:</span>
+                        <select name="per_page" class="text-gray-800 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white shadow-sm" onchange="this.form.submit()">
+                            <option value="10" @selected(($perPage ?? 10) == 10)>10</option>
+                            <option value="25" @selected(($perPage ?? 10) == 25)>25</option>
+                            <option value="50" @selected(($perPage ?? 10) == 50)>50</option>
+                            <option value="100" @selected(($perPage ?? 10) == 100)>100</option>
+                        </select>
+                    </form>
+                    <span class="text-xs text-gray-500">Menampilkan {{ $absensiList->firstItem() }}-{{ $absensiList->lastItem() }} dari {{ $absensiList->total() }} sesi</span>
+                </div>
+                @if($absensiList->hasPages())
+                    <div>
+                        {{ $absensiList->links('pagination::bootstrap-5') }}
+                    </div>
+                @endif
             </div>
         @else
             <div class="text-center py-16">

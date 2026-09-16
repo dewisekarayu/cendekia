@@ -13,11 +13,17 @@ class AbsensiController extends Controller
     /**
      * Daftar semua presensi di semua kelas
      */
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
         $absensiList = Absensi::with(['kelasPerkuliahan.mataKuliah', 'kelasPerkuliahan.dosen'])
             ->orderBy('tanggal', 'desc')
-            ->paginate(15);
+            ->paginate($perPage)
+            ->withQueryString();
 
         $statistics = [
             'total' => Absensi::count(),
@@ -28,7 +34,7 @@ class AbsensiController extends Controller
             'total_alpha' => AbsensiMahasiswa::where('status', 'alpha')->count(),
         ];
 
-        return view('admin.absensi.index', compact('absensiList', 'statistics'));
+        return view('admin.absensi.index', compact('absensiList', 'statistics', 'perPage'));
     }
 
     /**

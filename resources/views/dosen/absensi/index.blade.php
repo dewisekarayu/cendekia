@@ -166,6 +166,7 @@
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200/80">
+                            <th class="px-4 py-2.5 text-center text-[11px] font-bold text-slate-500 uppercase tracking-wider w-12">NO</th>
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-40">Pertemuan</th>
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-32">Tanggal</th>
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-40">Alokasi Waktu</th>
@@ -177,6 +178,9 @@
                     <tbody class="divide-y divide-slate-100 bg-white">
                         @foreach($absensiList as $absensi)
                             <tr class="hover:bg-slate-50/80 transition duration-150 group">
+                                <td class="px-4 py-2.5 text-center font-mono font-bold text-slate-400 text-xs">
+                                    {{ ($absensiList->currentPage() - 1) * $absensiList->perPage() + $loop->iteration }}
+                                </td>
                                 <td class="px-4 py-2.5 whitespace-nowrap">
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#321270]/5 border border-[#321270]/10 text-[#321270] font-bold text-[11px] group-hover:bg-[#321270] group-hover:text-white group-hover:border-transparent transition-all duration-300">
                                         Pertemuan {{ $absensi->pertemuan_ke }}
@@ -299,11 +303,33 @@
                 </table>
             </div>
 
-            <div class="flex items-center justify-center py-3 border-t border-slate-100 bg-slate-50/50">
-                <div class="px-4">
-                    {{ $absensiList->links() }}
+            {{-- Footer: Show + Info + Pagination --}}
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding: 0.75rem 1.25rem; border-top: 1px solid #f1f5f9; background: #f8fafc; border-radius: 0 0 0.75rem 0.75rem;">
+                {{-- Kiri: Show + Keterangan --}}
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                    <form method="GET" action="{{ route('dosen.absensi.index', $kelas->id) }}" style="display: flex; align-items: center; gap: 0.4rem;">
+                        <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">Show:</span>
+                        <select name="per_page" onchange="this.form.submit()"
+                            style="width: 70px; height: 32px; padding: 0 24px 0 8px; font-size: 0.8rem; font-weight: 600; color: #334155; border: 1px solid #e2e8f0; border-radius: 0.5rem; background: #fff; appearance: none; -webkit-appearance: none; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E\"); background-repeat: no-repeat; background-position: right 6px center; background-size: 12px; cursor: pointer;">
+                            <option value="10" @selected(($perPage ?? 10) == 10)>10</option>
+                            <option value="25" @selected(($perPage ?? 10) == 25)>25</option>
+                            <option value="50" @selected(($perPage ?? 10) == 50)>50</option>
+                            <option value="100" @selected(($perPage ?? 10) == 100)>100</option>
+                        </select>
+                    </form>
+                    <span style="font-size: 0.78rem; color: #94a3b8; white-space: nowrap;">
+                        Menampilkan {{ $absensiList->firstItem() ?? 0 }}&ndash;{{ $absensiList->lastItem() ?? 0 }} dari {{ $absensiList->total() }} sesi
+                    </span>
                 </div>
+
+                {{-- Kanan: Pagination --}}
+                @if($absensiList->hasPages())
+                    <div style="display: flex; align-items: center;">
+                        {{ $absensiList->links('pagination::bootstrap-5') }}
+                    </div>
+                @endif
             </div>
+
         @else
             <div class="text-center py-10 px-4 bg-white rounded-b-xl">
                 <div class="w-12 h-12 bg-[#321270]/5 text-[#321270] rounded-xl border border-[#321270]/10 shadow-sm flex items-center justify-center mx-auto mb-3">

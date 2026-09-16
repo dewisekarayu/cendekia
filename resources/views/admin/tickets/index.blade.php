@@ -43,8 +43,9 @@
 
     {{-- ===== FILTERS & SEARCH ===== --}}
     <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-        <form method="GET" action="{{ route('admin.help-center.tickets') }}" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
-            <div>
+        <form method="GET" action="{{ route('admin.help-center.tickets') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-end">
+            <input type="hidden" name="per_page" value="{{ $perPage ?? 10 }}">
+            <div class="sm:col-span-5">
                 <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Pencarian</label>
                 <input 
                     type="text" 
@@ -54,7 +55,7 @@
                     class="w-full h-10 px-3 rounded-lg border border-gray-200 bg-transparent text-gray-800 placeholder:text-gray-400 text-xs focus:ring-2 focus:ring-blue-900 focus:border-transparent outline-none transition-all"
                 >
             </div>
-            <div>
+            <div class="sm:col-span-3">
                 <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Status</label>
                 <select name="status" class="w-full h-10 px-3 rounded-lg border border-gray-200 bg-white text-gray-800 text-xs focus:ring-2 focus:ring-blue-900 focus:border-transparent outline-none transition-all">
                     <option value="">Semua Status</option>
@@ -63,7 +64,7 @@
                     @endforeach
                 </select>
             </div>
-            <div>
+            <div class="sm:col-span-2">
                 <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Kategori</label>
                 <select name="category" class="w-full h-10 px-3 rounded-lg border border-gray-200 bg-white text-gray-800 text-xs focus:ring-2 focus:ring-blue-900 focus:border-transparent outline-none transition-all">
                     <option value="">Semua Kategori</option>
@@ -72,12 +73,12 @@
                     @endforeach
                 </select>
             </div>
-            <div class="flex gap-2">
+            <div class="sm:col-span-2 flex gap-2">
                 <button type="submit" class="flex-1 h-10 rounded-lg bg-blue-900 text-white text-xs font-medium transition hover:bg-opacity-90">
                     Filter
                 </button>
-                <a href="{{ route('admin.help-center.tickets') }}" class="h-10 px-4 rounded-lg border border-gray-250 text-gray-700 hover:bg-gray-50 flex items-center justify-center text-xs font-medium transition">
-                    Reset
+                <a href="{{ route('admin.help-center.tickets') }}" class="h-10 px-3 rounded-lg border border-gray-250 text-gray-700 hover:bg-gray-50 flex items-center justify-center text-xs font-medium transition" title="Reset">
+                    <i class="bi bi-arrow-counterclockwise"></i>
                 </a>
             </div>
         </form>
@@ -89,7 +90,7 @@
             <table class="w-full text-left text-sm">
                 <thead>
                     <tr class="text-left text-gray-400 text-xs border-b border-gray-100 bg-gray-50/50">
-                        <th class="px-5 py-3 font-medium text-center w-16">No</th>
+                        <th class="px-5 py-3 font-medium text-center w-16">NO</th>
                         <th class="px-5 py-3 font-medium">Pengirim</th>
                         <th class="px-5 py-3 font-medium">Subjek / Masalah</th>
                         <th class="px-5 py-3 font-medium text-center">Kategori</th>
@@ -113,7 +114,7 @@
                             ];
                         @endphp
                         <tr class="hover:bg-gray-50/40 transition-colors">
-                            <td class="px-5 py-3.5 text-center font-medium text-gray-400">
+                            <td class="px-5 py-3.5 text-center font-bold text-gray-500 font-mono">
                                 {{ ($tickets->currentPage() - 1) * $tickets->perPage() + $index + 1 }}
                             </td>
                             <td class="px-5 py-3.5">
@@ -157,11 +158,35 @@
                 </tbody>
             </table>
         </div>
-        @if ($tickets->hasPages())
-            <div class="px-5 py-3 border-t border-gray-100">
-                {{ $tickets->links() }}
+
+        <div class="px-5 py-3 border-t border-gray-100 flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
+                <form method="GET" action="{{ route('admin.help-center.tickets') }}" class="flex items-center gap-2">
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
+                    @if(request('status'))
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                    @endif
+                    @if(request('category'))
+                        <input type="hidden" name="category" value="{{ request('category') }}">
+                    @endif
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider text-nowrap">Show:</span>
+                    <select name="per_page" class="h-8 px-2 rounded-lg border border-gray-200 bg-white text-gray-800 text-xs font-semibold focus:outline-none" onchange="this.form.submit()">
+                        <option value="10" @selected(($perPage ?? 10) == 10)>10</option>
+                        <option value="25" @selected(($perPage ?? 10) == 25)>25</option>
+                        <option value="50" @selected(($perPage ?? 10) == 50)>50</option>
+                        <option value="100" @selected(($perPage ?? 10) == 100)>100</option>
+                    </select>
+                </form>
+                <span class="text-xs text-gray-500">Menampilkan {{ $tickets->firstItem() ?? 0 }}-{{ $tickets->lastItem() ?? 0 }} dari {{ $tickets->total() }} tiket</span>
             </div>
-        @endif
+            @if ($tickets->hasPages())
+                <div>
+                    {{ $tickets->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

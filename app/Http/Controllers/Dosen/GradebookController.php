@@ -22,12 +22,17 @@ class GradebookController extends Controller
         $kelas = $kelasList->firstWhere('id', (int) $request->query('kelas_id'))
             ?? $kelasList->first();
 
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
         // Nilai akhir mahasiswa di kelas ini, diurutkan terbaik di atas
         $students = $kelas
             ? NilaiAkhir::with('mahasiswa')
                 ->where('kelas_perkuliahan_id', $kelas->id)
                 ->orderByDesc('nilai_akhir')
-                ->paginate(20)
+                ->paginate($perPage)
                 ->withQueryString()
             : collect();
 
@@ -40,7 +45,8 @@ class GradebookController extends Controller
             'kelasList',
             'kelas',
             'students',
-            'totalStudents'
+            'totalStudents',
+            'perPage'
         ));
     }
 }

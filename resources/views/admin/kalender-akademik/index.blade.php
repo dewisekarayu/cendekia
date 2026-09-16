@@ -10,39 +10,35 @@
     {{-- ═══════════════════════════════ HEADER SECTION ═══════════════════════════════ --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div class="min-w-0">
-            <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-slate-400 mb-2">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors">Dashboard</a>
-                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
-                <span class="text-gray-900 dark:text-white font-medium truncate">Kalender Akademik</span>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-                <span>Kalender Akademik</span>
+            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
+                Kalender Akademik
             </h1>
+            <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Kalender Akademik</li>
+                </ol>
+            </nav>
             @php
                 $activeSem = $semesters->firstWhere('id', $selectedSemesterId);
             @endphp
             @if($activeSem)
-            <p class="mt-2 flex items-center gap-2 flex-wrap">
+            <div class="mt-2 flex items-center gap-2 flex-wrap">
                 <span class="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold">
                     {{ $activeSem->tahun_ajaran }} – {{ $activeSem->nama_semester }}
                 </span>
                 @if($activeSem->is_active)
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Aktif
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Semester Aktif
                     </span>
                 @endif
-            </p>
+            </div>
             @endif
         </div>
         <div class="flex items-center gap-2 self-start sm:self-auto flex-wrap sm:flex-nowrap w-full sm:w-auto">
             <a href="{{ route('admin.kalender-akademik.create') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 bg-[#002B6B] hover:bg-[#003a88] text-white rounded-xl font-medium text-sm transition-all duration-200 shadow-md hover:shadow-lg flex-1 sm:flex-initial justify-center">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+               class="btn btn-primary d-inline-flex align-items-center gap-2 px-4 py-2.5 text-sm font-semibold shadow-sm">
+                <i class="bi bi-plus-lg"></i>
                 <span>Tambah Agenda</span>
             </a>
         </div>

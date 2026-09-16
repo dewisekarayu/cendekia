@@ -236,5 +236,10 @@ class KelasPerkuliahan extends Model
     {
         return $this->hasMany(Materi::class, 'kelas_perkuliahan_id');
     }
+
+    public function tugas()
+    {
+        return $this->hasMany(Tugas::class, 'kelas_perkuliahan_id');
+    }
 }
 

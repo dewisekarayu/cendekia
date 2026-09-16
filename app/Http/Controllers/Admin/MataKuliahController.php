@@ -23,7 +23,9 @@ class MataKuliahController extends Controller
             });
         }
 
-        $mataKuliah = $query->latest()->paginate(10)->withQueryString();
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
+        $mataKuliah = $query->latest()->paginate($perPage)->withQueryString();
 
         // Mengembalikan potongan tabel jika diakses via AJAX Live Search
         if ($request->has('ajax')) {

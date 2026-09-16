@@ -11,13 +11,19 @@ use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
         $kelasList = KelasPerkuliahan::with(['mataKuliah.programStudi', 'dosen', 'semester', 'mahasiswa'])
             ->latest()
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
 
-        return view('admin.kelas.index', compact('kelasList'));
+        return view('admin.kelas.index', compact('kelasList', 'perPage'));
     }
 
     public function create()

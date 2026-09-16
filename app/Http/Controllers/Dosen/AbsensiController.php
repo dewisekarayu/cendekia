@@ -15,16 +15,22 @@ class AbsensiController extends Controller
     /**
      * Daftar semua sesi presensi untuk satu kelas yang diampu dosen.
      */
-    public function index($kelasId)
+    public function index(Request $request, $kelasId)
     {
         $kelas = $this->kelasMilikDosen($kelasId, ['mahasiswa']);
+
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
 
         $absensiList = Absensi::where('kelas_perkuliahan_id', $kelasId)
             ->withCount([
                 'absensiMahasiswa as hadir_count' => fn ($q) => $q->where('status', 'hadir'),
             ])
             ->orderByDesc('pertemuan_ke')
-            ->paginate(10);
+            ->paginate($perPage)
+            ->withQueryString();
 
         $statistics = [
             'total_sesi' => Absensi::where('kelas_perkuliahan_id', $kelasId)->count(),
@@ -33,7 +39,7 @@ class AbsensiController extends Controller
             'sesi_tutup' => Absensi::where('kelas_perkuliahan_id', $kelasId)->tutup()->count(),
         ];
 
-        return view('dosen.absensi.index', compact('kelas', 'absensiList', 'statistics'));
+        return view('dosen.absensi.index', compact('kelas', 'absensiList', 'statistics', 'perPage'));
     }
 
     /**

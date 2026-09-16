@@ -14,11 +14,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $role = $request->get('role', 'mahasiswa');
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
 
         $userList = User::role($role)
             ->with('programStudi')
             ->latest()
-            ->paginate(15)
+            ->paginate($perPage)
             ->withQueryString();
 
         return view('admin.user.index', compact('userList', 'role'));

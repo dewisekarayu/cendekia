@@ -39,7 +39,12 @@ class TicketController extends Controller
             });
         }
 
-        $tickets = $query->latest()->paginate(15)->withQueryString();
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
+        $tickets = $query->latest()->paginate($perPage)->withQueryString();
         
         $statuses = [
             'open' => 'Terbuka (Open)',
@@ -57,7 +62,7 @@ class TicketController extends Controller
             'lainnya' => 'Lainnya'
         ];
 
-        return view('admin.tickets.index', compact('tickets', 'statuses', 'categories'));
+        return view('admin.tickets.index', compact('tickets', 'statuses', 'categories', 'perPage'));
     }
 
     /**

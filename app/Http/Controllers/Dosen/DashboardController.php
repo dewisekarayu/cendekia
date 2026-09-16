@@ -26,6 +26,25 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('dosen.dashboard', compact('kelasList', 'tugasPerluDinilai', 'totalMahasiswa', 'submissions'));
+        $hariIndo = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu'
+        ];
+        $todayName = $hariIndo[now()->format('l')] ?? 'Senin';
+        $kelasHariIni = $kelasList->filter(fn ($k) => strcasecmp($k->hari, $todayName) === 0);
+
+        return view('dosen.dashboard', compact(
+            'kelasList',
+            'tugasPerluDinilai',
+            'totalMahasiswa',
+            'submissions',
+            'kelasHariIni',
+            'todayName'
+        ));
     }
 }

@@ -29,8 +29,14 @@ class NotificationPreferenceController extends Controller
             $usersQuery->role($role);
         }
 
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
         $users = $usersQuery->with('notificationPreferences')
-            ->paginate(20);
+            ->paginate($perPage)
+            ->withQueryString();
 
         $notificationTypes = [
             'materi_baru' => '📚 Materi Baru',
@@ -47,6 +53,7 @@ class NotificationPreferenceController extends Controller
             'users',
             'search',
             'role',
+            'perPage',
             'notificationTypes'
         ));
     }
@@ -138,8 +145,8 @@ class NotificationPreferenceController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.notification-preferences.show', $user)
-            ->with('success', 'Preferensi notifikasi berhasil diperbarui.');
+            ->route('admin.notification-preferences.index')
+            ->with('success', "Preferensi notifikasi untuk {$user->name} berhasil diperbarui.");
     }
 
     /**
@@ -160,8 +167,8 @@ class NotificationPreferenceController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.notification-preferences.show', $user)
-            ->with('success', 'Preferensi notifikasi direset ke default.');
+            ->route('admin.notification-preferences.index')
+            ->with('success', "Preferensi notifikasi untuk {$user->name} direset ke default.");
     }
 
     /**
@@ -182,8 +189,8 @@ class NotificationPreferenceController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.notification-preferences.show', $user)
-            ->with('success', 'Semua notifikasi berhasil dinonaktifkan.');
+            ->route('admin.notification-preferences.index')
+            ->with('success', "Semua notifikasi untuk {$user->name} berhasil dinonaktifkan.");
     }
 
     /**
@@ -204,7 +211,7 @@ class NotificationPreferenceController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.notification-preferences.show', $user)
-            ->with('success', 'Semua notifikasi berhasil diaktifkan.');
+            ->route('admin.notification-preferences.index')
+            ->with('success', "Semua notifikasi untuk {$user->name} berhasil diaktifkan.");
     }
 }

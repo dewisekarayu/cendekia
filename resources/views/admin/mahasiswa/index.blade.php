@@ -1,27 +1,36 @@
 <x-admin-layout>
-    <div class="container-fluid">
-        <div class="mb-4 d-flex justify-content-between align-items-center">
+    <div class="container-fluid px-0">
+        <div class="mb-4 d-flex justify-content-between align-items-start flex-wrap gap-3">
             <div>
+                <h1 class="page-title mb-1">Manajemen Mahasiswa</h1>
+                <p class="text-muted mb-2" style="font-size: 0.875rem;">Kelola seluruh database mahasiswa, status akademik aktif/cuti, dan program studi terdaftar.</p>
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-1">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="color: #002B6B; font-weight: 600; text-decoration: none;">Master Data</a></li>
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #6b7280;">Manajemen Mahasiswa</li>
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><span class="text-slate-500">Master Data</span></li>
+                        <li class="breadcrumb-item active" aria-current="page">Data Mahasiswa</li>
                     </ol>
                 </nav>
-                <h1 class="page-title mb-0" style="font-size: 1.75rem; font-weight: 700; color: #002B6B;">Manajemen Mahasiswa</h1>
-                <p class="mb-0 mt-1 text-muted" style="font-size: 0.9rem;">Kelola data mahasiswa aktif dan status akademiknya.</p>
             </div>
-            <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-primary px-4 py-2" style="border-radius: 0.5rem; background-color: #002B6B; border: none; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
-                <i class="bi bi-plus-circle me-2"></i> Tambah Mahasiswa
+            <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg"></i>
+                <span>Tambah Mahasiswa</span>
             </a>
         </div>
 
         @if(session('success'))
-            <div class="alert alert-success" style="border-radius: 0.5rem;">{{ session('success') }}</div>
+            <div class="alert alert-success d-flex align-items-center justify-content-between border-0 shadow-sm mb-4" style="border-radius: 0.85rem; background-color: #ecfdf5; color: #065f46;" role="alert">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-check-circle-fill fs-5 text-success"></i>
+                    <span class="fw-semibold">{{ session('success') }}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
 
+        {{-- 4 Stat Cards --}}
         <div class="row g-3 mb-4">
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-3 col-sm-6">
                 <x-admin.stat-card
                     icon="people-fill"
                     color="blue"
@@ -29,7 +38,7 @@
                     :value="number_format($totalMahasiswa, 0, ',', '.')">
                 </x-admin.stat-card>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-3 col-sm-6">
                 <x-admin.stat-card
                     icon="check-circle-fill"
                     color="green"
@@ -37,15 +46,15 @@
                     :value="number_format($totalAktif, 0, ',', '.')">
                 </x-admin.stat-card>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-3 col-sm-6">
                 <x-admin.stat-card
-                    icon="pencil-square"
-                    color="blue"
+                    icon="pause-circle-fill"
+                    color="amber"
                     title="Cuti Akademik"
                     :value="number_format($totalCuti, 0, ',', '.')">
                 </x-admin.stat-card>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-3 col-sm-6">
                 <x-admin.stat-card
                     icon="x-circle-fill"
                     color="red"
@@ -55,20 +64,23 @@
             </div>
         </div>
 
-        <div class="table-card" style="background: white; border-radius: 1rem; border: none; box-shadow: 0 4px 20px rgba(0, 43, 107, 0.05); overflow: hidden;">
-            <form id="filterForm" method="GET" action="{{ route('admin.mahasiswa.index') }}" style="padding: 1.5rem; border-bottom: 1px solid rgba(0, 43, 107, 0.08);">
+        <div class="table-card">
+            <form id="filterForm" method="GET" action="{{ route('admin.mahasiswa.index') }}" class="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/50">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                     <div class="d-flex flex-wrap gap-2 flex-grow-1">
-                        <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="form-control py-2" placeholder="Cari nama / NIM..." style="width: auto; min-width: 200px; border-color: #cbd5e1; border-radius: 0.5rem; font-size: 0.9rem;" autocomplete="off">
+                        <div class="position-relative flex-grow-1" style="min-width: 220px; max-width: 360px;">
+                            <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="form-control ps-4" placeholder="Cari Nama atau NIM..." style="height: 42px; padding-right: 2.5rem;" autocomplete="off">
+                            <i class="bi bi-search position-absolute top-50 end-0 translate-middle-y me-3 text-slate-400" style="font-size: 0.9rem;"></i>
+                        </div>
 
-                        <select id="prodiSelect" name="program_studi_id" class="form-select py-2" style="width: auto; min-width: 180px; border-color: #cbd5e1; border-radius: 0.5rem; color: #334155; font-size: 0.9rem;">
-                            <option value="">Semua Prodi</option>
+                        <select id="prodiSelect" name="program_studi_id" class="form-select" style="width: auto; min-width: 180px; height: 42px;">
+                            <option value="">Semua Program Studi</option>
                             @foreach ($programStudiList as $prodi)
                                 <option value="{{ $prodi->id }}" {{ (string) request('program_studi_id') === (string) $prodi->id ? 'selected' : '' }}>{{ $prodi->nama_prodi }}</option>
                             @endforeach
                         </select>
 
-                        <select id="statusSelect" name="status" class="form-select py-2" style="width: auto; min-width: 150px; border-color: #cbd5e1; border-radius: 0.5rem; color: #334155; font-size: 0.9rem;">
+                        <select id="statusSelect" name="status" class="form-select" style="width: auto; min-width: 140px; height: 42px;">
                             <option value="">Semua Status</option>
                             <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
                             <option value="cuti" {{ request('status') === 'cuti' ? 'selected' : '' }}>Cuti</option>
@@ -76,8 +88,9 @@
                         </select>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-light d-flex align-items-center gap-2 px-3 py-2" style="border: 1px solid #cbd5e1; border-radius: 0.5rem; font-weight: 600; color: #334155; background-color: white; font-size: 0.9rem;">
-                            <i class="bi bi-arrow-clockwise"></i> Reset
+                        <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-light border d-flex align-items-center gap-2 px-3.5" style="border-radius: 0.75rem; height: 42px;" title="Reset Filter">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            <span class="d-none d-sm-inline">Reset</span>
                         </a>
                     </div>
                 </div>
@@ -134,9 +147,11 @@
                 const search = searchInput.value;
                 const prodi = prodiSelect.value;
                 const status = statusSelect.value;
+                const perPageEl = document.getElementById('perPageSelect');
+                const perPage = perPageEl ? perPageEl.value : 10;
 
                 // Bangun parameter URL untuk request AJAX
-                let url = `{{ route('admin.mahasiswa.index') }}?ajax=1&page=${page}&search=${encodeURIComponent(search)}&program_studi_id=${prodi}&status=${status}`;
+                let url = `{{ route('admin.mahasiswa.index') }}?ajax=1&page=${page}&per_page=${perPage}&search=${encodeURIComponent(search)}&program_studi_id=${prodi}&status=${status}`;
 
                 fetch(url)
                     .then(response => response.text())
@@ -146,7 +161,7 @@
                     .catch(error => console.error('Gagal memuat data mahasiswa:', error));
             }
 
-            // Real-time Search Keyboard (dengan jeda/debounce 400ms agar hemat resource server)
+            // Real-time Search Keyboard (dengan debounce 400ms)
             searchInput.addEventListener('input', function () {
                 clearTimeout(delayTimer);
                 delayTimer = setTimeout(function() {
@@ -157,6 +172,13 @@
             // Ganti Filter Dropdown langsung panggil fungsi pencarian
             prodiSelect.addEventListener('change', () => fetchMahasiswa());
             statusSelect.addEventListener('change', () => fetchMahasiswa());
+
+            // Handle perPage change via delegation
+            document.addEventListener('change', function (e) {
+                if (e.target && e.target.id === 'perPageSelect') {
+                    fetchMahasiswa(1);
+                }
+            });
 
             // Intercept link pagination bawaan agar berjalan via AJAX
             document.addEventListener('click', function (e) {

@@ -33,7 +33,9 @@ class DosenController extends Controller
             $query->where('program_studi_id', $prodiFilter);
         }
 
-        $dosen = $query->latest()->paginate(10)->withQueryString();
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
+        $dosen = $query->latest()->paginate($perPage)->withQueryString();
         $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
 
         // KUNCI PENCARIAN CEPAT: Jika request dikirim lewat AJAX ketikan, 

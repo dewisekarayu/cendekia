@@ -41,14 +41,37 @@ class KelasController extends Controller
 
     public function show(Request $request, $id)
     {
-        $kelas = KelasPerkuliahan::with(['mataKuliah.programStudi', 'mahasiswa', 'semester'])
+        $kelas = KelasPerkuliahan::with([
+            'mataKuliah.programStudi',
+            'mahasiswa',
+            'semester',
+            'materi',
+            'tugas.pengumpulan',
+            'absensi'
+        ])
             ->where('dosen_id', $request->user()->id)
             ->findOrFail($id);
 
-        // Get contextual help
-        $contextualHelp = \App\Helpers\HelpCenterHelper::getContextualHelp('kelas', 'detail');
+        $totalMateri = $kelas->materi->count();
+        $totalTugas = $kelas->tugas->count();
+        $totalAbsensi = $kelas->absensi->count();
+        $tugasPerluDinilai = $kelas->tugas->sum(function ($t) {
+            return $t->pengumpulan->where('status', '!=', PengumpulanTugas::STATUS_BELUM_DIKUMPUL)->count();
+        });
+        $absensiAktif = $kelas->absensi->where('status', 'buka')->first();
+        $recentMateri = $kelas->materi->sortByDesc('created_at')->take(3);
+        $recentTugas = $kelas->tugas->sortByDesc('created_at')->take(3);
 
-        return view('dosen.kelas-detail', compact('kelas', 'contextualHelp'));
+        return view('dosen.kelas-detail', compact(
+            'kelas',
+            'totalMateri',
+            'totalTugas',
+            'totalAbsensi',
+            'tugasPerluDinilai',
+            'absensiAktif',
+            'recentMateri',
+            'recentTugas'
+        ));
     }
 
     public function tugas(Request $request, $id)

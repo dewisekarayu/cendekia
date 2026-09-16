@@ -11,14 +11,19 @@ class PengumumanController extends Controller
     /**
      * Tampilkan daftar pengumuman (paginated), lengkap dengan pembuatnya.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 10;
+        }
+
         $pengumuman = Pengumuman::with('pembuat')
             ->latest()
-            ->paginate(6)
+            ->paginate($perPage)
             ->withQueryString();
 
-        return view('admin.pengumuman.index', compact('pengumuman'));
+        return view('admin.pengumuman.index', compact('pengumuman', 'perPage'));
     }
 
     /**

@@ -107,6 +107,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.user')
         ->parameters(['user' => 'user']);
 
+    // Admin Settings & Profile
+    Route::prefix('admin/setting')->name('admin.setting')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index']);
+        Route::put('/profile', [App\Http\Controllers\Admin\SettingController::class, 'updateProfile'])->name('.profile');
+        Route::put('/password', [App\Http\Controllers\Admin\SettingController::class, 'updatePassword'])->name('.password');
+        Route::post('/umum', [App\Http\Controllers\Admin\SettingController::class, 'updateUmum'])->name('.umum');
+        Route::post('/notifikasi', [App\Http\Controllers\Admin\SettingController::class, 'updateNotifikasi'])->name('.notifikasi');
+    });
+
     // Notification Preferences
     Route::prefix('admin/notification-preferences')->name('admin.notification-preferences.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'index'])->name('index');

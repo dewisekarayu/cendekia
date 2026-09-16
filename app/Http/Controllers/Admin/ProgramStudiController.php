@@ -22,7 +22,9 @@ class ProgramStudiController extends Controller
             });
         }
 
-        $prodiList = $query->latest()->paginate(10)->withQueryString();
+        $perPage = (int) $request->input('per_page', $request->input('show', 10));
+        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
+        $prodiList = $query->latest()->paginate($perPage)->withQueryString();
 
         // KUNCI LIVE SEARCH AJAX
         if ($request->has('ajax')) {
