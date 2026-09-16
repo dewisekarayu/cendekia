@@ -111,6 +111,31 @@
             </a>
         </div>
 
+        <!-- Sistem & Keamanan -->
+        <div class="nav-section-title text-[10px] font-normal tracking-wider text-white/40 px-2.5 uppercase mt-2">
+            Sistem & Keamanan
+        </div>
+        <div class="nav-item">
+            <a href="{{ route('admin.aktivitas.index') }}"
+               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+               {{ request()->routeIs('admin.aktivitas.*') 
+                  ? 'bg-white/15 text-white shadow-sm' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <i class="bi bi-shield-check text-base w-5 flex justify-center flex-shrink-0"></i>
+                <span>Log Aktivitas</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="{{ route('admin.settings.index') }}"
+               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+               {{ request()->routeIs('admin.settings.*') 
+                  ? 'bg-white/15 text-white shadow-sm' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <i class="bi bi-gear-fill text-base w-5 flex justify-center flex-shrink-0"></i>
+                <span>Pengaturan Global</span>
+            </a>
+        </div>
+
         <!-- Support -->
         <div class="nav-section-title text-[10px] font-normal tracking-wider text-white/40 px-2.5 uppercase">
             Support

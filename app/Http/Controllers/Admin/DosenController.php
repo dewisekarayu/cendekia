@@ -138,4 +138,50 @@ class DosenController extends Controller
         return redirect()->route('admin.dosen.index')
             ->with('success', 'Dosen berhasil dihapus.');
     }
+
+    /**
+     * Import Data Dosen dari file CSV
+     */
+    public function importCsv(Request $request)
+    {
+        $request->validate([
+            'file_csv' => 'required|mimes:csv,txt|max:2048'
+        ]);
+
+        $file = $request->file('file_csv');
+        $handle = fopen($file->getPathname(), "r");
+        
+        $header = true;
+        $count = 0;
+
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            if ($header) {
+                $header = false;
+                continue; // Skip header row
+            }
+
+            // Urutan CSV: Nama Lengkap, NIP, Email, ID Prodi
+            if (isset($data[0], $data[1], $data[2], $data[3])) {
+                $user = User::updateOrCreate(
+                    ['nip_nim' => $data[1]], // NIP
+                    [
+                        'name' => $data[0],
+                        'email' => $data[2],
+                        'password' => \Illuminate\Support\Facades\Hash::make($data[1]), // Default password = NIP
+                        'program_studi_id' => $data[3],
+                        'email_verified_at' => now(),
+                    ]
+                );
+                
+                // Beri peran dosen
+                if (!$user->hasRole('dosen')) {
+                    $user->assignRole('dosen');
+                }
+                $count++;
+            }
+        }
+        fclose($handle);
+
+        return redirect()->route('admin.dosen.index')->with('success', "$count data dosen berhasil diimpor.");
+    }
 }

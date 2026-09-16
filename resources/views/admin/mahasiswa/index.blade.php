@@ -87,6 +87,29 @@
                 @include('admin.mahasiswa.table')
             </div>
         </div>
+
+        <!-- Modal Import CSV Mahasiswa -->
+        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold" id="importModalLabel">📥 Impor Data Mahasiswa</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted small">Unggah file CSV dengan urutan kolom: <strong>Nama Lengkap, NIM, Email, ID Program Studi</strong>.</p>
+                            <input type="file" class="form-control" name="file_csv" accept=".csv, .txt" required>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary px-4" style="background-color: #002B6B; border: none;">Mulai Impor</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>

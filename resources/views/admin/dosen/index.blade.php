@@ -19,9 +19,15 @@
                     </ol>
                 </nav>
             </div>
-            <a href="{{ route('admin.dosen.create') }}" class="btn btn-primary px-4 py-2 d-flex align-items-center gap-2" style="border-radius: 0.5rem; background-color: #002B6B; border: none; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
-                <i class="bi bi-plus-circle"></i> Tambah Dosen
-            </a>
+            <!-- Tambah Dosen Button & Import CSV -->
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-success d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#importDosenModal">
+                    <i class="bi bi-file-earmark-excel me-2"></i> Impor CSV
+                </button>
+                <a href="{{ route('admin.dosen.create') }}" class="btn btn-primary d-flex align-items-center gap-2" style="background-color: #002B6B; border: none;">
+                    <i class="bi bi-person-plus-fill"></i> Tambah Dosen
+                </a>
+            </div>
         </div>
 
         <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden; background: white;">
@@ -72,6 +78,29 @@
             <div id="tableContainer">
                 @include('admin.dosen.table')
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Import CSV Dosen -->
+    <div class="modal fade" id="importDosenModal" tabindex="-1" aria-labelledby="importDosenModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ route('admin.dosen.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="importDosenModalLabel">📥 Impor Data Dosen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small">Unggah file CSV dengan urutan kolom: <strong>Nama Lengkap, NIP, Email, ID Program Studi</strong>.</p>
+                        <input type="file" class="form-control" name="file_csv" accept=".csv, .txt" required>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary px-4" style="background-color: #002B6B; border: none;">Mulai Impor</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </x-admin-layout>

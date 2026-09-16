@@ -88,6 +88,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->only(['index', 'store', 'update', 'destroy'])
         ->names('admin.pengumuman');
 
+    // Pengaturan Sistem
+    Route::get('admin/settings', [\App\Http\Controllers\Admin\SystemSettingController::class, 'index'])->name('admin.settings.index');
+    Route::put('admin/settings', [\App\Http\Controllers\Admin\SystemSettingController::class, 'update'])->name('admin.settings.update');
+
+    // Log Aktivitas
+    Route::get('admin/aktivitas', [\App\Http\Controllers\Admin\AktivitasPenggunaController::class, 'index'])->name('admin.aktivitas.index');
+
+    // Impor CSV
+    Route::post('admin/mahasiswa/import', [AdminMahasiswaController::class, 'importCsv'])->name('admin.mahasiswa.import');
+    Route::post('admin/dosen/import', [AdminDosenController::class, 'importCsv'])->name('admin.dosen.import');
+
     Route::resource('admin/kelas', KelasController::class)
         ->names('admin.kelas')
         ->parameters(['kelas' => 'kelas']);
