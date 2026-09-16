@@ -167,7 +167,12 @@ class AiAssistantController extends Controller
         $judul = $request->judul;
         $poin = $request->poin ?? 100;
 
-        $prompt = "Buatkan instruksi tugas perkuliahan untuk mahasiswa dengan judul tugas '$judul' dan bobot $poin poin. Instruksi harus jelas, terstruktur (bisa menggunakan poin/numbering), berisi deskripsi apa yang harus dikerjakan, dan ketentuan format pengumpulan. Jangan gunakan bahasa pengantar seperti 'Berikut adalah', langsung saja isinya.";
+        $prompt = "Buatkan instruksi tugas perkuliahan untuk mahasiswa dengan judul '$judul'. \n"
+                . "PENTING:\n"
+                . "1. LANGSUNG tuliskan poin-poin instruksi pengerjaan tugasnya (apa yang harus dikerjakan dan format pengumpulannya).\n"
+                . "2. JANGAN menulis ulang Judul Tugas, Bobot Poin, atau Waktu Pengumpulan di dalam teks, karena sudah ada kolomnya tersendiri di sistem.\n"
+                . "3. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah instruksi...' atau 'Selamat mengerjakan'.\n"
+                . "4. Gunakan bahasa Indonesia yang baku, terstruktur (gunakan bullet/numbering), ringkas, dan profesional ala dosen perguruan tinggi.";
 
         $messages = [
             ['role' => 'user', 'content' => $prompt]
