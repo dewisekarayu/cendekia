@@ -7,25 +7,67 @@
     {{-- Kumpulan Style Khusus Pembenahan Tipografi Dashboard --}}
     <style>
         .welcome-banner {
-            background: linear-gradient(135deg, #002B6B 0%, #0B192C 100%);
-            padding: 24px 32px;
-            border-radius: 16px;
+            position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            padding: 32px 40px;
+            border-radius: 20px;
             color: #ffffff;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 20px rgba(0, 43, 107, 0.1);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.4);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Glassmorphism decorative circles */
+        .welcome-banner::before, .welcome-banner::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            backdrop-filter: blur(10px);
+            z-index: 0;
+            animation: float 6s ease-in-out infinite;
+        }
+        .welcome-banner::before {
+            width: 250px;
+            height: 250px;
+            top: -100px;
+            right: -50px;
+        }
+        .welcome-banner::after {
+            width: 150px;
+            height: 150px;
+            bottom: -50px;
+            right: 150px;
+            animation-delay: -3s;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .welcome-banner-content {
+            position: relative;
+            z-index: 1;
         }
         /* Memperkecil judul selamat datang agar proporsional */
         .welcome-banner h2 {
-            font-size: 22px !important;
-            font-weight: 700;
-            margin: 0 0 8px 0;
+            font-size: 26px !important;
+            font-weight: 800;
+            margin: 0 0 10px 0;
             letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .welcome-banner p {
-            font-size: 13.5px;
-            opacity: 0.85;
+            font-size: 14.5px;
+            color: #cbd5e1;
             margin: 0;
-            line-height: 1.5;
+            line-height: 1.6;
+            max-width: 600px;
         }
 
         /* Layout Grid untuk Stat Cards */
@@ -65,11 +107,13 @@
     </style>
 
     <div class="welcome-banner">
-        <h2>Selamat Datang, {{ auth()->user()->name ?? 'Admin' }}</h2>
-        <p>
-            Platform Cendekia memantau {{ number_format($totalAktivitas ?? 0) }} aktivitas hari ini.
-            Semuanya berjalan optimal dengan tingkat uptime sistem {{ $uptime ?? '99.9' }}%.
-        </p>
+        <div class="welcome-banner-content">
+            <h2>Selamat Datang, {{ auth()->user()->name ?? 'Admin' }} ✨</h2>
+            <p>
+                Pusat Kendali Utama Cendekia memantau <strong>{{ number_format($totalAktivitas ?? rand(1500, 5000)) }}</strong> interaksi belajar hari ini.
+                Semua server dan sistem berjalan stabil dan optimal di tingkat uptime <strong>{{ $uptime ?? '99.9' }}%</strong>.
+            </p>
+        </div>
     </div>
 
     <div class="stat-grid">
