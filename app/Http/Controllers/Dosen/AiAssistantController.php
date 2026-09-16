@@ -256,14 +256,17 @@ class AiAssistantController extends Controller
     public function generateAiPdfSoal(Request $request)
     {
         $request->validate([
-            'title' => 'required|string'
+            'title' => 'required|string',
+            'tipe_soal' => 'nullable|string'
         ]);
 
         $title = $request->title;
+        $tipeSoal = $request->tipe_soal ? "Bentuk/Format/Jumlah yang diminta: " . $request->tipe_soal . ".\n" : "";
         
-        $prompt = "Buatkan daftar soal-soal untuk tugas/materi perkuliahan dengan judul '$title'.\n"
+        $prompt = "Buatkan isi dokumen materi atau soal-soal tugas perkuliahan dengan judul/topik '$title'.\n"
+                . $tipeSoal
                 . "PENTING:\n"
-                . "1. LANGSUNG berikan daftar soalnya (dan sedikit penjelasan konteks jika perlu).\n"
+                . "1. LANGSUNG berikan isinya (daftar soal atau materi penjelasan yang padat dan terstruktur).\n"
                 . "2. JANGAN menulis ulang Judul Tugas.\n"
                 . "3. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah daftar soal...'.\n"
                 . "4. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*). Gunakan teks murni biasa.";

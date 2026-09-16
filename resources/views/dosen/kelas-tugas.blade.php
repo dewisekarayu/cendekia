@@ -545,6 +545,11 @@
                 return;
             }
             
+            const tipeSoal = prompt("Bentuk soal seperti apa yang Anda inginkan?\nContoh: 10 Soal Pilihan Ganda (dengan opsi A-E), 5 Soal Essay, atau Campuran.", "5 Soal Essay");
+            if (tipeSoal === null) {
+                return; // Batalkan jika user klik cancel
+            }
+            
             const originalText = btn.innerHTML;
             btn.innerHTML = 'AI Sedang Menyusun Soal...';
             btn.disabled = true;
@@ -557,7 +562,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({ title: judul })
+                    body: JSON.stringify({ title: judul, tipe_soal: tipeSoal })
                 });
                 
                 if (!response.ok) throw new Error('Gagal membuat PDF');

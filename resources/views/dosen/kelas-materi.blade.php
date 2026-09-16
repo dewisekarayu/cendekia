@@ -574,6 +574,11 @@
             return;
         }
         
+        const tipeSoal = prompt("Format dokumen apa yang Anda inginkan?\nContoh: 10 Soal Latihan Pilihan Ganda, 5 Soal Essay, atau Ringkasan Materi.", "Ringkasan Materi & 3 Soal Latihan");
+        if (tipeSoal === null) {
+            return; // Batalkan jika user klik cancel
+        }
+        
         const originalText = btn.innerHTML;
         btn.innerHTML = 'AI Sedang Menyusun File...';
         btn.disabled = true;
@@ -585,7 +590,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({ title: judul })
+                body: JSON.stringify({ title: judul, tipe_soal: tipeSoal })
             });
             
             if (!response.ok) throw new Error('Gagal membuat PDF');
