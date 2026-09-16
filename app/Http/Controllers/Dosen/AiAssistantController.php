@@ -172,13 +172,14 @@ class AiAssistantController extends Controller
         $judul = $request->judul;
         $poin = $request->poin ?? 100;
 
-        $prompt = "Buatkan instruksi tugas perkuliahan untuk mahasiswa dengan judul '$judul'. \n"
+        $prompt = "Buatkan konten untuk tugas perkuliahan mahasiswa dengan judul '$judul'. \n"
+                . "Jika judul tersebut menyiratkan permintaan pembuatan soal (seperti 'Soal Kalkulus', 'Kuis Trigonometri', dll), maka LANGSUNG buatkan daftar soal-soal tersebut beserta konteksnya.\n"
+                . "Jika judul menyiratkan tugas umum (seperti 'Makalah', 'Proyek'), buatkan poin-poin instruksi pengerjaan tugasnya.\n"
                 . "PENTING:\n"
-                . "1. LANGSUNG tuliskan poin-poin instruksi pengerjaan tugasnya (apa yang harus dikerjakan dan format pengumpulannya).\n"
-                . "2. JANGAN menulis ulang Judul Tugas, Bobot Poin, atau Waktu Pengumpulan di dalam teks, karena sudah ada kolomnya tersendiri di sistem.\n"
-                . "3. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah instruksi...' atau 'Selamat mengerjakan'.\n"
-                . "4. Gunakan bahasa Indonesia yang baku, ringkas, dan profesional ala dosen perguruan tinggi.\n"
-                . "5. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*). Gunakan teks murni biasa. Untuk list, cukup gunakan angka 1. 2. 3. atau strip (-).";
+                . "1. JANGAN menulis ulang Judul Tugas, Bobot Poin, atau Waktu Pengumpulan di dalam teks, karena sudah ada kolomnya tersendiri di sistem.\n"
+                . "2. JANGAN gunakan kalimat pembuka/penutup seperti 'Berikut adalah...' atau 'Selamat mengerjakan'.\n"
+                . "3. Gunakan bahasa Indonesia yang baku, ringkas, dan profesional ala dosen perguruan tinggi.\n"
+                . "4. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*). Gunakan teks murni biasa. Untuk list/soal, cukup gunakan angka 1. 2. 3. atau strip (-).";
 
         $messages = [
             ['role' => 'user', 'content' => $prompt]
