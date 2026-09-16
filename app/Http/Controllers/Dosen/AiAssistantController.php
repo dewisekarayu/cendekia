@@ -163,6 +163,44 @@ class AiAssistantController extends Controller
     }
 
     /**
+     * Generate Draf Pengumuman
+     */
+    public function generatePengumuman(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string',
+        ]);
+
+        $judul = $request->judul;
+
+        $prompt = "Buatkan draf pengumuman resmi dan profesional untuk mahasiswa dengan topik/judul '$judul'. Pengumuman ini akan langsung dimasukkan ke form LMS. Gunakan bahasa yang jelas, sopan, dan akademis. JANGAN ada kalimat pembuka/penutup dari sistem seperti 'Berikut adalah...' atau Markdown seperti **tebal**.";
+
+        $messages = [
+            ['role' => 'user', 'content' => $prompt]
+        ];
+
+        try {
+            $content = $this->callAiApi($messages);
+            if ($content) {
+                // Bersihkan Markdown (Bold/Italic/Heading)
+                $content = str_replace('**', '', $content);
+                $content = preg_replace('/^\s*\*\s+/m', '- ', $content);
+                $content = preg_replace('/^\s*#+\s+/m', '', $content);
+                return response()->json([
+                    'success' => true,
+                    'message' => trim($content)
+                ]);
+            }
+            throw new \Exception('Respons kosong');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Generate Instruksi Tugas
      */
     public function generateInstruksi(Request $request)
