@@ -23,7 +23,6 @@
                     </ol>
                 </nav>
             </div>
-<<<<<<< HEAD
             <!-- Tambah Dosen Button & Import CSV -->
             <div class="d-flex gap-2">
                 <a href="{{ route('admin.dosen.import.view') }}" class="btn btn-outline-success d-flex align-items-center">
@@ -33,12 +32,6 @@
                     <i class="bi bi-person-plus-fill"></i> Tambah Dosen
                 </a>
             </div>
-=======
-            <a href="{{ route('admin.dosen.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg"></i>
-                <span>Tambah Dosen</span>
-            </a>
->>>>>>> a3574bb (feat: perbarui ui dosen, admin, tata letak tabel, pagination, dan dropdown serta mempefeat: perbarui ui dosen, admin, tata let)
         </div>
 
         <div class="table-card">
