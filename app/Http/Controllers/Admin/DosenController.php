@@ -142,6 +142,15 @@ class DosenController extends Controller
     }
 
     /**
+     * Tampilkan halaman UI Impor Data Dosen
+     */
+    public function importView()
+    {
+        $prodis = \App\Models\ProgramStudi::all();
+        return view('admin.dosen.import', compact('prodis'));
+    }
+
+    /**
      * Import Data Dosen dari file CSV
      */
     public function importCsv(Request $request)

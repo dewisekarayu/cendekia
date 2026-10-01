@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\AbsensiMahasiswa;
 use App\Models\KelasPerkuliahan;
+use App\Models\KelasMahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -157,6 +158,62 @@ class AbsensiController extends Controller
         ];
 
         return view('mahasiswa.absensi.show', compact('kelas', 'absensiList', 'stats'));
+    }
+
+    /**
+     * Endpoint untuk memproses hasil scan QR Code
+     */
+    public function scanQr($token)
+    {
+        $user = Auth::user();
+
+        $absensi = Absensi::where('qr_token', $token)
+            ->where('session_status', 'buka')
+            ->whereDate('tanggal', today())
+            ->first();
+
+        if (!$absensi) {
+            return redirect()->route('mahasiswa.dashboard')
+                ->with('error', 'QR Code tidak valid, kedaluwarsa, atau sesi presensi telah ditutup.');
+        }
+
+        $isEnrolled = KelasMahasiswa::where('kelas_perkuliahan_id', $absensi->kelas_perkuliahan_id)
+            ->where('mahasiswa_id', $user->id)
+            ->exists();
+
+        if (!$isEnrolled) {
+            return redirect()->route('mahasiswa.dashboard')
+                ->with('error', 'Anda tidak terdaftar di kelas untuk presensi ini.');
+        }
+
+        try {
+            DB::transaction(function () use ($absensi, $user) {
+                $sudahAda = AbsensiMahasiswa::where('absensi_id', $absensi->id)
+                    ->where('mahasiswa_id', $user->id)
+                    ->lockForUpdate()
+                    ->exists();
+
+                if ($sudahAda) {
+                    throw ValidationException::withMessages([
+                        'status' => 'Anda sudah melakukan presensi untuk sesi ini.',
+                    ]);
+                }
+
+                AbsensiMahasiswa::create([
+                    'absensi_id' => $absensi->id,
+                    'mahasiswa_id' => $user->id,
+                    'status' => 'hadir',
+                    'keterangan' => 'Hadir via Scan QR Code',
+                    'waktu_absensi' => now(),
+                ]);
+            });
+        } catch (ValidationException $e) {
+            return redirect()->route('mahasiswa.absensi.kelas', $absensi->kelas_perkuliahan_id)
+                ->with('warning', 'Anda sudah melakukan presensi untuk sesi ini.');
+        }
+
+        return redirect()->route('mahasiswa.absensi.kelas', $absensi->kelas_perkuliahan_id)
+            ->with('success', 'Berhasil melakukan presensi via QR Code! Status Anda: Hadir.');
     }
 
     private function kelasDiikutiMahasiswa($kelasId, array $with = []): KelasPerkuliahan
