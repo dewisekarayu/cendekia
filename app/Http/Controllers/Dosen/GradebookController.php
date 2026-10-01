@@ -49,4 +49,33 @@ class GradebookController extends Controller
             'perPage'
         ));
     }
+
+    public function updateBobot(Request $request)
+    {
+        $request->validate([
+            'kelas_id' => 'required|exists:kelas_perkuliahan,id',
+            'bobot_tugas' => 'required|integer|min:0|max:100',
+            'bobot_uts' => 'required|integer|min:0|max:100',
+            'bobot_uas' => 'required|integer|min:0|max:100',
+        ]);
+
+        $totalBobot = $request->bobot_tugas + $request->bobot_uts + $request->bobot_uas;
+        if ($totalBobot !== 100) {
+            return back()->with('error', 'Total bobot harus bernilai 100%. Saat ini: ' . $totalBobot . '%');
+        }
+
+        $kelas = KelasPerkuliahan::where('id', $request->kelas_id)
+            ->where(function ($query) use ($request) {
+                $query->where('dosen_id', $request->user()->id)
+                    ->orWhereJsonContains('dosen_pengampu', $request->user()->id);
+            })->firstOrFail();
+
+        $kelas->update([
+            'bobot_tugas' => $request->bobot_tugas,
+            'bobot_uts' => $request->bobot_uts,
+            'bobot_uas' => $request->bobot_uas,
+        ]);
+
+        return back()->with('success', 'Bobot penilaian berhasil diperbarui.');
+    }
 }

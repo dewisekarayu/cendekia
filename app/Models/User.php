@@ -114,6 +114,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relasi: KRS mahasiswa
+     */
+    public function krs()
+    {
+        return $this->hasMany(Krs::class, 'mahasiswa_id');
+    }
+
+    /**
      * Helper methods for role checking with null safety
      */
     

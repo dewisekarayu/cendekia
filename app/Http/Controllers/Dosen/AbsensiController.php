@@ -317,4 +317,41 @@ class AbsensiController extends Controller
             ->with($with)
             ->firstOrFail();
     }
+
+    /**
+     * Tampilkan log book / rekap kehadiran global untuk Dosen
+     */
+    public function logBook(Request $request)
+    {
+        $user = Auth::user();
+
+        // Get all classes taught by this dosen
+        $kelasIds = KelasPerkuliahan::where('dosen_id', $user->id)
+            ->orWhereJsonContains('dosen_pengampu', $user->id)
+            ->pluck('id');
+
+        $perPage = (int) $request->input('show', 25);
+        if (!in_array($perPage, [10, 25, 50, 100])) {
+            $perPage = 25;
+        }
+
+        $absensiList = Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)
+            ->with(['kelasPerkuliahan.mataKuliah', 'kelasPerkuliahan.mahasiswa'])
+            ->withCount([
+                'absensiMahasiswa as hadir_count' => fn ($q) => $q->where('status', 'hadir'),
+            ])
+            ->orderByDesc('tanggal')
+            ->orderByDesc('jam_mulai')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $statistics = [
+            'total_sesi' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->count(),
+            'sesi_draft' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->draft()->count(),
+            'sesi_buka' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->buka()->count(),
+            'sesi_tutup' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->tutup()->count(),
+        ];
+
+        return view('dosen.absensi.log-book', compact('absensiList', 'statistics', 'perPage'));
+    }
 }

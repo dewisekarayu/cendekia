@@ -242,6 +242,51 @@
 
         {{-- SIDEBAR: Grade distribution --}}
         <div class="space-y-5">
+            {{-- PENGATURAN BOBOT NILAI --}}
+            <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-5 shadow-sm transition-colors duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">Pengaturan Bobot</h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#321270]/10 text-[#321270] dark:bg-purple-900/30 dark:text-purple-300">
+                        Total 100%
+                    </span>
+                </div>
+                
+                <form action="{{ route('dosen.gradebook.update-bobot') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
+                    
+                    <div class="space-y-3 mb-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Tugas & Praktek</label>
+                            <div class="relative w-20">
+                                <input type="number" name="bobot_tugas" value="{{ old('bobot_tugas', $kelas->bobot_tugas ?? 30) }}" min="0" max="100" class="w-full text-right rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 py-1.5 pl-2 pr-6 text-xs font-bold text-gray-800 dark:text-white focus:outline-none focus:border-[#321270] dark:focus:border-purple-500">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between gap-3">
+                            <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Ujian Tengah Semester</label>
+                            <div class="relative w-20">
+                                <input type="number" name="bobot_uts" value="{{ old('bobot_uts', $kelas->bobot_uts ?? 30) }}" min="0" max="100" class="w-full text-right rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 py-1.5 pl-2 pr-6 text-xs font-bold text-gray-800 dark:text-white focus:outline-none focus:border-[#321270] dark:focus:border-purple-500">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between gap-3">
+                            <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Ujian Akhir Semester</label>
+                            <div class="relative w-20">
+                                <input type="number" name="bobot_uas" value="{{ old('bobot_uas', $kelas->bobot_uas ?? 40) }}" min="0" max="100" class="w-full text-right rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-900 py-1.5 pl-2 pr-6 text-xs font-bold text-gray-800 dark:text-white focus:outline-none focus:border-[#321270] dark:focus:border-purple-500">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-2 bg-[#321270] hover:bg-purple-900 dark:bg-purple-600 dark:hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
+                        Simpan Bobot
+                    </button>
+                </form>
+            </div>
+
             <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-5 shadow-sm transition-colors duration-200">
                 <h3 class="text-sm font-bold text-slate-800 dark:text-white mb-4">Distribusi Grade</h3>
 

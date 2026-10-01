@@ -21,6 +21,7 @@ use App\Http\Controllers\Dosen\AbsensiController as DosenAbsensiController;
 use App\Http\Controllers\Dosen\JadwalController as DosenJadwalController;
 use App\Http\Controllers\Dosen\MateriController as DosenMateriController;
 use App\Http\Controllers\Dosen\AiAssistantController as DosenAiAssistantController;
+use App\Http\Controllers\Dosen\KalenderAkademikController as DosenKalenderAkademikController;
 
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\KelasController as MahasiswaKelasController;
@@ -144,6 +145,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/bulk-delete', [App\Http\Controllers\Admin\AbsensiController::class, 'bulkDelete'])->name('bulkDelete');
     });
 
+    // Global Analytics (EWS)
+    Route::get('/admin/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('admin.analytics');
+
     // Kalender Akademik
     Route::resource('admin/kalender-akademik', KalenderAkademikController::class)
         ->names('admin.kalender-akademik')
@@ -185,6 +189,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     
     // Gradebook Dosen
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
+    Route::post('/dosen/gradebook/update-bobot', [DosenGradebookController::class, 'updateBobot'])->name('dosen.gradebook.update-bobot');
     
     // Materi Dosen
     Route::delete('/kelas/{id}/materi/{materiId}', [DosenKelasController::class, 'hapusMateri'])->name('dosen.kelas-materi.hapus');
@@ -249,6 +254,25 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
         Route::get('/calendar', [DosenJadwalController::class, 'calendar'])->name('calendar');
         Route::get('/export', [DosenJadwalController::class, 'exportPdf'])->name('export');
     });
+
+    // Kalender Akademik Dosen
+    Route::prefix('dosen/kalender-akademik')->name('dosen.kalender-akademik.')->group(function () {
+        Route::get('/', [DosenKalenderAkademikController::class, 'index'])->name('index');
+    });
+
+    // Bimbingan KRS (Dosen PA)
+    Route::prefix('dosen/krs')->name('dosen.krs.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Dosen\KRSController::class, 'index'])->name('index');
+        Route::get('/{id}', [App\Http\Controllers\Dosen\KRSController::class, 'show'])->name('show');
+        Route::post('/{id}/approve', [App\Http\Controllers\Dosen\KRSController::class, 'approve'])->name('approve');
+        Route::post('/{id}/reject', [App\Http\Controllers\Dosen\KRSController::class, 'reject'])->name('reject');
+    });
+
+    // Analytics & Prediksi AI (EWS)
+    Route::get('/dosen/analytics', [App\Http\Controllers\Dosen\AnalyticsController::class, 'index'])->name('dosen.analytics');
+
+    // Log Book Dosen (Rekap Kehadiran Global)
+    Route::get('/dosen/log-book', [App\Http\Controllers\Dosen\AbsensiController::class, 'logBook'])->name('dosen.log-book');
 });
 
 // ==========================================
@@ -284,6 +308,17 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
         Route::get('/', [MahasiswaJadwalController::class, 'index'])->name('index');
         Route::get('/semester/{semesterId?}', [MahasiswaJadwalController::class, 'showBySemester'])->name('semester');
         Route::get('/calendar', [MahasiswaJadwalController::class, 'calendar'])->name('calendar');
+    });
+
+    // Analytics & Prediksi AI Mahasiswa (Self EWS)
+    Route::get('/mahasiswa/analytics', [App\Http\Controllers\Mahasiswa\AnalyticsController::class, 'index'])->name('mahasiswa.analytics');
+
+    // KRS Mahasiswa
+    Route::prefix('mahasiswa/krs')->name('mahasiswa.krs.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Mahasiswa\KRSController::class, 'index'])->name('index');
+        Route::post('/{id}/tambah', [App\Http\Controllers\Mahasiswa\KRSController::class, 'tambahKelas'])->name('tambah');
+        Route::delete('/{id}/hapus/{kelas_id}', [App\Http\Controllers\Mahasiswa\KRSController::class, 'hapusKelas'])->name('hapus');
+        Route::post('/{id}/ajukan', [App\Http\Controllers\Mahasiswa\KRSController::class, 'ajukan'])->name('ajukan');
     });
     
     // Absensi Mahasiswa (Terintegrasi penuh dengan tombol absen masuk)
