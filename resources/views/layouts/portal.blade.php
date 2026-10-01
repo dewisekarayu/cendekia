@@ -84,6 +84,7 @@
             color: #60a5fa !important;
         }
 
+        html.dark .text-\[\#321270\],
         html.dark .text-purple-900 {
             color: #a78bfa !important;
         }

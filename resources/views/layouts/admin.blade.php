@@ -76,13 +76,148 @@
 
         html.dark .text-slate-800,
         html.dark .text-gray-900,
-        html.dark .text-gray-800 {
+        html.dark .text-gray-800,
+        html.dark .text-dark,
+        html.dark .text-black,
+        html.dark .text-body {
             color: #f8fafc !important;
         }
 
         html.dark .text-slate-500,
-        html.dark .text-gray-500 {
+        html.dark .text-gray-500,
+        html.dark .text-muted {
             color: #94a3b8 !important;
+        }
+
+        /* Bootstrap Modals & Forms Dark Mode */
+        html.dark .modal-content {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        
+        html.dark .modal-header,
+        html.dark .modal-footer {
+            border-color: #334155 !important;
+        }
+        
+        html.dark .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        html.dark .form-label {
+            color: #cbd5e1 !important;
+        }
+
+        /* Bootstrap Card Dark Mode */
+        html.dark .card,
+        html.dark .card.bg-white {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark .card .fw-bold,
+        html.dark .card .fw-semibold,
+        html.dark .card h1,
+        html.dark .card h2,
+        html.dark .card h3,
+        html.dark .card h4,
+        html.dark .card h5,
+        html.dark .card h6 {
+            color: #f1f5f9 !important;
+        }
+
+        html.dark .card .text-secondary,
+        html.dark .card .fw-semibold.text-secondary {
+            color: #94a3b8 !important;
+        }
+
+        /* Fix judul warna #002B6B (hardcoded inline style) */
+        /* Karena tidak bisa override inline style, kita gunakan CSS variables trick */
+        html.dark [style*="color: #002B6B"],
+        html.dark [style*="color:#002B6B"] {
+            color: #93c5fd !important;
+        }
+
+        /* Fix badge bg-light di dark mode */
+        html.dark .badge.bg-light {
+            background-color: #334155 !important;
+            color: #f1f5f9 !important;
+            border-color: #475569 !important;
+        }
+
+        /* Fix btn-light di dark mode */
+        html.dark .btn-light {
+            background-color: #1e293b !important;
+            border-color: #475569 !important;
+            color: #cbd5e1 !important;
+        }
+
+        html.dark .btn-light:hover {
+            background-color: #334155 !important;
+            border-color: #64748b !important;
+            color: #f1f5f9 !important;
+        }
+
+        /* Fix border-top pada card pengumuman */
+        html.dark .card[style*="border-left"] {
+            border-left-color: inherit !important;
+        }
+
+        /* Fix alert dark mode */
+        html.dark .alert-success {
+            background-color: rgba(6, 78, 59, 0.3) !important;
+            border-color: rgba(5, 150, 105, 0.4) !important;
+            color: #6ee7b7 !important;
+        }
+
+        /* Fix text-slate-600, text-slate-700 in dark */
+        html.dark .text-slate-600,
+        html.dark .text-slate-700,
+        html.dark .text-gray-600,
+        html.dark .text-gray-700 {
+            color: #cbd5e1 !important;
+        }
+
+        html.dark .text-secondary {
+            color: #94a3b8 !important;
+        }
+
+        /* Fix fw-bold text that isn't explicit text-slate classes */
+        html.dark .fw-bold:not([class*="text-"]):not([style*="color"]):not(.badge),
+        html.dark .fw-semibold:not([class*="text-"]):not([style*="color"]):not(.badge) {
+            color: #f1f5f9 !important;
+        }
+
+        /* Table name and sub-text fix */
+        html.dark .table .fw-bold {
+            color: #f1f5f9 !important;
+        }
+
+        html.dark small.text-slate-400 {
+            color: #64748b !important;
+        }
+
+        /* Semantic classes for table rows (works regardless of Tailwind JIT) */
+        html.dark .dosen-name {
+            color: #f1f5f9 !important;
+        }
+
+        html.dark .dosen-email {
+            color: #64748b !important;
+        }
+
+        /* Row number in table */
+        html.dark .table .font-monospace.fw-bold {
+            color: #64748b !important;
+        }
+
+        /* badge-code (NIDN/NIM badge) dark fix */
+        html.dark .badge-code {
+            background-color: rgba(30, 58, 138, 0.3) !important;
+            color: #93c5fd !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
         }
 
         /* =========================================================
@@ -276,6 +411,29 @@
         }
         html.dark .table tbody td {
             border-bottom-color: #334155;
+            color: #cbd5e1 !important;
+        }
+
+        /* Explicitly force all text inside table cells to be readable in dark mode */
+        html.dark .table tbody td *:not(.badge-status):not(.status-dot):not(.action-btn):not(.badge-code) {
+            color: inherit;
+        }
+
+        html.dark .table tbody td .fw-bold,
+        html.dark .table tbody td .fw-semibold {
+            color: #f1f5f9 !important;
+        }
+
+        html.dark .table tbody td small {
+            color: #64748b !important;
+        }
+
+        html.dark .dosen-name {
+            color: #f1f5f9 !important;
+        }
+
+        html.dark .dosen-email {
+            color: #64748b !important;
         }
 
         .table tbody tr:hover {

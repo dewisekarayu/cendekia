@@ -15,7 +15,7 @@
         <tbody>
             @forelse ($dosen as $item)
                 <tr>
-                    <td style="padding-left: 1.5rem;" class="text-center font-monospace text-slate-500 fw-bold">
+                    <td style="padding-left: 1.5rem;" class="text-center font-monospace fw-bold" style="color:#64748b">
                         {{ ($dosen->currentPage() - 1) * $dosen->perPage() + $loop->iteration }}
                     </td>
                     <td>
@@ -23,8 +23,8 @@
                             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode($item->name) }}" 
                                  style="width: 38px; height: 38px; border-radius: 50%; background-color: #f1f5f9; border: 1.5px solid #e2e8f0; flex-shrink: 0;" alt="{{ $item->name }}">
                             <div>
-                                <div class="fw-bold text-slate-800 dark:text-white" style="font-size: 0.9rem;">{{ $item->name }}</div>
-                                <small class="text-slate-400" style="font-size: 0.775rem;">{{ $item->email }}</small>
+                                <div class="fw-bold dosen-name" style="font-size: 0.9rem;">{{ $item->name }}</div>
+                                <small class="dosen-email" style="font-size: 0.775rem;">{{ $item->email }}</small>
                             </div>
                         </div>
                     </td>

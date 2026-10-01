@@ -86,10 +86,10 @@
 </div>
 
 <div class="space-y-4 max-w-7xl mx-auto">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-slate-700/60">
         <div>
-            <h1 class="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2.5">
-                <div class="p-1.5 bg-[#321270]/5 text-[#321270] rounded-lg border border-[#321270]/10 shadow-sm">
+            <h1 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2.5">
+                <div class="p-1.5 bg-[#321270]/5 dark:bg-purple-500/10 text-[#321270] dark:text-purple-400 rounded-lg border border-[#321270]/10 dark:border-purple-500/20 shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
@@ -139,48 +139,48 @@
     @endif
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div class="bg-white rounded-lg border border-slate-200/70 shadow-sm p-3 flex items-center justify-between hover:border-[#321270]/40 transition-all duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200/70 dark:border-slate-700 shadow-sm p-3 flex items-center justify-between hover:border-[#321270]/40 transition-all duration-300">
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Total Seluruh Sesi</p>
-                <p class="text-xl font-black text-slate-700 mt-0.5">{{ $statistics['total_sesi'] }}</p>
+                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Seluruh Sesi</p>
+                <p class="text-xl font-black text-slate-700 dark:text-white mt-0.5">{{ $statistics['total_sesi'] }}</p>
             </div>
-            <div class="p-2 bg-[#321270]/5 text-[#321270] rounded-lg border border-[#321270]/10 shadow-inner">
+            <div class="p-2 bg-[#321270]/5 dark:bg-purple-900/30 text-[#321270] dark:text-purple-400 rounded-lg border border-[#321270]/10 dark:border-purple-500/20 shadow-inner">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg border border-slate-200/70 shadow-sm p-3 flex items-center justify-between hover:border-amber-300 transition-all duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200/70 dark:border-slate-700 shadow-sm p-3 flex items-center justify-between hover:border-amber-300 transition-all duration-300">
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Sesi Konsep (Draft)</p>
-                <p class="text-xl font-black text-amber-600 mt-0.5">{{ $statistics['sesi_draft'] }}</p>
+                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Sesi Konsep (Draft)</p>
+                <p class="text-xl font-black text-amber-600 dark:text-amber-400 mt-0.5">{{ $statistics['sesi_draft'] }}</p>
             </div>
-            <div class="p-2 bg-amber-50 text-amber-600 rounded-lg border border-amber-100 shadow-inner">
+            <div class="p-2 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-lg border border-amber-100 dark:border-amber-700/50 shadow-inner">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg border border-slate-200/70 shadow-sm p-3 flex items-center justify-between hover:border-emerald-300 transition-all duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200/70 dark:border-slate-700 shadow-sm p-3 flex items-center justify-between hover:border-emerald-300 transition-all duration-300">
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Sesi Aktif (Terbuka)</p>
-                <p class="text-xl font-black text-emerald-600 mt-0.5">{{ $statistics['sesi_buka'] }}</p>
+                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Sesi Aktif (Terbuka)</p>
+                <p class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{{ $statistics['sesi_buka'] }}</p>
             </div>
-            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100 shadow-inner">
+            <div class="p-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg border border-emerald-100 dark:border-emerald-700/50 shadow-inner">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg border border-slate-200/70 shadow-sm p-3 flex items-center justify-between hover:border-rose-300 transition-all duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200/70 dark:border-slate-700 shadow-sm p-3 flex items-center justify-between hover:border-rose-300 transition-all duration-300">
             <div>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Sesi Selesai (Tutup)</p>
-                <p class="text-xl font-black text-rose-600 mt-0.5">{{ $statistics['sesi_tutup'] }}</p>
+                <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Sesi Selesai (Tutup)</p>
+                <p class="text-xl font-black text-rose-600 dark:text-rose-400 mt-0.5">{{ $statistics['sesi_tutup'] }}</p>
             </div>
-            <div class="p-2 bg-rose-50 text-rose-600 rounded-lg border border-rose-100 shadow-inner">
+            <div class="p-2 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-lg border border-rose-100 dark:border-rose-700/50 shadow-inner">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
@@ -188,17 +188,17 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-sm border border-slate-200/80 overflow-hidden">
-        <div class="bg-gradient-to-r from-slate-50 to-[#321270]/5 px-4 py-2.5 border-b border-slate-100 flex items-center gap-2">
-            <span class="w-1.5 h-3 bg-[#321270] rounded-full"></span>
-            <h2 class="text-sm font-bold text-slate-800">Daftar Log Rekapitulasi Presensi</h2>
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200/80 dark:border-slate-700 overflow-hidden transition-colors duration-200">
+        <div class="bg-gradient-to-r from-slate-50 to-[#321270]/5 dark:from-slate-800 dark:to-purple-900/20 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+            <span class="w-1.5 h-3 bg-[#321270] dark:bg-purple-500 rounded-full"></span>
+            <h2 class="text-sm font-bold text-slate-800 dark:text-white">Daftar Log Rekapitulasi Presensi</h2>
         </div>
 
         @if($absensiList->count() > 0)
             <div class="overflow-x-auto">
                 <table class="w-full border-collapse">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-200/80">
+                        <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200/80 dark:border-slate-700">
                             <th class="px-4 py-2.5 text-center text-[11px] font-bold text-slate-500 uppercase tracking-wider w-12">NO</th>
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-40">Pertemuan</th>
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-32">Tanggal</th>
@@ -208,9 +208,9 @@
                             <th class="px-4 py-2.5 text-right text-[11px] font-bold text-slate-500 uppercase tracking-wider min-w-[240px]">Panel Opsi Tindakan</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100 bg-white">
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700/50 bg-white dark:bg-slate-800">
                         @foreach($absensiList as $absensi)
-                            <tr class="hover:bg-slate-50/80 transition duration-150 group">
+                            <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-700/50 transition duration-150 group">
                                 <td class="px-4 py-2.5 text-center font-mono font-bold text-slate-400 text-xs">
                                     {{ ($absensiList->currentPage() - 1) * $absensiList->perPage() + $loop->iteration }}
                                 </td>
@@ -270,7 +270,7 @@
                                                 {{ max(0, $kelas->mahasiswa->count() - $absensi->hadir_count) }}
                                             </div>
                                         </div>
-                                        <span class="text-slate-700 text-xs font-bold bg-slate-50 px-1.5 py-0.5 border border-slate-200 rounded-md">
+                                        <span class="text-slate-700 dark:text-slate-200 text-xs font-bold bg-slate-50 dark:bg-slate-900/50 px-1.5 py-0.5 border border-slate-200 dark:border-slate-700 rounded-md">
                                             {{ $absensi->hadir_count }}<span class="text-slate-400 font-normal">/</span>{{ $kelas->mahasiswa->count() }} <span class="text-[10px] text-slate-400 font-medium">Mhs</span>
                                         </span>
                                     </div>
@@ -337,10 +337,10 @@
             </div>
 
             {{-- Footer: Show + Info + Pagination --}}
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding: 0.75rem 1.25rem; border-top: 1px solid #f1f5f9; background: #f8fafc; border-radius: 0 0 0.75rem 0.75rem;">
+            <div class="flex items-center justify-between flex-wrap gap-3 px-5 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 rounded-b-xl">
                 {{-- Kiri: Show + Keterangan --}}
-                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-                    <form method="GET" action="{{ route('dosen.absensi.index', $kelas->id) }}" style="display: flex; align-items: center; gap: 0.4rem;">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <form method="GET" action="{{ route('dosen.absensi.index', $kelas->id) }}" class="flex items-center gap-2">
                         @foreach(request()->except(['per_page', 'page']) as $k => $v)
                             @if(is_array($v))
                                 @foreach($v as $item)
@@ -350,36 +350,36 @@
                                 <input type="hidden" name="{{ $k }}" value="{{ $v }}">
                             @endif
                         @endforeach
-                        <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">Show:</span>
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Show:</span>
                         <select name="per_page" onchange="this.form.submit()"
-                            style="width: 70px; height: 32px; padding: 0 24px 0 8px; font-size: 0.8rem; font-weight: 600; color: #334155; border: 1px solid #e2e8f0; border-radius: 0.5rem; background: #fff; appearance: none; -webkit-appearance: none; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E\"); background-repeat: no-repeat; background-position: right 6px center; background-size: 12px; cursor: pointer;">
+                            class="w-[70px] h-8 px-2 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#321270]/20 dark:focus:ring-purple-500/30">
                             <option value="10" @selected(($perPage ?? 10) == 10)>10</option>
                             <option value="25" @selected(($perPage ?? 10) == 25)>25</option>
                             <option value="50" @selected(($perPage ?? 10) == 50)>50</option>
                             <option value="100" @selected(($perPage ?? 10) == 100)>100</option>
                         </select>
                     </form>
-                    <span style="font-size: 0.78rem; color: #94a3b8; white-space: nowrap;">
+                    <span class="text-[0.78rem] text-slate-400 whitespace-nowrap">
                         Menampilkan {{ $absensiList->firstItem() ?? 0 }}&ndash;{{ $absensiList->lastItem() ?? 0 }} dari {{ $absensiList->total() }} sesi
                     </span>
                 </div>
 
                 {{-- Kanan: Pagination --}}
                 @if($absensiList->hasPages())
-                    <div style="display: flex; align-items: center;">
+                    <div class="flex items-center">
                         {{ $absensiList->links('pagination::bootstrap-5') }}
                     </div>
                 @endif
             </div>
 
         @else
-            <div class="text-center py-10 px-4 bg-white rounded-b-xl">
-                <div class="w-12 h-12 bg-[#321270]/5 text-[#321270] rounded-xl border border-[#321270]/10 shadow-sm flex items-center justify-center mx-auto mb-3">
+            <div class="text-center py-10 px-4 bg-white dark:bg-slate-800 rounded-b-xl">
+                <div class="w-12 h-12 bg-[#321270]/5 dark:bg-purple-900/20 text-[#321270] dark:text-purple-400 rounded-xl border border-[#321270]/10 dark:border-purple-500/20 shadow-sm flex items-center justify-center mx-auto mb-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m9-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h3 class="text-sm font-bold text-slate-700">Belum Ada Sesi Presensi Terjadwal</h3>
+                <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200">Belum Ada Sesi Presensi Terjadwal</h3>
                 <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Seluruh modul log absensi pertemuan mata kuliah ini masih bernilai kosong.</p>
                 <div class="mt-4">
                     <a href="{{ route('dosen.absensi.create', $kelas->id) }}"
