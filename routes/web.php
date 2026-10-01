@@ -95,7 +95,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Log Aktivitas
     Route::get('admin/aktivitas', [\App\Http\Controllers\Admin\AktivitasPenggunaController::class, 'index'])->name('admin.aktivitas.index');
 
-    // Impor CSV
+    // Impor CSV/Excel Mahasiswa & Dosen
+    Route::get('admin/mahasiswa/template', [AdminMahasiswaController::class, 'downloadTemplate'])->name('admin.mahasiswa.template');
+    Route::post('admin/mahasiswa/import/preview', [AdminMahasiswaController::class, 'previewImport'])->name('admin.mahasiswa.import.preview');
+    Route::post('admin/mahasiswa/import/store', [AdminMahasiswaController::class, 'storeImport'])->name('admin.mahasiswa.import.store');
     Route::post('admin/mahasiswa/import', [AdminMahasiswaController::class, 'importCsv'])->name('admin.mahasiswa.import');
     Route::post('admin/dosen/import', [AdminDosenController::class, 'importCsv'])->name('admin.dosen.import');
 

@@ -12,10 +12,16 @@
                     </ol>
                 </nav>
             </div>
-            <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg"></i>
-                <span>Tambah Mahasiswa</span>
-            </a>
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalImportMahasiswa">
+                    <i class="bi bi-file-earmark-arrow-up"></i>
+                    <span>Impor Excel/CSV</span>
+                </button>
+                <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Tambah Mahasiswa</span>
+                </a>
+            </div>
         </div>
 
         @if(session('success'))
@@ -101,41 +107,151 @@
             </div>
         </div>
 
-        <!-- Modal Import CSV Mahasiswa -->
-        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="{{ route('admin.mahasiswa.import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-content">
-                        <div class="modal-header border-0 pb-0">
-                            <h5 class="modal-title fw-bold" id="importModalLabel">📥 Impor Data Mahasiswa</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal Wizard Impor Data Mahasiswa (Upload & Preview Validasi) -->
+        <div class="modal fade" id="modalImportMahasiswa" tabindex="-1" aria-labelledby="modalImportTitle" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem;">
+                    
+                    <!-- Modal Header -->
+                    <div class="modal-header border-bottom px-4 py-3 bg-light">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="p-2 bg-primary-subtle text-primary rounded-3">
+                                <i class="bi bi-file-earmark-spreadsheet-fill fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="modal-title fw-bold text-slate-800 mb-0" id="modalImportTitle">Impor Data Mahasiswa via Excel/CSV</h5>
+                                <p class="text-muted small mb-0">Unggah berkas spreadsheet dan tinjau validasi data sebelum disimpan ke database</p>
+                            </div>
                         </div>
-                        <div class="alert alert-info border-0 mb-3" style="background-color: #f0f7ff; color: #002B6B;">
-                            <h6 class="fw-bold mb-2" style="font-size: 0.9rem;"><i class="bi bi-info-circle-fill me-1"></i> SOP Impor Mahasiswa:</h6>
-                            <ol class="mb-2 text-muted" style="font-size: 0.85rem; padding-left: 1.2rem;">
-                                <li class="mb-1">Pastikan file Anda berekstensi <strong>.csv</strong>.</li>
-                                <li class="mb-1">Baris paling atas (judul kolom) akan diabaikan oleh sistem.</li>
-                                <li class="mb-1">Urutan 4 kolom wajib dari kiri ke kanan: <br><strong class="text-dark">Nama Lengkap &rarr; NIM &rarr; Email &rarr; ID Program Studi</strong></li>
-                                <li>Password otomatis (*default*) disetel sama persis dengan angka NIM.</li>
-                            </ol>
-                            <a href="data:text/csv;charset=utf-8,Nama Lengkap,NIM,Email,ID Program Studi%0ABudi Santoso,20240001,budi@student.cendekia.ac.id,1" download="template_mahasiswa.csv" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center mt-2" style="font-size: 0.8rem; font-weight: 600;">
-                                <i class="bi bi-download me-2"></i> Download Template CSV (Sudah Ada Isinya)
-                            </a>
-                        </div>
-                        <input type="file" class="form-control" name="file_csv" accept=".csv, .txt" required>
-                        <div class="modal-footer border-0 pt-0">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary px-4" style="background-color: #002B6B; border: none;">Mulai Impor</button>
-                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </form>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body p-4">
+
+                        <!-- STEP 1: UPLOAD & DOWNLOAD TEMPLATE -->
+                        <div id="stepUpload">
+                            <div class="card border border-info-subtle bg-info-subtle/20 rounded-3 mb-4">
+                                <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                                    <div>
+                                        <h6 class="fw-bold text-slate-800 mb-1">
+                                            <i class="bi bi-info-circle-fill text-info me-1"></i> Format Kolom Data
+                                        </h6>
+                                        <p class="text-muted small mb-0">
+                                            Urutan kolom: <strong>NIM</strong> (Wajib, Unik) &bull; <strong>Nama Lengkap</strong> (Wajib) &bull; <strong>Email</strong> (Wajib, Unik) &bull; <strong>No. Telepon</strong> (Opsional) &bull; <strong>Program Studi</strong> (Wajib) &bull; <strong>Status</strong> (Aktif / Cuti / Non-Aktif)
+                                        </p>
+                                    </div>
+                                    <a href="{{ route('admin.mahasiswa.template') }}" class="btn btn-sm btn-outline-primary text-nowrap d-inline-flex align-items-center gap-1 shadow-sm">
+                                        <i class="bi bi-download"></i> Unduh Template (.CSV)
+                                    </a>
+                                </div>
+                            </div>
+
+                            <form id="formUploadPreview" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="fileMahasiswa" class="form-label fw-semibold text-slate-700">Pilih Berkas CSV / Spreadsheet</label>
+                                    <input class="form-control form-control-lg" type="file" id="fileMahasiswa" name="file_mahasiswa" accept=".csv, .txt" required>
+                                    <div class="form-text text-muted">Format yang didukung: <code>.csv</code> atau <code>.txt</code> (Maks. 5MB). File dapat dibuka dan diedit di Microsoft Excel.</div>
+                                </div>
+
+                                <div id="uploadAlert" class="alert alert-danger d-none py-2 px-3 small" role="alert"></div>
+
+                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" id="btnProsesPreview" class="btn btn-primary px-4 d-inline-flex align-items-center gap-2">
+                                        <span class="spinner-border spinner-border-sm d-none" id="spinnerUpload" role="status" aria-hidden="true"></span>
+                                        <i class="bi bi-search" id="iconUpload"></i>
+                                        <span>Cek & Tinjau Data</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- STEP 2: PREVIEW DATA & VALIDASI -->
+                        <div id="stepPreview" class="d-none">
+                            <!-- Ringkasan Statistik -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-4">
+                                    <div class="p-3 border rounded-3 bg-light text-center">
+                                        <div class="text-muted small fw-semibold">Total Baris Terbaca</div>
+                                        <div class="fs-4 fw-bold text-dark" id="statTotalRows">0</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="p-3 border border-success-subtle bg-success-subtle/30 rounded-3 text-center">
+                                        <div class="text-success small fw-semibold">Siap Diimpor (Valid)</div>
+                                        <div class="fs-4 fw-bold text-success" id="statValidRows">0</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="p-3 border border-danger-subtle bg-danger-subtle/30 rounded-3 text-center">
+                                        <div class="text-danger small fw-semibold">Bermasalah (Invalid)</div>
+                                        <div class="fs-4 fw-bold text-danger" id="statInvalidRows">0</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Filter Baris & Tombol Ganti File -->
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="toggleOnlyErrors">
+                                    <label class="form-check-label small fw-semibold text-slate-700" for="toggleOnlyErrors">
+                                        Hanya tampilkan baris bermasalah (<span id="badgeErrorCount">0</span>)
+                                    </label>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="btnGantiFile">
+                                    <i class="bi bi-arrow-repeat me-1"></i> Unggah File Lain
+                                </button>
+                            </div>
+
+                            <!-- Tabel Tinjauan (Preview) -->
+                            <div class="table-responsive border rounded-3" style="max-height: 380px;">
+                                <table class="table table-hover align-middle mb-0" id="tablePreview">
+                                    <thead class="table-light sticky-top">
+                                        <tr class="text-nowrap small text-uppercase fw-bold text-slate-600">
+                                            <th style="width: 50px;">Baris</th>
+                                            <th>Status</th>
+                                            <th>NIM</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Email</th>
+                                            <th>No. Telepon</th>
+                                            <th>Program Studi</th>
+                                            <th>Status Mhs</th>
+                                            <th>Validasi / Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPreview">
+                                        <!-- Diisi via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Footer Step 2 -->
+                            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-4">
+                                <div class="small text-muted" id="previewNote">
+                                    <i class="bi bi-info-circle me-1"></i> Baris bermasalah (merah) akan dilewati dan tidak disimpan ke database.
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-light px-3" data-bs-dismiss="modal">Tutup</button>
+                                    <button type="button" class="btn btn-success px-4 d-inline-flex align-items-center gap-2" id="btnKonfirmasiSimpan">
+                                        <span class="spinner-border spinner-border-sm d-none" id="spinnerSimpan" role="status"></span>
+                                        <i class="bi bi-cloud-arrow-up-fill" id="iconSimpan"></i>
+                                        <span id="textBtnSimpan">Simpan Data Valid</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // ==================== FILTER & AJAX SEARCH TABLE ====================
             const searchInput = document.getElementById('searchInput');
             const prodiSelect = document.getElementById('prodiSelect');
             const statusSelect = document.getElementById('statusSelect');
@@ -150,7 +266,6 @@
                 const perPageEl = document.getElementById('perPageSelect');
                 const perPage = perPageEl ? perPageEl.value : 10;
 
-                // Bangun parameter URL untuk request AJAX
                 let url = `{{ route('admin.mahasiswa.index') }}?ajax=1&page=${page}&per_page=${perPage}&search=${encodeURIComponent(search)}&program_studi_id=${prodi}&status=${status}`;
 
                 fetch(url)
@@ -161,7 +276,6 @@
                     .catch(error => console.error('Gagal memuat data mahasiswa:', error));
             }
 
-            // Real-time Search Keyboard (dengan debounce 400ms)
             searchInput.addEventListener('input', function () {
                 clearTimeout(delayTimer);
                 delayTimer = setTimeout(function() {
@@ -169,18 +283,15 @@
                 }, 400);
             });
 
-            // Ganti Filter Dropdown langsung panggil fungsi pencarian
             prodiSelect.addEventListener('change', () => fetchMahasiswa());
             statusSelect.addEventListener('change', () => fetchMahasiswa());
 
-            // Handle perPage change via delegation
             document.addEventListener('change', function (e) {
                 if (e.target && e.target.id === 'perPageSelect') {
                     fetchMahasiswa(1);
                 }
             });
 
-            // Intercept link pagination bawaan agar berjalan via AJAX
             document.addEventListener('click', function (e) {
                 const paginationLink = e.target.closest('#tableContainer .pagination a');
                 if (paginationLink) {
@@ -189,6 +300,179 @@
                     const page = urlParams.get('page') || 1;
                     fetchMahasiswa(page);
                 }
+            });
+
+            // ==================== IMPOR EXCEL/CSV & PREVIEW LOGIC ====================
+            const formUploadPreview   = document.getElementById('formUploadPreview');
+            const stepUpload          = document.getElementById('stepUpload');
+            const stepPreview         = document.getElementById('stepPreview');
+            const btnProsesPreview    = document.getElementById('btnProsesPreview');
+            const spinnerUpload       = document.getElementById('spinnerUpload');
+            const iconUpload          = document.getElementById('iconUpload');
+            const uploadAlert         = document.getElementById('uploadAlert');
+            const btnGantiFile        = document.getElementById('btnGantiFile');
+            const tbodyPreview        = document.getElementById('tbodyPreview');
+            const toggleOnlyErrors    = document.getElementById('toggleOnlyErrors');
+            const btnKonfirmasiSimpan = document.getElementById('btnKonfirmasiSimpan');
+            const spinnerSimpan       = document.getElementById('spinnerSimpan');
+            const iconSimpan          = document.getElementById('iconSimpan');
+            const textBtnSimpan       = document.getElementById('textBtnSimpan');
+
+            let parsedRows = [];
+
+            // A. Submit Form Unggah untuk Mendapatkan Preview & Validasi
+            formUploadPreview.addEventListener('submit', function (e) {
+                e.preventDefault();
+                uploadAlert.classList.add('d-none');
+                
+                spinnerUpload.classList.remove('d-none');
+                iconUpload.classList.add('d-none');
+                btnProsesPreview.disabled = true;
+
+                const formData = new FormData(formUploadPreview);
+
+                fetch("{{ route('admin.mahasiswa.import.preview') }}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                .then(res => {
+                    spinnerUpload.classList.add('d-none');
+                    iconUpload.classList.remove('d-none');
+                    btnProsesPreview.disabled = false;
+
+                    if (res.status === 200 && res.body.success) {
+                        parsedRows = res.body.rows;
+                        renderPreview(res.body.summary, parsedRows);
+                        stepUpload.classList.add('d-none');
+                        stepPreview.classList.remove('d-none');
+                    } else {
+                        uploadAlert.textContent = res.body.message || 'Gagal memproses berkas.';
+                        uploadAlert.classList.remove('d-none');
+                    }
+                })
+                .catch(err => {
+                    spinnerUpload.classList.add('d-none');
+                    iconUpload.classList.remove('d-none');
+                    btnProsesPreview.disabled = false;
+                    uploadAlert.textContent = 'Terjadi kesalahan sistem saat menghubungi server.';
+                    uploadAlert.classList.remove('d-none');
+                });
+            });
+
+            // B. Render Hasil Preview ke Tabel
+            function renderPreview(summary, rows) {
+                document.getElementById('statTotalRows').textContent   = summary.total_rows;
+                document.getElementById('statValidRows').textContent   = summary.total_valid;
+                document.getElementById('statInvalidRows').textContent = summary.total_invalid;
+                document.getElementById('badgeErrorCount').textContent = summary.total_invalid;
+
+                tbodyPreview.innerHTML = '';
+
+                if (rows.length === 0) {
+                    tbodyPreview.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-muted">Berkas tidak memiliki data baris untuk diimpor.</td></tr>`;
+                    btnKonfirmasiSimpan.disabled = true;
+                    return;
+                }
+
+                btnKonfirmasiSimpan.disabled = summary.total_valid === 0;
+                textBtnSimpan.textContent = `Simpan (${summary.total_valid} Data Valid)`;
+
+                rows.forEach((row) => {
+                    const tr = document.createElement('tr');
+                    tr.className = row.is_valid ? 'row-valid' : 'row-invalid table-danger';
+
+                    const statusBadge = row.is_valid 
+                        ? `<span class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-check-circle me-1"></i> Valid</span>`
+                        : `<span class="badge bg-danger-subtle text-danger border border-danger-subtle"><i class="bi bi-exclamation-triangle me-1"></i> Error</span>`;
+
+                    const errorDetails = row.errors.length > 0 
+                        ? row.errors.map(err => `<div class="text-danger small fw-semibold">&bull; ${err}</div>`).join('')
+                        : `<span class="text-muted small"><i class="bi bi-check2 text-success me-1"></i>Siap diimpor</span>`;
+
+                    tr.innerHTML = `
+                        <td class="text-muted small">${row.row_number}</td>
+                        <td>${statusBadge}</td>
+                        <td class="fw-semibold ${row.errors.some(e => e.includes('NIM')) ? 'text-danger text-decoration-underline' : ''}">${row.nim || '-'}</td>
+                        <td>${row.nama || '-'}</td>
+                        <td class="${row.errors.some(e => e.includes('Email')) ? 'text-danger text-decoration-underline' : ''}">${row.email || '-'}</td>
+                        <td class="text-muted small">${row.telepon || '-'}</td>
+                        <td class="${row.errors.some(e => e.includes('Prodi') || e.includes('Program Studi')) ? 'text-danger fw-semibold' : ''}">${row.prodi_name || '-'}</td>
+                        <td><span class="badge bg-secondary-subtle text-secondary">${row.status_label}</span></td>
+                        <td>${errorDetails}</td>
+                    `;
+
+                    tbodyPreview.appendChild(tr);
+                });
+            }
+
+            // C. Filter Tampilan: Hanya Tampilkan Baris Error
+            toggleOnlyErrors.addEventListener('change', function () {
+                const rows = tbodyPreview.querySelectorAll('tr');
+                rows.forEach(tr => {
+                    if (toggleOnlyErrors.checked) {
+                        if (tr.classList.contains('row-valid')) {
+                            tr.style.display = 'none';
+                        }
+                    } else {
+                        tr.style.display = '';
+                    }
+                });
+            });
+
+            // D. Kembali ke Step 1 (Ganti Berkas)
+            btnGantiFile.addEventListener('click', function () {
+                stepPreview.classList.add('d-none');
+                stepUpload.classList.remove('d-none');
+                formUploadPreview.reset();
+                toggleOnlyErrors.checked = false;
+            });
+
+            // E. Eksekusi Simpan Data yang Valid ke Database
+            btnKonfirmasiSimpan.addEventListener('click', function () {
+                const validRows = parsedRows.filter(r => r.is_valid);
+                if (validRows.length === 0) return;
+
+                if (!confirm(`Konfirmasi: Simpan ${validRows.length} data mahasiswa yang valid ke database?`)) {
+                    return;
+                }
+
+                spinnerSimpan.classList.remove('d-none');
+                iconSimpan.classList.add('d-none');
+                btnKonfirmasiSimpan.disabled = true;
+
+                fetch("{{ route('admin.mahasiswa.import.store') }}", {
+                    method: 'POST',
+                    body: JSON.stringify({ rows: validRows }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(result => {
+                    spinnerSimpan.classList.add('d-none');
+                    iconSimpan.classList.remove('d-none');
+                    btnKonfirmasiSimpan.disabled = false;
+
+                    if (result.success) {
+                        alert(result.message);
+                        window.location.reload();
+                    } else {
+                        alert(result.message || 'Gagal menyimpan data.');
+                    }
+                })
+                .catch(err => {
+                    spinnerSimpan.classList.add('d-none');
+                    iconSimpan.classList.remove('d-none');
+                    btnKonfirmasiSimpan.disabled = false;
+                    alert('Terjadi kesalahan saat menyimpan data ke database.');
+                });
             });
         });
     </script>
