@@ -378,9 +378,14 @@
             border-collapse: collapse;
             color: #334155;
             vertical-align: middle;
+            --bs-table-bg: transparent;
         }
         html.dark .table {
             color: #cbd5e1;
+            --bs-table-bg: transparent;
+            --bs-table-color: #cbd5e1;
+            --bs-table-striped-bg: rgba(30, 41, 59, 0.5);
+            --bs-table-hover-bg: rgba(30, 41, 59, 0.7);
         }
 
         .table thead th {
@@ -403,13 +408,18 @@
         .table tbody tr {
             transition: all 0.15s ease;
         }
+        html.dark .table tbody tr {
+            background-color: transparent !important;
+        }
         .table tbody td {
             padding: 1.1rem 1.25rem;
             font-size: 0.875rem;
             border-bottom: 1px solid #f1f5f9;
             vertical-align: middle;
+            background-color: transparent !important;
         }
         html.dark .table tbody td {
+            background-color: transparent !important;
             border-bottom-color: #334155;
             color: #cbd5e1 !important;
         }
@@ -626,8 +636,11 @@
         }
         html.dark .form-control, html.dark .form-select {
             background-color: #0f172a;
-            border-color: #334155;
+            border-color: #475569;
             color: #f8fafc;
+        }
+        html.dark .form-control::placeholder, html.dark .form-select::placeholder {
+            color: #94a3b8 !important;
         }
         html.dark .form-control:focus, html.dark .form-select:focus {
             border-color: #3b82f6;
