@@ -162,15 +162,15 @@
         <div class="px-5 py-3 border-t border-gray-100 flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center gap-3 flex-wrap">
                 <form method="GET" action="{{ route('admin.help-center.tickets') }}" class="flex items-center gap-2">
-                    @if(request('search'))
-                        <input type="hidden" name="search" value="{{ request('search') }}">
-                    @endif
-                    @if(request('status'))
-                        <input type="hidden" name="status" value="{{ request('status') }}">
-                    @endif
-                    @if(request('category'))
-                        <input type="hidden" name="category" value="{{ request('category') }}">
-                    @endif
+                    @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                        @if(is_array($v))
+                            @foreach($v as $item)
+                                <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                            @endforeach
+                        @else
+                            <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                        @endif
+                    @endforeach
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider text-nowrap">Show:</span>
                     <select name="per_page" class="h-8 px-2 rounded-lg border border-gray-200 bg-white text-gray-800 text-xs font-semibold focus:outline-none" onchange="this.form.submit()">
                         <option value="10" @selected(($perPage ?? 10) == 10)>10</option>

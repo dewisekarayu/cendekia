@@ -43,7 +43,7 @@ Route::get('/', function () {
 
 // Dashboard umum -> redirect otomatis sesuai role
 Route::get('/dashboard', function () {
-    $user = auth()->user();
+    $user = request()->user();
     if (!$user) {
         abort(401);
     }
@@ -96,11 +96,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Log Aktivitas
     Route::get('admin/aktivitas', [\App\Http\Controllers\Admin\AktivitasPenggunaController::class, 'index'])->name('admin.aktivitas.index');
 
+    // Ekspor Data Mahasiswa & Dosen (PDF & Excel)
+    Route::get('admin/dosen/export/pdf', [AdminDosenController::class, 'exportPdf'])->name('admin.dosen.export.pdf');
+    Route::get('admin/dosen/export/excel', [AdminDosenController::class, 'exportExcel'])->name('admin.dosen.export.excel');
+    Route::get('admin/mahasiswa/export/pdf', [AdminMahasiswaController::class, 'exportPdf'])->name('admin.mahasiswa.export.pdf');
+    Route::get('admin/mahasiswa/export/excel', [AdminMahasiswaController::class, 'exportExcel'])->name('admin.mahasiswa.export.excel');
+
     // Impor CSV/Excel Mahasiswa & Dosen
     Route::get('admin/mahasiswa/template', [AdminMahasiswaController::class, 'downloadTemplate'])->name('admin.mahasiswa.template');
     Route::post('admin/mahasiswa/import/preview', [AdminMahasiswaController::class, 'previewImport'])->name('admin.mahasiswa.import.preview');
     Route::post('admin/mahasiswa/import/store', [AdminMahasiswaController::class, 'storeImport'])->name('admin.mahasiswa.import.store');
     Route::post('admin/mahasiswa/import', [AdminMahasiswaController::class, 'importCsv'])->name('admin.mahasiswa.import');
+
+    Route::get('admin/dosen/template', [AdminDosenController::class, 'downloadTemplate'])->name('admin.dosen.template');
+    Route::post('admin/dosen/import/preview', [AdminDosenController::class, 'previewImport'])->name('admin.dosen.import.preview');
+    Route::post('admin/dosen/import/store', [AdminDosenController::class, 'storeImport'])->name('admin.dosen.import.store');
     Route::get('admin/dosen/import', [AdminDosenController::class, 'importView'])->name('admin.dosen.import.view');
     Route::post('admin/dosen/import', [AdminDosenController::class, 'importCsv'])->name('admin.dosen.import');
 

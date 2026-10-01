@@ -604,9 +604,9 @@
                     contentInput.value = "Silakan unduh file PDF terlampir untuk melihat daftar soal. Kerjakan dengan teliti dan kumpulkan jawaban Anda sesuai dengan batas waktu yang ditentukan.";
                 }
                 
-                alert('Berhasil! AI telah membuatkan soal dalam bentuk PDF dan melampirkannya ke form.');
+                showToast('Berhasil! AI telah membuatkan soal dalam bentuk PDF dan melampirkannya ke form.', 'success');
             } catch (error) {
-                alert('Terjadi kesalahan: ' + error.message);
+                showToast('Terjadi kesalahan: ' + error.message, 'danger');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;

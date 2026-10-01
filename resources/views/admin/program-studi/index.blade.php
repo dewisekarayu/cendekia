@@ -107,6 +107,8 @@
                 });
         }
 
+        window.performSearch = performSearch;
+
         // Intercept pagination links
         document.addEventListener('click', function (e) {
             const link = e.target.closest('#tableContainer .pagination a');

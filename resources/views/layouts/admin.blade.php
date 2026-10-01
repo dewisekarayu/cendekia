@@ -809,6 +809,9 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <x-toast />
+
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">

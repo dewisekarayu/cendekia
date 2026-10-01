@@ -139,6 +139,15 @@
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-2 pb-4 flex-wrap gap-3">
             <div class="d-flex align-items-center gap-3 flex-wrap">
                 <form method="GET" action="{{ route('admin.pengumuman.index') }}" class="d-flex align-items-center gap-2">
+                    @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                        @if(is_array($v))
+                            @foreach($v as $item)
+                                <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                            @endforeach
+                        @else
+                            <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                        @endif
+                    @endforeach
                     <span class="text-xs fw-bold text-secondary text-nowrap">Show:</span>
                     <select name="per_page" class="form-select form-select-sm" style="width: 80px; border-radius: 0.5rem;" onchange="this.form.submit()">
                         <option value="10" @selected(($perPage ?? 10) == 10)>10</option>

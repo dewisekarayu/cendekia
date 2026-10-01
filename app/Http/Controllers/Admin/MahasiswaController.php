@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\MahasiswaExport;
 use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MahasiswaController extends Controller
 {
@@ -478,6 +481,70 @@ class MahasiswaController extends Controller
                 'message' => 'Terjadi kesalahan sistem saat menyimpan data: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Ekspor data mahasiswa ke PDF.
+     */
+    public function exportPdf(Request $request)
+    {
+        $search       = trim($request->input('search', ''));
+        $prodiFilter  = $request->input('program_studi_id');
+        $statusFilter = $request->input('status');
+
+        $query = User::role('mahasiswa')->with('programStudi');
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nip_nim', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+        if ($prodiFilter) {
+            $query->where('program_studi_id', $prodiFilter);
+        }
+        if ($statusFilter) {
+            $query->where('status', $statusFilter);
+        }
+
+        $mahasiswa = $query->latest()->get();
+
+        $prodiName = null;
+        if ($prodiFilter) {
+            $prodi = ProgramStudi::find($prodiFilter);
+            $prodiName = $prodi?->nama_prodi;
+        }
+
+        $filters = [
+            'search' => $search,
+            'prodi'  => $prodiName,
+            'status' => $statusFilter,
+        ];
+
+        $pdf = Pdf::loadView('admin.mahasiswa.pdf', compact('mahasiswa', 'filters'))
+            ->setPaper('a4', 'landscape');
+
+        $filename = 'data-mahasiswa-' . now()->format('Ymd-His') . '.pdf';
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Ekspor data mahasiswa ke Excel (.xlsx).
+     */
+    public function exportExcel(Request $request)
+    {
+        $search       = trim($request->input('search', ''));
+        $prodiFilter  = $request->input('program_studi_id');
+        $statusFilter = $request->input('status');
+
+        $filename = 'data-mahasiswa-' . now()->format('Ymd-His') . '.xlsx';
+
+        return Excel::download(
+            new MahasiswaExport($search, $prodiFilter, $statusFilter),
+            $filename
+        );
     }
 
     /**

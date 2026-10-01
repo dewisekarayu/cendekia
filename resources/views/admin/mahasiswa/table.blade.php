@@ -7,6 +7,7 @@
                 <th style="width: 130px;">NIM</th>
                 <th>FOTO & NAMA LENGKAP</th>
                 <th>PROGRAM STUDI</th>
+                <th>NO TLP</th>
                 <th>STATUS</th>
                 <th class="text-center" style="width: 120px;">AKSI</th>
             </tr>
@@ -36,6 +37,11 @@
                     <td>
                         <span class="badge-akreditasi">
                             {{ $item->programStudi?->nama_prodi ?? 'Belum memilih prodi' }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-slate-600 dark:text-slate-400 fw-medium" style="font-size: 0.85rem;">
+                            {{ $item->telepon ?? '-' }}
                         </span>
                     </td>
                     <td>
@@ -73,7 +79,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center py-5">
+                    <td colspan="7" class="text-center py-5">
                         <div class="d-flex flex-column align-items-center justify-content-center text-muted">
                             <i class="bi bi-mortarboard fs-1 text-slate-300 dark:text-slate-600 mb-2"></i>
                             <p class="fw-semibold mb-0">Belum ada data mahasiswa.</p>
@@ -88,15 +94,24 @@
 
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center px-4 py-3 border-t border-slate-100 dark:border-slate-700/60 gap-3">
     <div class="d-flex align-items-center gap-3 flex-wrap">
-        <div class="d-flex align-items-center gap-2">
+        <form method="GET" action="{{ route('admin.mahasiswa.index') }}" class="d-flex align-items-center gap-2">
+            @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                @if(is_array($v))
+                    @foreach($v as $item)
+                        <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                    @endforeach
+                @else
+                    <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                @endif
+            @endforeach
             <span class="text-xs fw-bold text-slate-500 uppercase tracking-wider text-nowrap">Show:</span>
-            <select id="perPageSelect" name="per_page" class="form-select form-select-sm shadow-sm" style="width: 80px; min-height: 38px; padding: 6px 28px 6px 12px; font-size: 0.875rem; font-weight: 600; line-height: 1.5; border-radius: 0.5rem;">
+            <select id="perPageSelect" name="per_page" class="form-select form-select-sm shadow-sm" style="width: 80px; min-height: 38px; padding: 6px 28px 6px 12px; font-size: 0.875rem; font-weight: 600; line-height: 1.5; border-radius: 0.5rem;" onchange="if(typeof window.fetchMahasiswa === 'function'){ window.fetchMahasiswa(1); } else { this.form.submit(); }">
                 <option value="10" {{ $mahasiswa->perPage() == 10 ? 'selected' : '' }}>10</option>
                 <option value="25" {{ $mahasiswa->perPage() == 25 ? 'selected' : '' }}>25</option>
                 <option value="50" {{ $mahasiswa->perPage() == 50 ? 'selected' : '' }}>50</option>
                 <option value="100" {{ $mahasiswa->perPage() == 100 ? 'selected' : '' }}>100</option>
             </select>
-        </div>
+        </form>
         <small class="text-muted">Menampilkan {{ $mahasiswa->firstItem() ?? 0 }}-{{ $mahasiswa->lastItem() ?? 0 }} dari {{ $mahasiswa->total() }} data</small>
     </div>
     @if($mahasiswa->hasPages())

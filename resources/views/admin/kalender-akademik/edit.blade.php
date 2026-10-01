@@ -233,9 +233,37 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {{-- Jenis Kegiatan --}}
                             <div>
-                                <label for="jenis_kegiatan" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                                    Jenis Kegiatan <span class="text-red-500">*</span>
-                                </label>
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <label for="jenis_kegiatan" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider m-0">
+                                        Jenis Kegiatan <span class="text-red-500">*</span>
+                                    </label>
+                                    <button type="button" onclick="toggleFormTambahJenis()" class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/80 px-2.5 py-1 rounded-lg border border-blue-200/80 dark:border-blue-800/60 transition-all cursor-pointer">
+                                        <i class="bi bi-plus-lg text-xs"></i>
+                                        <span>Tambah Jenis</span>
+                                    </button>
+                                </div>
+
+                                <!-- Form Inline Tambah Jenis Kegiatan Baru -->
+                                <div id="formTambahJenisContainer" class="hidden mb-3 p-3 bg-slate-50 dark:bg-slate-900/70 rounded-xl border border-slate-200 dark:border-slate-700 transition-all shadow-sm">
+                                    <div class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center justify-between">
+                                        <span class="flex items-center gap-1.5">
+                                            <i class="bi bi-plus-circle-fill text-blue-600 dark:text-blue-400"></i>
+                                            <span>Tambah Jenis Kegiatan Baru</span>
+                                        </span>
+                                        <button type="button" onclick="toggleFormTambahJenis()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 rounded transition-colors">
+                                            <i class="bi bi-x-lg text-xs"></i>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <input type="text" id="input_jenis_baru" class="form-control text-sm py-1.5 px-3 rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full" placeholder="Contoh: Seminar Nasional / Workshop" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); simpanJenisKegiatanBaru(); }">
+                                        <button type="button" onclick="simpanJenisKegiatanBaru()" class="px-3.5 py-1.5 bg-[#002B6B] hover:bg-blue-900 text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer">
+                                            <i class="bi bi-check-lg"></i>
+                                            <span>Tambah</span>
+                                        </button>
+                                    </div>
+                                    <span id="error_jenis_baru" class="text-red-500 text-xs mt-1.5 hidden font-medium block"></span>
+                                </div>
+
                                 <select name="jenis_kegiatan" id="jenis_kegiatan" class="form-select w-full" required onchange="updatePreview()">
                                     <option value="">-- Pilih Jenis Kegiatan --</option>
                                     @foreach($jenisKegiatanOptions as $key => $label)
@@ -492,6 +520,85 @@
             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
         ];
         return `${day} ${bulanIndo[monthIndex]} ${year}`;
+    }
+
+    /* ---------------- Tambah Jenis Kegiatan Dynamically ---------------- */
+    function toggleFormTambahJenis() {
+        const container = document.getElementById('formTambahJenisContainer');
+        const input = document.getElementById('input_jenis_baru');
+        const errorEl = document.getElementById('error_jenis_baru');
+        
+        if (errorEl) {
+            errorEl.classList.add('hidden');
+            errorEl.textContent = '';
+        }
+        
+        if (container.classList.contains('hidden')) {
+            container.classList.remove('hidden');
+            setTimeout(() => input.focus(), 100);
+        } else {
+            container.classList.add('hidden');
+            input.value = '';
+        }
+    }
+
+    function simpanJenisKegiatanBaru() {
+        const input = document.getElementById('input_jenis_baru');
+        const errorEl = document.getElementById('error_jenis_baru');
+        const select = document.getElementById('jenis_kegiatan');
+        
+        const rawVal = input.value.trim();
+        if (!rawVal) {
+            errorEl.textContent = 'Nama jenis kegiatan tidak boleh kosong.';
+            errorEl.classList.remove('hidden');
+            input.focus();
+            return;
+        }
+
+        const key = rawVal.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || rawVal.toLowerCase();
+        
+        let existingOpt = Array.from(select.options).find(opt => opt.value === key || opt.text.toLowerCase() === rawVal.toLowerCase());
+        
+        if (existingOpt) {
+            select.value = existingOpt.value;
+            errorEl.classList.add('hidden');
+            toggleFormTambahJenis();
+            updatePreview();
+            
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'info',
+                    title: 'Jenis kegiatan sudah ada dan telah dipilih.',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            }
+            return;
+        }
+
+        const option = document.createElement('option');
+        option.value = key;
+        option.text = rawVal;
+        option.selected = true;
+
+        select.appendChild(option);
+        select.value = key;
+        
+        toggleFormTambahJenis();
+        updatePreview();
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: `Jenis kegiatan "${rawVal}" berhasil ditambahkan.`,
+                showConfirmButton: false,
+                timer: 2500
+            });
+        }
     }
 
     function updatePreview() {

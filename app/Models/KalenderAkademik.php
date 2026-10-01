@@ -161,22 +161,9 @@ class KalenderAkademik extends Model
     protected function jenisKegiatanLabel(): Attribute
     {
         return Attribute::make(
-            get: fn () => match ($this->jenis_kegiatan) {
-                'uts'                     => 'UTS',
-                'uas'                     => 'UAS',
-                'libur_nasional'          => 'Libur Nasional',
-                'libur_akademik'          => 'Libur Akademik',
-                'deadline_tugas'          => 'Deadline Tugas',
-                'deadline_skripsi'        => 'Deadline Skripsi',
-                'pengumuman_nilai'        => 'Pengumuman Nilai',
-                'praktikum'               => 'Praktikum',
-                'wisuda'                  => 'Wisuda',
-                'orientasi_mahasiswa_baru' => 'Orientasi Mahasiswa Baru',
-                'pembayaran_ukt'          => 'Pembayaran UKT',
-                'pengisian_krs'           => 'Pengisian KRS',
-                'pengisian_khs'           => 'Pengisian KHS',
-                'cuti_akademik'           => 'Cuti Akademik',
-                default                   => 'Lainnya',
+            get: function () {
+                $options = self::getJenisKegiatanOptions();
+                return $options[$this->jenis_kegiatan] ?? ucwords(str_replace(['_', '-'], ' ', $this->jenis_kegiatan ?? 'Lainnya'));
             }
         );
     }
@@ -301,7 +288,7 @@ class KalenderAkademik extends Model
 
     public static function getJenisKegiatanOptions(): array
     {
-        return [
+        $options = [
             'uts'                     => 'UTS',
             'uas'                     => 'UAS',
             'libur_nasional'          => 'Libur Nasional',
@@ -318,6 +305,24 @@ class KalenderAkademik extends Model
             'cuti_akademik'           => 'Cuti Akademik',
             'lainnya'                 => 'Lainnya',
         ];
+
+        try {
+            $customTypes = self::query()
+                ->select('jenis_kegiatan')
+                ->whereNotNull('jenis_kegiatan')
+                ->distinct()
+                ->pluck('jenis_kegiatan');
+
+            foreach ($customTypes as $type) {
+                if ($type && !isset($options[$type])) {
+                    $options[$type] = ucwords(str_replace(['_', '-'], ' ', $type));
+                }
+            }
+        } catch (\Throwable $e) {
+            // Silently ignore if query fails
+        }
+
+        return $options;
     }
 
     public static function getWarnaPresets(): array

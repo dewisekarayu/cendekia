@@ -43,6 +43,9 @@
         @yield('content')
     </main>
 
+    <!-- Toast Notification -->
+    <x-toast />
+
     <!-- Footer -->
     <footer class="bg-gray-800 text-gray-100 py-8 mt-16">
         <div class="container mx-auto px-4">

@@ -256,7 +256,7 @@ function markAllHadir() {
     });
     
     // Show notification
-    alert('✓ Semua mahasiswa telah diset status Hadir!');
+    showToast('✓ Semua mahasiswa telah diset status Hadir!', 'success');
 }
 </script>
 @endsection

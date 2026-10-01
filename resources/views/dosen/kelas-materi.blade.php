@@ -632,9 +632,9 @@
                 contentInput.value = "Silakan unduh dan pelajari file PDF terlampir.";
             }
             
-            alert('Berhasil! AI telah membuatkan file materi/soal dalam bentuk PDF dan melampirkannya ke form.');
+            showToast('Berhasil! AI telah membuatkan file materi/soal dalam bentuk PDF dan melampirkannya ke form.', 'success');
         } catch (error) {
-            alert('Terjadi kesalahan: ' + error.message);
+            showToast('Terjadi kesalahan: ' + error.message, 'danger');
         } finally {
             btn.innerHTML = originalText;
             btn.disabled = false;

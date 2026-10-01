@@ -18,8 +18,13 @@ return new class extends Migration
             }
         });
 
-        // Cegah 1 mahasiswa presensi 2x di sesi yang sama (safety net di level DB)
-        $indexExists = collect(DB::select("SHOW INDEX FROM absensi_mahasiswa WHERE Key_name = 'absensi_mahasiswa_unique'"))->isNotEmpty();
+        $dbDriver = Schema::getConnection()->getDriverName();
+        $indexExists = false;
+        if ($dbDriver === 'mysql') {
+            $indexExists = collect(DB::select("SHOW INDEX FROM absensi_mahasiswa WHERE Key_name = 'absensi_mahasiswa_unique'"))->isNotEmpty();
+        } else if ($dbDriver === 'sqlite') {
+            $indexExists = collect(DB::select("SELECT name FROM sqlite_master WHERE type='index' AND name='absensi_mahasiswa_unique'"))->isNotEmpty();
+        }
 
         if (!$indexExists) {
             Schema::table('absensi_mahasiswa', function (Blueprint $table) {

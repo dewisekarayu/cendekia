@@ -308,6 +308,15 @@
                 {{-- Kiri: Show + Keterangan --}}
                 <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                     <form method="GET" action="{{ route('dosen.absensi.index', $kelas->id) }}" style="display: flex; align-items: center; gap: 0.4rem;">
+                        @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                            @if(is_array($v))
+                                @foreach($v as $item)
+                                    <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                                @endforeach
+                            @else
+                                <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                            @endif
+                        @endforeach
                         <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">Show:</span>
                         <select name="per_page" onchange="this.form.submit()"
                             style="width: 70px; height: 32px; padding: 0 24px 0 8px; font-size: 0.8rem; font-weight: 600; color: #334155; border: 1px solid #e2e8f0; border-radius: 0.5rem; background: #fff; appearance: none; -webkit-appearance: none; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E\"); background-repeat: no-repeat; background-position: right 6px center; background-size: 12px; cursor: pointer;">

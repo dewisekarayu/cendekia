@@ -132,7 +132,15 @@
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center px-4 py-3 border-t border-slate-100 dark:border-slate-700/60 gap-3">
             <div class="d-flex align-items-center gap-3 flex-wrap">
                 <form method="GET" action="{{ route('admin.user.index') }}" class="d-flex align-items-center gap-2">
-                    <input type="hidden" name="role" value="{{ $role }}">
+                    @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                        @if(is_array($v))
+                            @foreach($v as $item)
+                                <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                            @endforeach
+                        @else
+                            <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                        @endif
+                    @endforeach
                     <span class="text-xs font-bold text-slate-500 uppercase tracking-wider text-nowrap">Show:</span>
                     <select name="per_page" class="form-select form-select-sm" style="width: 80px; border-radius: 0.5rem; height: 34px;" onchange="this.form.submit()">
                         <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>

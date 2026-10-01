@@ -533,6 +533,9 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <x-toast />
+
     <style>
         [x-cloak] {
             display: none !important;

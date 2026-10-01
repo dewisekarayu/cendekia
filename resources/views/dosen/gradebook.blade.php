@@ -216,9 +216,15 @@
                 <div class="px-5 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-900/30 flex items-center justify-between flex-wrap gap-3">
                     <div class="flex items-center gap-3 flex-wrap">
                         <form method="GET" action="{{ route('dosen.gradebook') }}" class="flex items-center gap-1.5">
-                            @if(request('kelas_id'))
-                                <input type="hidden" name="kelas_id" value="{{ request('kelas_id') }}">
-                            @endif
+                            @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                                @if(is_array($v))
+                                    @foreach($v as $item)
+                                        <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                                    @endforeach
+                                @else
+                                    <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                                @endif
+                            @endforeach
                             <span class="text-xs text-gray-500 dark:text-slate-400 font-bold uppercase tracking-wider">Show:</span>
                             <select name="per_page" class="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1 text-xs text-gray-700 dark:text-gray-300 font-semibold focus:outline-none shadow-sm" onchange="this.form.submit()">
                                 <option value="10" @selected(($perPage ?? 10) == 10)>10</option>

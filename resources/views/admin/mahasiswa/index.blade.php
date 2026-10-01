@@ -12,12 +12,34 @@
                     </ol>
                 </nav>
             </div>
-            <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalImportMahasiswa">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                {{-- Dropdown Ekspor --}}
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0.75rem; height: 42px;">
+                        <i class="bi bi-download"></i>
+                        <span>Ekspor</span>
+                        <i class="bi bi-chevron-down" style="font-size: 0.7rem;"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border" style="border-radius: 0.75rem; min-width: 200px;">
+                        <li>
+                            <a href="{{ route('admin.mahasiswa.export.pdf', request()->only(['search', 'program_studi_id', 'status'])) }}" id="btnExportPdf" class="dropdown-item d-flex align-items-center gap-2 py-2" target="_blank">
+                                <i class="bi bi-file-earmark-pdf-fill text-danger"></i>
+                                <span>Ekspor PDF</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.mahasiswa.export.excel', request()->only(['search', 'program_studi_id', 'status'])) }}" id="btnExportExcel" class="dropdown-item d-flex align-items-center gap-2 py-2">
+                                <i class="bi bi-file-earmark-excel-fill text-success"></i>
+                                <span>Ekspor Excel</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalImportMahasiswa" style="border-radius: 0.75rem; height: 42px;">
                     <i class="bi bi-file-earmark-arrow-up"></i>
-                    <span>Impor Excel/CSV</span>
+                    <span>Impor</span>
                 </button>
-                <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-primary d-flex align-items-center gap-2" style="border-radius: 0.75rem; height: 42px;">
                     <i class="bi bi-plus-lg"></i>
                     <span>Tambah Mahasiswa</span>
                 </a>
@@ -72,6 +94,7 @@
 
         <div class="table-card">
             <form id="filterForm" method="GET" action="{{ route('admin.mahasiswa.index') }}" class="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/50">
+                <input type="hidden" name="per_page" id="filterPerPageInput" value="{{ request('per_page', 10) }}">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                     <div class="d-flex flex-wrap gap-2 flex-grow-1">
                         <div class="position-relative flex-grow-1" style="min-width: 220px; max-width: 360px;">
@@ -134,12 +157,31 @@
                             <div class="card border border-info-subtle bg-info-subtle/20 rounded-3 mb-4">
                                 <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                                     <div>
-                                        <h6 class="fw-bold text-slate-800 mb-1">
-                                            <i class="bi bi-info-circle-fill text-info me-1"></i> Format Kolom Data
+                                        <h6 class="fw-bold text-slate-800 mb-2">
+                                            <i class="bi bi-info-circle-fill text-info me-1"></i> Panduan Format Kolom Data
                                         </h6>
-                                        <p class="text-muted small mb-0">
-                                            Urutan kolom: <strong>NIM</strong> (Wajib, Unik) &bull; <strong>Nama Lengkap</strong> (Wajib) &bull; <strong>Email</strong> (Wajib, Unik) &bull; <strong>No. Telepon</strong> (Opsional) &bull; <strong>Program Studi</strong> (Wajib) &bull; <strong>Status</strong> (Aktif / Cuti / Non-Aktif)
-                                        </p>
+                                        <div class="text-muted small">
+                                            <p class="mb-2">Pastikan urutan kolom dari kiri ke kanan sesuai format berikut:</p>
+                                            <ul class="list-unstyled mb-0" style="padding-left: 0.25rem;">
+                                                <li class="mb-1"><i class="bi bi-check2-circle text-primary me-1"></i> <strong>NIM</strong> (Wajib, Unik)</li>
+                                                <li class="mb-1"><i class="bi bi-check2-circle text-primary me-1"></i> <strong>Nama Lengkap & Email</strong> (Wajib, Email Unik)</li>
+                                                <li class="mb-1"><i class="bi bi-dash-circle text-secondary me-1"></i> <strong>No. Telepon</strong> (Opsional)</li>
+                                                <li class="mb-2"><i class="bi bi-check2-circle text-primary me-1"></i> <strong>Program Studi</strong> (Wajib). Pilihan valid:
+                                                    <div class="mt-1 ms-4">
+                                                        @foreach ($programStudiList as $prodi)
+                                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle me-1 mb-1">{{ $prodi->nama_prodi }}</span>
+                                                        @endforeach
+                                                    </div>
+                                                </li>
+                                                <li><i class="bi bi-check2-circle text-primary me-1"></i> <strong>Status</strong> (Wajib). Pilihan valid: 
+                                                    <div class="mt-1 ms-4">
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle me-1">Aktif</span>
+                                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle me-1">Cuti</span>
+                                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle me-1">Non-Aktif</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <a href="{{ route('admin.mahasiswa.template') }}" class="btn btn-sm btn-outline-primary text-nowrap d-inline-flex align-items-center gap-1 shadow-sm">
                                         <i class="bi bi-download"></i> Unduh Template (.CSV)
@@ -260,31 +302,60 @@
             let delayTimer;
 
             function fetchMahasiswa(page = 1) {
-                const search = searchInput.value;
-                const prodi = prodiSelect.value;
-                const status = statusSelect.value;
+                const search = searchInput ? searchInput.value : '';
+                const prodi = prodiSelect ? prodiSelect.value : '';
+                const status = statusSelect ? statusSelect.value : '';
                 const perPageEl = document.getElementById('perPageSelect');
-                const perPage = perPageEl ? perPageEl.value : 10;
+                const perPage = perPageEl ? perPageEl.value : (document.getElementById('filterPerPageInput') ? document.getElementById('filterPerPageInput').value : 10);
 
-                let url = `{{ route('admin.mahasiswa.index') }}?ajax=1&page=${page}&per_page=${perPage}&search=${encodeURIComponent(search)}&program_studi_id=${prodi}&status=${status}`;
+                const filterPerPageInput = document.getElementById('filterPerPageInput');
+                if (filterPerPageInput) filterPerPageInput.value = perPage;
 
-                fetch(url)
+                const url = new URL(window.location.origin + window.location.pathname);
+                url.searchParams.set('page', page);
+                url.searchParams.set('per_page', perPage);
+                if (search) url.searchParams.set('search', search);
+                if (prodi) url.searchParams.set('program_studi_id', prodi);
+                if (status) url.searchParams.set('status', status);
+
+                const fetchUrl = new URL(url);
+                fetchUrl.searchParams.set('ajax', '1');
+
+                fetch(fetchUrl)
                     .then(response => response.text())
                     .then(html => {
                         tableContainer.innerHTML = html;
+                        const browserUrl = new URL(url);
+                        browserUrl.searchParams.delete('ajax');
+                        window.history.pushState({}, '', browserUrl);
+                        if (typeof updateMahasiswaExportUrls === 'function') {
+                            updateMahasiswaExportUrls();
+                        }
                     })
                     .catch(error => console.error('Gagal memuat data mahasiswa:', error));
             }
 
-            searchInput.addEventListener('input', function () {
-                clearTimeout(delayTimer);
-                delayTimer = setTimeout(function() {
-                    fetchMahasiswa();
-                }, 400);
-            });
+            window.fetchMahasiswa = fetchMahasiswa;
 
-            prodiSelect.addEventListener('change', () => fetchMahasiswa());
-            statusSelect.addEventListener('change', () => fetchMahasiswa());
+            const filterForm = document.getElementById('filterForm');
+            if (filterForm) {
+                filterForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    fetchMahasiswa(1);
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    clearTimeout(delayTimer);
+                    delayTimer = setTimeout(function() {
+                        fetchMahasiswa(1);
+                    }, 400);
+                });
+            }
+
+            if (prodiSelect) prodiSelect.addEventListener('change', () => fetchMahasiswa(1));
+            if (statusSelect) statusSelect.addEventListener('change', () => fetchMahasiswa(1));
 
             document.addEventListener('change', function (e) {
                 if (e.target && e.target.id === 'perPageSelect') {
@@ -461,19 +532,41 @@
                     btnKonfirmasiSimpan.disabled = false;
 
                     if (result.success) {
-                        alert(result.message);
-                        window.location.reload();
+                        showToast(result.message, 'success');
+                        setTimeout(() => window.location.reload(), 1500);
                     } else {
-                        alert(result.message || 'Gagal menyimpan data.');
+                        showToast(result.message || 'Gagal menyimpan data.', 'danger');
                     }
                 })
                 .catch(err => {
                     spinnerSimpan.classList.add('d-none');
                     iconSimpan.classList.remove('d-none');
                     btnKonfirmasiSimpan.disabled = false;
-                    alert('Terjadi kesalahan saat menyimpan data ke database.');
+                    showToast('Terjadi kesalahan saat menyimpan data ke database.', 'danger');
                 });
             });
+
+            // Dynamic Sync Export Links for Mahasiswa
+            // searchInput, prodiSelect, statusSelect already declared above
+            const btnExportPdf = document.getElementById('btnExportPdf');
+            const btnExportExcel = document.getElementById('btnExportExcel');
+
+            function updateMahasiswaExportUrls() {
+                const params = new URLSearchParams();
+                if (searchInput && searchInput.value.trim()) params.set('search', searchInput.value.trim());
+                if (prodiSelect && prodiSelect.value) params.set('program_studi_id', prodiSelect.value);
+                if (statusSelect && statusSelect.value) params.set('status', statusSelect.value);
+
+                const pdfBase = "{{ route('admin.mahasiswa.export.pdf') }}";
+                const excelBase = "{{ route('admin.mahasiswa.export.excel') }}";
+
+                if (btnExportPdf) btnExportPdf.href = pdfBase + (params.toString() ? '?' + params.toString() : '');
+                if (btnExportExcel) btnExportExcel.href = excelBase + (params.toString() ? '?' + params.toString() : '');
+            }
+
+            if (searchInput) searchInput.addEventListener('input', updateMahasiswaExportUrls);
+            if (prodiSelect) prodiSelect.addEventListener('change', updateMahasiswaExportUrls);
+            if (statusSelect) statusSelect.addEventListener('change', updateMahasiswaExportUrls);
         });
     </script>
 </x-admin-layout>

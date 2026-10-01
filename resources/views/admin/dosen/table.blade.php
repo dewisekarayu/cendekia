@@ -86,15 +86,24 @@
 
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center px-4 py-3 border-t border-slate-100 dark:border-slate-700/60 gap-3">
     <div class="d-flex align-items-center gap-3 flex-wrap">
-        <div class="d-flex align-items-center gap-2">
+        <form method="GET" action="{{ route('admin.dosen.index') }}" class="d-flex align-items-center gap-2">
+            @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                @if(is_array($v))
+                    @foreach($v as $item)
+                        <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                    @endforeach
+                @else
+                    <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                @endif
+            @endforeach
             <span class="text-xs fw-bold text-slate-500 uppercase tracking-wider text-nowrap">Show:</span>
-            <select id="perPageSelect" name="per_page" class="form-select form-select-sm" style="width: 80px; border-radius: 0.5rem; height: 34px;">
+            <select id="perPageSelect" name="per_page" class="form-select form-select-sm" style="width: 80px; border-radius: 0.5rem; height: 34px;" onchange="if(typeof window.performSearch === 'function'){ window.performSearch(1); } else { this.form.submit(); }">
                 <option value="10" {{ $dosen->perPage() == 10 ? 'selected' : '' }}>10</option>
                 <option value="25" {{ $dosen->perPage() == 25 ? 'selected' : '' }}>25</option>
                 <option value="50" {{ $dosen->perPage() == 50 ? 'selected' : '' }}>50</option>
                 <option value="100" {{ $dosen->perPage() == 100 ? 'selected' : '' }}>100</option>
             </select>
-        </div>
+        </form>
         <small class="text-muted">Menampilkan {{ $dosen->firstItem() ?? 0 }}-{{ $dosen->lastItem() ?? 0 }} dari {{ $dosen->total() }} data</small>
     </div>
     @if($dosen->hasPages())

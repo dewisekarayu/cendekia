@@ -184,6 +184,15 @@
             <div class="flex items-center justify-between flex-wrap gap-3 px-6 py-4 border-t border-gray-100 bg-gray-50">
                 <div class="flex items-center gap-3 flex-wrap">
                     <form method="GET" action="{{ route('admin.absensi.index') }}" class="flex items-center gap-2">
+                        @foreach(request()->except(['per_page', 'page']) as $k => $v)
+                            @if(is_array($v))
+                                @foreach($v as $item)
+                                    <input type="hidden" name="{{ $k }}[]" value="{{ $item }}">
+                                @endforeach
+                            @else
+                                <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                            @endif
+                        @endforeach
                         <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Show:</span>
                         <select name="per_page" class="text-gray-800 text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white shadow-sm" onchange="this.form.submit()">
                             <option value="10" @selected(($perPage ?? 10) == 10)>10</option>

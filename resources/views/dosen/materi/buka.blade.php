@@ -322,7 +322,7 @@
                 btn.classList.remove('text-green-600');
             }, 1500);
         }).catch(() => {
-            alert('Gagal menyalin link. Silakan salin manual: ' + absoluteUrl);
+            showToast('Gagal menyalin link. Silakan salin manual: ' + absoluteUrl, 'danger');
         });
     }
 </script>
