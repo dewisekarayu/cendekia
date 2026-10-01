@@ -5,7 +5,34 @@
 
 @section('content')
 
-    <h1 class="text-xl font-bold text-gray-800 mb-6">Jadwal Mengajar Saya</h1>
+    <div class="mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-5 sm:px-8 sm:py-6 shadow-md text-white">
+        <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
+        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-purple-400/10 blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wide text-purple-200/70">Tugas Mengajar</p>
+                <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Jadwal Mengajar Saya
+                </h1>
+                <p class="mt-2 text-sm text-purple-100/70">
+                    Daftar seluruh kelas dan sesi mengajar Anda di semester ini.
+                </p>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <a href="{{ route('dosen.log-book') }}"
+                   class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span>Log Book</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
     @if($kelasPerkuliahan->isEmpty())
         <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-8 text-center">

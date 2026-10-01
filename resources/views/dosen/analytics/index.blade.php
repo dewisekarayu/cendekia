@@ -3,16 +3,21 @@
 @section('title', 'Early Warning System (EWS) Analytics')
 
 @section('content')
-<div class="mb-6 rounded-2xl bg-gradient-to-r from-rose-700 to-pink-800 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+<div class="mb-6 rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-rose-200/70">Dashboard Analytics & Prediksi AI</p>
-            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Early Warning System</h1>
-            <p class="mt-2 text-sm text-rose-100/70">Mendeteksi mahasiswa yang berisiko tidak lulus atau tertinggal berdasarkan absensi dan nilai tugas.</p>
+            <p class="text-xs font-bold uppercase tracking-wide text-purple-200/70">Dashboard Analytics & Prediksi AI</p>
+            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Early Warning System
+            </h1>
+            <p class="mt-2 text-sm text-purple-100/70">Mendeteksi mahasiswa yang berisiko tidak lulus atau tertinggal berdasarkan absensi dan nilai tugas.</p>
         </div>
         <div class="flex items-center gap-3">
             <div class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-xl text-center border border-white/20">
-                <p class="text-[10px] uppercase font-bold text-rose-200">Total Mahasiswa</p>
+                <p class="text-[10px] uppercase font-bold text-purple-200">Total Mahasiswa</p>
                 <p class="text-xl font-black text-white">{{ $totalStudents }}</p>
             </div>
             <div class="px-4 py-2 bg-rose-500/30 backdrop-blur-md rounded-xl text-center border border-rose-400/30">
@@ -21,8 +26,8 @@
             </div>
         </div>
     </div>
-    <div class="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-white/5 pointer-events-none"></div>
-    <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-black/10 pointer-events-none"></div>
+    <div class="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+    <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-purple-400/10 blur-xl pointer-events-none"></div>
 </div>
 
 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-700 overflow-hidden">

@@ -6,15 +6,15 @@
 @section('title', 'Pusat Bantuan')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-0 my-6 sm:my-10 animate-fade-in">
+<div class="max-w-6xl mx-auto px-4 sm:px-0 my-4 sm:my-6 animate-fade-in">
 
     {{-- ===== HERO SECTION ===== --}}
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#002B6B] via-indigo-700 to-purple-600 px-5 sm:px-7 py-12 sm:py-16 mb-10 shadow-xl shadow-blue-950/10 border border-slate-100 dark:border-slate-800">
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#002B6B] via-indigo-700 to-purple-600 px-5 sm:px-7 py-5 sm:py-6 mb-6 shadow-xl shadow-blue-950/10 border border-slate-100 dark:border-slate-800">
         <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-white/10 to-transparent rounded-full -mr-20 -mt-20 blur-2xl pointer-events-none"></div>
         <div class="absolute -bottom-10 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
         
         <div class="relative z-10">
-            <div class="flex items-center justify-between gap-4 mb-6">
+            <div class="flex items-center justify-between gap-4 mb-3">
                 <div>
                     <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 px-3.5 py-1.5 text-xs font-medium text-blue-100 backdrop-blur-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -38,7 +38,7 @@
             <h1 class="text-3xl sm:text-4xl font-display font-extrabold text-white mb-4 tracking-tight leading-tight">
                 Ada yang bisa kami bantu?
             </h1>
-            <p class="text-sm sm:text-base text-blue-100/90 max-w-2xl leading-relaxed mb-8">
+            <p class="text-sm sm:text-base text-blue-100/90 max-w-2xl leading-relaxed mb-5">
                 Temukan solusi instan dan panduan lengkap seputar akun, kelas, tugas, absensi, hingga penilaian LMS Cendekia.
             </p>
 

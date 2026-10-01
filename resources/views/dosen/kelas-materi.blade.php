@@ -5,16 +5,61 @@
 
 @section('content')
 
-    <div class="bg-gradient-to-r from-[#321270] to-[#4c19a0] dark:from-indigo-950 dark:to-purple-900 rounded-xl px-8 py-6 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-sm">
-        <div>
-            <div class="flex items-center gap-2 mb-2">
-                <span class="text-xs font-semibold bg-white/15 text-white px-2.5 py-1 rounded">{{ $kelas->mataKuliah->kode_mk ?? '-' }}</span>
-                <span class="text-xs text-white/80">Semester {{ $kelas->semester->nama_semester ?? '-' }}</span>
+    {{-- HERO HEADER BANNER --}}
+    <div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-7 sm:px-8 shadow-md relative text-white">
+        <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
+        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-purple-400/10 blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div class="min-w-0 flex-1">
+                <div class="mb-3 flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/15 px-3 py-1 text-xs font-bold tracking-wide text-white backdrop-blur-sm shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
+                    </span>
+                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-purple-100 backdrop-blur-sm">
+                        {{ $kelas->semester?->nama_semester ?? 'Semester Aktif' }}
+                    </span>
+                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-purple-100 backdrop-blur-sm">
+                        {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Program Studi' }}
+                    </span>
+                </div>
+
+                <h1 class="text-2xl font-black text-white sm:text-3xl tracking-tight leading-tight">
+                    {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
+                </h1>
+
+                <div class="mt-3 flex flex-wrap items-center gap-y-2 gap-x-5 text-xs sm:text-sm text-purple-100/90 font-medium">
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {{ $kelas->hari }}, {{ substr($kelas->jam_mulai,0,5) }} – {{ substr($kelas->jam_selesai,0,5) }} WIB
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        </svg>
+                        Ruang: {{ $kelas->ruangan ?? '-' }}
+                    </span>
+                    <span class="inline-flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        {{ $kelas->mataKuliah?->sks ?? 0 }} SKS
+                    </span>
+                </div>
             </div>
-            <h1 class="text-xl font-bold text-white">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</h1>
-            <p class="text-sm text-white/80 mt-1">
-                {{ $kelas->hari }}, {{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }} • {{ $kelas->ruangan }}
-            </p>
+
+            {{-- Right Side / Actions --}}
+            <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+                <div class="flex flex-col items-center justify-center rounded-xl bg-white/10 px-5 py-3 border border-white/20 backdrop-blur-sm">
+                    <span class="text-[10px] font-bold text-purple-200 uppercase tracking-wider mb-0.5">Mahasiswa</span>
+                    <span class="text-xl font-black text-white leading-none">{{ $kelas->mahasiswa->count() }}</span>
+                </div>
+            </div>
         </div>
     </div>
 

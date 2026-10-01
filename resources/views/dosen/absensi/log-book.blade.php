@@ -6,25 +6,32 @@
 @section('content')
 
 <div class="space-y-4 max-w-7xl mx-auto py-6">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60">
-        <div>
-            <h1 class="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2.5">
-                <div class="p-1.5 bg-[#321270]/5 text-[#321270] rounded-lg border border-[#321270]/10 shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-5 sm:px-8 sm:py-6 shadow-md text-white">
+        <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
+        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-purple-400/10 blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wide text-purple-200/70">Manajemen Kelas</p>
+                <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
-                </div>
-                <span>Log Book Presensi Mengajar</span>
-            </h1>
-            <p class="mt-1.5 text-xs text-slate-500">
-                Rekapitulasi seluruh sesi presensi dari kelas yang Anda ampu.
-            </p>
-        </div>
-        <div class="flex items-center gap-2.5">
-            <a href="{{ route('dosen.jadwal.index') }}"
-               class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-xs shadow-sm transition-all duration-300">
-                <span>Lihat Jadwal</span>
-            </a>
+                    Log Book Presensi Mengajar
+                </h1>
+                <p class="mt-2 text-sm text-purple-100/70">
+                    Rekapitulasi seluruh sesi presensi dari kelas yang Anda ampu.
+                </p>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <a href="{{ route('dosen.jadwal.index') }}"
+                   class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Lihat Jadwal</span>
+                </a>
+            </div>
         </div>
     </div>
 
