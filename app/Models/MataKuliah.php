@@ -13,6 +13,7 @@ class MataKuliah extends Model
 
     protected $fillable = [
         'program_studi_id',
+        'kurikulum_id',
         'kode_mk',
         'nama_mk',
         'sks',
@@ -23,6 +24,11 @@ class MataKuliah extends Model
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_studi_id');
+    }
+
+    public function kurikulum()
+    {
+        return $this->belongsTo(Kurikulum::class, 'kurikulum_id');
     }
 
     /**

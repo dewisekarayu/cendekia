@@ -13,6 +13,7 @@ class ProgramStudi extends Model
 
     // TAMBAHKAN 'akreditasi' DAN 'status' DI SINI AGAR BISA DISIMPAN
     protected $fillable = [
+        'fakultas_id',
         'kode_prodi',
         'nama_prodi',
         'jenjang',
@@ -23,5 +24,10 @@ class ProgramStudi extends Model
     public function mataKuliah()
     {
         return $this->hasMany(MataKuliah::class, 'program_studi_id');
+    }
+
+    public function fakultas()
+    {
+        return $this->belongsTo(Fakultas::class, 'fakultas_id');
     }
 }

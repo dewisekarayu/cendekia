@@ -92,6 +92,19 @@
                 </div>
 
                 <div class="col-md-12">
+                    <label for="kurikulum_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kurikulum</label>
+                    <select class="form-select @error('kurikulum_id') is-invalid @enderror" id="kurikulum_id" name="kurikulum_id" style="border-radius: 8px; padding: 0.6rem 0.75rem;">
+                        <option value="">-- Pilih Kurikulum (Opsional) --</option>
+                        @foreach($kurikulumList ?? [] as $kurikulum)
+                            <option value="{{ $kurikulum->id }}" {{ old('kurikulum_id') == $kurikulum->id ? 'selected' : '' }}>{{ $kurikulum->nama_kurikulum }} ({{ $kurikulum->tahun_mulai }})</option>
+                        @endforeach
+                    </select>
+                    @error('kurikulum_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-12">
                     <label for="deskripsi" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Deskripsi Mata Kuliah</label>
                     <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3" style="border-radius: 8px; padding: 0.6rem 0.75rem;" placeholder="Jelaskan deskripsi ringkas mata kuliah...">{{ old('deskripsi') }}</textarea>
                     @error('deskripsi')

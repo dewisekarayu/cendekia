@@ -75,6 +75,17 @@
         </div>
 
         <div class="nav-item">
+            <a href="{{ route('admin.fakultas.index') }}"
+               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+               {{ request()->routeIs('admin.fakultas.*') 
+                  ? 'bg-white/15 text-white shadow-sm' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <i class="bi bi-building text-base w-5 flex justify-center flex-shrink-0"></i>
+                <span>Fakultas</span>
+            </a>
+        </div>
+
+        <div class="nav-item">
             <a href="{{ route('admin.program-studi.index') }}"
                class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
                {{ request()->routeIs('admin.program-studi.*') 
@@ -82,6 +93,28 @@
                   : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                 <i class="bi bi-diagram-3 text-base w-5 flex justify-center flex-shrink-0"></i>
                 <span>Program Studi</span>
+            </a>
+        </div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.kurikulum.index') }}"
+               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+               {{ request()->routeIs('admin.kurikulum.*') 
+                  ? 'bg-white/15 text-white shadow-sm' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <i class="bi bi-journal-bookmark text-base w-5 flex justify-center flex-shrink-0"></i>
+                <span>Kurikulum</span>
+            </a>
+        </div>
+
+        <div class="nav-item">
+            <a href="{{ route('admin.tahun-akademik.index') }}"
+               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+               {{ request()->routeIs('admin.tahun-akademik.*') 
+                  ? 'bg-white/15 text-white shadow-sm' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <i class="bi bi-calendar-event text-base w-5 flex justify-center flex-shrink-0"></i>
+                <span>Tahun Akademik</span>
             </a>
         </div>
 

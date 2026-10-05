@@ -28,6 +28,19 @@
                     </div>
 
                     <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="fakultas_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Fakultas</label>
+                            <select class="form-select @error('fakultas_id') is-invalid @enderror" id="fakultas_id" name="fakultas_id" style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                                <option value="">-- Pilih Fakultas (Opsional) --</option>
+                                @foreach($fakultasList ?? [] as $fakultas)
+                                    <option value="{{ $fakultas->id }}" {{ old('fakultas_id') == $fakultas->id ? 'selected' : '' }}>{{ $fakultas->kode_fakultas }} - {{ $fakultas->nama_fakultas }}</option>
+                                @endforeach
+                            </select>
+                            @error('fakultas_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="col-md-4">
                             <label for="kode_prodi" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kode Prodi <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('kode_prodi') is-invalid @enderror" id="kode_prodi" name="kode_prodi" value="{{ old('kode_prodi') }}" placeholder="Contoh: IF101" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">

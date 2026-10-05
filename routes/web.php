@@ -65,10 +65,20 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
+    Route::resource('admin/fakultas', \App\Http\Controllers\Admin\FakultasController::class)
+        ->names('admin.fakultas');
+
     Route::resource('admin/program-studi', ProgramStudiController::class)
         ->except(['show'])
         ->names('admin.program-studi')
         ->parameters(['program-studi' => 'programStudi']);
+
+    Route::resource('admin/kurikulum', \App\Http\Controllers\Admin\KurikulumController::class)
+        ->names('admin.kurikulum');
+
+    Route::resource('admin/tahun-akademik', \App\Http\Controllers\Admin\TahunAkademikController::class)
+        ->names('admin.tahun-akademik')
+        ->parameters(['tahun-akademik' => 'tahun_akademik']);
 
     Route::resource('admin/mata-kuliah', MataKuliahController::class)
         ->except(['show'])

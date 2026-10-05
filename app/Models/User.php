@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'program_studi_id',
+        'dosen_wali_id',
         'status',
         'telepon',
         'foto',
@@ -95,6 +96,22 @@ class User extends Authenticatable
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_studi_id');
+    }
+
+    /**
+     * Relasi: dosen wali mahasiswa ini
+     */
+    public function dosenWali()
+    {
+        return $this->belongsTo(User::class, 'dosen_wali_id');
+    }
+
+    /**
+     * Relasi: mahasiswa yang dibimbing (kalau user ini dosen)
+     */
+    public function mahasiswaBimbingan()
+    {
+        return $this->hasMany(User::class, 'dosen_wali_id');
     }
 
     /**

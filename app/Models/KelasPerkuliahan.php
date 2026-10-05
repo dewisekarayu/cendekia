@@ -17,7 +17,6 @@ class KelasPerkuliahan extends Model
         'program_studi_id',
         'semester_id',
         'kode_kelas',
-        'tahun_akademik',
         'hari',
         'jam_mulai',
         'jam_selesai',
@@ -25,12 +24,10 @@ class KelasPerkuliahan extends Model
         'kuota_mahasiswa',
         'status_kelas',
         'is_active',
-        'dosen_pengampu',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'dosen_pengampu' => 'array',
         'kuota_mahasiswa' => 'integer',
     ];
 
@@ -64,7 +61,9 @@ class KelasPerkuliahan extends Model
     public function scopeByDosen($query, $dosenId)
     {
         return $query->where('dosen_id', $dosenId)
-            ->orWhereJsonContains('dosen_pengampu', $dosenId);
+            ->orWhereHas('dosenPengampuTambahan', function ($q) use ($dosenId) {
+                $q->where('users.id', $dosenId);
+            });
     }
 
     /**
@@ -84,14 +83,24 @@ class KelasPerkuliahan extends Model
     }
 
     /**
+     * Relasi: dosen pengampu tambahan (team teaching) lewat tabel pivot kelas_dosen
+     */
+    public function dosenPengampuTambahan()
+    {
+        return $this->belongsToMany(User::class, 'kelas_dosen', 'kelas_perkuliahan_id', 'dosen_id')
+            ->withPivot('is_koordinator')
+            ->withTimestamps();
+    }
+
+    /**
      * Relasi: semua dosen pengampu (termasuk team teaching)
      */
     public function semuaDosenPengampu()
     {
-        $dosenIds = $this->dosen_pengampu ?? [];
-        $dosenIds[] = $this->dosen_id;
+        $utama = $this->dosen()->get();
+        $tambahan = $this->dosenPengampuTambahan()->get();
         
-        return User::whereIn('id', $dosenIds)->get();
+        return $utama->merge($tambahan);
     }
 
     /**

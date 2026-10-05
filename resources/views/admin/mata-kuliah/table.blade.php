@@ -7,6 +7,7 @@
                 <th style="width: 140px;">KODE MK</th>
                 <th>NAMA MATA KULIAH</th>
                 <th>PROGRAM STUDI</th>
+                <th>KURIKULUM</th>
                 <th class="text-center" style="width: 120px;">AKSI</th>
             </tr>
         </thead>
@@ -28,6 +29,9 @@
                         </span>
                     </td>
                     <td>
+                        <span class="text-muted small">{{ $mk->kurikulum->nama_kurikulum ?? '-' }}</span>
+                    </td>
+                    <td>
                         <div class="action-buttons justify-content-center">
                             <a href="{{ route('admin.mata-kuliah.edit', $mk->id) }}" class="action-btn action-btn-edit" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
@@ -45,7 +49,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center py-5">
+                    <td colspan="6" class="text-center py-5">
                         <div class="d-flex flex-column align-items-center justify-content-center text-muted">
                             <i class="bi bi-book fs-1 text-slate-300 dark:text-slate-600 mb-2"></i>
                             <p class="fw-semibold mb-0">Belum ada data mata kuliah.</p>

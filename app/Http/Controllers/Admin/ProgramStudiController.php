@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
+use App\Models\Fakultas;
 use Illuminate\Http\Request;
 
 class ProgramStudiController extends Controller
@@ -12,7 +13,7 @@ class ProgramStudiController extends Controller
     {
         $search = trim($request->input('search', ''));
 
-        $query = ProgramStudi::query();
+        $query = ProgramStudi::with('fakultas');
 
         // Fitur Pencarian Aktif (Nama Prodi atau Kode Prodi)
         if ($search !== '') {
@@ -36,7 +37,8 @@ class ProgramStudiController extends Controller
 
     public function create()
     {
-        return view('admin.program-studi.create');
+        $fakultasList = Fakultas::orderBy('nama_fakultas')->get();
+        return view('admin.program-studi.create', compact('fakultasList'));
     }
 
     public function store(Request $request)
@@ -47,6 +49,7 @@ class ProgramStudiController extends Controller
             'jenjang'    => 'required|in:D3,D4,S1,S2',
             'akreditasi' => 'required|in:Unggul,A,B,Baik',
             'status'     => 'required|in:0,1',
+            'fakultas_id' => 'nullable|exists:fakultas,id',
         ]);
 
         ProgramStudi::create($validated);
@@ -58,7 +61,8 @@ class ProgramStudiController extends Controller
     public function edit($id)
     {
         $prodi = ProgramStudi::findOrFail($id);
-        return view('admin.program-studi.edit', compact('prodi'));
+        $fakultasList = Fakultas::orderBy('nama_fakultas')->get();
+        return view('admin.program-studi.edit', compact('prodi', 'fakultasList'));
     }
 
     public function update(Request $request, $id)
@@ -71,6 +75,7 @@ class ProgramStudiController extends Controller
             'jenjang'    => 'required|in:D3,D4,S1,S2',
             'akreditasi' => 'required|in:Unggul,A,B,Baik',
             'status'     => 'required|in:0,1',
+            'fakultas_id' => 'nullable|exists:fakultas,id',
         ]);
 
         $prodi->update($validated);

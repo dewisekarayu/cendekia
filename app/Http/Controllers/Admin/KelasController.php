@@ -13,17 +13,29 @@ class KelasController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = (int) $request->input('per_page', $request->input('show', 10));
-        if (!in_array($perPage, [10, 25, 50, 100])) {
-            $perPage = 10;
+        $search = trim($request->input('search', ''));
+        $query = KelasPerkuliahan::with(['mataKuliah.programStudi', 'dosen', 'dosenPengampuTambahan', 'semester', 'mahasiswa']);
+
+        if ($search !== '') {
+            $query->whereHas('mataKuliah', function ($q) use ($search) {
+                $q->where('nama_mk', 'like', "%{$search}%")
+                  ->orWhere('kode_mk', 'like', "%{$search}%");
+            })->orWhere('kode_kelas', 'like', "%{$search}%")
+              ->orWhereHas('dosen', function ($q) use ($search) {
+                  $q->where('name', 'like', "%{$search}%");
+              });
         }
 
-        $kelasList = KelasPerkuliahan::with(['mataKuliah.programStudi', 'dosen', 'semester', 'mahasiswa'])
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
+        $perPage = (int) $request->input('per_page', 10);
+        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
 
-        return view('admin.kelas.index', compact('kelasList', 'perPage'));
+        $kelasList = $query->latest()->paginate($perPage)->withQueryString();
+
+        if ($request->ajax()) {
+            return view('admin.kelas.table', compact('kelasList'))->render();
+        }
+
+        return view('admin.kelas.index', compact('kelasList', 'search'));
     }
 
     public function create()
@@ -53,7 +65,6 @@ class KelasController extends Controller
             'program_studi_id' => 'required|exists:program_studi,id',
             'semester_id' => 'required|exists:semesters,id',
             'kode_kelas' => 'required|string|max:10',
-            'tahun_akademik' => 'required|string|max:20',
             'hari' => 'required|string',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
@@ -81,7 +92,14 @@ class KelasController extends Controller
                 ->with('error', 'Ruangan sudah digunakan pada hari dan waktu yang sama.');
         }
 
-        KelasPerkuliahan::create($validated);
+        $kelasData = $validated;
+        unset($kelasData['dosen_pengampu']);
+        
+        $kelas = KelasPerkuliahan::create($kelasData);
+
+        if (!empty($validated['dosen_pengampu'])) {
+            $kelas->dosenPengampuTambahan()->sync($validated['dosen_pengampu']);
+        }
 
         return redirect()->route('admin.kelas.index')
             ->with('success', 'Kelas berhasil dibuat.');
@@ -114,7 +132,6 @@ class KelasController extends Controller
             'program_studi_id' => 'required|exists:program_studi,id',
             'semester_id' => 'required|exists:semesters,id',
             'kode_kelas' => 'required|string|max:10',
-            'tahun_akademik' => 'required|string|max:20',
             'hari' => 'required|string',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
@@ -143,7 +160,16 @@ class KelasController extends Controller
                 ->with('error', 'Ruangan sudah digunakan pada hari dan waktu yang sama.');
         }
 
-        $kelas->update($validated);
+        $kelasData = $validated;
+        unset($kelasData['dosen_pengampu']);
+        
+        $kelas->update($kelasData);
+
+        if (isset($validated['dosen_pengampu'])) {
+            $kelas->dosenPengampuTambahan()->sync($validated['dosen_pengampu']);
+        } else {
+            $kelas->dosenPengampuTambahan()->sync([]);
+        }
 
         return redirect()->route('admin.kelas.index')
             ->with('success', 'Kelas berhasil diperbarui.');

@@ -6,6 +6,7 @@
                 <th style="width: 60px; text-align: center; padding-left: 1.5rem;">NO</th>
                 <th style="width: 140px;">KODE PRODI</th>
                 <th>NAMA PROGRAM STUDI</th>
+                <th>FAKULTAS</th>
                 <th>JENJANG PENDIDIKAN</th>
                 <th>AKREDITASI</th>
                 <th>STATUS</th>
@@ -23,6 +24,9 @@
                     </td>
                     <td>
                         <span class="fw-bold text-slate-800 dark:text-white" style="font-size: 0.925rem;">{{ $prodi->nama_prodi }}</span>
+                    </td>
+                    <td>
+                        <span class="text-muted">{{ $prodi->fakultas->nama_fakultas ?? '-' }}</span>
                     </td>
                     <td>
                         <span class="text-secondary fw-semibold">{{ $prodi->jenjang }} - {{ $prodi->jenjang === 'S1' ? 'Sarjana' : 'Program ' . $prodi->jenjang }}</span>
@@ -60,7 +64,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center py-5">
+                    <td colspan="8" class="text-center py-5">
                         <div class="d-flex flex-column align-items-center justify-content-center text-muted">
                             <i class="bi bi-diagram-3 fs-1 text-slate-300 dark:text-slate-600 mb-2"></i>
                             <p class="fw-semibold mb-0">Belum ada data program studi.</p>
