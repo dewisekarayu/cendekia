@@ -78,7 +78,7 @@ class AbsensiPolicy
             return true;
         }
 
-        $dosenPengampu = $kelas->dosen_pengampu ?? [];
+        $dosenPengampu = $kelas->dosenPengampuTambahan->pluck('id')->toArray();
 
         return in_array($user->id, $dosenPengampu);
     }

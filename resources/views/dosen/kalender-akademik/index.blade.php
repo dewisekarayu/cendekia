@@ -1,30 +1,30 @@
 @extends('layouts.portal')
 @section('title', 'Kalender Akademik')
-@section('activeMenu', 'Jadwal')
+@section('activeMenu', 'Kalender Akademik')
 @section('content')
 
-<div x-data="calendar()" class="min-h-screen bg-slate-50 dark:bg-slate-900 py-6 px-4 sm:px-6 lg:px-8 mb-12">
-    <div class="max-w-7xl mx-auto space-y-6">
+<div x-data="calendar()" class="min-h-screen bg-[#faf9ff] dark:bg-slate-1000 py-5 px-4 sm:px-6 lg:px-8 mb-8">
+    <div class="max-w-7xl mx-auto space-y-4">
         {{-- Breadcrumb & Header Modern --}}
-        <div class="space-y-4">
+        <div class="space-y-3">
             <nav class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">
-                <a href="{{ route('dosen.dashboard') }}" class="hover:text-[#002B6B] dark:hover:text-blue-400 transition-colors">Dashboard</a>
+                <a href="{{ route('dosen.dashboard') }}" class="hover:text-[#321270] dark:hover:text-violet-400 transition-colors">Dashboard</a>
                 <svg class="w-3 h-3 flex-shrink-0 text-gray-300 dark:text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 <span class="text-gray-600 dark:text-slate-300">Kalender Akademik</span>
             </nav>
 
-            <div class="relative bg-gradient-to-r from-[#002B6B] via-[#053d8f] to-[#001f52] rounded-3xl p-6 text-white shadow-xl overflow-hidden">
+            <div class="relative bg-gradient-to-r from-[#321270] via-[#4a1fa8] to-[#21104f] rounded-3xl p-5 sm:p-6 text-white shadow-xl shadow-purple-950/15 overflow-hidden">
                 <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center flex-shrink-0 shadow-inner">
-                            <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+                            <svg class="w-6 h-6 text-violet-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
                         </div>
                         <div>
                             <h1 class="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300">Kalender Akademik</h1>
-                            <p class="text-xs text-blue-100/80 mt-0.5">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini.</p>
+                            <p class="text-xs text-violet-100/85 mt-0.5">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini.</p>
                         </div>
                     </div>
                 </div>
@@ -32,12 +32,12 @@
         </div>
 
         {{-- Main Grid Layout --}}
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
             {{-- Calendar Main Block --}}
-            <div class="lg:col-span-3 space-y-6">
-                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
+            <div class="lg:col-span-3 space-y-4">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700/80 overflow-hidden">
                     {{-- Controls Bar --}}
-                    <div class="p-5 sm:p-6 border-b border-gray-100 dark:border-slate-700/60 space-y-4">
+                    <div class="p-4 sm:p-5 border-b border-gray-100 dark:border-slate-700/60 space-y-3">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             {{-- Month Nav --}}
                             <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-900 p-1 rounded-xl w-fit border border-gray-100 dark:border-slate-800">
@@ -51,12 +51,12 @@
                             </div>
 
                             <div class="flex items-center gap-3">
-                                <button @click="goToToday()" class="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl bg-slate-100 dark:bg-slate-900 text-[#002B6B] dark:text-blue-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition active:scale-95 shadow-sm border border-gray-200/50 dark:border-0">
+                                <button @click="goToToday()" class="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl bg-purple-50 dark:bg-slate-900 text-[#321270] dark:text-violet-400 hover:bg-purple-100 dark:hover:bg-slate-800 transition active:scale-95 shadow-sm border border-purple-100 dark:border-0">
                                     Hari Ini
                                 </button>
                                 {{-- Semester Selector Custom --}}
                                 <div class="relative flex items-center">
-                                    <select x-model="selectedSemesterId" @change="updateURL()" class="pl-4 pr-10 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-gray-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#002B6B] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-[#002B6B]/10 outline-none transition appearance-none cursor-pointer">
+                                    <select x-model="selectedSemesterId" @change="updateURL()" class="pl-4 pr-10 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-purple-100 dark:border-slate-700 bg-purple-50/40 dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#321270] focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-[#321270]/10 outline-none transition appearance-none cursor-pointer">
                                         <option value="">Semua Semester</option>
                                         @foreach($semesters as $sem)
                                             <option value="{{ $sem->id }}">{{ $sem->tahun_ajaran }} - {{ $sem->nama_semester }} @if($sem->is_active) (Aktif) @endif</option>
@@ -68,7 +68,7 @@
                         </div>
 
                         {{-- Elegant Category Badges Filter --}}
-                        <div class="overflow-x-auto scrollbar-none -mx-5 px-5 sm:mx-0 sm:px-0">
+                        <div class="overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
                             <div class="flex gap-2 pb-1 flex-nowrap">
                                 @foreach([
                                     'uts' => 'UTS', 'uas' => 'UAS', 'libur_nasional' => 'Libur', 'libur_akademik' => 'Akademik', 
@@ -79,7 +79,7 @@
                                     'pengumuman_akademik' => 'Pengumuman', 'lainnya' => 'Lainnya'
                                 ] as $cat => $label)
                                     <label class="flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-xl border transition-all text-xs font-bold whitespace-nowrap flex-shrink-0 select-none active:scale-95 shadow-sm" 
-                                           :class="visibleCategories.has('{{ $cat }}') ? 'bg-[#002B6B] border-[#002B6B] text-white shadow-[#002B6B]/10' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'">
+                                           :class="visibleCategories.has('{{ $cat }}') ? 'bg-[#321270] border-[#321270] text-white shadow-[#321270]/10' : 'bg-white dark:bg-slate-900 border-purple-100 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-purple-50 dark:hover:bg-slate-800'">
                                         <input type="checkbox" @click="toggleCategory('{{ $cat }}')" :checked="visibleCategories.has('{{ $cat }}')" class="sr-only">
                                         <span class="w-1.5 h-1.5 rounded-full" :class="visibleCategories.has('{{ $cat }}') ? 'bg-white' : 'bg-gray-400 dark:bg-slate-600'"></span>
                                         <span>{{ $label }}</span>
@@ -90,7 +90,7 @@
                     </div>
 
                     {{-- Calendar Matrix Rendering --}}
-                    <div class="p-2 sm:p-6">
+                    <div class="p-2 sm:p-5">
                         <div class="grid grid-cols-7 gap-0.5 sm:gap-1 mb-2">
                             @foreach(['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $day)
                                 <div class="text-center text-[9px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500 py-1 sm:py-2 truncate">{{ $day }}</div>
@@ -102,7 +102,7 @@
                                 <template x-for="day in week" :key="day.dateStr">
                                     <div @click="$dispatch('select-day', {day: day})"
                                          :class="{
-                                             'bg-slate-100/80 dark:bg-slate-900 border-[#002B6B] dark:border-blue-500/80 shadow-inner ring-1 ring-[#002B6B]/20': day.isToday,
+                                             'bg-purple-50/80 dark:bg-slate-900 border-[#321270] dark:border-violet-500/80 shadow-inner ring-1 ring-[#321270]/20': day.isToday,
                                              'bg-rose-50/40 dark:bg-rose-950/10 border-rose-100 dark:border-rose-950/30': day.isWeekend && !day.isToday && day.isCurrentMonth,
                                              'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700/60': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                              'bg-slate-50/50 dark:bg-slate-900/40 border-gray-100 dark:border-slate-800/40 opacity-40': !day.isCurrentMonth,
@@ -111,7 +111,7 @@
                                         
                                         <div class="flex items-start justify-between gap-1 mb-1 sm:mb-2 relative z-10">
                                             <span :class="{
-                                                      'text-[#002B6B] dark:text-blue-400 font-extrabold bg-slate-200/60 dark:bg-slate-800 px-1 sm:px-1.5 py-0.5 rounded-md sm:rounded-lg': day.isToday,
+                                                      'text-[#321270] dark:text-violet-400 font-extrabold bg-purple-100 dark:bg-slate-800 px-1 sm:px-1.5 py-0.5 rounded-md sm:rounded-lg': day.isToday,
                                                       'text-rose-600 dark:text-rose-500 font-bold': day.isWeekend && !day.isToday && day.isCurrentMonth,
                                                       'text-gray-800 dark:text-slate-200 font-bold': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                                       'text-gray-400 dark:text-slate-600 font-medium': !day.isCurrentMonth,
@@ -154,10 +154,10 @@
 
                 {{-- Riwayat Agenda Section --}}
                 @if($historyEvents->count() > 0)
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
-                    <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-purple-100/80 dark:border-slate-700 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-purple-50 dark:bg-slate-700 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-[#321270] dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         <h3 class="font-bold text-gray-900 dark:text-white">Riwayat Agenda</h3>
                         <span class="ml-auto px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-bold">
@@ -188,18 +188,18 @@
             </div>
 
             {{-- Sidebar Blocks --}}
-            <div class="lg:col-span-1 space-y-6">
+            <div class="lg:col-span-1 space-y-4">
                 {{-- Upcoming Events --}}
-                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
-                    <div class="bg-slate-50/60 dark:bg-slate-900/40 px-5 py-4 border-b border-gray-100 dark:border-slate-700/60">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700/80 overflow-hidden">
+                    <div class="bg-purple-50/60 dark:bg-slate-900/40 px-4 py-3.5 border-b border-purple-100/80 dark:border-slate-700/60">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-[#002B6B] dark:text-blue-400">
+                            <div class="w-9 h-9 rounded-xl bg-purple-100 dark:bg-slate-900 flex items-center justify-center text-[#321270] dark:text-violet-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                             </div>
                             <h3 class="font-bold text-gray-900 dark:text-white text-base">Agenda Mendatang</h3>
                         </div>
                     </div>
-                    <div class="p-4 space-y-3 max-h-[420px] overflow-y-auto custom-scrollbar">
+                    <div class="p-3.5 space-y-3 max-h-[420px] overflow-y-auto custom-scrollbar">
                         <template x-if="upcomingEvents.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i).length > 0">
                             <div class="space-y-2.5">    
                                 <template x-for="event in upcomingEvents.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i)" :key="event.id">
@@ -223,11 +223,11 @@
                 </div>
 
                 {{-- Semester Statistics Bar --}}
-                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700/80 overflow-hidden">
-                    <div class="bg-slate-50/60 dark:bg-slate-900/40 px-5 py-4 border-b border-gray-100 dark:border-slate-700/60">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700/80 overflow-hidden">
+                    <div class="bg-purple-50/60 dark:bg-slate-900/40 px-4 py-3.5 border-b border-purple-100/80 dark:border-slate-700/60">
                         <h3 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Ringkasan Smt</h3>
                     </div>
-                    <div class="p-4 space-y-2">
+                    <div class="p-3.5 space-y-2">
                         <template x-for="(stat, idx) in [
                             { label: 'Total Agenda', key: 'total', bg: 'bg-slate-50 dark:bg-slate-900', text: 'text-gray-800 dark:text-white' },
                             { label: 'UTS & UAS', key: 'exams', bg: 'bg-rose-50/60 dark:bg-rose-950/20', text: 'text-rose-600 dark:text-rose-400' },
@@ -258,7 +258,7 @@
                 <div class="p-5 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/20">
                     <div class="flex items-center gap-3 min-w-0">
                         <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                             :style="'background-color: ' + (selectedEvent.warna || '#002B6B')">
+                             :style="'background-color: ' + (selectedEvent.warna || '#321270')">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
                         </div>
                         <h3 class="font-extrabold text-gray-900 dark:text-white text-sm truncate" x-text="selectedEvent.judul"></h3>
@@ -271,7 +271,7 @@
                 <div class="p-6 space-y-4 text-sm">
                     <div class="flex flex-wrap gap-2">
                         <span class="px-2.5 py-1 rounded-lg text-xs font-bold"
-                              :style="'background-color: ' + (selectedEvent.warna || '#002B6B') + '15; color: ' + (selectedEvent.warna || '#002B6B')"
+                              :style="'background-color: ' + (selectedEvent.warna || '#321270') + '15; color: ' + (selectedEvent.warna || '#321270')"
                               x-text="selectedEvent.jenis_kegiatan_label || 'Kegiatan'"></span>
                         <span x-show="selectedEvent.is_all_day"
                               class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
@@ -281,7 +281,7 @@
 
                     <div class="bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-none rounded-2xl p-4 text-xs space-y-1">
                         <div class="flex items-center gap-2 text-gray-800 dark:text-slate-200 font-bold">
-                            <svg class="w-4 h-4 text-[#002B6B] dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                            <svg class="w-4 h-4 text-[#321270] dark:text-violet-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0121 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                             <span>
                                 <span x-text="selectedEvent.tanggal_mulai"></span>
                                 <template x-if="selectedEvent.tanggal_selesai && selectedEvent.tanggal_selesai !== selectedEvent.tanggal_mulai">

@@ -299,15 +299,6 @@
                 </div>
                 <h3 class="text-sm font-bold text-slate-700">Belum Ada Sesi Presensi Terjadwal</h3>
                 <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Seluruh modul log absensi pertemuan mata kuliah ini masih bernilai kosong.</p>
-                <div class="mt-4">
-                    <a href="{{ route('dosen.absensi.create', $kelas->id) }}"
-                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#321270] to-[#4a1fa8] hover:brightness-110 text-white rounded-lg font-bold text-xs shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Buat Sesi Pertemuan Pertama</span>
-                    </a>
-                </div>
             </div>
         @endif
     </div>

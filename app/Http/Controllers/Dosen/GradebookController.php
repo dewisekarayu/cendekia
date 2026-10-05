@@ -67,7 +67,9 @@ class GradebookController extends Controller
         $kelas = KelasPerkuliahan::where('id', $request->kelas_id)
             ->where(function ($query) use ($request) {
                 $query->where('dosen_id', $request->user()->id)
-                    ->orWhereJsonContains('dosen_pengampu', $request->user()->id);
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($request) {
+                        $q->where('users.id', $request->user()->id);
+                    });
             })->firstOrFail();
 
         $kelas->update([

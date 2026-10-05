@@ -304,7 +304,9 @@ class AbsensiController extends Controller
         return KelasPerkuliahan::where('id', $kelasId)
             ->where(function ($query) use ($user) {
                 $query->where('dosen_id', $user->id)
-                    ->orWhereJsonContains('dosen_pengampu', $user->id);
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                        $q->where('users.id', $user->id);
+                    });
             })
             ->with(array_merge(['mataKuliah'], $with))
             ->firstOrFail();
@@ -327,7 +329,9 @@ class AbsensiController extends Controller
 
         // Get all classes taught by this dosen
         $kelasIds = KelasPerkuliahan::where('dosen_id', $user->id)
-            ->orWhereJsonContains('dosen_pengampu', $user->id)
+            ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            })
             ->pluck('id');
 
         $perPage = (int) $request->input('show', 25);

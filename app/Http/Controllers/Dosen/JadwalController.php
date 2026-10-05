@@ -19,7 +19,9 @@ class JadwalController extends Controller
         // Ambil kelas yang diampu dosen (baik sebagai dosen utama maupun team teaching)
         $kelasPerkuliahan = KelasPerkuliahan::where(function($query) use ($user) {
                 $query->where('dosen_id', $user->id)
-                    ->orWhereJsonContains('dosen_pengampu', $user->id);
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                        $q->where('users.id', $user->id);
+                    });
             })
             ->with(['mataKuliah.programStudi', 'semester', 'mahasiswa'])
             ->where('status_kelas', 'aktif')
@@ -61,7 +63,9 @@ class JadwalController extends Controller
         $kelas = KelasPerkuliahan::where('id', $id)
             ->where(function($query) use ($user) {
                 $query->where('dosen_id', $user->id)
-                    ->orWhereJsonContains('dosen_pengampu', $user->id);
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                        $q->where('users.id', $user->id);
+                    });
             })
             ->with(['mataKuliah.programStudi', 'semester', 'mahasiswa', 'absensi'])
             ->firstOrFail();
@@ -82,7 +86,9 @@ class JadwalController extends Controller
         
         $kelasPerkuliahan = KelasPerkuliahan::where(function($query) use ($user) {
                 $query->where('dosen_id', $user->id)
-                    ->orWhereJsonContains('dosen_pengampu', $user->id);
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                        $q->where('users.id', $user->id);
+                    });
             })
             ->with(['mataKuliah', 'mahasiswa'])
             ->where('status_kelas', 'aktif')
@@ -135,7 +141,9 @@ class JadwalController extends Controller
         
         $kelasPerkuliahan = KelasPerkuliahan::where(function($query) use ($user) {
                 $query->where('dosen_id', $user->id)
-                    ->orWhereJsonContains('dosen_pengampu', $user->id);
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                        $q->where('users.id', $user->id);
+                    });
             })
             ->with(['mataKuliah.programStudi', 'semester'])
             ->where('status_kelas', 'aktif')

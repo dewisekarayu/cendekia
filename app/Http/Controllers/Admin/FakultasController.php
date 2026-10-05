@@ -46,8 +46,7 @@ class FakultasController extends Controller
 
     public function show(Fakultas $fakultas)
     {
-        $fakulta = $fakultas; // matching view variable
-        return view('admin.fakultas.show', compact('fakulta'));
+        return view('admin.fakultas.show', compact('fakultas'));
     }
 
     public function edit(Fakultas $fakultas)
@@ -55,20 +54,20 @@ class FakultasController extends Controller
         return view('admin.fakultas.edit', compact('fakultas'));
     }
 
-    public function update(Request $request, Fakultas $fakulta)
+    public function update(Request $request, Fakultas $fakultas)
     {
         $validated = $request->validate([
-            'kode_fakultas' => 'required|string|unique:fakultas,kode_fakultas,' . $fakulta->id,
+            'kode_fakultas' => 'required|string|unique:fakultas,kode_fakultas,' . $fakultas->id,
             'nama_fakultas' => 'required|string|max:255',
         ]);
 
-        $fakulta->update($validated);
+        $fakultas->update($validated);
         return redirect()->route('admin.fakultas.index')->with('success', 'Fakultas berhasil diperbarui');
     }
 
-    public function destroy(Fakultas $fakulta)
+    public function destroy(Fakultas $fakultas)
     {
-        $fakulta->delete();
+        $fakultas->delete();
         return redirect()->route('admin.fakultas.index')->with('success', 'Fakultas berhasil dihapus');
     }
 }

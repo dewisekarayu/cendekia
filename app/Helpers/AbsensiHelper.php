@@ -176,7 +176,9 @@ class AbsensiHelper
     public static function getLecturerStatistics($dosenId): array
     {
         $classes = KelasPerkuliahan::where('dosen_id', $dosenId)
-            ->orWhereJsonContains('dosen_pengampu', $dosenId)
+            ->orWhereHas('dosenPengampuTambahan', function ($q) use ($dosenId) {
+                $q->where('users.id', $dosenId);
+            })
             ->get();
 
         $statistics = [

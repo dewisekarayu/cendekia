@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\FakultasController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -65,8 +66,9 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::resource('admin/fakultas', \App\Http\Controllers\Admin\FakultasController::class)
-        ->names('admin.fakultas');
+    Route::resource('admin/fakultas', FakultasController::class)
+        ->names('admin.fakultas')
+        ->parameters(['fakultas' => 'fakultas']);
 
     Route::resource('admin/program-studi', ProgramStudiController::class)
         ->except(['show'])

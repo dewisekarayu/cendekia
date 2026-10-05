@@ -174,10 +174,15 @@ class KelasPerkuliahan extends Model
 
         // Cek bentrok untuk dosen team teaching
         $bentrokTeamTeaching = false;
-        if ($this->dosen_pengampu) {
-            foreach ($this->dosen_pengampu as $dosenId) {
-                $bentrok = self::where('dosen_id', $dosenId)
-                    ->orWhereJsonContains('dosen_pengampu', $dosenId)
+        $dosenTambahanIds = $this->dosenPengampuTambahan->pluck('id');
+        if ($dosenTambahanIds->isNotEmpty()) {
+            foreach ($dosenTambahanIds as $dosenId) {
+                $bentrok = self::where(function ($q) use ($dosenId) {
+                        $q->where('dosen_id', $dosenId)
+                            ->orWhereHas('dosenPengampuTambahan', function ($sub) use ($dosenId) {
+                                $sub->where('users.id', $dosenId);
+                            });
+                    })
                     ->where('id', '!=', $this->id)
                     ->where('hari', $this->hari)
                     ->where(function($query) {
