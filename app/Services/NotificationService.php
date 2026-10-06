@@ -32,6 +32,16 @@ class NotificationService
             $sentCount = 0;
 
             foreach ($mahasiswaList as $mahasiswa) {
+                // Buat notifikasi in-app
+                \App\Models\Notifikasi::create([
+                    'user_id' => $mahasiswa->id,
+                    'kelas_perkuliahan_id' => $materi->kelas_perkuliahan_id,
+                    'judul' => 'Materi Baru: ' . \Illuminate\Support\Str::limit($materi->judul, 40),
+                    'pesan' => 'Mata Kuliah: ' . ($materi->kelasPerkuliahan->mataKuliah->nama_mk ?? 'Kelas') . '. ' . \Illuminate\Support\Str::limit(strip_tags($materi->deskripsi ?? ''), 80),
+                    'tipe' => 'materi',
+                    'url' => route('mahasiswa.materi.buka', ['kelas' => $materi->kelas_perkuliahan_id, 'materi' => $materi->id]),
+                ]);
+
                 if (NotificationPreference::forUser($mahasiswa->id)->isEnabled('materi_baru')) {
                     SendMateriBaru::dispatch($materi, $mahasiswa, $dosen);
                     $sentCount++;
@@ -56,6 +66,16 @@ class NotificationService
             $sentCount = 0;
 
             foreach ($mahasiswaList as $mahasiswa) {
+                // Buat notifikasi in-app
+                \App\Models\Notifikasi::create([
+                    'user_id' => $mahasiswa->id,
+                    'kelas_perkuliahan_id' => $tugas->kelas_perkuliahan_id,
+                    'judul' => 'Tugas Baru: ' . \Illuminate\Support\Str::limit($tugas->judul, 40),
+                    'pesan' => 'Mata Kuliah: ' . ($tugas->kelasPerkuliahan->mataKuliah->nama_mk ?? 'Kelas') . '. ' . \Illuminate\Support\Str::limit(strip_tags($tugas->deskripsi ?? ''), 80),
+                    'tipe' => 'tugas',
+                    'url' => route('mahasiswa.pengumpulan-tugas.show', $tugas->id),
+                ]);
+
                 if (NotificationPreference::forUser($mahasiswa->id)->isEnabled('tugas_baru')) {
                     SendTugasBaru::dispatch($tugas, $mahasiswa, $dosen);
                     $sentCount++;
@@ -80,6 +100,16 @@ class NotificationService
             $sentCount = 0;
 
             foreach ($mahasiswaList as $mahasiswa) {
+                // Buat notifikasi in-app
+                \App\Models\Notifikasi::create([
+                    'user_id' => $mahasiswa->id,
+                    'kelas_perkuliahan_id' => $pengumuman->kelas_perkuliahan_id,
+                    'judul' => 'Pengumuman: ' . \Illuminate\Support\Str::limit($pengumuman->judul, 40),
+                    'pesan' => 'Mata Kuliah: ' . ($pengumuman->kelasPerkuliahan->mataKuliah->nama_mk ?? 'Global') . '. ' . \Illuminate\Support\Str::limit(strip_tags($pengumuman->isi ?? ''), 80),
+                    'tipe' => 'pengumuman',
+                    'url' => route('mahasiswa.pengumuman.index'),
+                ]);
+
                 if (NotificationPreference::forUser($mahasiswa->id)->isEnabled('pengumuman_baru')) {
                     SendPengumumanBaru::dispatch($pengumuman, $mahasiswa, $dosen);
                     $sentCount++;
@@ -101,6 +131,18 @@ class NotificationService
     {
         try {
             $mahasiswa = $submission->mahasiswa;
+            $tugas = $submission->tugas;
+            
+            // Buat notifikasi in-app
+            \App\Models\Notifikasi::create([
+                'user_id' => $mahasiswa->id,
+                'kelas_perkuliahan_id' => $tugas->kelas_perkuliahan_id,
+                'judul' => 'Nilai Diterbitkan: ' . \Illuminate\Support\Str::limit($tugas->judul, 40),
+                'pesan' => 'Mata Kuliah: ' . ($tugas->kelasPerkuliahan->mataKuliah->nama_mk ?? 'Kelas') . '. Cek nilai Anda sekarang.',
+                'tipe' => 'nilai',
+                'url' => route('mahasiswa.pengumpulan-tugas.show', $tugas->id),
+            ]);
+
             if (NotificationPreference::forUser($mahasiswa->id)->isEnabled('nilai_baru')) {
                 SendNilaiBaru::dispatch($submission, $mahasiswa, $dosen);
                 Log::info("Notified student about new nilai", ['mahasiswa_id' => $mahasiswa->id]);
