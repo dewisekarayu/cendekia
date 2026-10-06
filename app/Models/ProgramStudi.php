@@ -19,6 +19,7 @@ class ProgramStudi extends Model
         'jenjang',
         'akreditasi',
         'status',
+        'fakultas_id',
     ];
 
     public function mataKuliah()
