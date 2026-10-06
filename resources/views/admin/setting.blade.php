@@ -18,7 +18,7 @@
                class="btn btn-light border bg-white dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 d-inline-flex align-items-center gap-2 px-3.5 py-2 text-sm font-semibold shadow-sm"
                style="border-radius: 0.75rem;">
                 <i class="bi bi-bell"></i>
-                <span>Notifikasi Civitas</span>
+                <span>Pengaturan Notifikasi Pengguna</span>
             </a>
         </div>
     </div>
