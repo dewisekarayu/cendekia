@@ -139,6 +139,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relasi: Notifikasi user
+     */
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class, 'user_id');
+    }
+
+    /**
      * Helper methods for role checking with null safety
      */
     

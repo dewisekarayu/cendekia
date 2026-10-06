@@ -212,6 +212,8 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     // Gradebook Dosen
     Route::get('/dosen/gradebook', [DosenGradebookController::class, 'index'])->name('dosen.gradebook');
     Route::post('/dosen/gradebook/update-bobot', [DosenGradebookController::class, 'updateBobot'])->name('dosen.gradebook.update-bobot');
+    Route::post('/dosen/gradebook/update-nilai', [DosenGradebookController::class, 'updateNilai'])->name('dosen.gradebook.update-nilai');
+    Route::post('/dosen/gradebook/sync-absensi', [DosenGradebookController::class, 'syncAbsensi'])->name('dosen.gradebook.sync-absensi');
     
     // Materi Dosen
     Route::delete('/kelas/{id}/materi/{materiId}', [DosenKelasController::class, 'hapusMateri'])->name('dosen.kelas-materi.hapus');
@@ -304,6 +306,9 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('/mahasiswa/dashboard', [MahasiswaDashboardController::class, 'index'])->name('mahasiswa.dashboard');
     Route::get('/mahasiswa/kelas-saya', [MahasiswaKelasController::class, 'kelasSaya'])->name('mahasiswa.kelas-saya');
     Route::get('/mahasiswa/kelas/{id}', [MahasiswaKelasController::class, 'show'])->name('mahasiswa.kelas-detail');
+    
+    // Pengumuman Mahasiswa
+    Route::get('/mahasiswa/pengumuman', [App\Http\Controllers\Mahasiswa\PengumumanController::class, 'index'])->name('mahasiswa.pengumuman.index');
 
     Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/buka', [MahasiswaKelasController::class, 'bukaMateri'])->name('mahasiswa.materi.buka');
     Route::get('/mahasiswa/kelas/{kelas}/materi/{materi}/unduh/{file}', [MahasiswaKelasController::class, 'unduhMateri'])->name('mahasiswa.materi.unduh');

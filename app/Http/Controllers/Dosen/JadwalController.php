@@ -50,7 +50,7 @@ class JadwalController extends Controller
             return $kelas->mataKuliah->sks ?? 0;
         });
 
-        return view('dosen.jadwal.index', compact('jadwalByDay', 'totalKelas', 'totalMahasiswa', 'totalSKS', 'days'));
+        return view('dosen.jadwal.index', compact('kelasPerkuliahan', 'jadwalByDay', 'totalKelas', 'totalMahasiswa', 'totalSKS', 'days'));
     }
 
     /**

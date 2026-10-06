@@ -5,10 +5,10 @@
 
 @section('content')
 
-<div class="space-y-6">
+<div class="space-y-4">
 
     {{-- HERO WELCOME BANNER --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] via-[#09357a] to-[#144896] dark:from-slate-900 dark:via-indigo-950 dark:to-blue-950 px-6 py-7 sm:px-8 shadow-md text-white">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] via-[#09357a] to-[#144896] dark:from-slate-900 dark:via-indigo-950 dark:to-blue-950 px-6 py-5 sm:px-8 shadow-md text-white">
         <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
         <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-blue-400/10 blur-xl"></div>
         
@@ -40,7 +40,7 @@
             </div>
 
             {{-- Quick Action Buttons in Hero --}}
-            <div class="flex flex-row lg:flex-col gap-2.5 shrink-0">
+            <div class="flex flex-row flex-wrap lg:flex-nowrap gap-2.5 shrink-0">
                 <a href="{{ route('admin.dosen.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition text-decoration-none">
                     <i class="bi bi-person-badge text-blue-200"></i>
                     Data Dosen
@@ -61,7 +61,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {{-- Total Mahasiswa --}}
         <a href="{{ route('admin.mahasiswa.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2">
                 <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#002B6B] dark:text-blue-300 border border-blue-100 dark:border-blue-900/50 group-hover:scale-105 transition-transform">
                     <i class="bi bi-people-fill text-lg"></i>
                 </div>
@@ -70,8 +70,8 @@
                 </span>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Total Mahasiswa</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalMahasiswa ?? 0) }}</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-0.5">Total Mahasiswa</p>
+                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-1.5">{{ number_format($totalMahasiswa ?? 0) }}</p>
                 <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
                     <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Kelola Mahasiswa</span>
                     <i class="bi bi-arrow-right text-xs text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform"></i>
@@ -81,7 +81,7 @@
 
         {{-- Total Dosen --}}
         <a href="{{ route('admin.dosen.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2">
                 <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50 group-hover:scale-105 transition-transform">
                     <i class="bi bi-person-badge text-lg"></i>
                 </div>
@@ -90,8 +90,8 @@
                 </span>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Total Dosen</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalDosen ?? 0) }}</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-0.5">Total Dosen</p>
+                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-1.5">{{ number_format($totalDosen ?? 0) }}</p>
                 <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
                     <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Kelola Dosen</span>
                     <i class="bi bi-arrow-right text-xs text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
@@ -101,7 +101,7 @@
 
         {{-- Mata Kuliah --}}
         <a href="{{ route('admin.mata-kuliah.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-amber-400 dark:hover:border-amber-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2">
                 <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 border border-amber-100 dark:border-amber-900/50 group-hover:scale-105 transition-transform">
                     <i class="bi bi-book-fill text-lg"></i>
                 </div>
@@ -110,8 +110,8 @@
                 </span>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Mata Kuliah</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalMataKuliah ?? $totalMatkul ?? 0) }}</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-0.5">Mata Kuliah</p>
+                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-1.5">{{ number_format($totalMataKuliah ?? $totalMatkul ?? 0) }}</p>
                 <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
                     <span class="text-xs font-semibold text-amber-600 dark:text-amber-400">Daftar Kurikulum</span>
                     <i class="bi bi-arrow-right text-xs text-amber-600 dark:text-amber-400 group-hover:translate-x-1 transition-transform"></i>
@@ -121,7 +121,7 @@
 
         {{-- Program Studi --}}
         <a href="{{ route('admin.program-studi.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-rose-400 dark:hover:border-rose-500 hover:shadow-md transition-all duration-200 text-decoration-none">
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2">
                 <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border border-rose-100 dark:border-rose-900/50 group-hover:scale-105 transition-transform">
                     <i class="bi bi-diagram-3 text-lg"></i>
                 </div>
@@ -130,8 +130,8 @@
                 </span>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-1">Program Studi</p>
-                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-3">{{ number_format($totalProgramStudi ?? $totalProdi ?? 0) }}</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-0.5">Program Studi</p>
+                <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-1.5">{{ number_format($totalProgramStudi ?? $totalProdi ?? 0) }}</p>
                 <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
                     <span class="text-xs font-semibold text-rose-600 dark:text-rose-400">Kelola Program Studi</span>
                     <i class="bi bi-arrow-right text-xs text-rose-600 dark:text-rose-400 group-hover:translate-x-1 transition-transform"></i>

@@ -1,7 +1,7 @@
 @extends('layouts.portal')
 
 @section('title', 'Log Book Presensi Mengajar')
-@section('activeMenu', 'Dashboard')
+@section('activeMenu', 'Log Mengajar')
 
 @section('content')
 

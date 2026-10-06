@@ -54,7 +54,19 @@
                 </div>
 
                 <h2 class="text-base font-bold text-slate-800 dark:text-white tracking-tight">{{ $p->judul }}</h2>
-                <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed whitespace-pre-line">{{ $p->isi }}</p>
+                <div x-data="{ expanded: false }" class="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed relative">
+                    <div :class="expanded ? 'whitespace-pre-line' : 'line-clamp-2 whitespace-normal'" class="transition-all duration-200">
+                        {{ $p->isi }}
+                    </div>
+                    @if(strlen($p->isi) > 200)
+                        <button @click="expanded = !expanded" class="text-[#321270] dark:text-purple-400 font-bold mt-2 hover:underline text-xs flex items-center gap-1 focus:outline-none">
+                            <span x-text="expanded ? 'Tampilkan lebih sedikit' : 'Baca selengkapnya'"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" :class="expanded ? 'rotate-180' : ''" class="h-3 w-3 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    @endif
+                </div>
 
                 <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 text-[11px] font-medium text-slate-400 dark:text-slate-500">
                     <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
