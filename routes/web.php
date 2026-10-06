@@ -60,6 +60,13 @@ Route::get('/dashboard', function () {
     abort(403, 'Role tidak dikenali');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Rute Notifikasi
+Route::middleware('auth')->group(function () {
+    Route::get('/notifikasi', [\App\Http\Controllers\NotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::get('/notifikasi/{notifikasi}/baca', [\App\Http\Controllers\NotifikasiController::class, 'baca'])->name('notifikasi.baca');
+    Route::post('/notifikasi/baca-semua', [\App\Http\Controllers\NotifikasiController::class, 'bacaSemua'])->name('notifikasi.baca-semua');
+});
+
 // ==========================================
 // DASHBOARD & HALAMAN KHUSUS ADMIN
 // ==========================================
@@ -260,6 +267,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
         Route::get('/', [DosenAbsensiController::class, 'index'])->name('index');
         Route::get('/create', [DosenAbsensiController::class, 'create'])->name('create');
         Route::post('/', [DosenAbsensiController::class, 'store'])->name('store');
+        Route::get('/export-all', [DosenAbsensiController::class, 'exportAll'])->name('export-all');
         Route::get('/{absensiId}', [DosenAbsensiController::class, 'show'])->name('show');
         Route::get('/{absensiId}/edit', [DosenAbsensiController::class, 'edit'])->name('edit');
         Route::put('/{absensiId}', [DosenAbsensiController::class, 'update'])->name('update');

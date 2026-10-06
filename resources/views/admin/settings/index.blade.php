@@ -90,7 +90,6 @@
         width: 20px;
         left: 3px;
         bottom: 3px;
-        background-color: white;
         transition: .4s;
         border-radius: 50%;
     }

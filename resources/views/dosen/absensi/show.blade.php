@@ -239,10 +239,18 @@
     </div>
 
     <div class="bg-white rounded-lg shadow-sm border border-slate-200/80 overflow-hidden">
-        <div class="bg-gradient-to-r from-slate-50 to-[#321270]/5 px-4 py-2.5 border-b border-slate-100 flex items-center gap-2">
-            <span class="w-1.5 h-3 bg-[#321270] rounded-full"></span>
-            <h2 class="text-sm font-bold text-slate-800">Daftar Rekap Absensi Mahasiswa</h2>
-            <span id="jumlahHasil" class="ml-auto text-[11px] font-semibold text-slate-400"></span>
+        <div class="bg-gradient-to-r from-slate-50 to-[#321270]/5 px-4 py-2.5 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="w-1.5 h-3 bg-[#321270] rounded-full"></span>
+                <h2 class="text-sm font-bold text-slate-800">Daftar Rekap Absensi Mahasiswa</h2>
+                <span id="jumlahHasil" class="ml-2 text-[11px] font-semibold text-slate-400"></span>
+            </div>
+            <a href="{{ route('dosen.absensi.export', [$kelas->id, $absensi->id]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 rounded-lg text-[10px] font-bold shadow-sm transition-all">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Export Excel (CSV)</span>
+            </a>
         </div>
 
         <div class="overflow-x-auto">

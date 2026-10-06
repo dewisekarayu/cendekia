@@ -22,7 +22,6 @@
         color: #0f172a;
     }
     .table-hover tbody tr:hover {
-        background-color: #f8fafc;
     }
     .badge-dosen { background: #3b82f6; color: white; }
     .badge-mahasiswa { background: #10b981; color: white; }

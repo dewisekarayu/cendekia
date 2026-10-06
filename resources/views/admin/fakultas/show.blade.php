@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white; max-width: 800px;">
+    <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; max-width: 800px;">
         <table class="table table-borderless">
             <tbody>
                 <tr>

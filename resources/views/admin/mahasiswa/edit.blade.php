@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="table-card" style="max-width: 800px; background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.05);">
+        <div class="table-card" style="max-width: 800px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.05);">
             <form method="POST" action="{{ route('admin.mahasiswa.update', $mahasiswaMember->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')

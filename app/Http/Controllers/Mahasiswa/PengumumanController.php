@@ -22,8 +22,10 @@ class PengumumanController extends Controller
 
         // Ambil pengumuman (Global + Kelas yang diikuti)
         $pengumuman = Pengumuman::with(['pembuat', 'kelasPerkuliahan'])
-            ->whereNull('kelas_perkuliahan_id')
-            ->orWhereIn('kelas_perkuliahan_id', $kelasIds)
+            ->where(function ($query) use ($kelasIds) {
+                $query->whereNull('kelas_perkuliahan_id')
+                      ->orWhereIn('kelas_perkuliahan_id', $kelasIds);
+            })
             ->latest()
             ->paginate(10);
 

@@ -25,18 +25,18 @@
 
         <div class="d-flex flex-column gap-3 mb-4">
             @forelse ($pengumuman as $index => $item)
-                <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 12px; border-left: 5px solid #e2e8f0 !important;">
+                <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 12px;" data-pg-card>
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div class="d-flex align-items-center flex-wrap gap-2">
                             <span class="badge bg-light text-dark border font-monospace px-2 py-1" style="font-size: 0.75rem;">
                                 #{{ ($pengumuman->currentPage() - 1) * $pengumuman->perPage() + $index + 1 }}
                             </span>
                             @if ($item->untuk_semua)
-                                <span class="badge fw-bold px-2 py-1" style="background-color: #ECFDF5; color: #059669; font-size: 0.7rem; border-radius: 6px; letter-spacing: 0.5px;">
+                                <span class="badge fw-bold px-2 py-1 pg-target pg-target-all">
                                     <i class="bi bi-people-fill me-1"></i> UNTUK SEMUA
                                 </span>
                             @else
-                                <span class="badge fw-bold px-2 py-1" style="background-color: #F1F5F9; color: #64748b; font-size: 0.7rem; border-radius: 6px; letter-spacing: 0.5px;">
+                                <span class="badge fw-bold px-2 py-1 pg-target pg-target-group">
                                     <i class="bi bi-person-lines-fill me-1"></i> KELOMPOK TERTENTU
                                 </span>
                             @endif
@@ -51,9 +51,9 @@
                             </button>
                         </div>
                     </div>
-                    <h5 class="fw-bold mb-2" style="color: #002B6B; font-size: 1.1rem;">{{ $item->judul }}</h5>
+                    <h5 class="fw-bold mb-2 pg-title" style="font-size: 1.1rem;">{{ $item->judul }}</h5>
                     <p class="text-muted small mb-3" style="line-height: 1.6;">{{ Str::limit(strip_tags($item->isi), 220) }}</p>
-                    <div class="d-flex justify-content-between align-items-center pt-3 border-top" style="border-color: #f1f5f9 !important;">
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top" data-pg-footer>
                         <div class="d-flex align-items-center gap-2">
                             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white fw-bold" style="width: 28px; height: 28px; font-size: 0.75rem;">
                                 {{ $item->pembuat ? strtoupper(Str::substr($item->pembuat->name, 0, 2)) : '?' }}

@@ -26,20 +26,20 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm" style="border-radius: 12px; background: white; overflow: hidden;">
+    <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
         <div class="card-body p-0">
             <table class="table table-borderless mb-0">
                 <tbody>
                     <tr class="border-bottom">
-                        <th class="ps-4 py-3 text-muted fw-semibold" style="width: 250px; background-color: #f8fafc;">Nama Semester</th>
+                        <th class="ps-4 py-3 text-muted fw-semibold" style="width: 250px;">Nama Semester</th>
                         <td class="py-3 fw-bold text-dark">{{ $tahun_akademik->nama_semester }}</td>
                     </tr>
                     <tr class="border-bottom">
-                        <th class="ps-4 py-3 text-muted fw-semibold" style="background-color: #f8fafc;">Tahun Ajaran</th>
+                        <th class="ps-4 py-3 text-muted fw-semibold" style="">Tahun Ajaran</th>
                         <td class="py-3">{{ $tahun_akademik->tahun_ajaran }}</td>
                     </tr>
                     <tr class="border-bottom">
-                        <th class="ps-4 py-3 text-muted fw-semibold" style="background-color: #f8fafc;">Jenis Semester</th>
+                        <th class="ps-4 py-3 text-muted fw-semibold" style="">Jenis Semester</th>
                         <td class="py-3">
                             <span class="badge {{ $tahun_akademik->jenis == 'Ganjil' ? 'bg-primary' : 'bg-info' }} bg-opacity-10 text-{{ $tahun_akademik->jenis == 'Ganjil' ? 'primary' : 'info' }} px-3 py-2 rounded-pill fw-semibold">
                                 {{ $tahun_akademik->jenis }}
@@ -47,7 +47,7 @@
                         </td>
                     </tr>
                     <tr class="border-bottom">
-                        <th class="ps-4 py-3 text-muted fw-semibold" style="background-color: #f8fafc;">Tanggal Pelaksanaan</th>
+                        <th class="ps-4 py-3 text-muted fw-semibold" style="">Tanggal Pelaksanaan</th>
                         <td class="py-3">
                             <div class="d-flex align-items-center gap-2">
                                 <i class="bi bi-calendar-event text-primary"></i>
@@ -56,7 +56,7 @@
                         </td>
                     </tr>
                     <tr class="border-bottom">
-                        <th class="ps-4 py-3 text-muted fw-semibold" style="background-color: #f8fafc;">Status</th>
+                        <th class="ps-4 py-3 text-muted fw-semibold" style="">Status</th>
                         <td class="py-3">
                             @if($tahun_akademik->is_active)
                                 <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold d-inline-flex align-items-center gap-2">

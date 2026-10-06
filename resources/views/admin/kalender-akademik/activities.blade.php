@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm" style="border-radius: 1rem; background: white;">
+    <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
         <div class="card-header bg-white border-0 pb-0">
             <h5 class="mb-0 fw-bold" style="color: var(--primary-blue);"><i class="bi bi-clock-history me-2"></i>Log Aktivitas ({{ $logs->total() }} record)</h5>
         </div>

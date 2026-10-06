@@ -17,7 +17,7 @@
 
     <form action="{{ route('admin.fakultas.store') }}" method="POST">
         @csrf
-        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white; max-width: 800px;">
+        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; max-width: 800px;">
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="kode_fakultas" class="form-label fw-semibold small text-muted">Kode Fakultas <span class="text-danger">*</span></label>

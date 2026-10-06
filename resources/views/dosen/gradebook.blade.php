@@ -7,9 +7,7 @@
 @php
     $gradeColors = [
         'A'  => ['bg' => 'bg-emerald-100 dark:bg-emerald-950/40',  'text' => 'text-emerald-700 dark:text-emerald-350',  'ring' => 'ring-emerald-250'],
-        'AB' => ['bg' => 'bg-teal-100 dark:bg-teal-950/40',        'text' => 'text-teal-700 dark:text-teal-350',        'ring' => 'ring-teal-250'],
         'B'  => ['bg' => 'bg-blue-100 dark:bg-blue-950/40',        'text' => 'text-blue-700 dark:text-blue-350',        'ring' => 'ring-blue-250'],
-        'BC' => ['bg' => 'bg-sky-100 dark:bg-sky-950/40',          'text' => 'text-sky-700 dark:text-sky-350',          'ring' => 'ring-sky-250'],
         'C'  => ['bg' => 'bg-amber-100 dark:bg-amber-950/40',      'text' => 'text-amber-700 dark:text-amber-350',      'ring' => 'ring-amber-250'],
         'D'  => ['bg' => 'bg-orange-100 dark:bg-orange-950/40',    'text' => 'text-orange-700 dark:text-orange-350',    'ring' => 'ring-orange-250'],
         'E'  => ['bg' => 'bg-red-100 dark:bg-red-950/40',          'text' => 'text-red-700 dark:text-red-350',          'ring' => 'ring-red-250'],
@@ -21,7 +19,7 @@
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
             <p class="text-xs font-bold uppercase tracking-wide text-purple-200/70">Penilaian</p>
-            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Gradebook</h1>
+            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Pratinjau Tabel Interaktif</h1>
             @if ($kelas)
                 <p class="mt-1 text-sm text-purple-100/70">
                     {{ $kelas->mataKuliah?->nama_mk ?? '-' }} &middot; {{ $kelas->kode_kelas }}
@@ -42,29 +40,7 @@
     <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/5 pointer-events-none"></div>
 </div>
 
-{{-- TABS --}}
-@php
-    $tabLinks = [
-        'Beranda'      => ['url' => route('dosen.kelas-detail', $kelas->id), 'active' => request()->routeIs('dosen.kelas-detail')],
-        'Absensi'      => ['url' => route('dosen.absensi.index', $kelas->id),  'active' => request()->routeIs('dosen.absensi.*')],
-        'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
-        'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
-        'Forum'        => ['url' => route('dosen.kelas-forum', $kelas->id),  'active' => request()->routeIs('dosen.kelas-forum')],
-        'Rekap Tugas'  => ['url' => route('dosen.kelas-tugas.rekap', $kelas->id), 'active' => request()->routeIs('dosen.kelas-tugas.rekap')],
-        'Grade Akhir'  => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
-    ];
-@endphp
-<div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-sm transition-colors duration-200">
-    @foreach ($tabLinks as $label => $tab)
-        <a href="{{ $tab['url'] }}"
-           class="whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition
-               {{ $tab['active']
-                   ? 'bg-[#321270] dark:bg-purple-650 text-white shadow-sm shadow-purple-900/20'
-                   : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-white' }}">
-            {{ $label }}
-        </a>
-    @endforeach
-</div>
+
 
 {{-- ===== CLASS SELECTOR ===== --}}
 @if ($kelasList->isNotEmpty())
@@ -101,7 +77,9 @@
         $avg       = $nilaiArr->avg('nilai_akhir');
         $highest   = $nilaiArr->max('nilai_akhir');
         $lowest    = $nilaiArr->min('nilai_akhir');
-        $gradeACount = $nilaiArr->whereIn('grade', ['A','AB'])->count();
+        $highestGrade = $nilaiArr->count() > 0 ? ($nilaiArr->sortByDesc('nilai_akhir')->first()->grade ?? '-') : '-';
+        $lowestGrade = $nilaiArr->count() > 0 ? ($nilaiArr->sortBy('nilai_akhir')->first()->grade ?? '-') : '-';
+        $gradeACount = $nilaiArr->where('grade', 'A')->count();
         $gradeDist = $nilaiArr->groupBy('grade')->map->count();
     @endphp
 
@@ -113,16 +91,26 @@
         </div>
         <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-4 shadow-sm transition-colors duration-200">
             <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">Tertinggi</p>
-            <p class="mt-2 text-3xl font-extrabold text-emerald-600 dark:text-emerald-450">{{ $highest ? number_format($highest, 1) : '-' }}</p>
+            <div class="mt-2 flex items-center gap-2">
+                <p class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-450">{{ $highest ? number_format($highest, 1) : '-' }}</p>
+                @if($highestGrade !== '-')
+                    <span class="inline-flex items-center justify-center w-8 h-6 rounded-lg text-xs font-extrabold {{ $gradeColors[$highestGrade]['bg'] ?? '' }} {{ $gradeColors[$highestGrade]['text'] ?? '' }}">{{ $highestGrade }}</span>
+                @endif
+            </div>
             <p class="mt-1 text-xs text-gray-400 dark:text-slate-500">nilai terbaik</p>
         </div>
         <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-4 shadow-sm transition-colors duration-200">
             <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">Terendah</p>
-            <p class="mt-2 text-3xl font-extrabold text-amber-500 dark:text-amber-450">{{ $lowest ? number_format($lowest, 1) : '-' }}</p>
+            <div class="mt-2 flex items-center gap-2">
+                <p class="text-3xl font-extrabold text-amber-500 dark:text-amber-450">{{ $lowest ? number_format($lowest, 1) : '-' }}</p>
+                @if($lowestGrade !== '-')
+                    <span class="inline-flex items-center justify-center w-8 h-6 rounded-lg text-xs font-extrabold {{ $gradeColors[$lowestGrade]['bg'] ?? '' }} {{ $gradeColors[$lowestGrade]['text'] ?? '' }}">{{ $lowestGrade }}</span>
+                @endif
+            </div>
             <p class="mt-1 text-xs text-gray-400 dark:text-slate-500">perlu perhatian</p>
         </div>
         <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-4 shadow-sm transition-colors duration-200">
-            <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">Nilai A/AB</p>
+            <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">Nilai A</p>
             <p class="mt-2 text-3xl font-extrabold text-violet-600 dark:text-purple-400">{{ $gradeACount }}</p>
             <p class="mt-1 text-xs text-gray-400 dark:text-slate-500">mahasiswa berprestasi</p>
         </div>
@@ -135,108 +123,122 @@
             <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 shadow-sm overflow-hidden transition-colors duration-200">
 
                 {{-- Table toolbar --}}
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800">
-                    <div class="relative flex-1 max-w-xs">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input id="studentSearch" type="text" placeholder="Cari nama / NIM..."
-                               class="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 pl-8 pr-3 py-2 text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:border-[#321270] dark:focus:border-purple-500 focus:ring-1 focus:ring-[#321270]/20">
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400 dark:text-slate-500 font-medium">
-                            {{ $students instanceof \Illuminate\Pagination\LengthAwarePaginator ? $students->total() : count($students) }} mahasiswa
-                        </span>
-                        <form action="{{ route('dosen.gradebook.sync-absensi') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
-                            <button type="submit" class="inline-flex items-center gap-1 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/50 text-[#321270] dark:text-purple-400 border border-purple-100 dark:border-purple-800 px-3 py-1.5 text-xs font-bold transition">
+                <form action="{{ route('dosen.gradebook.sync-absensi') }}" method="POST" id="form-sync-absensi">
+                    @csrf
+                    <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
+                </form>
+
+                <form action="{{ route('dosen.gradebook.update-nilai') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <div class="relative flex-1 max-w-[200px]">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input id="studentSearch" type="text" placeholder="Cari nama / NIM..."
+                                       class="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 pl-8 pr-3 py-1.5 text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:border-[#321270] dark:focus:border-purple-500 focus:ring-1 focus:ring-[#321270]/20">
+                            </div>
+                            <select id="gradeFilter" class="rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 px-3 py-1.5 text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:border-[#321270] focus:ring-1 focus:ring-[#321270]/20">
+                                <option value="">Semua Grade</option>
+                                <option value="A">Grade A</option>
+                                <option value="B">Grade B</option>
+                                <option value="C">Grade C</option>
+                                <option value="D">Grade D</option>
+                                <option value="E">Grade E</option>
+                            </select>
+                            <select name="sort" onchange="window.location.href='?kelas_id={{ $kelas->id }}&per_page={{ $perPage }}&sort='+this.value" class="rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 px-3 py-1.5 text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:border-[#321270] focus:ring-1 focus:ring-[#321270]/20">
+                                <option value="nama_asc" @selected(($sort ?? '') == 'nama_asc')>Urut: Nama (A-Z)</option>
+                                <option value="nilai_desc" @selected(($sort ?? '') == 'nilai_desc')>Urut: Nilai Tertinggi</option>
+                                <option value="nilai_asc" @selected(($sort ?? '') == 'nilai_asc')>Urut: Nilai Terendah</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="submit" form="form-sync-absensi" class="inline-flex items-center gap-1 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/50 text-[#321270] dark:text-purple-400 border border-purple-100 dark:border-purple-800 px-3 py-1.5 text-xs font-bold transition">
                                 <i class="bi bi-arrow-repeat"></i> Sync Kehadiran
                             </button>
-                        </form>
+                            <button type="button" id="btnToggleEdit" class="inline-flex items-center gap-1 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-800 dark:text-white px-4 py-1.5 text-xs font-bold transition shadow-sm">
+                                <i class="bi bi-pencil-square"></i> Edit Nilai
+                            </button>
+                            <button type="submit" id="btnSimpanNilai" class="hidden inline-flex items-center gap-1 rounded-xl bg-[#321270] hover:bg-purple-900 dark:bg-purple-600 dark:hover:bg-purple-500 text-white px-4 py-1.5 text-xs font-bold transition shadow-sm">
+                                <i class="bi bi-save"></i> Simpan Nilai
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {{-- Table --}}
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm min-w-[640px]">
-                        <thead>
-                            <tr class="border-b border-gray-100 dark:border-slate-700 bg-gray-50/70 dark:bg-slate-900/30 text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
-                                <th class="px-3 py-3 text-center w-12">NO</th>
-                                <th class="px-5 py-3 text-left">Mahasiswa</th>
-                                <th class="px-4 py-3 text-center">Hadir</th>
-                                <th class="px-4 py-3 text-center">Tugas</th>
-                                <th class="px-4 py-3 text-center">Quiz</th>
-                                <th class="px-4 py-3 text-center">Project</th>
-                                <th class="px-4 py-3 text-center">UTS</th>
-                                <th class="px-4 py-3 text-center">UAS</th>
-                                <th class="px-4 py-3 text-center">Akhir</th>
-                                <th class="px-4 py-3 text-center">Grade</th>
-                                <th class="px-3 py-3 text-center w-14"><i class="bi bi-three-dots"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentTableBody" class="divide-y divide-gray-50 dark:divide-slate-700/50">
-                            @forelse ($students as $s)
-                                @php
-                                    $g  = $s->grade ?? 'E';
-                                    $gc = $gradeColors[$g] ?? $gradeColors['E'];
-                                @endphp
-                                <tr class="student-row hover:bg-purple-50/30 dark:hover:bg-purple-900/10 transition"
-                                    data-search="{{ strtolower($s->name ?? '') }} {{ strtolower($s->nip_nim ?? '') }}">
-                                    <td class="px-3 py-3.5 text-center font-mono font-bold text-gray-400 text-xs">
-                                        {{ ($students instanceof \Illuminate\Pagination\LengthAwarePaginator ? ($students->currentPage() - 1) * $students->perPage() : 0) + $loop->iteration }}
-                                    </td>
-                                    <td class="px-5 py-3.5">
-                                        <div class="flex items-center gap-2.5">
-                                            <div class="w-8 h-8 rounded-full bg-[#321270] dark:bg-purple-950 flex items-center justify-center text-white dark:text-purple-300 text-xs font-bold shrink-0">
-                                                {{ strtoupper(substr($s->name ?? '?', 0, 1)) }}
-                                            </div>
-                                            <div class="min-w-0">
-                                                <p class="font-bold text-slate-800 dark:text-white text-xs truncate">{{ $s->name ?? '-' }}</p>
-                                                <p class="text-[10px] text-gray-400 dark:text-slate-500">{{ $s->nip_nim ?? '-' }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_kehadiran !== null ? number_format($s->nilai_kehadiran, 0) : '-' }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_tugas !== null ? number_format($s->nilai_tugas, 0) : '-' }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_quiz !== null ? number_format($s->nilai_quiz, 0) : '-' }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_project !== null ? number_format($s->nilai_project, 0) : '-' }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_uts !== null ? number_format($s->nilai_uts, 0) : '-' }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_uas !== null ? number_format($s->nilai_uas, 0) : '-' }}</td>
-                                    <td class="px-4 py-3.5 text-center">
-                                        <span class="font-black text-sm text-slate-800 dark:text-white">{{ $s->nilai_akhir !== null ? number_format($s->nilai_akhir, 1) : '-' }}</span>
-                                    </td>
-                                    <td class="px-4 py-3.5 text-center">
-                                        <span class="inline-flex items-center justify-center w-9 h-7 rounded-lg text-xs font-extrabold {{ $gc['bg'] }} {{ $gc['text'] }}">
-                                            {{ $g }}
-                                        </span>
-                                    </td>
-                                    <td class="px-3 py-3.5 text-center">
-                                        <button type="button" class="btn-edit-nilai text-[#321270] hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300" 
-                                            data-bs-toggle="modal" data-bs-target="#editNilaiModal"
-                                            data-id="{{ $s->mahasiswa_id }}" 
-                                            data-nama="{{ $s->name }}"
-                                            data-nim="{{ $s->nip_nim }}"
-                                            data-hadir="{{ $s->nilai_kehadiran }}"
-                                            data-tugas="{{ $s->nilai_tugas }}"
-                                            data-quiz="{{ $s->nilai_quiz }}"
-                                            data-project="{{ $s->nilai_project }}"
-                                            data-uts="{{ $s->nilai_uts }}"
-                                            data-uas="{{ $s->nilai_uas }}">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </button>
-                                    </td>
+                    {{-- Table --}}
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm min-w-[640px]">
+                            <thead>
+                                <tr class="border-b border-gray-100 dark:border-slate-700 bg-gray-50/70 dark:bg-slate-900/30 text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+                                    <th class="px-3 py-3 text-center w-12">NO</th>
+                                    <th class="px-5 py-3 text-left">Mahasiswa</th>
+                                    <th class="px-4 py-3 text-center w-20">Hadir</th>
+                                    <th class="px-4 py-3 text-center w-20">Tugas</th>
+                                    <th class="px-4 py-3 text-center w-20">UTS</th>
+                                    <th class="px-4 py-3 text-center w-20">UAS</th>
+                                    <th class="px-4 py-3 text-center w-20">Akhir</th>
+                                    <th class="px-4 py-3 text-center w-20">Grade</th>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="10" class="py-12 text-center text-sm text-gray-400 dark:text-slate-500">
-                                        Belum ada data nilai akhir untuk kelas ini.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody id="studentTableBody" class="divide-y divide-gray-50 dark:divide-slate-700/50">
+                                @forelse ($students as $index => $s)
+                                    @php
+                                        $g  = $s->grade ?? 'E';
+                                        $gc = $gradeColors[$g] ?? $gradeColors['E'];
+                                    @endphp
+                                    <tr class="student-row hover:bg-purple-50/30 dark:hover:bg-purple-900/10 transition"
+                                        data-search="{{ strtolower($s->name ?? '') }} {{ strtolower($s->nip_nim ?? '') }}"
+                                        data-grade="{{ $g }}">
+                                        <td class="px-3 py-2 text-center font-mono font-bold text-gray-400 text-xs">
+                                            {{ ($students instanceof \Illuminate\Pagination\LengthAwarePaginator ? ($students->currentPage() - 1) * $students->perPage() : 0) + $loop->iteration }}
+                                        </td>
+                                        <td class="px-5 py-2">
+                                            <div class="flex items-center gap-2.5">
+                                                <div class="w-8 h-8 rounded-full bg-[#321270] dark:bg-purple-950 flex items-center justify-center text-white dark:text-purple-300 text-xs font-bold shrink-0">
+                                                    {{ strtoupper(substr($s->name ?? '?', 0, 1)) }}
+                                                </div>
+                                                <div class="min-w-0">
+                                                    <p class="font-bold text-slate-800 dark:text-white text-xs truncate">{{ $s->name ?? '-' }}</p>
+                                                    <p class="text-[10px] text-gray-400 dark:text-slate-500">{{ $s->nip_nim ?? '-' }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <input type="hidden" name="students[{{ $index }}][mahasiswa_id]" value="{{ $s->mahasiswa_id }}">
+                                            <input type="number" step="any" name="students[{{ $index }}][nilai_kehadiran]" value="{{ $s->nilai_kehadiran }}" class="grade-input w-16 text-center rounded-md border border-transparent bg-transparent dark:bg-transparent px-1 py-1 text-xs focus:border-[#321270] focus:ring-[#321270]/20 transition-colors" readonly min="0" max="100">
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <input type="number" step="any" name="students[{{ $index }}][nilai_tugas]" value="{{ $s->nilai_tugas }}" class="grade-input w-16 text-center rounded-md border border-transparent bg-transparent dark:bg-transparent px-1 py-1 text-xs focus:border-[#321270] focus:ring-[#321270]/20 transition-colors" readonly min="0" max="100">
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <input type="number" step="any" name="students[{{ $index }}][nilai_uts]" value="{{ $s->nilai_uts }}" class="grade-input w-16 text-center rounded-md border border-transparent bg-transparent dark:bg-transparent px-1 py-1 text-xs focus:border-[#321270] focus:ring-[#321270]/20 transition-colors" readonly min="0" max="100">
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <input type="number" step="any" name="students[{{ $index }}][nilai_uas]" value="{{ $s->nilai_uas }}" class="grade-input w-16 text-center rounded-md border border-transparent bg-transparent dark:bg-transparent px-1 py-1 text-xs focus:border-[#321270] focus:ring-[#321270]/20 transition-colors" readonly min="0" max="100">
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <span class="font-black text-sm text-slate-800 dark:text-white">{{ $s->nilai_akhir !== null ? number_format($s->nilai_akhir, 1) : '-' }}</span>
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <span class="inline-flex items-center justify-center w-9 h-7 rounded-lg text-xs font-extrabold {{ $gc['bg'] }} {{ $gc['text'] }}">
+                                                {{ $g }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="py-12 text-center text-sm text-gray-400 dark:text-slate-500">
+                                            Belum ada data nilai akhir untuk kelas ini.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
 
                 {{-- Pagination & Footer Toolbar --}}
                 <div class="px-5 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-900/30 flex items-center justify-between flex-wrap gap-3">
@@ -326,7 +328,7 @@
                     <p class="text-xs text-gray-400 dark:text-slate-500 text-center py-4">Belum ada data.</p>
                 @else
                     <div class="space-y-2.5">
-                        @foreach (['A','AB','B','BC','C','D','E'] as $g)
+                        @foreach (['A','B','C','D','E'] as $g)
                             @php
                                 $cnt = $gradeDist[$g] ?? 0;
                                 $gc2 = $gradeColors[$g] ?? $gradeColors['E'];
@@ -339,8 +341,8 @@
                                 <div class="flex-1 min-w-0">
                                     <div class="h-2 rounded-full bg-gray-100 dark:bg-slate-900 overflow-hidden">
                                         <div class="h-full rounded-full transition-all
-                                            {{ $g === 'A' || $g === 'AB' ? 'bg-emerald-500' :
-                                               ($g === 'B' || $g === 'BC' ? 'bg-blue-500' :
+                                            {{ $g === 'A' ? 'bg-emerald-500' :
+                                               ($g === 'B' ? 'bg-blue-500' :
                                                ($g === 'C' ? 'bg-amber-500' :
                                                ($g === 'D' ? 'bg-orange-500' : 'bg-red-500'))) }}"
                                              style="width: {{ $pct }}%">
@@ -355,8 +357,7 @@
                     <div class="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700 text-center">
                         <p class="text-[10px] text-gray-400 dark:text-slate-500 uppercase font-bold tracking-wide">Lulus (≥C)</p>
                         @php
-                            $lulus = ($gradeDist['A'] ?? 0) + ($gradeDist['AB'] ?? 0) + ($gradeDist['B'] ?? 0)
-                                   + ($gradeDist['BC'] ?? 0) + ($gradeDist['C'] ?? 0);
+                            $lulus = ($gradeDist['A'] ?? 0) + ($gradeDist['B'] ?? 0) + ($gradeDist['C'] ?? 0);
                             $lulusPct = $totalStudents > 0 ? round($lulus / $totalStudents * 100) : 0;
                         @endphp
                         <p class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-450 mt-1">{{ $lulusPct }}%</p>
@@ -365,131 +366,77 @@
                 @endif
             </div>
 
-            {{-- Kelas Info --}}
-            <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-5 shadow-sm space-y-3 transition-colors duration-200">
-                <h3 class="text-sm font-bold text-slate-800 dark:text-white">Info Kelas</h3>
-                <div class="space-y-2 text-xs text-gray-600 dark:text-slate-300">
-                    <div class="flex items-start justify-between gap-2">
-                        <span class="text-gray-400 dark:text-slate-500">Kode Kelas</span>
-                        <span class="font-semibold text-slate-700 dark:text-slate-200 text-right">{{ $kelas->kode_kelas }}</span>
-                    </div>
-                    <div class="flex items-start justify-between gap-2">
-                        <span class="text-gray-400 dark:text-slate-500">Hari/Jam</span>
-                        <span class="font-semibold text-slate-700 dark:text-slate-200 text-right">{{ $kelas->hari }}, {{ substr($kelas->jam_mulai, 0, 5) }}</span>
-                    </div>
-                    <div class="flex items-start justify-between gap-2">
-                        <span class="text-gray-400 dark:text-slate-500">Ruangan</span>
-                        <span class="font-semibold text-slate-700 dark:text-slate-200 text-right">{{ $kelas->ruangan ?? '-' }}</span>
-                    </div>
-                    <div class="flex items-start justify-between gap-2">
-                        <span class="text-gray-400 dark:text-slate-500">SKS</span>
-                        <span class="font-semibold text-slate-700 dark:text-slate-200">{{ $kelas->mataKuliah?->sks ?? '-' }}</span>
-                    </div>
-                </div>
-            </div>
         </div>
-
     </div>
-
 @endif
-
-{{-- MODAL EDIT NILAI (Tailwind) --}}
-<div id="editNilaiModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <!-- Background overlay -->
-    <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity backdrop-blur-sm"></div>
-
-    <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
-        <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-gray-100 dark:border-slate-700">
-            <div class="border-b border-gray-100 dark:border-slate-700 px-6 py-4 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800 dark:text-white text-lg" id="modal-title">Input / Edit Nilai</h3>
-                <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-500 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            
-            <form action="{{ route('dosen.gradebook.update-nilai') }}" method="POST">
-                @csrf
-                <input type="hidden" name="kelas_id" value="{{ $kelas?->id }}">
-                <input type="hidden" name="mahasiswa_id" id="edit_mahasiswa_id">
-                
-                <div class="px-6 py-5">
-                    <p class="text-sm font-bold text-[#321270] dark:text-purple-400 mb-4" id="edit_nama_mhs"></p>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Kehadiran (0-100)</label>
-                            <input type="number" name="nilai_kehadiran" id="edit_kehadiran" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Tugas (0-100)</label>
-                            <input type="number" name="nilai_tugas" id="edit_tugas" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Quiz (0-100)</label>
-                            <input type="number" name="nilai_quiz" id="edit_quiz" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Project (0-100)</label>
-                            <input type="number" name="nilai_project" id="edit_project" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">UTS (0-100)</label>
-                            <input type="number" name="nilai_uts" id="edit_uts" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">UAS (0-100)</label>
-                            <input type="number" name="nilai_uas" id="edit_uas" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
-                        </div>
-                    </div>
-                </div>
-                <div class="border-t border-gray-100 dark:border-slate-700 px-6 py-4 flex justify-end gap-3 bg-gray-50 dark:bg-slate-800/50 rounded-b-2xl">
-                    <button type="button" class="btn-close-modal rounded-xl px-4 py-2 text-sm font-bold bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-600">Batal</button>
-                    <button type="submit" class="rounded-xl px-4 py-2 text-sm font-bold text-white bg-[#321270] hover:bg-[#250d54]">Simpan Nilai</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 @endsection
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('studentSearch');
-    if (!input) return;
-    input.addEventListener('input', function () {
-        const q = this.value.toLowerCase().trim();
+    const searchInput = document.getElementById('studentSearch');
+    const gradeFilter = document.getElementById('gradeFilter');
+    
+    function filterTable() {
+        const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const g = gradeFilter ? gradeFilter.value : '';
+        
         document.querySelectorAll('.student-row').forEach(row => {
             const text = (row.dataset.search || '').toLowerCase();
-            row.classList.toggle('hidden', q !== '' && !text.includes(q));
-        });
-    });
-
-    // Populate Edit Nilai Modal and Show
-    document.querySelectorAll('.btn-edit-nilai').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.getElementById('edit_mahasiswa_id').value = this.dataset.id;
-            document.getElementById('edit_nama_mhs').textContent = this.dataset.nama + ' (' + this.dataset.nim + ')';
-            document.getElementById('edit_kehadiran').value = this.dataset.hadir !== '' ? this.dataset.hadir : 0;
-            document.getElementById('edit_tugas').value = this.dataset.tugas !== '' ? this.dataset.tugas : 0;
-            document.getElementById('edit_quiz').value = this.dataset.quiz !== '' ? this.dataset.quiz : 0;
-            document.getElementById('edit_project').value = this.dataset.project !== '' ? this.dataset.project : 0;
-            document.getElementById('edit_uts').value = this.dataset.uts !== '' ? this.dataset.uts : 0;
-            document.getElementById('edit_uas').value = this.dataset.uas !== '' ? this.dataset.uas : 0;
+            const rowGrade = row.dataset.grade || '';
             
-            document.getElementById('editNilaiModal').classList.remove('hidden');
+            const matchSearch = q === '' || text.includes(q);
+            const matchGrade = g === '' || rowGrade === g;
+            
+            row.classList.toggle('hidden', !(matchSearch && matchGrade));
         });
-    });
+    }
 
-    // Close Modal
-    document.querySelectorAll('.btn-close-modal').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.getElementById('editNilaiModal').classList.add('hidden');
+    if (searchInput) searchInput.addEventListener('input', filterTable);
+    if (gradeFilter) gradeFilter.addEventListener('change', filterTable);
+
+    // Toggle Edit Mode
+    const btnToggleEdit = document.getElementById('btnToggleEdit');
+    const btnSimpanNilai = document.getElementById('btnSimpanNilai');
+    const gradeInputs = document.querySelectorAll('.grade-input');
+
+    if(btnToggleEdit) {
+        btnToggleEdit.addEventListener('click', function() {
+            const isEditing = !btnSimpanNilai.classList.contains('hidden');
+            if(!isEditing) {
+                // Masuk mode edit
+                btnSimpanNilai.classList.remove('hidden');
+                btnToggleEdit.innerHTML = '<i class="bi bi-x-circle"></i> Batal Edit';
+                btnToggleEdit.classList.replace('bg-gray-100', 'bg-red-50');
+                btnToggleEdit.classList.replace('text-gray-800', 'text-red-600');
+                btnToggleEdit.classList.replace('dark:bg-slate-700', 'dark:bg-red-900/30');
+                btnToggleEdit.classList.replace('dark:text-white', 'dark:text-red-400');
+                
+                gradeInputs.forEach(input => {
+                    input.removeAttribute('readonly');
+                    input.classList.remove('border-transparent', 'bg-transparent', 'dark:bg-transparent');
+                    input.classList.add('border-gray-300', 'dark:border-slate-600', 'bg-white', 'dark:bg-slate-700');
+                });
+            } else {
+                // Batal edit
+                btnSimpanNilai.classList.add('hidden');
+                btnToggleEdit.innerHTML = '<i class="bi bi-pencil-square"></i> Edit Nilai';
+                btnToggleEdit.classList.replace('bg-red-50', 'bg-gray-100');
+                btnToggleEdit.classList.replace('text-red-600', 'text-gray-800');
+                btnToggleEdit.classList.replace('dark:bg-red-900/30', 'dark:bg-slate-700');
+                btnToggleEdit.classList.replace('dark:text-red-400', 'dark:text-white');
+                
+                gradeInputs.forEach(input => {
+                    input.setAttribute('readonly', true);
+                    input.classList.add('border-transparent', 'bg-transparent', 'dark:bg-transparent');
+                    input.classList.remove('border-gray-300', 'dark:border-slate-600', 'bg-white', 'dark:bg-slate-700');
+                    // Reset value to its default
+                    input.value = input.defaultValue;
+                });
+            }
         });
-    });
+    }
 });
 </script>
 @endpush

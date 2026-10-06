@@ -361,6 +361,7 @@
                         $menu = [
                             ['label' => 'Dashboard', 'route' => 'dosen.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
                             ['label' => 'Kelas Saya', 'route' => 'dosen.kelas-saya', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
+                            ['label' => 'Gradebook', 'route' => 'dosen.gradebook', 'icon' => 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z'],
                             ['label' => 'Pengumuman', 'route' => 'dosen.kelas-pengumuman.index', 'icon' => 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z'],
                             ['label' => 'Jadwal', 'route' => 'dosen.schedule', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
                             ['label' => 'Log Mengajar', 'route' => 'dosen.log-book', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
@@ -526,8 +527,8 @@
 
                 <div class="flex items-center justify-end gap-2 sm:gap-4">
                     @php
-                        $unreadNotifs = auth()->check() ? auth()->user()->notifikasi()->whereNull('dibaca_pada')->orderBy('created_at', 'desc')->get() : collect();
-                        $unreadCount = $unreadNotifs->count();
+                        $recentNotifs = auth()->check() ? auth()->user()->notifikasi()->orderBy('created_at', 'desc')->get() : collect();
+                        $unreadCount = auth()->check() ? auth()->user()->notifikasi()->whereNull('dibaca_pada')->count() : 0;
                     @endphp
                     <div class="relative" x-data="{ notifOpen: false }">
                         <button @click="notifOpen = !notifOpen" @click.away="notifOpen = false" class="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition focus:outline-none">
@@ -555,11 +556,17 @@
                                 @endif
                             </div>
                             <div class="max-h-72 overflow-y-auto">
-                                @forelse($unreadNotifs->take(5) as $notif)
-                                    <a href="{{ $notif->url ?? '#' }}" class="block px-4 py-3 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
-                                        <p class="text-xs font-bold text-gray-800 dark:text-white mb-0.5">{{ $notif->judul }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{{ $notif->pesan }}</p>
-                                        <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                @forelse($recentNotifs as $notif)
+                                    @php $isUnread = is_null($notif->dibaca_pada); @endphp
+                                    <a href="{{ route('notifikasi.baca', $notif->id) }}" class="block px-4 py-3 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-100 dark:hover:bg-slate-700/70 transition {{ $isUnread ? 'bg-blue-50/30 dark:bg-slate-700/30' : '' }}">
+                                        <div class="flex items-start justify-between gap-2">
+                                            <p class="text-xs font-bold {{ $isUnread ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300' }} mb-0.5">{{ $notif->judul }}</p>
+                                            @if($isUnread)
+                                                <span class="w-2 h-2 mt-1 shrink-0 bg-blue-500 rounded-full"></span>
+                                            @endif
+                                        </div>
+                                        <p class="text-xs {{ $isUnread ? 'text-gray-600 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500' }} line-clamp-2">{{ $notif->pesan }}</p>
+                                        <p class="text-[10px] {{ $isUnread ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500/80' }} mt-1 font-medium">{{ $notif->created_at->diffForHumans() }} &bull; {{ $notif->created_at->format('d M Y, H:i') }}</p>
                                     </a>
                                 @empty
                                     <div class="px-4 py-6 text-center">
@@ -572,31 +579,20 @@
                                     </div>
                                 @endforelse
                             </div>
-                            @php
-                                $pengumumanRoute = '#';
-                                if (auth()->check()) {
-                                    if (auth()->user()->hasRole('mahasiswa')) {
-                                        $pengumumanRoute = route('mahasiswa.pengumuman.index');
-                                    } elseif (auth()->user()->hasRole('dosen')) {
-                                        $pengumumanRoute = route('dosen.kelas-pengumuman.index');
-                                    } elseif (auth()->user()->hasRole('admin')) {
-                                        $pengumumanRoute = route('admin.pengumuman.index');
-                                    }
-                                }
-                            @endphp
-                            <a href="{{ $pengumumanRoute }}" class="block px-4 py-2 text-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition bg-gray-50/50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-700">
-                                Lihat Semua Pengumuman
+                            @if($unreadCount > 0)
+                                <form action="{{ route('notifikasi.baca-semua') }}" method="POST" class="block w-full border-t border-gray-100 dark:border-slate-700">
+                                    @csrf
+                                    <button type="submit" class="w-full px-4 py-2 text-center text-xs font-bold text-[#002B6B] dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition bg-gray-50/50 dark:bg-slate-800/50">
+                                        Tandai Semua Dibaca
+                                    </button>
+                                </form>
+                            @endif
+                            <a href="{{ route('notifikasi.index') }}" class="block w-full px-4 py-2 text-center text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-[#002B6B] dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition bg-white dark:bg-slate-800 border-t border-gray-100 dark:border-slate-700 rounded-b-xl">
+                                Lihat Semua Notifikasi
                             </a>
                         </div>
                     </div>
-                    @if (auth()->user()?->hasRole('mahasiswa'))
-                        <button class="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
-                    @endif
+                    
 
                     <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
                         <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
