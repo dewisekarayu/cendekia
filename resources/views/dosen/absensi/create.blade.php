@@ -141,47 +141,6 @@
                 </div>
             </div>
 
-            {{-- STEP 2: DOKUMENTASI --}}
-            <div class="flex gap-4">
-                <div class="flex flex-col items-center shrink-0">
-                    <div class="w-8 h-8 rounded-full bg-[#321270] text-white font-display font-semibold text-sm flex items-center justify-center rail-dot">2</div>
-                    <div class="w-px flex-1 rail-line mt-1 mb-1"></div>
-                </div>
-                <div class="flex-1 min-w-0 pb-6">
-                    <h2 class="font-display text-lg font-semibold text-[#1E1B2E] mb-0.5">Dokumentasi Sesi</h2>
-                    <p class="text-xs text-slate-500 mb-4">Ringkasan materi dan catatan perkuliahan — semua kolom opsional</p>
-
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
-                        <div>
-                            <label for="rangkuman" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                                Ringkasan Pokok Bahasan Materi
-                            </label>
-                            <textarea id="rangkuman" name="rangkuman" rows="3"
-                                placeholder="Tulis poin-poin materi utama yang akan dipaparkan..."
-                                class="w-full px-3.5 py-2.5 text-sm text-[#1E1B2E] bg-slate-50 hover:bg-white focus:bg-white rounded-xl border-2 border-slate-200 focus:border-[#321270] outline-none transition duration-200 resize-none">{{ old('rangkuman') }}</textarea>
-                        </div>
-
-                        <div>
-                            <label for="berita_acara" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                                Berita Acara Perkuliahan
-                            </label>
-                            <textarea id="berita_acara" name="berita_acara" rows="3"
-                                placeholder="Tulis pokok kejadian, hambatan kelas, atau catatan berita acara..."
-                                class="w-full px-3.5 py-2.5 text-sm text-[#1E1B2E] bg-slate-50 hover:bg-white focus:bg-white rounded-xl border-2 border-slate-200 focus:border-[#321270] outline-none transition duration-200 resize-none">{{ old('berita_acara') }}</textarea>
-                        </div>
-
-                        <div>
-                            <label for="catatan" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                                Catatan Tambahan Khusus
-                            </label>
-                            <textarea id="catatan" name="catatan" rows="2"
-                                placeholder="Catatan pendelegasian tugas mandiri mahasiswa atau lainnya..."
-                                class="w-full px-3.5 py-2.5 text-sm text-[#1E1B2E] bg-slate-50 hover:bg-white focus:bg-white rounded-xl border-2 border-slate-200 focus:border-[#321270] outline-none transition duration-200 resize-none">{{ old('catatan') }}</textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {{-- STEP 3 (final marker, no line after) --}}
             <div class="flex gap-4">
                 <div class="flex flex-col items-center shrink-0">
@@ -229,34 +188,11 @@
                 </ul>
             </div>
 
-            {{-- kelas record card --}}
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="bg-[#321270] px-5 py-3">
-                    <p class="text-[10px] font-bold text-white/60 uppercase tracking-[0.15em]">Kartu Kelas</p>
-                    <p class="font-display text-white font-semibold text-base truncate">{{ $kelas->mataKuliah->nama_mk }}</p>
-                </div>
-                <div class="p-5 space-y-3.5">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-400 font-semibold uppercase tracking-wider text-[10px]">Kode Akses</span>
-                        <span class="font-mono-tix font-bold text-[#321270] bg-[#321270]/[0.06] px-2 py-0.5 rounded border border-[#321270]/10">{{ $kelas->kode_kelas }}</span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-400 font-semibold uppercase tracking-wider text-[10px]">Ruangan</span>
-                        <span class="font-semibold text-slate-700">{{ $kelas->ruangan ?? 'Online/Hybrid' }}</span>
-                    </div>
-                    <div class="pt-3 border-t border-dashed border-slate-200 flex items-center justify-between">
-                        <span class="text-slate-400 font-semibold uppercase tracking-wider text-[10px]">Mahasiswa Terdaftar</span>
-                        <span class="font-display text-2xl font-semibold text-[#321270]">{{ $kelas->mahasiswa->count() }}</span>
-                    </div>
-                </div>
-            </div>
-
             {{-- tips --}}
             <div class="rounded-2xl border border-dashed border-[#321270]/25 p-5">
                 <p class="text-[10px] font-bold text-[#321270] uppercase tracking-[0.15em] mb-2">Catatan Kaki</p>
                 <ul class="text-xs text-slate-600 space-y-1.5">
                     <li>· Sesuaikan jam dengan jadwal SIAKAD</li>
-                    <li>· Ringkasan yang rapi memudahkan rekap akhir semester</li>
                     <li>· Format waktu mengikuti standar 24 jam</li>
                 </ul>
             </div>
