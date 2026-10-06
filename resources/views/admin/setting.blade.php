@@ -9,21 +9,8 @@
     {{-- Page Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <div class="flex items-center gap-2 mb-1">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#002B6B] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
-                    <i class="bi bi-gear-fill text-xs"></i>
-                    Konfigurasi & Akun
-                </span>
-            </div>
-            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
-                Pengaturan Sistem & Profil
-            </h1>
-            <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Pengaturan</li>
-                </ol>
-            </nav>
+            <h1 class="text-2xl font-extrabold text-slate-800 dark:text-white transition-colors duration-200">Pengaturan</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200">Kelola preferensi dan konfigurasi sistem</p>
         </div>
 
         <div class="flex items-center gap-2 flex-wrap">
@@ -69,73 +56,47 @@
         </div>
     @endif
 
-    {{-- STAT MINI OVERVIEW --}}
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-                <div class="stat-card-icon blue" style="flex-shrink: 0;">
-                    <i class="bi bi-shield-lock"></i>
-                </div>
-                <div style="min-width: 0; overflow: hidden;">
-                    <div class="label">Peran Akun</div>
-                    <div class="number text-blue-700 dark:text-blue-400" style="font-size: 1rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Administrator</div>
-                </div>
-            </div>
+    {{-- STATS STRIP --}}
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div class="group rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5 bg-[#002B6B]"></div>
+            <p class="text-[28px] font-black text-[#002B6B] dark:text-blue-400 leading-none">Admin</p>
+            <p class="mt-1.5 text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wide">Peran Akun</p>
+            <div class="mt-2 w-6 h-0.5 rounded-full bg-[#002B6B]/30 dark:bg-blue-500/30"></div>
         </div>
-        <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-                <div class="stat-card-icon green">
-                    <i class="bi bi-people"></i>
-                </div>
-                <div>
-                    <div class="label">Total Pengguna</div>
-                    <div class="number">{{ number_format($totalUsers ?? 0) }}</div>
-                </div>
-            </div>
+        <div class="group rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5 bg-emerald-500"></div>
+            <p class="text-[28px] font-black text-emerald-600 dark:text-emerald-400 leading-none">{{ number_format($totalUsers ?? 0) }}</p>
+            <p class="mt-1.5 text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wide">Total Pengguna</p>
+            <div class="mt-2 w-6 h-0.5 rounded-full bg-emerald-400/40"></div>
         </div>
-        <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-                <div class="stat-card-icon blue">
-                    <i class="bi bi-person-badge"></i>
-                </div>
-                <div>
-                    <div class="label">Total Dosen</div>
-                    <div class="number">{{ number_format($totalDosen ?? 0) }}</div>
-                </div>
-            </div>
+        <div class="group rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5 bg-violet-500"></div>
+            <p class="text-[28px] font-black text-violet-600 dark:text-violet-400 leading-none">{{ number_format($totalDosen ?? 0) }}</p>
+            <p class="mt-1.5 text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wide">Total Dosen</p>
+            <div class="mt-2 w-6 h-0.5 rounded-full bg-violet-400/40"></div>
         </div>
-        <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-                <div class="stat-card-icon amber">
-                    <i class="bi bi-mortarboard"></i>
-                </div>
-                <div>
-                    <div class="label">Mahasiswa</div>
-                    <div class="number">{{ number_format($totalMahasiswa ?? 0) }}</div>
-                </div>
-            </div>
+        <div class="group rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-5 bg-amber-500"></div>
+            <p class="text-[28px] font-black text-amber-500 leading-none">{{ number_format($totalMahasiswa ?? 0) }}</p>
+            <p class="mt-1.5 text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wide">Mahasiswa</p>
+            <div class="mt-2 w-6 h-0.5 rounded-full bg-amber-400/40"></div>
         </div>
     </div>
 
     {{-- SETTINGS TABS --}}
-    <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 overflow-x-auto pb-px">
-        <button type="button" @click="activeTab = 'profil'"
-                :class="activeTab === 'profil' ? 'border-[#002B6B] text-[#002B6B] dark:border-blue-400 dark:text-blue-400 font-bold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-medium'"
-                class="flex items-center gap-2 px-4 py-3 border-b-2 text-sm transition whitespace-nowrap">
-            <i class="bi bi-person-gear"></i>
-            <span>Profil & Keamanan</span>
+    <div class="flex gap-2 border-b border-gray-200 dark:border-slate-700 overflow-x-auto transition-colors duration-200">
+        <button type="button" @click="activeTab = 'profil'" :class="activeTab === 'profil' ? 'border-[#002B6B] text-slate-800 dark:text-white border-b-2' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-white hover:border-gray-300'" class="flex items-center gap-2 px-4 py-3 font-semibold transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span class="hidden sm:inline">Profil & Keamanan</span>
         </button>
-        <button type="button" @click="activeTab = 'tampilan'"
-                :class="activeTab === 'tampilan' ? 'border-[#002B6B] text-[#002B6B] dark:border-blue-400 dark:text-blue-400 font-bold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-medium'"
-                class="flex items-center gap-2 px-4 py-3 border-b-2 text-sm transition whitespace-nowrap">
-            <i class="bi bi-palette"></i>
-            <span>Tampilan & Bahasa</span>
+        <button type="button" @click="activeTab = 'tampilan'" :class="activeTab === 'tampilan' ? 'border-[#002B6B] text-slate-800 dark:text-white border-b-2' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-white hover:border-gray-300'" class="flex items-center gap-2 px-4 py-3 font-semibold transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 9a3 3 0 100 6 3 3 0 000-6z"/></svg>
+            <span class="hidden sm:inline">Tampilan & Bahasa</span>
         </button>
-        <button type="button" @click="activeTab = 'notifikasi'"
-                :class="activeTab === 'notifikasi' ? 'border-[#002B6B] text-[#002B6B] dark:border-blue-400 dark:text-blue-400 font-bold' : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-medium'"
-                class="flex items-center gap-2 px-4 py-3 border-b-2 text-sm transition whitespace-nowrap">
-            <i class="bi bi-bell"></i>
-            <span>Notifikasi Admin</span>
+        <button type="button" @click="activeTab = 'notifikasi'" :class="activeTab === 'notifikasi' ? 'border-[#002B6B] text-slate-800 dark:text-white border-b-2' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-white hover:border-gray-300'" class="flex items-center gap-2 px-4 py-3 font-semibold transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="hidden sm:inline">Notifikasi</span>
         </button>
     </div>
 
@@ -205,8 +166,8 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex justify-end">
-                    <button type="submit" class="btn btn-primary px-5 py-2.5 flex items-center gap-2">
-                        <i class="bi bi-check2-circle fs-5"></i>
+                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition flex items-center gap-2">
+                        <i class="bi bi-check2-circle"></i>
                         <span>Simpan Profil</span>
                     </button>
                 </div>
@@ -259,8 +220,8 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex justify-end">
-                    <button type="submit" class="btn btn-primary px-5 py-2.5 flex items-center gap-2">
-                        <i class="bi bi-shield-check fs-5"></i>
+                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition flex items-center gap-2">
+                        <i class="bi bi-shield-check"></i>
                         <span>Perbarui Kata Sandi</span>
                     </button>
                 </div>
@@ -338,8 +299,8 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex justify-end">
-                    <button type="submit" class="btn btn-primary px-5 py-2.5 flex items-center gap-2">
-                        <i class="bi bi-check2-circle fs-5"></i>
+                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition flex items-center gap-2">
+                        <i class="bi bi-check2-circle"></i>
                         <span>Simpan Preferensi</span>
                     </button>
                 </div>
@@ -417,8 +378,8 @@
                     <a href="{{ route('admin.notification-preferences.index') }}" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
                         <i class="bi bi-people me-1"></i> Buka Manajemen Notifikasi Semua Civitas →
                     </a>
-                    <button type="submit" class="btn btn-primary px-5 py-2.5 flex items-center gap-2">
-                        <i class="bi bi-check2-circle fs-5"></i>
+                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition flex items-center gap-2">
+                        <i class="bi bi-check2-circle"></i>
                         <span>Simpan Notifikasi</span>
                     </button>
                 </div>

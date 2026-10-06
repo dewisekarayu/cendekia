@@ -525,12 +525,70 @@
                 <div class="hidden lg:block flex-1"></div>
 
                 <div class="flex items-center justify-end gap-2 sm:gap-4">
-                    <button class="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                        </svg>
-                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-                    </button>
+                    @php
+                        $unreadNotifs = auth()->check() ? auth()->user()->notifikasi()->whereNull('dibaca_pada')->orderBy('created_at', 'desc')->get() : collect();
+                        $unreadCount = $unreadNotifs->count();
+                    @endphp
+                    <div class="relative" x-data="{ notifOpen: false }">
+                        <button @click="notifOpen = !notifOpen" @click.away="notifOpen = false" class="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            @if($unreadCount > 0)
+                                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                            @endif
+                        </button>
+
+                        <div x-show="notifOpen"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 overflow-hidden z-50"
+                             style="display: none;">
+                            <div class="px-4 py-3 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/50">
+                                <h3 class="text-sm font-bold text-gray-800 dark:text-white">Notifikasi</h3>
+                                @if($unreadCount > 0)
+                                    <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 text-xs font-bold">{{ $unreadCount }} Baru</span>
+                                @endif
+                            </div>
+                            <div class="max-h-72 overflow-y-auto">
+                                @forelse($unreadNotifs->take(5) as $notif)
+                                    <a href="{{ $notif->url ?? '#' }}" class="block px-4 py-3 border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
+                                        <p class="text-xs font-bold text-gray-800 dark:text-white mb-0.5">{{ $notif->judul }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{{ $notif->pesan }}</p>
+                                        <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                    </a>
+                                @empty
+                                    <div class="px-4 py-6 text-center">
+                                        <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 dark:bg-slate-700 text-gray-400 mb-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                            </svg>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Belum ada notifikasi baru</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                            @php
+                                $pengumumanRoute = '#';
+                                if (auth()->check()) {
+                                    if (auth()->user()->hasRole('mahasiswa')) {
+                                        $pengumumanRoute = route('mahasiswa.pengumuman.index');
+                                    } elseif (auth()->user()->hasRole('dosen')) {
+                                        $pengumumanRoute = route('dosen.kelas-pengumuman.index');
+                                    } elseif (auth()->user()->hasRole('admin')) {
+                                        $pengumumanRoute = route('admin.pengumuman.index');
+                                    }
+                                }
+                            @endphp
+                            <a href="{{ $pengumumanRoute }}" class="block px-4 py-2 text-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition bg-gray-50/50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-700">
+                                Lihat Semua Pengumuman
+                            </a>
+                        </div>
+                    </div>
 
                     <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
                         <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">

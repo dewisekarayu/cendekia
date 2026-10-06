@@ -186,7 +186,7 @@
                                         </div>
                                         
                                         <div class="flex gap-2">
-                                            <a href="{{ route('dosen.kelas.show', $kelas->id) }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <a href="{{ route('dosen.kelas-detail', $kelas->id) }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
                                                 Kelola Kelas
                                             </a>
                                         </div>

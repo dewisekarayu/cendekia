@@ -50,7 +50,8 @@
         'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
         'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
         'Forum'        => ['url' => route('dosen.kelas-forum', $kelas->id),  'active' => request()->routeIs('dosen.kelas-forum')],
-        'Penilaian'    => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
+        'Rekap Tugas'  => ['url' => route('dosen.kelas-tugas.rekap', $kelas->id), 'active' => request()->routeIs('dosen.kelas-tugas.rekap')],
+        'Grade Akhir'  => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
     ];
 @endphp
 <div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-sm transition-colors duration-200">
@@ -142,9 +143,18 @@
                         <input id="studentSearch" type="text" placeholder="Cari nama / NIM..."
                                class="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 pl-8 pr-3 py-2 text-xs text-gray-800 dark:text-gray-100 focus:outline-none focus:border-[#321270] dark:focus:border-purple-500 focus:ring-1 focus:ring-[#321270]/20">
                     </div>
-                    <span class="text-xs text-gray-400 dark:text-slate-500 font-medium">
-                        {{ $students instanceof \Illuminate\Pagination\LengthAwarePaginator ? $students->total() : count($students) }} mahasiswa terdaftar
-                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-gray-400 dark:text-slate-500 font-medium">
+                            {{ $students instanceof \Illuminate\Pagination\LengthAwarePaginator ? $students->total() : count($students) }} mahasiswa
+                        </span>
+                        <form action="{{ route('dosen.gradebook.sync-absensi') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
+                            <button type="submit" class="inline-flex items-center gap-1 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/50 text-[#321270] dark:text-purple-400 border border-purple-100 dark:border-purple-800 px-3 py-1.5 text-xs font-bold transition">
+                                <i class="bi bi-arrow-repeat"></i> Sync Kehadiran
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 {{-- Table --}}
@@ -162,6 +172,7 @@
                                 <th class="px-4 py-3 text-center">UAS</th>
                                 <th class="px-4 py-3 text-center">Akhir</th>
                                 <th class="px-4 py-3 text-center">Grade</th>
+                                <th class="px-3 py-3 text-center w-14"><i class="bi bi-three-dots"></i></th>
                             </tr>
                         </thead>
                         <tbody id="studentTableBody" class="divide-y divide-gray-50 dark:divide-slate-700/50">
@@ -171,34 +182,49 @@
                                     $gc = $gradeColors[$g] ?? $gradeColors['E'];
                                 @endphp
                                 <tr class="student-row hover:bg-purple-50/30 dark:hover:bg-purple-900/10 transition"
-                                    data-search="{{ strtolower($s->mahasiswa?->name ?? '') }} {{ strtolower($s->mahasiswa?->nip_nim ?? '') }}">
+                                    data-search="{{ strtolower($s->name ?? '') }} {{ strtolower($s->nip_nim ?? '') }}">
                                     <td class="px-3 py-3.5 text-center font-mono font-bold text-gray-400 text-xs">
                                         {{ ($students instanceof \Illuminate\Pagination\LengthAwarePaginator ? ($students->currentPage() - 1) * $students->perPage() : 0) + $loop->iteration }}
                                     </td>
                                     <td class="px-5 py-3.5">
                                         <div class="flex items-center gap-2.5">
                                             <div class="w-8 h-8 rounded-full bg-[#321270] dark:bg-purple-950 flex items-center justify-center text-white dark:text-purple-300 text-xs font-bold shrink-0">
-                                                {{ strtoupper(substr($s->mahasiswa?->name ?? '?', 0, 1)) }}
+                                                {{ strtoupper(substr($s->name ?? '?', 0, 1)) }}
                                             </div>
                                             <div class="min-w-0">
-                                                <p class="font-bold text-slate-800 dark:text-white text-xs truncate">{{ $s->mahasiswa?->name ?? '-' }}</p>
-                                                <p class="text-[10px] text-gray-400 dark:text-slate-500">{{ $s->mahasiswa?->nip_nim ?? '-' }}</p>
+                                                <p class="font-bold text-slate-800 dark:text-white text-xs truncate">{{ $s->name ?? '-' }}</p>
+                                                <p class="text-[10px] text-gray-400 dark:text-slate-500">{{ $s->nip_nim ?? '-' }}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ number_format($s->nilai_kehadiran, 0) }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ number_format($s->nilai_tugas, 0) }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ number_format($s->nilai_quiz, 0) }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ number_format($s->nilai_project, 0) }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ number_format($s->nilai_uts, 0) }}</td>
-                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ number_format($s->nilai_uas, 0) }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_kehadiran !== null ? number_format($s->nilai_kehadiran, 0) : '-' }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_tugas !== null ? number_format($s->nilai_tugas, 0) : '-' }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_quiz !== null ? number_format($s->nilai_quiz, 0) : '-' }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_project !== null ? number_format($s->nilai_project, 0) : '-' }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_uts !== null ? number_format($s->nilai_uts, 0) : '-' }}</td>
+                                    <td class="px-4 py-3.5 text-center text-xs font-medium text-gray-700 dark:text-slate-300">{{ $s->nilai_uas !== null ? number_format($s->nilai_uas, 0) : '-' }}</td>
                                     <td class="px-4 py-3.5 text-center">
-                                        <span class="font-black text-sm text-slate-800 dark:text-white">{{ number_format($s->nilai_akhir, 1) }}</span>
+                                        <span class="font-black text-sm text-slate-800 dark:text-white">{{ $s->nilai_akhir !== null ? number_format($s->nilai_akhir, 1) : '-' }}</span>
                                     </td>
                                     <td class="px-4 py-3.5 text-center">
                                         <span class="inline-flex items-center justify-center w-9 h-7 rounded-lg text-xs font-extrabold {{ $gc['bg'] }} {{ $gc['text'] }}">
                                             {{ $g }}
                                         </span>
+                                    </td>
+                                    <td class="px-3 py-3.5 text-center">
+                                        <button type="button" class="btn-edit-nilai text-[#321270] hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300" 
+                                            data-bs-toggle="modal" data-bs-target="#editNilaiModal"
+                                            data-id="{{ $s->mahasiswa_id }}" 
+                                            data-nama="{{ $s->name }}"
+                                            data-nim="{{ $s->nip_nim }}"
+                                            data-hadir="{{ $s->nilai_kehadiran }}"
+                                            data-tugas="{{ $s->nilai_tugas }}"
+                                            data-quiz="{{ $s->nilai_quiz }}"
+                                            data-project="{{ $s->nilai_project }}"
+                                            data-uts="{{ $s->nilai_uts }}"
+                                            data-uas="{{ $s->nilai_uas }}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @empty
@@ -367,6 +393,66 @@
 
 @endif
 
+{{-- MODAL EDIT NILAI (Tailwind) --}}
+<div id="editNilaiModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-50 transition-opacity backdrop-blur-sm"></div>
+
+    <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+        <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-gray-100 dark:border-slate-700">
+            <div class="border-b border-gray-100 dark:border-slate-700 px-6 py-4 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 dark:text-white text-lg" id="modal-title">Input / Edit Nilai</h3>
+                <button type="button" class="btn-close-modal text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <form action="{{ route('dosen.gradebook.update-nilai') }}" method="POST">
+                @csrf
+                <input type="hidden" name="kelas_id" value="{{ $kelas?->id }}">
+                <input type="hidden" name="mahasiswa_id" id="edit_mahasiswa_id">
+                
+                <div class="px-6 py-5">
+                    <p class="text-sm font-bold text-[#321270] dark:text-purple-400 mb-4" id="edit_nama_mhs"></p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Kehadiran (0-100)</label>
+                            <input type="number" name="nilai_kehadiran" id="edit_kehadiran" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Tugas (0-100)</label>
+                            <input type="number" name="nilai_tugas" id="edit_tugas" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Quiz (0-100)</label>
+                            <input type="number" name="nilai_quiz" id="edit_quiz" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">Project (0-100)</label>
+                            <input type="number" name="nilai_project" id="edit_project" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">UTS (0-100)</label>
+                            <input type="number" name="nilai_uts" id="edit_uts" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 dark:text-slate-300 mb-1">UAS (0-100)</label>
+                            <input type="number" name="nilai_uas" id="edit_uas" min="0" max="100" step="any" class="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm focus:border-[#321270] focus:ring-[#321270]/20">
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-100 dark:border-slate-700 px-6 py-4 flex justify-end gap-3 bg-gray-50 dark:bg-slate-800/50 rounded-b-2xl">
+                    <button type="button" class="btn-close-modal rounded-xl px-4 py-2 text-sm font-bold bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-600">Batal</button>
+                    <button type="submit" class="rounded-xl px-4 py-2 text-sm font-bold text-white bg-[#321270] hover:bg-[#250d54]">Simpan Nilai</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -379,6 +465,29 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.student-row').forEach(row => {
             const text = (row.dataset.search || '').toLowerCase();
             row.classList.toggle('hidden', q !== '' && !text.includes(q));
+        });
+    });
+
+    // Populate Edit Nilai Modal and Show
+    document.querySelectorAll('.btn-edit-nilai').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('edit_mahasiswa_id').value = this.dataset.id;
+            document.getElementById('edit_nama_mhs').textContent = this.dataset.nama + ' (' + this.dataset.nim + ')';
+            document.getElementById('edit_kehadiran').value = this.dataset.hadir !== '' ? this.dataset.hadir : 0;
+            document.getElementById('edit_tugas').value = this.dataset.tugas !== '' ? this.dataset.tugas : 0;
+            document.getElementById('edit_quiz').value = this.dataset.quiz !== '' ? this.dataset.quiz : 0;
+            document.getElementById('edit_project').value = this.dataset.project !== '' ? this.dataset.project : 0;
+            document.getElementById('edit_uts').value = this.dataset.uts !== '' ? this.dataset.uts : 0;
+            document.getElementById('edit_uas').value = this.dataset.uas !== '' ? this.dataset.uas : 0;
+            
+            document.getElementById('editNilaiModal').classList.remove('hidden');
+        });
+    });
+
+    // Close Modal
+    document.querySelectorAll('.btn-close-modal').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('editNilaiModal').classList.add('hidden');
         });
     });
 });

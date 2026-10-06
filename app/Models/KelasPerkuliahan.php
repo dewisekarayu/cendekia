@@ -24,6 +24,9 @@ class KelasPerkuliahan extends Model
         'kuota_mahasiswa',
         'status_kelas',
         'is_active',
+        'bobot_tugas',
+        'bobot_uts',
+        'bobot_uas',
     ];
 
     protected $casts = [

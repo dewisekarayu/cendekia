@@ -1,6 +1,7 @@
 @extends('layouts.portal')
 
 @section('title', 'Gradebook')
+@section('activeMenu', 'Gradebook')
 
 @section('content')
 
