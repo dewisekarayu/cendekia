@@ -119,6 +119,30 @@ class KelasPerkuliahan extends Model
     }
 
     /**
+     * Accessor untuk properti jadwal (diambil dari jadwal pertama jika ada)
+     * Ini memastikan backward compatibility dengan view yang menggunakan $kelas->hari, $kelas->jam_mulai, dll.
+     */
+    public function getHariAttribute()
+    {
+        return $this->jadwals->first()->hari ?? null;
+    }
+
+    public function getJamMulaiAttribute()
+    {
+        return $this->jadwals->first()->jam_mulai ?? null;
+    }
+
+    public function getJamSelesaiAttribute()
+    {
+        return $this->jadwals->first()->jam_selesai ?? null;
+    }
+
+    public function getRuanganAttribute()
+    {
+        return $this->jadwals->first()->ruangan ?? null;
+    }
+
+    /**
      * Relasi: kelas ini di semester mana
      */
     public function semester()

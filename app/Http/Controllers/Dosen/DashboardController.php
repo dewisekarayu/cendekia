@@ -12,7 +12,7 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        $kelasList = $user->kelasDiampu()->with(['mataKuliah.programStudi', 'mahasiswa'])->get();
+        $kelasList = $user->kelasDiampu()->with(['mataKuliah.programStudi', 'mahasiswa', 'jadwals'])->get();
 
         $tugasPerluDinilai = PengumpulanTugas::whereHas('tugas.kelasPerkuliahan', fn ($q) => $q->where('dosen_id', $user->id))
             ->where('status', 'dikumpulkan')
@@ -36,7 +36,18 @@ class DashboardController extends Controller
             'Saturday' => 'Sabtu'
         ];
         $todayName = $hariIndo[now()->format('l')] ?? 'Senin';
-        $kelasHariIni = $kelasList->filter(fn ($k) => strcasecmp($k->hari, $todayName) === 0);
+        $kelasHariIni = $kelasList->filter(function ($k) use ($todayName) {
+            foreach ($k->jadwals as $jadwal) {
+                if (strcasecmp($jadwal->hari, $todayName) === 0) {
+                    // Update property to matched jadwal so view displays correct time
+                    $k->jam_mulai = $jadwal->jam_mulai;
+                    $k->jam_selesai = $jadwal->jam_selesai;
+                    $k->ruangan = $jadwal->ruangan;
+                    return true;
+                }
+            }
+            return false;
+        });
 
         return view('dosen.dashboard', compact(
             'kelasList',
