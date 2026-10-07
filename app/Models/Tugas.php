@@ -19,11 +19,23 @@ class Tugas extends Model
         'link_lampiran',
         'deadline',
         'bobot_nilai',
+        'is_closed',
     ];
 
     protected $casts = [
         'deadline' => 'datetime',
+        'is_closed' => 'boolean',
     ];
+
+    public function isTutup(): bool
+    {
+        return (bool) ($this->is_closed || ($this->deadline && $this->deadline->isPast()));
+    }
+
+    public function isTerbuka(): bool
+    {
+        return !$this->isTutup();
+    }
 
     public function kelasPerkuliahan()
     {

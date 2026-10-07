@@ -30,7 +30,6 @@
             'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
             'Forum'        => ['url' => route('dosen.kelas-forum', $kelas->id),  'active' => request()->routeIs('dosen.kelas-forum')],
             'Rekap Tugas'  => ['url' => route('dosen.kelas-tugas.rekap', $kelas->id), 'active' => request()->routeIs('dosen.kelas-tugas.rekap')],
-            'Grade Akhir'  => ['url' => route('dosen.gradebook', ['kelas_id' => $kelas->id]), 'active' => request()->routeIs('dosen.gradebook')],
         ];
     @endphp
     <div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-sm transition-colors duration-200">
@@ -133,13 +132,13 @@
                 <tbody id="tugasTableBody" class="divide-y divide-gray-100 dark:divide-slate-700/50">
                     @foreach ($tugasList as $tugas)
                         @php
-                            $isPastDeadline = $tugas->deadline < now();
+                            $isClosed = $tugas->isTutup();
                             $submitted = $tugas->submitted_count ?? 0;
                             $total = $kelas->mahasiswa->count();
                             $persen = $total > 0 ? round(($submitted / $total) * 100) : 0;
                         @endphp
                         <tr class="tugas-row hover:bg-gray-50/50 dark:hover:bg-slate-900/20 transition duration-150"
-                            data-status="{{ $isPastDeadline ? 'closed' : 'open' }}"
+                            data-status="{{ $isClosed ? 'closed' : 'open' }}"
                             data-deadline="{{ $tugas->deadline->timestamp }}"
                             data-search="{{ strtolower($tugas->judul . ' ' . ($tugas->instruksi ?? '') . ' ' . ($tugas->bobot_nilai ?? '')) }}">
                             <td class="px-5 py-3">
@@ -148,8 +147,14 @@
                             </td>
                             <td class="px-5 py-3">
                                 <p class="text-gray-500 dark:text-slate-300">{{ $tugas->deadline->format('d M Y, H:i') }}</p>
-                                <p class="text-[11px] font-semibold {{ $isPastDeadline ? 'text-red-500 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400' }}">
-                                    {{ $isPastDeadline ? 'Berakhir ' . $tugas->deadline->diffForHumans() : $tugas->deadline->diffForHumans() }}
+                                <p class="text-[11px] font-semibold {{ $isClosed ? 'text-red-500 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400' }}">
+                                    @if ($tugas->is_closed && !$tugas->deadline->isPast())
+                                        Ditutup manual
+                                    @elseif ($tugas->deadline->isPast())
+                                        Berakhir {{ $tugas->deadline->diffForHumans() }}
+                                    @else
+                                        {{ $tugas->deadline->diffForHumans() }}
+                                    @endif
                                 </p>
                             </td>
                             <td class="px-5 py-3">
@@ -159,14 +164,25 @@
                                 </div>
                             </td>
                             <td class="px-5 py-3">
-                                @if ($isPastDeadline)
-                                    <span class="inline-block text-[10px] font-semibold text-gray-600 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">Ditutup</span>
+                                @if ($isClosed)
+                                    <span class="inline-block text-[10px] font-semibold text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-md">Ditutup</span>
                                 @else
-                                    <span class="inline-block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-1 rounded">Terbuka</span>
+                                    <span class="inline-block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-md">Terbuka</span>
                                 @endif
                             </td>
                             <td class="px-5 py-3 text-right whitespace-nowrap">
                                 <div class="inline-flex items-center gap-2">
+                                    @if ($isClosed)
+                                        <button type="button"
+                                                onclick="openModalBukaTugas({{ $tugas->id }}, '{{ addslashes($tugas->judul) }}', '{{ $tugas->deadline->translatedFormat('d M Y, H:i') }}')"
+                                                class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 px-3 py-1.5 rounded-md transition duration-150">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            Buka Kembali
+                                        </button>
+                                    @endif
+
                                     <a href="{{ route('dosen.tugas.submissions', [$kelas->id, $tugas->id]) }}"
                                     class="inline-block text-xs font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-3 py-1.5 rounded-md transition duration-150">
                                         Lihat Pengumpulan
@@ -181,22 +197,55 @@
                                         </button>
 
                                         <div id="dropdownTugas{{ $tugas->id }}"
-                                            class="dropdown-tugas hidden absolute right-0 mt-2 w-40 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg z-20 overflow-hidden">
+                                            class="dropdown-tugas hidden absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg z-20 overflow-hidden divide-y divide-gray-100 dark:divide-slate-700/60">
 
-                                            <button type="button" onclick="toggleDropdown('dropdownTugas{{ $tugas->id }}'); toggleModal('modalEditTugas{{ $tugas->id }}')"
-                                                    class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
-                                                Edit
-                                            </button>
+                                            <div class="py-1">
+                                                @if ($isClosed)
+                                                    <button type="button"
+                                                            onclick="toggleDropdown('dropdownTugas{{ $tugas->id }}'); openModalBukaTugas({{ $tugas->id }}, '{{ addslashes($tugas->judul) }}', '{{ $tugas->deadline->translatedFormat('d M Y, H:i') }}')"
+                                                            class="w-full text-left px-4 py-2 text-sm text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition flex items-center gap-2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                        Buka Kembali
+                                                    </button>
+                                                @else
+                                                    <form action="{{ route('dosen.kelas-tugas.tutup', [$kelas->id, $tugas->id]) }}" method="POST"
+                                                        onsubmit="return confirm('Tutup pengumpulan tugas ini sekarang? Mahasiswa tidak akan dapat mengumpulkan jawaban baru sampai Anda membukanya kembali.');">
+                                                        @csrf
+                                                        <button type="submit"
+                                                                class="w-full text-left px-4 py-2 text-sm text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition flex items-center gap-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                                            </svg>
+                                                            Tutup Pengumpulan
+                                                        </button>
+                                                    </form>
+                                                @endif
 
-                                            <form action="{{ route('dosen.kelas-tugas.destroy', [$kelas->id, $tugas->id]) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus tugas ini? Semua data pengumpulan dan lampiran terkait juga akan ikut terhapus dan tidak bisa dikembalikan.');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                        class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition">
-                                                    Hapus
+                                                <button type="button" onclick="toggleDropdown('dropdownTugas{{ $tugas->id }}'); toggleModal('modalEditTugas{{ $tugas->id }}')"
+                                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition flex items-center gap-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                    Edit
                                                 </button>
-                                            </form>
+                                            </div>
+
+                                            <div class="py-1">
+                                                <form action="{{ route('dosen.kelas-tugas.destroy', [$kelas->id, $tugas->id]) }}" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus tugas ini? Semua data pengumpulan dan lampiran terkait juga akan ikut terhapus dan tidak bisa dikembalikan.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                            class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition flex items-center gap-2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -468,6 +517,84 @@
         </div>
     </div>
 
+    {{-- ===== MODAL BUKA KEMBALI TUGAS ===== --}}
+    <div id="modalBukaTugas" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="closeModalBukaTugas()"></div>
+
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="relative bg-white dark:bg-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700">
+
+                <div class="px-6 py-5 bg-gradient-to-r from-emerald-600 to-teal-700 text-white flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold leading-tight">Buka Kembali Tugas</h3>
+                            <p class="text-xs text-emerald-100 mt-0.5">Tentukan batas waktu baru untuk pengumpulan</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closeModalBukaTugas()" class="p-1 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="formBukaTugas" method="POST" action="">
+                    @csrf
+                    <div class="p-6 space-y-4">
+                        {{-- Info box tugas --}}
+                        <div class="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <p class="text-xs text-slate-400">Judul Tugas</p>
+                            <p id="bukaTugasJudul" class="text-sm font-bold text-slate-800 dark:text-white mt-0.5">-</p>
+                            <p class="text-xs text-slate-500 mt-1">
+                                Batas waktu sebelumnya: <span id="bukaTugasDeadlineLama" class="font-semibold text-rose-500">-</span>
+                            </p>
+                        </div>
+
+                        {{-- Input Deadline Baru --}}
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                                Batas Waktu Baru (Deadline) <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="datetime-local" id="bukaTugasDeadlineInput" name="deadline" required
+                                class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none transition text-sm font-medium text-slate-800 dark:text-slate-100">
+                            <p class="text-[11px] text-slate-400">
+                                Mahasiswa dapat mengumpulkan kembali tugas hingga tanggal dan jam yang Anda tentukan di atas.
+                            </p>
+                        </div>
+
+                        {{-- Quick Presets --}}
+                        <div class="space-y-1.5">
+                            <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Pilihan Cepat Perpanjangan:</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                <button type="button" onclick="setPresetDeadline(1)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+1 Hari</button>
+                                <button type="button" onclick="setPresetDeadline(3)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+3 Hari</button>
+                                <button type="button" onclick="setPresetDeadline(7)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+1 Minggu</button>
+                                <button type="button" onclick="setPresetDeadline(14)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+2 Minggu</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-900 px-6 py-4 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2.5">
+                        <button type="button" onclick="closeModalBukaTugas()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Buka Kembali Tugas
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Fungsi umum untuk membuka/tutup modal apa saja
         function toggleModal(modalID) {
@@ -478,11 +605,54 @@
             }
         }
 
+        function openModalBukaTugas(tugasId, judul, deadlineLama) {
+            const modal = document.getElementById('modalBukaTugas');
+            const form = document.getElementById('formBukaTugas');
+            const judulEl = document.getElementById('bukaTugasJudul');
+            const dlEl = document.getElementById('bukaTugasDeadlineLama');
+            const input = document.getElementById('bukaTugasDeadlineInput');
+
+            const url = "{{ route('dosen.kelas-tugas.buka', [$kelas->id, ':tugasId']) }}".replace(':tugasId', tugasId);
+            form.action = url;
+            judulEl.textContent = judul;
+            dlEl.textContent = deadlineLama;
+
+            const now = new Date();
+            const minIso = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            input.min = minIso;
+
+            setPresetDeadline(3);
+
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModalBukaTugas() {
+            const modal = document.getElementById('modalBukaTugas');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        function setPresetDeadline(days) {
+            const target = new Date();
+            target.setDate(target.getDate() + days);
+            target.setHours(23, 59, 0, 0);
+            const iso = new Date(target.getTime() - target.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            const input = document.getElementById('bukaTugasDeadlineInput');
+            if (input) input.value = iso;
+        }
+
         // Menutup modal ketika user mengklik area background luar (overlay)
         window.onclick = function(event) {
-            document.querySelectorAll('[id^="modalEditTugas"], #modalTugas').forEach(modal => {
+            document.querySelectorAll('[id^="modalEditTugas"], #modalTugas, #modalBukaTugas').forEach(modal => {
                 if (event.target === modal && !modal.classList.contains('hidden')) {
-                    toggleModal(modal.id);
+                    if (modal.id === 'modalBukaTugas') {
+                        closeModalBukaTugas();
+                    } else {
+                        toggleModal(modal.id);
+                    }
                 }
             });
 

@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\KelasPerkuliahan;
+use App\Services\EwsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\KelasPerkuliahan;
 
 class AnalyticsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, EwsService $ews)
     {
         $mahasiswa = $request->user();
 
-        // 1. Dapatkan semua kelas yang diikuti Mahasiswa ini
+        // 1. Semua kelas yang diikuti mahasiswa ini
         $kelasIds = DB::table('kelas_mahasiswa')
             ->where('mahasiswa_id', $mahasiswa->id)
             ->pluck('kelas_perkuliahan_id');
@@ -22,126 +23,44 @@ class AnalyticsController extends Controller
             ->whereIn('id', $kelasIds)
             ->get();
 
-        $analyticsPerClass = [];
-        $globalRiskScore = 0;
-        $totalClasses = count($kelasAktif);
+        $metrics = $ews->metrics(collect([$mahasiswa->id]), $kelasIds);
 
-        // Agregasi Global
-        $globalTotalSesi = 0;
-        $globalHadirSesi = 0;
-        $globalTotalTugas = 0;
-        $globalTugasDikerjakan = 0;
-        $globalTotalNilai = 0;
-        $globalJumlahNilai = 0;
+        $statusMap = [
+            'High'   => ['Kritis (Bahaya)', 'bg-rose-100 text-rose-700 border-rose-200 font-bold'],
+            'Medium' => ['Waspada', 'bg-amber-100 text-amber-700 border-amber-200 font-bold'],
+            'Low'    => ['Aman', 'bg-emerald-100 text-emerald-700 border-emerald-200'],
+        ];
+
+        $analyticsPerClass = [];
+        $allMetrics = [];
 
         foreach ($kelasAktif as $kelas) {
-            // A. Kehadiran di Kelas Ini
-            $totalSesi = DB::table('absensi')
-                ->where('kelas_perkuliahan_id', $kelas->id)
-                ->count();
+            $m = $metrics[$mahasiswa->id . ':' . $kelas->id] ?? $ews->combine([]);
+            $allMetrics[] = $m;
+            $r = $ews->evaluate($m);
+            [$label, $color] = $statusMap[$r['risk_level']];
 
-            $hadirSesi = DB::table('absensi_mahasiswa')
-                ->join('absensi', 'absensi_mahasiswa.absensi_id', '=', 'absensi.id')
-                ->where('absensi.kelas_perkuliahan_id', $kelas->id)
-                ->where('absensi_mahasiswa.mahasiswa_id', $mahasiswa->id)
-                ->where('absensi_mahasiswa.status', 'hadir')
-                ->count();
-
-            $attendanceRate = $totalSesi > 0 ? round(($hadirSesi / $totalSesi) * 100) : 100;
-
-            // Tambah ke Global
-            $globalTotalSesi += $totalSesi;
-            $globalHadirSesi += $hadirSesi;
-
-            // B. Tugas di Kelas Ini
-            $totalTugas = DB::table('tugas')->where('kelas_perkuliahan_id', $kelas->id)->count();
-            
-            $tugasDikumpulkan = DB::table('pengumpulan_tugas')
-                ->join('tugas', 'pengumpulan_tugas.tugas_id', '=', 'tugas.id')
-                ->where('tugas.kelas_perkuliahan_id', $kelas->id)
-                ->where('pengumpulan_tugas.mahasiswa_id', $mahasiswa->id)
-                ->get();
-
-            $tugasDikerjakan = $tugasDikumpulkan->count();
-            $missedAssignments = max(0, $totalTugas - $tugasDikerjakan);
-            
-            $avgScore = 0;
-            $tugasDinilai = $tugasDikumpulkan->whereNotNull('nilai');
-            if ($tugasDinilai->count() > 0) {
-                $avgScore = round($tugasDinilai->avg('nilai'));
-                $globalTotalNilai += $tugasDinilai->sum('nilai');
-                $globalJumlahNilai += $tugasDinilai->count();
-            }
-
-            // Tambah ke Global
-            $globalTotalTugas += $totalTugas;
-            $globalTugasDikerjakan += $tugasDikerjakan;
-
-            // C. Risk Prediksi Per Kelas
-            $riskScore = 0;
-            $reasons = [];
-
-            if ($attendanceRate < 75) {
-                $riskScore += 40;
-                $reasons[] = "Kehadiran sangat rendah ($attendanceRate%)";
-            } elseif ($attendanceRate < 85) {
-                $riskScore += 20;
-                $reasons[] = "Kehadiran perlu ditingkatkan ($attendanceRate%)";
-            }
-
-            if ($avgScore > 0 && $avgScore < 60) {
-                $riskScore += 40;
-                $reasons[] = "Rata-rata tugas rendah ($avgScore)";
-            } elseif ($avgScore > 0 && $avgScore < 70) {
-                $riskScore += 20;
-                $reasons[] = "Rata-rata tugas batas bawah ($avgScore)";
-            }
-
-            if ($missedAssignments >= 2) {
-                $riskScore += 30;
-                $reasons[] = "Tidak mengerjakan $missedAssignments tugas";
-            } elseif ($missedAssignments == 1) {
-                $riskScore += 10;
-                $reasons[] = "Tidak mengerjakan 1 tugas";
-            }
-
-            // Status Kelas
-            $statusColor = 'bg-emerald-100 text-emerald-700 border-emerald-200';
-            $statusLabel = 'Aman';
-            if ($riskScore >= 70) {
-                $statusColor = 'bg-rose-100 text-rose-700 border-rose-200 font-bold';
-                $statusLabel = 'Kritis (Bahaya)';
-            } elseif ($riskScore >= 40) {
-                $statusColor = 'bg-amber-100 text-amber-700 border-amber-200 font-bold';
-                $statusLabel = 'Waspada';
-            }
-
-            $analyticsPerClass[] = (object) [
-                'kelas' => $kelas,
-                'attendance_rate' => $attendanceRate,
-                'avg_score' => $avgScore,
-                'missed_assignments' => $missedAssignments,
-                'reasons' => $reasons,
-                'status_color' => $statusColor,
-                'status_label' => $statusLabel,
-                'risk_score' => $riskScore
-            ];
+            $analyticsPerClass[] = (object) array_merge($r, [
+                'kelas'        => $kelas,
+                'status_label' => $label,
+                'status_color' => $color,
+            ]);
         }
 
         // Urutkan kelas dari yang paling berisiko
-        usort($analyticsPerClass, function ($a, $b) {
-            return $b->risk_score <=> $a->risk_score;
-        });
+        usort($analyticsPerClass, fn ($a, $b) => $b->risk_score <=> $a->risk_score);
 
-        // Hitung Global Status
-        $globalAttendance = $globalTotalSesi > 0 ? round(($globalHadirSesi / $globalTotalSesi) * 100) : 100;
-        $globalAvgScore = $globalJumlahNilai > 0 ? round($globalTotalNilai / $globalJumlahNilai) : 0;
-        $globalMissed = max(0, $globalTotalTugas - $globalTugasDikerjakan);
+        // Status global
+        $global = $ews->evaluate($ews->combine($allMetrics));
+        $globalAttendance = $global['attendance_rate'];
+        $globalAvgScore = $global['avg_score'];
+        $globalMissed = $global['missed_assignments'];
+        $totalClasses = $kelasAktif->count();
 
         return view('mahasiswa.analytics.index', compact(
-            'analyticsPerClass', 
-            'globalAttendance', 
-            'globalAvgScore', 
+            'analyticsPerClass',
+            'globalAttendance',
+            'globalAvgScore',
             'globalMissed',
             'totalClasses'
         ));

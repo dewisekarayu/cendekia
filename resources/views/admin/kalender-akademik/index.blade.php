@@ -338,10 +338,10 @@
             {{-- Agenda Mendatang --}}
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10">
-                    <div class="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
-                        <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    <div class="w-9 h-9 shrink-0 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                        <svg class="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white text-sm">Agenda Mendatang</h3>
+                    <h3 class="font-bold text-gray-900 dark:text-white text-sm whitespace-nowrap">Agenda Mendatang</h3>
                     <span class="ml-auto text-xs px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-bold" x-text="upcomingEvents.length"></span>
                 </div>
                 <div class="divide-y divide-gray-50 dark:divide-slate-700/50 max-h-[380px] overflow-y-auto">

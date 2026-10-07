@@ -165,13 +165,18 @@ class KelasController extends Controller
         ]);
 
         // 1. Update data utama tugas
-        $tugas->update([
+        $isFuture = \Carbon\Carbon::parse($validated['deadline'])->isFuture();
+        $updateData = [
             'judul' => $validated['judul'],
-            'instruksi' => $validated['instruksi'], // PENTING: Bersihkan via XSS Purifier di level Request/Model jika ini Rich Text!
+            'instruksi' => $validated['instruksi'],
             'deadline' => $validated['deadline'],
             'bobot_nilai' => $validated['poin'],
             'link_lampiran' => $validated['link_lampiran'] ?? null,
-        ]);
+        ];
+        if ($isFuture && $tugas->is_closed) {
+            $updateData['is_closed'] = false;
+        }
+        $tugas->update($updateData);
 
         // 2. Hapus file lama yang dicentang oleh dosen
         if (!empty($validated['hapus_files'])) {
@@ -200,6 +205,50 @@ class KelasController extends Controller
 
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil diperbarui.');
+    }
+
+    public function bukaTugas(Request $request, $id, $tugasId)
+    {
+        $kelas = KelasPerkuliahan::where(function ($q) use ($request) {
+            $q->where('dosen_id', $request->user()->id)
+                ->orWhereHas('dosenPengampuTambahan', fn ($sq) => $sq->where('users.id', $request->user()->id));
+        })->findOrFail($id);
+
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+
+        $validated = $request->validate([
+            'deadline' => ['required', 'date', 'after:now'],
+        ], [
+            'deadline.required' => 'Batas waktu (deadline) baru wajib ditentukan.',
+            'deadline.after' => 'Batas waktu (deadline) baru harus lebih besar dari waktu saat ini.',
+        ]);
+
+        $tugas->update([
+            'deadline' => $validated['deadline'],
+            'is_closed' => false,
+        ]);
+
+        $formattedDeadline = \Carbon\Carbon::parse($validated['deadline'])->translatedFormat('d M Y, H:i');
+
+        return redirect()->route('dosen.kelas-tugas', $kelas->id)
+            ->with('success', "Tugas \"{$tugas->judul}\" berhasil dibuka kembali dengan batas waktu sampai {$formattedDeadline}.");
+    }
+
+    public function tutupTugas(Request $request, $id, $tugasId)
+    {
+        $kelas = KelasPerkuliahan::where(function ($q) use ($request) {
+            $q->where('dosen_id', $request->user()->id)
+                ->orWhereHas('dosenPengampuTambahan', fn ($sq) => $sq->where('users.id', $request->user()->id));
+        })->findOrFail($id);
+
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+
+        $tugas->update([
+            'is_closed' => true,
+        ]);
+
+        return redirect()->route('dosen.kelas-tugas', $kelas->id)
+            ->with('success', "Pengumpulan tugas \"{$tugas->judul}\" telah ditutup.");
     }
     
     public function hapusTugas(Request $request, $id, $tugasId)
