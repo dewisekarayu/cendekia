@@ -162,8 +162,8 @@ class JadwalController extends Controller
             ->orderBy('tanggal')
             ->get();
 
-        // Ambil daftar ruangan unik dari semua kelas yang ada di tabel kelas_perkuliahan
-        $availableRooms = \App\Models\KelasPerkuliahan::whereNotNull('ruangan')
+        // Ambil daftar ruangan unik dari semua jadwal yang ada di tabel kelas_jadwals
+        $availableRooms = \App\Models\KelasJadwal::whereNotNull('ruangan')
             ->where('ruangan', '!=', '')
             ->distinct()
             ->pluck('ruangan')
