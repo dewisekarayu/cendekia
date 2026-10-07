@@ -69,17 +69,17 @@
             @foreach ($kelasList as $i => $kelas)
                 @php $c = $colors[$i % count($colors)]; @endphp
                 <a href="{{ route('mahasiswa.kelas-detail', $kelas->id) }}"
-                   data-search="{{ strtolower($kelas->mataKuliah?->nama_mk ?? '') }} {{ strtolower($kelas->mataKuliah?->kode_mk ?? '') }} {{ strtolower($kelas->dosen?->name ?? '') }}"
+                   data-search="{{ strtolower($kelas->mataKuliah?->nama_mk ?? '') }} {{ strtolower($kelas->mataKuliah?->kode_mk ?? '') }} {{ strtolower($kelas->kode_kelas ?? '') }} {{ strtolower($kelas->mataKuliah?->programStudi?->nama_prodi ?? '') }} {{ strtolower($kelas->dosen?->name ?? '') }}"
                    class="kelas-card group flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-sm hover:shadow-lg hover:shadow-blue-950/8 hover:-translate-y-0.5 transition-all duration-200 overflow-hidden">
 
                     {{-- Color bar top --}}
                     <div class="h-1.5 w-full {{ $c['bg'] }}"></div>
 
                     <div class="flex flex-col flex-1 p-4">
-                        {{-- Badge row --}}
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="inline-block rounded-md {{ $c['light'] }} {{ $c['text'] }} px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
-                                {{ $kelas->mataKuliah?->kode_mk ?? 'MK' }}
+                        {{-- 1. PRODI --}}
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="inline-block max-w-[75%] truncate rounded-md {{ $c['light'] }} {{ $c['text'] }} px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+                                {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Umum' }}
                             </span>
                             <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
@@ -87,13 +87,25 @@
                             </span>
                         </div>
 
-                        {{-- Course name --}}
-                        <h3 class="text-sm font-bold text-slate-800 group-hover:text-[#002B6B] transition leading-snug line-clamp-2 min-h-[40px]">
-                            {{ $kelas->mataKuliah?->nama_mk ?? '-' }}
+                        {{-- 2. KELAS --}}
+                        <p class="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Kelas</p>
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-[#002B6B] transition leading-snug">
+                            {{ $kelas->kode_kelas ?? '-' }}
                         </h3>
 
+                        {{-- 3. MATA KULIAH --}}
+                        <div class="mt-3 rounded-lg bg-gray-50 px-3 py-2.5">
+                            <p class="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Mata Kuliah</p>
+                            <p class="mt-0.5 text-sm font-semibold text-slate-700 leading-snug line-clamp-2">
+                                {{ $kelas->mataKuliah?->nama_mk ?? '-' }}
+                            </p>
+                            <p class="mt-0.5 text-[11px] text-gray-400">
+                                {{ $kelas->mataKuliah?->kode_mk ?? '-' }} &bull; {{ $kelas->mataKuliah?->sks ?? 0 }} SKS
+                            </p>
+                        </div>
+
                         {{-- Meta info --}}
-                        <div class="mt-2.5 space-y-1.5 text-[11px] text-gray-500">
+                        <div class="mt-3 space-y-1.5 text-[11px] text-gray-500">
                             <div class="flex items-center gap-1.5 truncate">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -112,21 +124,6 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                                 <span>{{ $kelas->ruangan ?? '-' }}</span>
-                                <span class="ml-auto font-semibold text-slate-600">{{ $kelas->mataKuliah?->sks ?? 0 }} SKS</span>
-                            </div>
-                        </div>
-
-                        {{-- Spacer --}}
-                        <div class="flex-1"></div>
-
-                        {{-- Progress bar --}}
-                        <div class="mt-4 pt-3 border-t border-gray-100">
-                            <div class="flex items-center justify-between text-[10px] font-semibold text-gray-400 mb-1.5">
-                                <span>Progres Kelas</span>
-                                <span class="{{ $c['text'] }} font-bold">0%</span>
-                            </div>
-                            <div class="h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">
-                                <div class="h-full rounded-full {{ $c['bar'] }} transition-all" style="width: 0%"></div>
                             </div>
                         </div>
 
