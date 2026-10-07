@@ -171,7 +171,7 @@
                     @php 
                         $tugas = $timelineItem; 
                         $dl = \Carbon\Carbon::parse($tugas->deadline);
-                        $overdue = $dl->isPast();
+                        $isClosed = $tugas->isTutup();
                         $daysLeft = (int) floor(now()->diffInDays($dl, false));
                         $pengumpulanSaya = $tugas->pengumpulanTugas->firstWhere('status', '!=', \App\Models\PengumpulanTugas::STATUS_BELUM_DIKUMPUL);
 
@@ -183,6 +183,10 @@
                             $tugasBtnLabel = 'Lihat Pengumpulan';
                             $tugasBtnClass = 'bg-slate-600 hover:bg-slate-700';
                             $tugasBtnIcon  = 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z';
+                        } elseif ($isClosed) {
+                            $tugasBtnLabel = 'Ditutup';
+                            $tugasBtnClass = 'bg-slate-500 hover:bg-slate-600';
+                            $tugasBtnIcon  = 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z';
                         } else {
                             $tugasBtnLabel = 'Kerjakan';
                             $tugasBtnClass = 'bg-[#002B6B] hover:bg-blue-800';
@@ -190,7 +194,7 @@
                         }
                     @endphp
                     <div x-show="tab === 'semua' || tab === 'tugas'" class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center transition duration-200 hover:shadow-md">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $overdue && !$pengumpulanSaya ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600' }}">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $isClosed && !$pengumpulanSaya ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                         </div>
                         <div class="min-w-0 flex-1">
@@ -199,8 +203,8 @@
                                 Deadline: {{ $dl->format('d M Y, H:i') }}
                                 @if ($pengumpulanSaya)
                                     <span class="ml-1 font-semibold text-emerald-600">· Sudah dikumpulkan</span>
-                                @elseif ($overdue)
-                                    <span class="ml-1 font-semibold text-red-500">· Sudah lewat</span>
+                                @elseif ($isClosed)
+                                    <span class="ml-1 font-semibold text-red-500">· Ditutup</span>
                                 @elseif ($daysLeft <= 2)
                                     <span class="ml-1 font-semibold text-amber-600">· {{ $daysLeft === 0 ? 'Hari ini' : $daysLeft.' hari lagi' }}</span>
                                 @endif
