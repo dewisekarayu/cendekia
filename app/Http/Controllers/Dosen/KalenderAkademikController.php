@@ -30,12 +30,8 @@ class KalenderAkademikController extends Controller
             ->orderBy('jenis', 'desc')
             ->get();
 
-        $startOfMonth = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth();
-        $endOfMonth   = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->endOfMonth();
-
         $query = KalenderAkademik::published()
             ->with('semester')
-            ->byDateRange($startOfMonth, $endOfMonth)
             ->orderBy('tanggal_mulai')
             ->orderBy('waktu_mulai');
 
@@ -52,10 +48,7 @@ class KalenderAkademikController extends Controller
                 ? $event->tanggal_selesai->copy()
                 : $start->copy();
 
-            $loopStart = $start->lt($startOfMonth) ? $startOfMonth->copy() : $start->copy();
-            $loopEnd   = $end->gt($endOfMonth) ? $endOfMonth->copy() : $end->copy();
-
-            for ($date = $loopStart; $date->lte($loopEnd); $date->addDay()) {
+            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
                 $key = $date->format('Y-m-d');
                 $eventsByDate[$key][] = $event;
             }

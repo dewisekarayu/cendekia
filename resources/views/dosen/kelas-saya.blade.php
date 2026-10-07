@@ -55,11 +55,12 @@
     ];
     @endphp
 
-    @foreach ($kelasList as $i => $kelas)
+        @foreach ($kelasList as $i => $kelas)
     <div class="kelas-card bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden transition-colors duration-200" data-search="{{ strtolower($kelas->mataKuliah->nama_mk ?? '') }} {{ strtolower($kelas->mataKuliah->kode_mk ?? '') }} {{ strtolower($kelas->kode_kelas ?? '') }} {{ strtolower($kelas->mataKuliah->programStudi->nama_prodi ?? '') }}">
         <div class="h-1.5 {{ $topColors[$i % count($topColors)] }}"></div>
         <div class="p-5">
-            <div class="flex items-center justify-between mb-2">
+            {{-- 1. PRODI --}}
+            <div class="flex items-center justify-between mb-3">
                 <span class="inline-block text-[10px] font-semibold tracking-wide px-2 py-0.5 rounded {{ $tagColors[$i % count($tagColors)] }}">
                     {{ $kelas->mataKuliah->programStudi->nama_prodi ?? 'Umum' }}
                 </span>
@@ -69,8 +70,16 @@
                 </span>
             </div>
 
-            <h3 class="font-bold text-gray-800 dark:text-white leading-snug">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</h3>
-            <p class="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{{ $kelas->mataKuliah->kode_mk ?? '-' }} • {{ $kelas->mataKuliah->sks ?? 0 }} SKS</p>
+            {{-- 2. KELAS --}}
+            <p class="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">Kelas</p>
+            <h3 class="font-bold text-lg text-gray-800 dark:text-white leading-snug">{{ $kelas->kode_kelas ?? '-' }}</h3>
+
+            {{-- 3. MATA KULIAH --}}
+            <div class="mt-3 rounded-lg bg-gray-50 dark:bg-slate-700/40 px-3 py-2.5">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">Mata Kuliah</p>
+                <p class="mt-0.5 text-sm font-semibold text-gray-700 dark:text-slate-100 leading-snug">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</p>
+                <p class="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{{ $kelas->mataKuliah->kode_mk ?? '-' }} • {{ $kelas->mataKuliah->sks ?? 0 }} SKS</p>
+            </div>
 
             <div class="mt-3 space-y-1.5 text-xs text-gray-500 dark:text-slate-300">
                 <div class="flex items-center gap-1.5">
