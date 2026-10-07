@@ -46,9 +46,23 @@
 
     {{-- Alert --}}
     @if(session('success'))
-    <div class="bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800 rounded-xl p-4 flex items-start gap-3">
+    <div x-data="{ show: true }"
+         x-init="setTimeout(() => show = false, 4000)"
+         x-show="show"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 -translate-y-2"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-500"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-2"
+         class="bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800 rounded-xl p-4 flex items-start gap-3">
         <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-        <p class="text-green-800 dark:text-green-300 text-sm font-medium">{{ session('success') }}</p>
+        <p class="flex-1 text-green-800 dark:text-green-300 text-sm font-medium">{{ session('success') }}</p>
+        <button type="button" @click="show = false"
+                class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200 transition-colors p-0.5 rounded-lg flex-shrink-0"
+                aria-label="Tutup">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
     @endif
 
@@ -116,7 +130,7 @@
                                 Tampilkan Semua
                             </button>
                         </div>
-                        
+
                         <div class="flex flex-wrap gap-2 pt-1">
                             @php
                                 $kategoriList = [
@@ -142,7 +156,7 @@
                                         :style="isCategoryVisible('{{ $key }}')
                                             ? 'background-color: {{ $info['color'] }}10; color: {{ $info['color'] }}; border-color: {{ $info['color'] }}30;'
                                             : 'background-color: #f3f4f6; color: #9ca3af; border-color: #e5e7eb; opacity: 0.6; text-decoration: line-through;'">
-                                    <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" 
+                                    <span class="w-1.5 h-1.5 rounded-full flex-shrink-0"
                                         :style="isCategoryVisible('{{ $key }}') ? 'background-color: {{ $info['color'] }}' : 'background-color: #9ca3af'"></span>
                                     {{ $info['label'] }}
                                 </button>
@@ -172,6 +186,7 @@
                                 }"
                                 style="min-height:95px;"
                                 @click="selectDay(day)"
+                                @dblclick="openModalForDate(day)"
                                 @keydown.enter.prevent="selectDay(day)"
                                 @keydown.space.prevent="selectDay(day)"
                                 tabindex="0">
@@ -182,7 +197,7 @@
                                           :class="day.isSelected ? 'text-white' : (day.isToday ? 'text-blue-600 dark:text-blue-400' : (day.isCurrentMonth ? 'text-gray-800 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600'))"
                                           x-text="day.date"></span>
                                     <span x-show="day.filteredEvents.length > 0"
-                                          class="text-[9px] px-1 py-0.2 rounded font-black"
+                                          class="text-[9px] px-1 py-0.5 rounded font-black"
                                           :class="day.isSelected ? 'bg-blue-700 text-blue-100' : 'bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400'"
                                           x-text="day.filteredEvents.length"></span>
                                 </div>
@@ -191,8 +206,8 @@
                                 <div class="px-1.5 pb-1.5 pt-1 space-y-1 overflow-hidden mt-auto">
                                     <template x-for="event in day.filteredEvents.slice(0, 2)" :key="event.id">
                                         <div class="px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-medium truncate border"
-                                             :style="day.isSelected 
-                                                ? 'background-color: rgba(255,255,255,0.15); color: #fff; border-color: transparent;' 
+                                             :style="day.isSelected
+                                                ? 'background-color: rgba(255,255,255,0.15); color: #fff; border-color: transparent;'
                                                 : 'background-color:' + event.warna + '12; color:' + event.warna + '; border-color:' + event.warna + '30;'"
                                              @click.stop="openModal(event)"
                                              :title="event.judul">
@@ -215,19 +230,20 @@
                 <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
-                            <svg class="w-4.5 h-4.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         <h3 class="font-bold text-gray-900 dark:text-white">Agenda Hari Ini</h3>
                     </div>
+                    {{-- FIX: x-text-suffix bukan atribut Alpine, diganti concat string --}}
                     <span class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold"
-                          x-text="calendarDays.find(d => d.isToday)?.filteredEvents.length || 0" x-text-suffix=" agenda"> Agenda</span>
+                          x-text="(calendarDays.find(d => d.isToday)?.filteredEvents.length || 0) + ' agenda'"></span>
                 </div>
                 <div class="divide-y divide-gray-50 dark:divide-slate-700/50">
                     <div x-show="!calendarDays.find(d => d.isToday) || calendarDays.find(d => d.isToday)?.filteredEvents.length === 0" class="p-8 text-center" x-cloak>
                         <svg class="w-10 h-10 mx-auto text-gray-200 dark:text-gray-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <p class="text-gray-400 dark:text-gray-500 text-sm">Tidak ada agenda aktif untuk hari ini.</p>
                     </div>
-                    
+
                     <template x-for="event in (calendarDays.find(d => d.isToday)?.filteredEvents || [])" :key="event.id">
                         <div class="flex items-start gap-3 p-4 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer"
                              :style="'border-left: 4px solid ' + event.warna"
@@ -394,6 +410,7 @@
                         <p class="font-bold text-indigo-900 dark:text-indigo-300 text-xs mb-1.5">Tips Navigasi</p>
                         <ul class="text-[11px] text-indigo-700 dark:text-indigo-400 space-y-1 list-disc list-inside">
                             <li>Klik kotak tanggal untuk filter sidebar.</li>
+                            <li>Klik dua kali kotak tanggal untuk menambah agenda.</li>
                             <li>Klik badge kegiatan untuk memunculkan detail info modal.</li>
                             <li>Gunakan filter di atas untuk menyembunyikan jenis agenda.</li>
                         </ul>
@@ -402,99 +419,244 @@
             </div>
         </div>{{-- /sidebar --}}
     </div>{{-- /Main Grid --}}
-</div>{{-- /Main x-data --}}
 
-{{-- ═══════════════════════════════ EVENT DETAIL MODAL ═══════════════════════════════ --}}
-<div x-show="modalOpen"
-     x-cloak
-     class="fixed inset-0 z-50 flex items-center justify-center p-4"
-     role="dialog" aria-modal="true">
-    {{-- Backdrop --}}
-    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="closeModal()"></div>
+    {{-- ═══════════════════════════════ EVENT EDIT MODAL ═══════════════════════════════ --}}
+    {{-- FIX: modal sekarang berada DI DALAM scope x-data="kalenderData()" --}}
+    <div x-show="modalOpen"
+         x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center p-4"
+         role="dialog" aria-modal="true"
+         @keydown.escape.window="closeModal()">
+        {{-- Backdrop --}}
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="closeModal()"></div>
 
-    {{-- Modal box --}}
-    <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden z-10 border border-gray-100 dark:border-slate-700 transform transition-all"
-         x-show="modalOpen"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 translate-y-4 scale-95"
-         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-         x-transition:leave-end="opacity-0 translate-y-4 scale-95">
+        {{-- Modal box --}}
+        <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden z-10 border border-gray-100 dark:border-slate-700 transform transition-all flex flex-col"
+             x-show="modalOpen"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 scale-95">
 
-        {{-- Header modal dengan aksen border atas dinamis --}}
-        <div class="flex items-center gap-3 p-5 border-b border-gray-100 dark:border-slate-700" :style="'border-top: 4px solid ' + (selectedEvent?.warna ?? '#3b82f6')">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                 :style="'background-color:' + (selectedEvent?.warna ?? '#3b82f6') + '20'">
-                <svg class="w-5 h-5" :style="'color:' + (selectedEvent?.warna ?? '#3b82f6')" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+            {{-- Header --}}
+            <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 dark:border-slate-700" :style="'border-top: 4px solid ' + (editForm.warna || '#3b82f6')">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                     :style="'background-color:' + (editForm.warna || '#3b82f6') + '20'">
+                    <svg class="w-5 h-5" :style="'color:' + (editForm.warna || '#3b82f6')" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M18.364 4.982a2.322 2.322 0 013.284 3.284L12 17.414l-4 1 1-4 9.364-9.364z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-gray-900 dark:text-white text-base" x-text="isEditMode ? (editForm.id ? 'Edit Agenda' : 'Tambah Agenda') : 'Detail Agenda'"></h3>
+                    <p class="text-[10px] uppercase tracking-wider font-extrabold" :style="'color:' + (editForm.warna || '#3b82f6')" x-text="editForm.jenis_kegiatan_label || editForm.jenis_kegiatan || ''"></p>
+                </div>
+                <button type="button" @click="closeModal()"
+                        class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-600 dark:hover:text-gray-200 transition-colors flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
-            <div class="flex-1 min-w-0">
-                <h3 class="font-bold text-gray-900 dark:text-white text-base truncate" x-text="selectedEvent?.judul ?? ''"></h3>
-                <span class="text-[10px] uppercase tracking-wider font-extrabold" :style="'color:' + selectedEvent?.warna" x-text="selectedEvent?.jenis_kegiatan"></span>
-            </div>
-            <button @click="closeModal()"
-                    class="p-2 rounded-xl text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-600 dark:hover:text-gray-200 transition-colors flex-shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
 
-        {{-- Body modal --}}
-        <div class="p-5 space-y-4 overflow-y-auto max-h-[calc(90vh-140px)] text-sm">
-            {{-- Tanggal Pelaksanaan --}}
-            <div class="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            {{-- Detail Body --}}
+            <div x-show="!isEditMode && editForm.id" class="p-5 space-y-5 overflow-y-auto max-h-[calc(90vh-180px)]">
                 <div>
-                    <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Waktu Pelaksanaan</p>
-                    <p class="mt-0.5 font-medium text-gray-900 dark:text-white" x-text="selectedEvent?.tanggal_label ?? ''"></p>
+                    <h4 class="text-xl font-extrabold text-gray-900 dark:text-white" x-text="editForm.judul"></h4>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 whitespace-pre-line" x-text="editForm.deskripsi || 'Tidak ada deskripsi'"></p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">Tanggal</p>
+                            <p class="text-sm font-semibold text-gray-900 dark:text-white" x-text="formatTanggal(editForm.tanggal_mulai) + (editForm.tanggal_selesai ? ' – ' + formatTanggal(editForm.tanggal_selesai) : '')"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-lg bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">Waktu</p>
+                            <p class="text-sm font-semibold text-gray-900 dark:text-white" x-text="editForm.is_all_day ? 'Sepanjang Hari' : (editForm.waktu_mulai + (editForm.waktu_selesai ? ' – ' + editForm.waktu_selesai : ''))"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 sm:col-span-2">
+                        <div class="p-2 rounded-lg bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">Lokasi</p>
+                            <p class="text-sm font-semibold text-gray-900 dark:text-white" x-text="editForm.lokasi || '-'"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-4 border-t border-gray-100 dark:border-slate-700">
+                    <button type="button" @click="if(confirm('Hapus agenda ini secara permanen?')) { $refs.deleteForm.action = '/admin/kalender-akademik/' + editForm.id; $refs.deleteForm.submit(); }"
+                            class="px-4 py-2.5 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors shadow-sm border border-red-200">
+                        Hapus Agenda
+                    </button>
+                    <button type="button" @click="isEditMode = true"
+                            class="px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-sm">
+                        Edit Agenda
+                    </button>
                 </div>
             </div>
 
-            {{-- Lokasi --}}
-            <div class="flex items-start gap-3 text-gray-700 dark:text-gray-300" x-show="selectedEvent?.lokasi">
-                <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                <div>
-                    <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Lokasi / Tempat</p>
-                    <p class="mt-0.5 text-gray-900 dark:text-white" x-text="selectedEvent?.lokasi ?? ''"></p>
-                </div>
-            </div>
+            {{-- Edit Form Body --}}
+            <form x-show="isEditMode" :action="editForm.id ? ('/admin/kalender-akademik/' + editForm.id) : '{{ route('admin.kalender-akademik.store') }}'" method="POST" @submit="editSubmitting = true">
+                @csrf
+                <template x-if="editForm.id">
+                    <input type="hidden" name="_method" value="PUT">
+                </template>
 
-            {{-- Deskripsi Kegiatan --}}
-            <div class="pt-3 border-t border-gray-100 dark:border-slate-700" x-show="selectedEvent?.deskripsi">
-                <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase mb-1.5">Deskripsi Detail</p>
-                <p class="text-gray-600 dark:text-slate-300 whitespace-pre-wrap leading-relaxed bg-gray-50 dark:bg-slate-900/50 p-3 rounded-xl border border-gray-100 dark:border-slate-700" x-text="selectedEvent?.deskripsi ?? ''"></p>
-            </div>
+                <div class="p-5 space-y-4 overflow-y-auto max-h-[calc(90vh-180px)]">
 
-            {{-- Info Tambahan Semester --}}
-            <div class="pt-3 border-t border-gray-100 dark:border-slate-700 grid grid-cols-2 gap-4">
-                <div>
-                    <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Semester</p>
-                    <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 mt-0.5" x-text="selectedEvent?.semester_label ?? '–'"></p>
-                </div>
-                <div>
-                    <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Status Sistem</p>
-                    <span class="inline-flex mt-0.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-900">
-                        Terjadwal
-                    </span>
-                </div>
-            </div>
-        </div>
+                    {{-- Judul --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Judul Agenda <span class="text-red-500">*</span></label>
+                        <input type="text" name="judul" x-model="editForm.judul" required
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition">
+                    </div>
 
-        {{-- Footer modal tindakan --}}
-        <div class="p-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/30 flex justify-end gap-2">
-            <template x-if="selectedEvent?.id">
-                <a :href="'/admin/kalender-akademik/' + selectedEvent.id + '/edit'" 
-                   class="px-4 py-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900 rounded-xl font-semibold text-xs transition-colors inline-flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M18.364 4.982a2.322 2.322 0 013.284 3.284L12 17.414l-4 1 1-4 9.364-9.364z"/></svg>
-                    Edit Data
-                </a>
-            </template>
-            <button @click="closeModal()"
-                    class="py-2 px-4 rounded-xl font-semibold text-xs text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 border border-gray-200 dark:border-slate-600 transition-colors shadow-sm">
-                Tutup
-            </button>
+                    {{-- Jenis Kegiatan & Semester --}}
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Jenis Kegiatan <span class="text-red-500">*</span></label>
+                            <select name="jenis_kegiatan" x-model="editForm.jenis_kegiatan" required
+                                    class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition appearance-none">
+                                @foreach(App\Models\KalenderAkademik::getJenisKegiatanOptions() as $key => $label)
+                                    <option value="{{ $key }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Semester <span class="text-red-500">*</span></label>
+                            <select name="semester_id" x-model="editForm.semester_id" required
+                                    class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition appearance-none">
+                                @foreach($semesters as $sem)
+                                    <option value="{{ $sem->id }}">{{ $sem->tahun_ajaran }} – {{ $sem->nama_semester }}@if($sem->is_active) (Aktif)@endif</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Tanggal Mulai & Selesai --}}
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Tanggal Mulai <span class="text-red-500">*</span></label>
+                            <input type="date" name="tanggal_mulai" x-model="editForm.tanggal_mulai" required
+                                   class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Tanggal Selesai</label>
+                            <input type="date" name="tanggal_selesai" x-model="editForm.tanggal_selesai"
+                                   class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition">
+                        </div>
+                    </div>
+
+                    {{-- Sepanjang Hari Toggle --}}
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-700">
+                        <label class="flex items-center justify-between cursor-pointer select-none m-0">
+                            <div class="flex items-center gap-2.5">
+                                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                <span class="text-xs font-bold text-slate-700 dark:text-white">Sepanjang Hari</span>
+                            </div>
+                            {{-- hidden 0 supaya nilai tetap terkirim saat checkbox tidak dicentang --}}
+                            <input type="hidden" name="is_all_day" value="0">
+                            <input type="checkbox" name="is_all_day" value="1" x-model="editForm.is_all_day"
+                                   class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
+                        </label>
+                    </div>
+
+                    {{-- Waktu (hidden if all day) --}}
+                    <div x-show="!editForm.is_all_day" x-transition class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Jam Mulai</label>
+                            <input type="time" name="waktu_mulai" x-model="editForm.waktu_mulai"
+                                   class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Jam Selesai</label>
+                            <input type="time" name="waktu_selesai" x-model="editForm.waktu_selesai"
+                                   class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition">
+                        </div>
+                    </div>
+
+                    {{-- Lokasi --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Lokasi / Tempat</label>
+                        <input type="text" name="lokasi" x-model="editForm.lokasi" placeholder="Contoh: Gedung A Lt.3"
+                               class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition">
+                    </div>
+
+                    {{-- Deskripsi --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Deskripsi</label>
+                        <textarea name="deskripsi" x-model="editForm.deskripsi" rows="3" placeholder="Deskripsi agenda..."
+                                  class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition resize-none"></textarea>
+                    </div>
+
+                    {{-- Warna --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Warna Label</label>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            @foreach(App\Models\KalenderAkademik::getWarnaPresets() as $hex => $nama)
+                                <button type="button"
+                                        @click="editForm.warna = '{{ $hex }}'"
+                                        class="w-7 h-7 rounded-lg border-2 transition-all duration-150 shadow-sm hover:scale-110 focus:outline-none"
+                                        :class="editForm.warna === '{{ $hex }}' ? 'border-gray-900 dark:border-white ring-2 ring-offset-1 scale-110' : 'border-transparent'"
+                                        style="background-color: {{ $hex }}"
+                                        title="{{ $nama }}"></button>
+                            @endforeach
+                            <input type="color" x-model="editForm.warna" class="w-7 h-7 rounded-lg border-0 cursor-pointer p-0" title="Warna kustom">
+                        </div>
+                        <input type="hidden" name="warna" x-model="editForm.warna">
+                    </div>
+
+                    {{-- Published Toggle --}}
+                    <div class="p-3 rounded-xl bg-green-50 dark:bg-green-950/30 border border-green-200/60 dark:border-green-900/50">
+                        <label class="flex items-center justify-between cursor-pointer select-none m-0">
+                            <div class="flex items-center gap-2.5">
+                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span class="text-xs font-bold text-green-800 dark:text-green-300">Publikasikan (terlihat oleh dosen & mahasiswa)</span>
+                            </div>
+                            {{-- hidden 0 supaya nilai tetap terkirim saat checkbox tidak dicentang --}}
+                            <input type="hidden" name="is_published" value="0">
+                            <input type="checkbox" name="is_published" value="1" x-model="editForm.is_published"
+                                   class="w-5 h-5 rounded text-green-600 focus:ring-green-500 cursor-pointer">
+                        </label>
+                    </div>
+                </div>
+
+                {{-- Footer --}}
+                <div class="px-5 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/30 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 w-full justify-end">
+                        <button type="button" @click="editForm.id ? (isEditMode = false) : closeModal()"
+                                class="py-2 px-4 rounded-xl font-semibold text-xs text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 border border-gray-200 dark:border-slate-600 transition-colors shadow-sm">
+                            Batal
+                        </button>
+                        <button type="submit" :disabled="editSubmitting"
+                                class="inline-flex items-center gap-1.5 py-2 px-5 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 border border-blue-700 transition-colors shadow-sm disabled:opacity-50">
+                            <svg x-show="editSubmitting" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                            <svg x-show="!editSubmitting" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span x-text="editSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
+
+    {{-- Hidden Delete Form (juga harus di dalam scope x-data agar $refs.deleteForm terbaca) --}}
+    <form x-ref="deleteForm" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
+</div>{{-- /Main x-data --}}
 
 @push('scripts')
 <script>
@@ -509,7 +671,11 @@ function kalenderData() {
         selectedDay: null,
         selectedEvent: null,
         modalOpen: false,
+        isEditMode: false,
+        editForm: {},
+        editSubmitting: false,
         selectedSemester: '{{ $selectedSemesterId ?? "" }}',
+        semesters: @json($semesters),
 
         init() {
             // Menghilangkan duplikasi berdasarkan judul dan tanggal untuk Agenda Mendatang (Sidebar)
@@ -554,15 +720,19 @@ function kalenderData() {
         buildDay(date, month, year, isCurrentMonth) {
             const pad = n => String(n).padStart(2, '0');
             const dateStr = `${year}-${pad(month)}-${pad(date)}`;
-            const todayStr = new Date().toISOString().split('T')[0];
+
+            // FIX: pakai tanggal lokal (WIB), bukan toISOString() yang berbasis UTC
+            const now = new Date();
+            const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
             const rawEvents = this.eventsByDate[dateStr] ?? [];
-            
+
             // 1. Filter kategori yang disembunyikan
             let filtered = rawEvents.filter(e =>
                 this.hiddenCategories.length === 0 || !this.hiddenCategories.includes(e.jenis_kegiatan)
             );
 
-            // 2. PROTEKSI DUPLIKAT: Menyaring agar agenda dengan judul yang sama di hari yang sama hanya muncul 1 kali
+            // 2. Proteksi duplikat: judul sama di hari yang sama hanya tampil 1 kali
             const seenTitles = new Set();
             filtered = filtered.filter(e => {
                 if (seenTitles.has(e.judul)) {
@@ -577,7 +747,7 @@ function kalenderData() {
                 isToday: dateStr === todayStr,
                 isSelected: this.selectedDay?.dateStr === dateStr,
                 events: rawEvents,
-                filteredEvents: filtered, // Hasil akhir yang bersih dari duplikasi
+                filteredEvents: filtered,
             };
         },
 
@@ -594,9 +764,20 @@ function kalenderData() {
             return `${days[d.getDay()]}, ${this.selectedDay.date} ${months[this.selectedDay.month - 1]} ${this.selectedDay.year}`;
         },
 
-        prevMonth() { let m = this.currentMonth - 1, y = this.currentYear; if (m < 1) { m = 12; y--; } this.navigate(m, y); },
-        nextMonth() { let m = this.currentMonth + 1, y = this.currentYear; if (m > 12) { m = 1; y++; } this.navigate(m, y); },
-        goToToday() { const t = new Date(); this.navigate(t.getMonth() + 1, t.getFullYear()); },
+        prevMonth() { this.currentMonth--; if (this.currentMonth < 1) { this.currentMonth = 12; this.currentYear--; } this.syncURL(); },
+        nextMonth() { this.currentMonth++; if (this.currentMonth > 12) { this.currentMonth = 1; this.currentYear++; } this.syncURL(); },
+        goToToday() { const t = new Date(); this.currentMonth = t.getMonth() + 1; this.currentYear = t.getFullYear(); this.syncURL(); },
+
+        syncURL() {
+            try {
+                const url = new URL(window.location);
+                url.searchParams.set('month', this.currentMonth);
+                url.searchParams.set('year', this.currentYear);
+                if (this.selectedSemester) url.searchParams.set('semester_id', this.selectedSemester);
+                else url.searchParams.delete('semester_id');
+                window.history.replaceState({}, '', url.toString());
+            } catch (e) {}
+        },
 
         navigate(month, year) {
             const url = new URL(window.location.href);
@@ -623,23 +804,50 @@ function kalenderData() {
             if (this.selectedDay) this.selectedDay = this.buildDay(this.selectedDay.date, this.selectedDay.month, this.selectedDay.year, this.selectedDay.isCurrentMonth);
         },
 
-        openModal(event) {
-            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-            let tanggalLabel = '';
-            if (event.tanggal_mulai) {
-                const start = new Date(event.tanggal_mulai.split('T')[0] + 'T00:00:00');
-                tanggalLabel = `${start.getDate()} ${months[start.getMonth()]} ${start.getFullYear()}`;
-                if (event.tanggal_selesai && event.tanggal_selesai !== event.tanggal_mulai) {
-                    const end = new Date(event.tanggal_selesai.split('T')[0] + 'T00:00:00');
-                    tanggalLabel += ` – ${end.getDate()} ${months[end.getMonth()]} ${end.getFullYear()}`;
-                }
-            }
-            const semLabel = event.semester ? (event.semester.tahun_ajaran + ' – ' + event.semester.nama_semester) : '–';
-            this.selectedEvent = { ...event, tanggal_label: tanggalLabel, semester_label: semLabel };
+        openModalForDate(day) {
+            this.isEditMode = true;
+            this.editForm = {
+                id: null,
+                judul: '',
+                jenis_kegiatan: 'lainnya',
+                semester_id: this.selectedSemester,
+                tanggal_mulai: day.dateStr,
+                tanggal_selesai: '',
+                is_all_day: true,
+                waktu_mulai: '',
+                waktu_selesai: '',
+                lokasi: '',
+                deskripsi: '',
+                warna: '#002B6B',
+                is_published: true,
+                jenis_kegiatan_label: 'Agenda Baru'
+            };
             this.modalOpen = true;
             document.body.style.overflow = 'hidden';
         },
-        closeModal() { this.modalOpen = false; this.selectedEvent = null; document.body.style.overflow = ''; },
+
+        openModal(event) {
+            this.isEditMode = false;
+            this.editForm = {
+                id: event.id,
+                judul: event.judul,
+                jenis_kegiatan: event.jenis_kegiatan,
+                semester_id: event.semester_id,
+                tanggal_mulai: event.tanggal_mulai ? event.tanggal_mulai.split('T')[0] : '',
+                tanggal_selesai: event.tanggal_selesai ? event.tanggal_selesai.split('T')[0] : '',
+                is_all_day: !!event.is_all_day,
+                waktu_mulai: event.waktu_mulai ? event.waktu_mulai.substring(0, 5) : '',
+                waktu_selesai: event.waktu_selesai ? event.waktu_selesai.substring(0, 5) : '',
+                lokasi: event.lokasi || '',
+                deskripsi: event.deskripsi || '',
+                warna: event.warna || '#3b82f6',
+                is_published: !!event.is_published,
+                jenis_kegiatan_label: event.jenis_kegiatan
+            };
+            this.modalOpen = true;
+            document.body.style.overflow = 'hidden';
+        },
+        closeModal() { this.modalOpen = false; this.isEditMode = false; this.editForm = {}; this.editSubmitting = false; document.body.style.overflow = ''; },
 
         formatTanggal(dateStr) {
             if (!dateStr) return '';

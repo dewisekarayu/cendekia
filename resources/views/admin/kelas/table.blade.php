@@ -46,7 +46,7 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <span class="badge px-3 py-2 fw-bold" style="background-color: #eff6ff; color: #1d4ed8; border-radius: 8px;">
+                        <span class="badge px-3 py-2 fw-bold kuota-badge">
                             <i class="bi bi-people-fill me-1"></i> {{ $kelas->mahasiswa->count() }} / {{ $kelas->kuota_mahasiswa }}
                         </span>
                     </td>

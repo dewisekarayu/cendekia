@@ -30,19 +30,8 @@ class KalenderAkademikController extends Controller
             ->orderBy('jenis', 'desc')
             ->get();
 
-        // ============================================================
-        // BUG FIX 1: Query events untuk kalender grid
-        // Sebelumnya mengambil SEMUA event lalu di-loop PHP.
-        // Perbaikan: ambil hanya event yang overlap dengan bulan yang ditampilkan,
-        // plus eager-load 'semester' agar accessor semester ter-serialize.
-        // Relasi dan accessor sudah di-append via $appends di model.
-        // ============================================================
-        $startOfMonth = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->startOfMonth();
-        $endOfMonth   = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->endOfMonth();
-
         $query = KalenderAkademik::published()
             ->with('semester')
-            ->byDateRange($startOfMonth, $endOfMonth)
             ->orderBy('tanggal_mulai')
             ->orderBy('waktu_mulai');
 
@@ -64,11 +53,7 @@ class KalenderAkademikController extends Controller
                 ? $event->tanggal_selesai->copy()
                 : $start->copy();
 
-            // Batasi loop hanya dalam rentang bulan yang ditampilkan
-            $loopStart = $start->lt($startOfMonth) ? $startOfMonth->copy() : $start->copy();
-            $loopEnd   = $end->gt($endOfMonth) ? $endOfMonth->copy() : $end->copy();
-
-            for ($date = $loopStart; $date->lte($loopEnd); $date->addDay()) {
+            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
                 $key = $date->format('Y-m-d');
                 $eventsByDate[$key][] = $event;
             }

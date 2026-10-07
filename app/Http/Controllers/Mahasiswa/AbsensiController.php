@@ -41,10 +41,28 @@ class AbsensiController extends Controller
         $kelas = $this->kelasDiikutiMahasiswa($kelasId, ['mataKuliah', 'dosen']);
 
         $absensiAktif = Absensi::where('kelas_perkuliahan_id', $kelasId)
-            ->where('session_status', 'buka')
+            ->whereIn('session_status', ['buka', 'draft'])
             ->whereDate('tanggal', today())
             ->latest('created_at')
             ->first();
+
+        if ($absensiAktif) {
+            $absensiAktif->checkAndAutoOpen();
+            $absensiAktif->checkAndAutoClose();
+            if (!$absensiAktif->isBuka()) {
+                $absensiAktif = null;
+            }
+        }
+
+        // Dynamically block if time is past jam_selesai
+        if ($absensiAktif) {
+            $currentTime = now()->format('H:i:s');
+            $jamSelesai = \Carbon\Carbon::parse($absensiAktif->jam_selesai)->format('H:i:s');
+            
+            if ($currentTime > $jamSelesai) {
+                $absensiAktif = null;
+            }
+        }
 
         $sudahAbsen = null;
         if ($absensiAktif) {
@@ -77,11 +95,21 @@ class AbsensiController extends Controller
             ->where('kelas_perkuliahan_id', $kelasId)
             ->firstOrFail();
 
+        // Dynamically block if time is past jam_selesai
+        if ($absensi->isBuka()) {
+            $currentTime = now()->format('H:i:s');
+            $jamSelesai = \Carbon\Carbon::parse($absensi->jam_selesai)->format('H:i:s');
+            
+            if ($currentTime > $jamSelesai) {
+                return redirect()->back()->with('warning', 'Waktu presensi sudah habis.');
+            }
+        }
+
         $this->authorize('checkIn', $absensi);
 
         // Sesi harus benar-benar masih terbuka & untuk hari ini
         if (!$absensi->isBuka() || !$absensi->tanggal->isToday()) {
-            return redirect()->back()->with('warning', 'Sesi presensi ini tidak dapat diakses (sudah ditutup atau bukan sesi hari ini).');
+            return redirect()->back()->with('warning', 'Sesi presensi ini tidak dapat diakses (waktu sudah habis atau sesi telah ditutup).');
         }
 
         $validated = $request->validate([
@@ -172,9 +200,18 @@ class AbsensiController extends Controller
             ->whereDate('tanggal', today())
             ->first();
 
+        if ($absensi) {
+            $absensi->checkAndAutoOpen();
+            $absensi->checkAndAutoClose();
+            
+            if (!$absensi->isBuka()) {
+                $absensi = null;
+            }
+        }
+
         if (!$absensi) {
             return redirect()->route('mahasiswa.dashboard')
-                ->with('error', 'QR Code tidak valid, kedaluwarsa, atau sesi presensi telah ditutup.');
+                ->with('error', 'QR Code tidak valid, kedaluwarsa, atau sesi presensi telah ditutup karena waktu habis.');
         }
 
         $isEnrolled = KelasMahasiswa::where('kelas_perkuliahan_id', $absensi->kelas_perkuliahan_id)

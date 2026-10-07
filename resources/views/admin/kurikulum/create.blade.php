@@ -17,7 +17,7 @@
 
     <form action="{{ route('admin.kurikulum.store') }}" method="POST">
         @csrf
-        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white; max-width: 800px;">
+        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; max-width: 800px;">
             <div class="row g-3">
                 <div class="col-md-6">
                     <label for="program_studi_id" class="form-label fw-semibold small text-muted">Program Studi <span class="text-danger">*</span></label>

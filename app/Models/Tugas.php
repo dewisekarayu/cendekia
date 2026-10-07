@@ -16,6 +16,7 @@ class Tugas extends Model
         'judul',
         'instruksi',
         'file_lampiran',
+        'link_lampiran',
         'deadline',
         'bobot_nilai',
     ];

@@ -32,6 +32,11 @@ class AbsensiController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
+        foreach ($absensiList as $absen) {
+            $absen->checkAndAutoOpen();
+            $absen->checkAndAutoClose();
+        }
+
         $statistics = [
             'total_sesi' => Absensi::where('kelas_perkuliahan_id', $kelasId)->count(),
             'sesi_draft' => Absensi::where('kelas_perkuliahan_id', $kelasId)->draft()->count(),
@@ -65,10 +70,12 @@ class AbsensiController extends Controller
             'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:99'],
             'tanggal' => ['required', 'date'],
             'jam_mulai' => ['required', 'string', 'max:50'],
-            'jam_selesai' => ['required', 'string', 'max:50'],
+            'jam_selesai' => ['required', 'string', 'max:50', 'after:jam_mulai'],
             'rangkuman' => ['nullable', 'string', 'max:500'],
             'berita_acara' => ['nullable', 'string', 'max:1000'],
             'catatan' => ['nullable', 'string', 'max:500'],
+        ], [
+            'jam_selesai.after' => 'Jam selesai tidak boleh lebih awal dari atau sama dengan jam mulai.',
         ]);
 
         $sudahAda = Absensi::where('kelas_perkuliahan_id', $kelasId)
@@ -104,6 +111,9 @@ class AbsensiController extends Controller
     {
         $kelas = $this->kelasMilikDosen($kelasId, ['mahasiswa']);
         $absensi = $this->absensiDiKelas($kelasId, $absensiId, ['absensiMahasiswa.mahasiswa']);
+
+        $absensi->checkAndAutoOpen();
+        $absensi->checkAndAutoClose();
 
         $this->authorize('view', $absensi);
 
@@ -260,11 +270,13 @@ class AbsensiController extends Controller
             'pertemuan_ke' => ['required', 'integer', 'min:1', 'max:99'],
             'tanggal' => ['required', 'date'],
             'jam_mulai' => ['required', 'string', 'max:50'],
-            'jam_selesai' => ['required', 'string', 'max:50'],
+            'jam_selesai' => ['required', 'string', 'max:50', 'after:jam_mulai'],
             'session_status' => ['required', 'in:draft,buka,tutup'],
             'rangkuman' => ['nullable', 'string', 'max:500'],
             'berita_acara' => ['nullable', 'string', 'max:1000'],
             'catatan' => ['nullable', 'string', 'max:500'],
+        ], [
+            'jam_selesai.after' => 'Jam selesai tidak boleh lebih awal dari atau sama dengan jam mulai.',
         ]);
 
         // Check duplicate pertemuan
@@ -287,11 +299,114 @@ class AbsensiController extends Controller
 
     public function export($kelasId, $absensiId)
     {
-        $this->kelasMilikDosen($kelasId);
-        $this->absensiDiKelas($kelasId, $absensiId);
+        $kelas = $this->kelasMilikDosen($kelasId, ['mahasiswa']);
+        $absensi = $this->absensiDiKelas($kelasId, $absensiId, ['absensiMahasiswa.mahasiswa']);
 
-        return redirect()->route('dosen.absensi.show', ['kelasId' => $kelasId, 'absensiId' => $absensiId])
-            ->with('info', 'Fitur export PDF akan segera tersedia.');
+        $hadirMap = $absensi->absensiMahasiswa->keyBy('mahasiswa_id');
+
+        $fileName = 'Rekap_Absensi_Pertemuan_' . $absensi->pertemuan_ke . '_' . str_replace(' ', '_', $kelas->mataKuliah->nama_mk) . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['No', 'NIM', 'Nama Lengkap', 'Status Kehadiran', 'Waktu Log', 'Keterangan'];
+
+        $callback = function() use($kelas, $hadirMap, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($kelas->mahasiswa as $index => $mahasiswa) {
+                $attendance = $hadirMap[$mahasiswa->id] ?? null;
+                $status = $attendance?->status ?? 'alpha';
+                $waktu = $attendance?->waktu_absensi?->format('H:i') ?? '-';
+                $keterangan = $attendance?->keterangan ?? '-';
+
+                $row = [
+                    $index + 1,
+                    $mahasiswa->nim ?? '-',
+                    $mahasiswa->name,
+                    ucfirst($status),
+                    $waktu,
+                    $keterangan
+                ];
+
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportAll($kelasId)
+    {
+        $kelas = $this->kelasMilikDosen($kelasId, ['mahasiswa', 'mataKuliah']);
+        
+        $absensiList = Absensi::where('kelas_perkuliahan_id', $kelasId)
+            ->with(['absensiMahasiswa'])
+            ->orderBy('pertemuan_ke')
+            ->get();
+
+        $fileName = 'Rekap_Semua_Absensi_' . str_replace(' ', '_', $kelas->mataKuliah->nama_mk) . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['No', 'NIM', 'Nama Lengkap'];
+        foreach ($absensiList as $absensi) {
+            $columns[] = 'Pertemuan ' . $absensi->pertemuan_ke;
+        }
+        $columns = array_merge($columns, ['Total Hadir', 'Total Izin', 'Total Sakit', 'Total Alpha']);
+
+        $callback = function() use($kelas, $absensiList, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($kelas->mahasiswa as $index => $mahasiswa) {
+                $row = [
+                    $index + 1,
+                    $mahasiswa->nim ?? '-',
+                    $mahasiswa->name,
+                ];
+
+                $totalHadir = 0;
+                $totalIzin = 0;
+                $totalSakit = 0;
+                $totalAlpha = 0;
+
+                foreach ($absensiList as $absensi) {
+                    $attendance = $absensi->absensiMahasiswa->firstWhere('mahasiswa_id', $mahasiswa->id);
+                    $status = $attendance?->status ?? 'alpha';
+                    
+                    if ($status === 'hadir') $totalHadir++;
+                    elseif ($status === 'izin') $totalIzin++;
+                    elseif ($status === 'sakit') $totalSakit++;
+                    else $totalAlpha++;
+
+                    $row[] = ucfirst($status);
+                }
+
+                $row[] = $totalHadir;
+                $row[] = $totalIzin;
+                $row[] = $totalSakit;
+                $row[] = $totalAlpha;
+
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**
@@ -321,41 +436,10 @@ class AbsensiController extends Controller
     }
 
     /**
-     * Tampilkan log book / rekap kehadiran global untuk Dosen
+     * Tampilkan log book / rekap kehadiran global untuk Dosen (Dialihkan ke halaman terpadu Jadwal & Log Mengajar)
      */
-    public function logBook(Request $request)
-    {
-        $user = Auth::user();
-
-        // Get all classes taught by this dosen
-        $kelasIds = KelasPerkuliahan::where('dosen_id', $user->id)
-            ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
-                $q->where('users.id', $user->id);
-            })
-            ->pluck('id');
-
-        $perPage = (int) $request->input('per_page', 25);
-        if (!in_array($perPage, [10, 25, 50, 100])) {
-            $perPage = 25;
-        }
-
-        $absensiList = Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)
-            ->with(['kelasPerkuliahan.mataKuliah', 'kelasPerkuliahan.mahasiswa'])
-            ->withCount([
-                'absensiMahasiswa as hadir_count' => fn ($q) => $q->where('status', 'hadir'),
-            ])
-            ->orderByDesc('tanggal')
-            ->orderByDesc('jam_mulai')
-            ->paginate($perPage)
-            ->withQueryString();
-
-        $statistics = [
-            'total_sesi' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->count(),
-            'sesi_draft' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->draft()->count(),
-            'sesi_buka' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->buka()->count(),
-            'sesi_tutup' => Absensi::whereIn('kelas_perkuliahan_id', $kelasIds)->tutup()->count(),
-        ];
-
-        return view('dosen.absensi.log-book', compact('absensiList', 'statistics', 'perPage'));
-    }
+     public function logBook(Request $request)
+     {
+         return redirect()->route('dosen.jadwal.index', ['tab' => 'log']);
+     }
 }

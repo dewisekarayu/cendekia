@@ -21,7 +21,7 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-plus-circle-fill text-primary" style="color: #002B6B !important;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Formulir Program Studi Baru</h6>
@@ -30,7 +30,7 @@
                     <div class="row g-3">
                         <div class="col-md-12">
                             <label for="fakultas_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Fakultas</label>
-                            <select class="form-select @error('fakultas_id') is-invalid @enderror" id="fakultas_id" name="fakultas_id" style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <select class="form-select @error('fakultas_id') is-invalid @enderror" id="fakultas_id" name="fakultas_id" style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                                 <option value="">-- Pilih Fakultas (Opsional) --</option>
                                 @foreach($fakultasList ?? [] as $fakultas)
                                     <option value="{{ $fakultas->id }}" {{ old('fakultas_id') == $fakultas->id ? 'selected' : '' }}>{{ $fakultas->kode_fakultas }} - {{ $fakultas->nama_fakultas }}</option>
@@ -43,7 +43,7 @@
 
                         <div class="col-md-4">
                             <label for="kode_prodi" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kode Prodi <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('kode_prodi') is-invalid @enderror" id="kode_prodi" name="kode_prodi" value="{{ old('kode_prodi') }}" placeholder="Contoh: IF101" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <input type="text" class="form-control @error('kode_prodi') is-invalid @enderror" id="kode_prodi" name="kode_prodi" value="{{ old('kode_prodi') }}" placeholder="Contoh: IF101" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                             @error('kode_prodi')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -51,7 +51,7 @@
 
                         <div class="col-md-8">
                             <label for="nama_prodi" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Nama Program Studi <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nama_prodi') is-invalid @enderror" id="nama_prodi" name="nama_prodi" value="{{ old('nama_prodi') }}" placeholder="Contoh: Teknik Informatika" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <input type="text" class="form-control @error('nama_prodi') is-invalid @enderror" id="nama_prodi" name="nama_prodi" value="{{ old('nama_prodi') }}" placeholder="Contoh: Teknik Informatika" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                             @error('nama_prodi')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -59,7 +59,7 @@
 
                         <div class="col-md-6">
                             <label for="jenjang" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Jenjang Pendidikan <span class="text-danger">*</span></label>
-                            <select class="form-select @error('jenjang') is-invalid @enderror" id="jenjang" name="jenjang" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <select class="form-select @error('jenjang') is-invalid @enderror" id="jenjang" name="jenjang" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                                 <option value="" disabled selected>Pilih Jenjang</option>
                                 <option value="D3" {{ old('jenjang') == 'D3' ? 'selected' : '' }}>D3 - Ahli Madya</option>
                                 <option value="D4" {{ old('jenjang') == 'D4' ? 'selected' : '' }}>D4 - Sarjana Terapan</option>
@@ -73,7 +73,7 @@
 
                         <div class="col-md-6">
                             <label for="akreditasi" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Akreditasi</label>
-                            <select class="form-select @error('akreditasi') is-invalid @enderror" id="akreditasi" name="akreditasi" style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <select class="form-select @error('akreditasi') is-invalid @enderror" id="akreditasi" name="akreditasi" style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                                 <option value="Unggul" {{ old('akreditasi') == 'Unggul' ? 'selected' : '' }}>Unggul</option>
                                 <option value="A" {{ old('akreditasi') == 'A' ? 'selected' : '' }}>A</option>
                                 <option value="B" {{ old('akreditasi') == 'B' ? 'selected' : '' }}>B</option>
@@ -104,7 +104,7 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <label class="form-label fw-semibold small text-muted text-uppercase d-block mb-3" style="letter-spacing: 0.5px;">Status Departemen</label>
                     
                     <div class="btn-group w-100 p-1 bg-light rounded-3" role="group" style="border: 1px solid #e2e8f0;">
@@ -120,7 +120,7 @@
                     <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold d-flex align-items-center justify-content-center gap-2" style="background-color: #002B6B; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
                         <i class="bi bi-check-lg"></i> Simpan Departemen
                     </button>
-                    <a href="{{ route('admin.program-studi.index') }}" class="btn btn-light border w-100 py-2.5 fw-semibold text-secondary" style="border-radius: 8px; background-color: white;">
+                    <a href="{{ route('admin.program-studi.index') }}" class="btn btn-light border w-100 py-2.5 fw-semibold text-secondary" style="border-radius: 8px;">
                         Batal
                     </a>
                 </div>

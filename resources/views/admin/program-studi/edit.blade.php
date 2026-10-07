@@ -22,7 +22,7 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-pencil-square text-primary" style="color: #002B6B !important;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Formulir Perubahan Data</h6>
@@ -83,7 +83,7 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <label class="form-label fw-semibold small text-muted text-uppercase d-block mb-3" style="letter-spacing: 0.5px;">Status Departemen</label>
                     <div class="btn-group w-100 p-1 bg-light rounded-3" role="group" style="border: 1px solid #e2e8f0;">
                         <input type="radio" class="btn-check" name="status" id="status_aktif" value="1" {{ old('status', $prodi->status) == 1 ? 'checked' : '' }}>
@@ -98,7 +98,7 @@
                     <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold d-flex align-items-center justify-content-center gap-2" style="background-color: #002B6B; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
                         <i class="bi bi-save"></i> Perbarui Data
                     </button>
-                    <a href="{{ route('admin.program-studi.index') }}" class="btn btn-light border w-100 py-2.5 fw-semibold text-secondary" style="border-radius: 8px; background-color: white;">
+                    <a href="{{ route('admin.program-studi.index') }}" class="btn btn-light border w-100 py-2.5 fw-semibold text-secondary" style="border-radius: 8px;">
                         Batal
                     </a>
                 </div>

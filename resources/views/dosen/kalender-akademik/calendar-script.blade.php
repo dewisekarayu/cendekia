@@ -168,13 +168,25 @@ document.addEventListener('alpine:init', () => {
                 this.currentMonth = 12;
                 this.currentYear--;
             }
-            this.updateURL();
+            this.syncURL();
         },
 
         goToToday() {
             this.currentMonth = this.today.getMonth() + 1;
             this.currentYear = this.today.getFullYear();
-            this.updateURL();
+            this.syncURL();
+        },
+
+        syncURL() {
+            try {
+                const url = new URL(window.location);
+                url.searchParams.set('month', this.currentMonth);
+                url.searchParams.set('year', this.currentYear);
+                if (this.selectedSemesterId) {
+                    url.searchParams.set('semester_id', this.selectedSemesterId);
+                }
+                window.history.replaceState({}, '', url.toString());
+            } catch (e) {}
         },
 
         updateURL() {

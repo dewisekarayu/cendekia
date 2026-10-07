@@ -128,7 +128,7 @@
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-40">Alokasi Waktu</th>
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-28">Status Akses</th>
                             <th class="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider w-40">Rasio Kehadiran</th>
-                            <th class="px-4 py-2.5 text-right text-[11px] font-bold text-slate-500 uppercase tracking-wider min-w-[240px]">Panel Opsi Tindakan</th>
+                            <th class="px-4 py-2.5 text-right text-[11px] font-bold text-slate-500 uppercase tracking-wider">Panel Opsi Tindakan</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 bg-white">
@@ -204,57 +204,76 @@
                                 </td>
 
                                 <td class="px-4 py-2.5 whitespace-nowrap text-right">
-                                    <div class="flex items-center justify-end gap-1.5">
-                                        <a href="{{ route('dosen.absensi.show', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}"
-                                           class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-slate-50 text-[#321270] border border-slate-250/70 rounded-lg text-[11px] font-bold shadow-sm transition-all">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    <div class="flex justify-end relative" x-data="{ open: false }" :class="open ? 'z-50' : 'z-0'">
+                                        <button @click="open = !open" @click.away="open = false" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-lg text-[11px] font-bold shadow-sm transition-all focus:outline-none" :class="{ 'ring-2 ring-[#321270]/20 bg-slate-50': open }">
+                                            <span>Aksi</span>
+                                            <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                             </svg>
-                                            <span>Lihat</span>
-                                        </a>
-
-                                        @if($absensi->isDraft())
-                                            <form action="{{ route('dosen.absensi.buka', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white border border-emerald-200 rounded-lg text-[11px] font-bold shadow-sm transition-all">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </button>
+                                        
+                                        <div x-show="open" 
+                                             x-transition:enter="transition ease-out duration-100" 
+                                             x-transition:enter-start="transform opacity-0 scale-95" 
+                                             x-transition:enter-end="transform opacity-100 scale-100" 
+                                             x-transition:leave="transition ease-in duration-75" 
+                                             x-transition:leave-start="transform opacity-100 scale-100" 
+                                             x-transition:leave-end="transform opacity-0 scale-95" 
+                                             class="absolute right-0 top-full mt-1.5 w-44 origin-top-right rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5 focus:outline-none overflow-hidden text-left" 
+                                             style="display: none;">
+                                            
+                                            <div class="py-1.5">
+                                                <a href="{{ route('dosen.absensi.show', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" class="group flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-[#321270]/5 hover:text-[#321270] transition-colors">
+                                                    <svg class="w-4 h-4 text-slate-400 group-hover:text-[#321270]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                     </svg>
-                                                    <span>Buka</span>
-                                                </button>
-                                            </form>
-                                        @elseif($absensi->isBuka())
-                                            <form action="{{ route('dosen.absensi.tutup', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-amber-50 hover:bg-amber-600 text-amber-800 hover:text-white border border-amber-200 rounded-lg text-[11px] font-bold shadow-sm transition-all">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    Lihat Detail
+                                                </a>
+                                                
+                                                @if($absensi->isDraft())
+                                                    <form action="{{ route('dosen.absensi.buka', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" method="POST" class="block w-full">
+                                                        @csrf
+                                                        <button type="submit" class="group flex w-full items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                                                            <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                            </svg>
+                                                            Buka Sesi
+                                                        </button>
+                                                    </form>
+                                                @elseif($absensi->isBuka())
+                                                    <form action="{{ route('dosen.absensi.tutup', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" method="POST" class="block w-full">
+                                                        @csrf
+                                                        <button type="submit" class="group flex w-full items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-amber-50 hover:text-amber-700 transition-colors">
+                                                            <svg class="w-4 h-4 text-slate-400 group-hover:text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                            Tutup Sesi
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                
+                                                <a href="{{ route('dosen.absensi.edit', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" class="group flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                                                    <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                     </svg>
-                                                    <span>Tutup</span>
-                                                </button>
-                                            </form>
-                                        @endif
-
-                                        <a href="{{ route('dosen.absensi.edit', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}"
-                                           class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-250/70 rounded-lg text-[11px] font-bold shadow-sm transition-all">
-                                            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                            <span>Edit</span>
-                                        </a>
-
-                                        <form action="{{ route('dosen.absensi.destroy', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" method="POST"
-                                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus arsip sesi presensi beserta rekap riwayat pertemuan ini?');" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-rose-50 hover:bg-rose-650 text-rose-600 hover:text-white border border-rose-100 rounded-lg text-[11px] font-bold shadow-sm transition-all">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                                <span>Hapus</span>
-                                            </button>
-                                        </form>
+                                                    Edit Presensi
+                                                </a>
+                                                
+                                                <div class="border-t border-slate-100 my-1.5"></div>
+                                                
+                                                <form action="{{ route('dosen.absensi.destroy', ['kelasId' => $absensi->kelas_perkuliahan_id, 'absensiId' => $absensi->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus arsip sesi presensi beserta rekap riwayat pertemuan ini?');" class="block w-full">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="group flex w-full items-center gap-2.5 px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors">
+                                                        <svg class="w-4 h-4 text-rose-500 group-hover:text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                        Hapus Sesi
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

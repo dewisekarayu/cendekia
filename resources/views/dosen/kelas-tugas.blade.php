@@ -255,7 +255,47 @@
                             <div class="space-y-2">
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instruksi Tugas</label>
                                 <textarea name="instruksi" rows="5" required maxlength="5000"
+                                <textarea name="instruksi" rows="5" required maxlength="5000" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..."
                                     class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none resize-none">{{ $tugas->instruksi }}</textarea>
+                            </div>
+                            
+                            <div class="space-y-2" x-data="{ linkInput: '{{ $tugas->link_lampiran }}', previewUrl() { 
+                                if(!this.linkInput) return null;
+                                let ytMatch = this.linkInput.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+                                if(ytMatch) return { type: 'youtube', id: ytMatch[1] };
+                                return { type: 'link', url: this.linkInput };
+                            } }">
+                                <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Tautan Eksternal (YouTube, Drive, dll) (Opsional)</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                        </svg>
+                                    </div>
+                                    <input type="url" name="link_lampiran" x-model="linkInput" placeholder="https://..."
+                                        class="pl-10 w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none">
+                                </div>
+                                
+                                <template x-if="previewUrl()">
+                                    <div class="mt-3 border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800/50">
+                                        <template x-if="previewUrl().type === 'youtube'">
+                                            <iframe :src="'https://www.youtube.com/embed/' + previewUrl().id" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-64 object-cover"></iframe>
+                                        </template>
+                                        <template x-if="previewUrl().type === 'link'">
+                                            <div class="p-4 flex items-center gap-3">
+                                                <div class="bg-blue-100 dark:bg-blue-900/40 p-2.5 rounded-lg text-blue-600 dark:text-blue-400">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                    </svg>
+                                                </div>
+                                                <div class="overflow-hidden">
+                                                    <p class="text-sm font-bold text-gray-800 dark:text-slate-200 truncate" x-text="previewUrl().url"></p>
+                                                    <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Tautan Eksternal Terlampir</p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
                             </div>
 
                             <div class="space-y-2">
@@ -353,6 +393,45 @@
                                 </div>
                             </div>
                             <textarea name="instruksi" rows="5" required maxlength="5000" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none resize-none">{{ old('instruksi') }}</textarea>
+                        </div>
+                        
+                        <div class="space-y-2" x-data="{ linkInput: '{{ old('link_lampiran') }}', previewUrl() { 
+                            if(!this.linkInput) return null;
+                            let ytMatch = this.linkInput.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+                            if(ytMatch) return { type: 'youtube', id: ytMatch[1] };
+                            return { type: 'link', url: this.linkInput };
+                        } }">
+                            <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Tautan Eksternal (YouTube, Drive, dll) (Opsional)</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                    </svg>
+                                </div>
+                                <input type="url" name="link_lampiran" x-model="linkInput" placeholder="https://..."
+                                    class="pl-10 w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none">
+                            </div>
+                            
+                            <template x-if="previewUrl()">
+                                <div class="mt-3 border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800/50">
+                                    <template x-if="previewUrl().type === 'youtube'">
+                                        <iframe :src="'https://www.youtube.com/embed/' + previewUrl().id" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-64 object-cover"></iframe>
+                                    </template>
+                                    <template x-if="previewUrl().type === 'link'">
+                                        <div class="p-4 flex items-center gap-3">
+                                            <div class="bg-blue-100 dark:bg-blue-900/40 p-2.5 rounded-lg text-blue-600 dark:text-blue-400">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                </svg>
+                                            </div>
+                                            <div class="overflow-hidden">
+                                                <p class="text-sm font-bold text-gray-800 dark:text-slate-200 truncate" x-text="previewUrl().url"></p>
+                                                <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Tautan Eksternal Terlampir</p>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
                         </div>
 
                         <div class="space-y-2">

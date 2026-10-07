@@ -15,14 +15,22 @@ class AnalyticsController extends Controller
         $dosen = $request->user();
 
         // 1. Dapatkan semua kelas yang diampu Dosen ini
-        $kelasIds = KelasPerkuliahan::where('dosen_id', $dosen->id)->pluck('id');
+        $kelasList = KelasPerkuliahan::with('mataKuliah')->where('dosen_id', $dosen->id)->get();
+        $kelasIds = $kelasList->pluck('id');
+        $kelasMap = $kelasList->keyBy('id');
+
+        $availableClasses = [];
+        foreach ($kelasList as $k) {
+            $nama = $k->mataKuliah->nama_mata_kuliah . ' - ' . $k->kode_kelas;
+            $availableClasses[$k->id] = $nama;
+        }
 
         // 2. Dapatkan semua mahasiswa di kelas-kelas tersebut
-        $mahasiswaIds = DB::table('kelas_mahasiswa')
+        $kelasMahasiswa = DB::table('kelas_mahasiswa')
             ->whereIn('kelas_perkuliahan_id', $kelasIds)
-            ->pluck('mahasiswa_id')
-            ->unique();
+            ->get();
 
+        $mahasiswaIds = $kelasMahasiswa->pluck('mahasiswa_id')->unique();
         $students = User::whereIn('id', $mahasiswaIds)->get();
 
         $analytics = [];
@@ -30,6 +38,15 @@ class AnalyticsController extends Controller
         $totalStudents = count($students);
 
         foreach ($students as $mhs) {
+            $mhsKelasIds = $kelasMahasiswa->where('mahasiswa_id', $mhs->id)->pluck('kelas_perkuliahan_id');
+            $mhsKelasNames = [];
+            foreach ($mhsKelasIds as $cId) {
+                if (isset($availableClasses[$cId])) {
+                    $mhsKelasNames[] = $availableClasses[$cId];
+                }
+            }
+            $kelasString = implode(', ', $mhsKelasNames);
+
             // A. Cek Kehadiran (Attendance) di semua kelas dosen ini
             $totalSesi = DB::table('absensi_mahasiswa')
                 ->join('absensi', 'absensi_mahasiswa.absensi_id', '=', 'absensi.id')
@@ -100,6 +117,8 @@ class AnalyticsController extends Controller
 
             $analytics[] = (object) [
                 'mahasiswa' => $mhs,
+                'kelas_string' => $kelasString,
+                'kelas_array' => $mhsKelasNames,
                 'attendance_rate' => $attendanceRate,
                 'avg_score' => $avgScore,
                 'missed_assignments' => $missedAssignments,
@@ -115,6 +134,6 @@ class AnalyticsController extends Controller
             return $b->risk_score <=> $a->risk_score;
         });
 
-        return view('dosen.analytics.index', compact('analytics', 'atRiskCount', 'totalStudents'));
+        return view('dosen.analytics.index', compact('analytics', 'atRiskCount', 'totalStudents', 'availableClasses'));
     }
 }

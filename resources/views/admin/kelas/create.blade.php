@@ -39,7 +39,7 @@
         <div class="row g-4">
             <div class="col-lg-8">
                 <!-- Data Akademik -->
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-journal-bookmark-fill" style="color: #002B6B;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Data Akademik & Kurikulum</h6>
@@ -48,7 +48,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="semester_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Semester <span class="text-danger">*</span></label>
-                            <select name="semester_id" id="semester_id" class="form-select @error('semester_id') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <select name="semester_id" id="semester_id" class="form-select @error('semester_id') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                                 <option value="">-- Pilih Semester --</option>
                                 @foreach ($semesterList as $semester)
                                     <option value="{{ $semester->id }}" {{ old('semester_id') == $semester->id ? 'selected' : '' }}>
@@ -61,7 +61,7 @@
 
                         <div class="col-md-6">
                             <label for="program_studi_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Program Studi <span class="text-danger">*</span></label>
-                            <select name="program_studi_id" id="program_studi_id" class="form-select @error('program_studi_id') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;" onchange="updateMataKuliah(this.value)">
+                            <select name="program_studi_id" id="program_studi_id" class="form-select @error('program_studi_id') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;" onchange="updateMataKuliah(this.value)">
                                 <option value="">-- Pilih Program Studi --</option>
                                 @foreach ($programStudiList as $prodi)
                                     <option value="{{ $prodi->id }}" {{ old('program_studi_id') == $prodi->id ? 'selected' : '' }}>
@@ -74,7 +74,7 @@
 
                         <div class="col-md-8">
                             <label for="mata_kuliah_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Mata Kuliah <span class="text-danger">*</span></label>
-                            <select name="mata_kuliah_id" id="mata_kuliah_id" class="form-select @error('mata_kuliah_id') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <select name="mata_kuliah_id" id="mata_kuliah_id" class="form-select @error('mata_kuliah_id') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                                 <option value="">-- Pilih Prodi Terlebih Dahulu --</option>
                                 {{-- Diisi via JavaScript --}}
                             </select>
@@ -83,14 +83,14 @@
 
                         <div class="col-md-4">
                             <label for="kode_kelas" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kode Kelas <span class="text-danger">*</span></label>
-                            <input type="text" name="kode_kelas" id="kode_kelas" value="{{ old('kode_kelas') }}" class="form-control @error('kode_kelas') is-invalid @enderror" placeholder="Contoh: A, B, atau Reg-1" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <input type="text" name="kode_kelas" id="kode_kelas" value="{{ old('kode_kelas') }}" class="form-control @error('kode_kelas') is-invalid @enderror" placeholder="Contoh: A, B, atau Reg-1" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                             @error('kode_kelas') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                 </div>
 
                 <!-- Pengampu -->
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-people-fill" style="color: #002B6B;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Dosen Pengampu & Team Teaching</h6>
@@ -99,7 +99,7 @@
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="dosen_id" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Dosen Utama (Koordinator) <span class="text-danger">*</span></label>
-                            <select name="dosen_id" id="dosen_id" class="form-select @error('dosen_id') is-invalid @enderror" required style="border-radius: 8px; background-color: #F8FAFC;">
+                            <select name="dosen_id" id="dosen_id" class="form-select @error('dosen_id') is-invalid @enderror" required style="border-radius: 8px;">
                                 <option value="">-- Pilih Dosen Utama --</option>
                                 @foreach ($dosenList as $dosen)
                                     <option value="{{ $dosen->id }}" {{ old('dosen_id') == $dosen->id ? 'selected' : '' }}>
@@ -112,7 +112,7 @@
 
                         <div class="col-12">
                             <label for="dosen_pengampu" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Dosen Tambahan (Team Teaching) <span class="text-muted fw-normal text-lowercase">opsional</span></label>
-                            <select name="dosen_pengampu[]" id="dosen_pengampu" class="form-select @error('dosen_pengampu') is-invalid @enderror" multiple="multiple" style="border-radius: 8px; background-color: #F8FAFC;">
+                            <select name="dosen_pengampu[]" id="dosen_pengampu" class="form-select @error('dosen_pengampu') is-invalid @enderror" multiple="multiple" style="border-radius: 8px;">
                                 @foreach ($dosenList as $dosen)
                                     <option value="{{ $dosen->id }}" {{ in_array($dosen->id, old('dosen_pengampu', [])) ? 'selected' : '' }}>
                                         {{ $dosen->name }} ({{ $dosen->nip_nim }})
@@ -128,7 +128,7 @@
 
             <div class="col-lg-4">
                 <!-- Waktu & Tempat -->
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: white;">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-clock-fill" style="color: #002B6B;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Waktu & Ruang</h6>
@@ -136,7 +136,7 @@
 
                     <div class="mb-3">
                         <label for="hari" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Hari <span class="text-danger">*</span></label>
-                        <select name="hari" id="hari" class="form-select @error('hari') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                        <select name="hari" id="hari" class="form-select @error('hari') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                             <option value="">-- Pilih Hari --</option>
                             @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $hari)
                                 <option value="{{ $hari }}" {{ old('hari') == $hari ? 'selected' : '' }}>{{ $hari }}</option>
@@ -148,26 +148,26 @@
                     <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label for="jam_mulai" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Jam Mulai <span class="text-danger">*</span></label>
-                            <input type="time" name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai') }}" class="form-control @error('jam_mulai') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <input type="time" name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai') }}" class="form-control @error('jam_mulai') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                             @error('jam_mulai') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-6">
                             <label for="jam_selesai" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Selesai <span class="text-danger">*</span></label>
-                            <input type="time" name="jam_selesai" id="jam_selesai" value="{{ old('jam_selesai') }}" class="form-control @error('jam_selesai') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                            <input type="time" name="jam_selesai" id="jam_selesai" value="{{ old('jam_selesai') }}" class="form-control @error('jam_selesai') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                             @error('jam_selesai') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="ruangan" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Ruangan / Lab</label>
-                        <input type="text" name="ruangan" id="ruangan" value="{{ old('ruangan') }}" class="form-control @error('ruangan') is-invalid @enderror" placeholder="Cth: R.301 / Lab Komputer" style="border-radius: 8px; padding: 0.65rem 0.75rem; background-color: #F8FAFC;">
+                        <input type="text" name="ruangan" id="ruangan" value="{{ old('ruangan') }}" class="form-control @error('ruangan') is-invalid @enderror" placeholder="Cth: R.301 / Lab Komputer" style="border-radius: 8px; padding: 0.65rem 0.75rem;">
                         @error('ruangan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="kuota_mahasiswa" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kuota Mahasiswa <span class="text-danger">*</span></label>
                         <div class="input-group">
-                            <input type="number" name="kuota_mahasiswa" id="kuota_mahasiswa" value="{{ old('kuota_mahasiswa', 40) }}" class="form-control @error('kuota_mahasiswa') is-invalid @enderror" required min="1" max="200" style="background-color: #F8FAFC;">
+                            <input type="number" name="kuota_mahasiswa" id="kuota_mahasiswa" value="{{ old('kuota_mahasiswa', 40) }}" class="form-control @error('kuota_mahasiswa') is-invalid @enderror" required min="1" max="200" style="">
                             <span class="input-group-text" style="background-color: #e2e8f0;">Orang</span>
                         </div>
                         @error('kuota_mahasiswa') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -178,7 +178,7 @@
                     <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="background-color: #002B6B; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
                         <i class="bi bi-save"></i> Buat Kelas
                     </button>
-                    <a href="{{ route('admin.kelas.index') }}" class="btn btn-light border w-100 py-2 fw-semibold text-secondary" style="border-radius: 8px; background-color: white;">
+                    <a href="{{ route('admin.kelas.index') }}" class="btn btn-light border w-100 py-2 fw-semibold text-secondary" style="border-radius: 8px;">
                         Batal
                     </a>
                 </div>
@@ -195,7 +195,6 @@
 <style>
     .select2-container--bootstrap-5 .select2-selection {
         border-radius: 8px;
-        background-color: #F8FAFC;
         border-color: #dee2e6;
         font-size: 0.95rem;
     }

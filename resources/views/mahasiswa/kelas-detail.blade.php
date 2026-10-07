@@ -113,167 +113,189 @@
                     Pencet Absen
                 </a>
             </div> -->
-        </div>
+        </div>        @php
+            $timeline = collect();
+            foreach($materiList as $m) {
+                $m->timeline_type = 'materi';
+                $m->timeline_date = $m->created_at;
+                $timeline->push($m);
+            }
+            foreach($tugasList as $t) {
+                $t->timeline_type = 'tugas';
+                $t->timeline_date = $t->created_at;
+                $timeline->push($t);
+            }
+            foreach($rekapAbsen as $a) {
+                $a->timeline_type = 'absensi';
+                $a->timeline_date = $a->created_at;
+                $timeline->push($a);
+            }
+            $timeline = $timeline->sortByDesc('timeline_date');
+        @endphp
 
-        {{-- MATERI --}}
-        <div x-show="tab === 'semua' || tab === 'materi'" class="space-y-3">
-            @forelse ($materiList as $materi)
-                <div class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center">
-                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#002B6B]">
-                        @php
-                            $icons = ['pdf' => 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z', 'mp4' => 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z'];
-                            $iconPath = $icons[$materi->tipe_file ?? ''] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
-                        @endphp
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}"/></svg>
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <div class="mb-1 flex flex-wrap items-center gap-2">
-                            <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-600">Pertemuan {{ $materi->pertemuan_ke }}</span>
-                            @if ($materi->tipe_file)
-                                <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase text-blue-600">{{ $materi->tipe_file }}</span>
-                            @endif
+        <div class="space-y-3" x-show="tab !== 'forum'">
+            @forelse ($timeline as $timelineItem)
+                @if ($timelineItem->timeline_type === 'materi')
+                    @php $materi = $timelineItem; @endphp
+                    <div x-show="tab === 'semua' || tab === 'materi'" class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center transition duration-200 hover:shadow-md">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#002B6B]">
+                            @php
+                                $icons = ['pdf' => 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z', 'mp4' => 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z'];
+                                $iconPath = $icons[$materi->tipe_file ?? ''] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477-4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
+                            @endphp
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}"/></svg>
                         </div>
-                        <p class="text-sm font-bold text-slate-800">{{ $materi->judul }}</p>
-                        <p class="mt-0.5 text-xs leading-relaxed text-slate-500">
-                        {{ $materi->deskripsi ? Str::limit($materi->deskripsi, 110) : ($materi->files->isNotEmpty() ? 'File tersedia.' : 'File belum diunggah.') }}
-                    </p>
-                    </div>
-                    @if ($materi->files->isNotEmpty())
-                        <a href="{{ route('mahasiswa.materi.buka', [$kelas->id, $materi->id]) }}"
-                        class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#002B6B] px-4 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                            Buka ({{ $materi->files->count() }})
-                        </a>
-                    @else
-                        <span class="inline-flex shrink-0 items-center justify-center rounded-xl bg-slate-100 px-4 py-2.5 text-xs font-bold text-slate-400">Belum Ada</span>
-                    @endif
-                </div>
-            @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'materi'">
-                    Belum ada materi untuk kelas ini.
-                </div>
-            @endforelse
-        </div>
-
-        {{-- TUGAS --}}
-        <div x-show="tab === 'semua' || tab === 'tugas'" class="space-y-3">
-            @forelse ($tugasList as $tugas)
-                @php
-                    $dl = \Carbon\Carbon::parse($tugas->deadline);
-                    $overdue = $dl->isPast();
-                    $daysLeft = (int) floor(now()->diffInDays($dl, false));
-
-                    // pengumpulan milik mahasiswa yang login (eager-load dari controller)
-                    $pengumpulanSaya = $tugas->pengumpulanTugas
-                        ->firstWhere('status', '!=', \App\Models\PengumpulanTugas::STATUS_BELUM_DIKUMPUL);
-
-                    if ($pengumpulanSaya && $pengumpulanSaya->status === \App\Models\PengumpulanTugas::STATUS_DINILAI) {
-                        $tugasBtnLabel = 'Lihat Nilai';
-                        $tugasBtnClass = 'bg-emerald-600 hover:bg-emerald-700';
-                        $tugasBtnIcon  = 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
-                    } elseif ($pengumpulanSaya) {
-                        $tugasBtnLabel = 'Lihat Pengumpulan';
-                        $tugasBtnClass = 'bg-slate-600 hover:bg-slate-700';
-                        $tugasBtnIcon  = 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z';
-                    } else {
-                        $tugasBtnLabel = 'Kerjakan';
-                        $tugasBtnClass = 'bg-[#002B6B] hover:bg-blue-800';
-                        $tugasBtnIcon  = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14';
-                    }
-                @endphp
-                <div class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $overdue && !$pengumpulanSaya ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-sm font-semibold text-gray-800 truncate">{{ $tugas->judul }}</p>
-                        <p class="mt-0.5 text-xs text-gray-400">
-                            Deadline: {{ $dl->format('d M Y, H:i') }}
-                            @if ($pengumpulanSaya)
-                                <span class="ml-1 font-semibold text-emerald-600">· Sudah dikumpulkan</span>
-                            @elseif ($overdue)
-                                <span class="ml-1 font-semibold text-red-500">· Sudah lewat</span>
-                            @elseif ($daysLeft <= 2)
-                                <span class="ml-1 font-semibold text-amber-600">· {{ $daysLeft === 0 ? 'Hari ini' : $daysLeft.' hari lagi' }}</span>
-                            @endif
-                        </p>
-                    </div>
-
-                    <div class="flex shrink-0 items-center gap-2">
-                        @if ($tugas->bobot_nilai)
-                            <span class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">{{ $tugas->bobot_nilai }}%</span>
-                        @endif
-
-                        @if ($pengumpulanSaya?->is_graded)
-                            <span class="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700">{{ $pengumpulanSaya->nilai }}/100</span>
-                        @endif
-
-                        <a href="{{ route('mahasiswa.pengumpulan-tugas.show', $tugas->id) }}"
-                           class="inline-flex items-center gap-1.5 rounded-xl {{ $tugasBtnClass }} px-4 py-2.5 text-xs font-bold text-white transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $tugasBtnIcon }}"/></svg>
-                            {{ $tugasBtnLabel }}
-                        </a>
-                    </div>
-                </div>
-            @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'tugas'">
-                    Belum ada tugas untuk kelas ini.
-                </div>
-            @endforelse
-        </div>
-
-        {{-- ABSENSI --}}
-        <div x-show="tab === 'semua' || tab === 'absensi'" class="space-y-3">
-            @forelse ($rekapAbsen as $item)
-                @php
-                    $attendance = $item->absensiMahasiswa->first();
-                    $status = $attendance?->status;
-                    if (!$status) {
-                        if ($item->isBuka()) {
-                            $status = 'terbuka';
-                        } elseif ($item->isDraft()) {
-                            $status = 'draft';
-                        } else {
-                            $status = 'alpha';
-                        }
-                    }
-
-                    $absenMap = [
-                        'hadir'    => ['label' => 'Hadir',         'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/30', 'icon' => 'M5 13l4 4L19 7'],
-                        'izin'     => ['label' => 'Izin',           'class' => 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30',           'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'sakit'    => ['label' => 'Sakit',          'class' => 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/30',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'alpha'    => ['label' => 'Tidak Hadir',    'class' => 'bg-red-50 text-red-700 border-red-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/30',              'icon' => 'M6 18L18 6M6 6l12 12'],
-                        'terbuka'  => ['label' => 'Terbuka',        'class' => 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-900/30',  'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        'draft'    => ['label' => 'Belum Dimulai',  'class' => 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-900/40 dark:text-slate-400 dark:border-slate-800',        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                    ];
-                    $ab = $absenMap[$status] ?? $absenMap['alpha'];
-                @endphp
-                <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm transition-colors duration-200">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border {{ $ab['class'] }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $ab['icon'] }}"/></svg>
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-250">Pertemuan {{ $item->pertemuan_ke }}</p>
-                        <p class="text-xs text-slate-400 dark:text-slate-450">{{ $item->tanggal->format('d M Y') }}
-                            @if ($item->rangkuman)
-                                · {{ Str::limit($item->rangkuman, 80) }}
-                            @endif
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        @if($status === 'terbuka')
-                            <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white hover:text-white text-decoration-none transition shadow-sm">
-                                Absen Masuk
+                        <div class="min-w-0 flex-1">
+                            <div class="mb-1 flex flex-wrap items-center gap-2">
+                                <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-600">Pertemuan {{ $materi->pertemuan_ke }}</span>
+                                @if ($materi->tipe_file)
+                                    <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase text-blue-600">{{ $materi->tipe_file }}</span>
+                                @endif
+                            </div>
+                            <p class="text-sm font-bold text-slate-800">{{ $materi->judul }}</p>
+                            <p class="mt-0.5 text-xs leading-relaxed text-slate-500">
+                                {{ $materi->deskripsi ? Str::limit($materi->deskripsi, 110) : ($materi->files->isNotEmpty() ? 'File tersedia.' : 'File belum diunggah.') }}
+                            </p>
+                        </div>
+                        @if ($materi->files->isNotEmpty())
+                            <a href="{{ route('mahasiswa.materi.buka', [$kelas->id, $materi->id]) }}"
+                            class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#002B6B] px-4 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                Buka ({{ $materi->files->count() }})
                             </a>
+                        @else
+                            <span class="inline-flex shrink-0 items-center justify-center rounded-xl bg-slate-100 px-4 py-2.5 text-xs font-bold text-slate-400">Belum Ada</span>
                         @endif
-                        <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
                     </div>
-                </div>
+                @elseif ($timelineItem->timeline_type === 'tugas')
+                    @php 
+                        $tugas = $timelineItem; 
+                        $dl = \Carbon\Carbon::parse($tugas->deadline);
+                        $overdue = $dl->isPast();
+                        $daysLeft = (int) floor(now()->diffInDays($dl, false));
+                        $pengumpulanSaya = $tugas->pengumpulanTugas->firstWhere('status', '!=', \App\Models\PengumpulanTugas::STATUS_BELUM_DIKUMPUL);
+
+                        if ($pengumpulanSaya && $pengumpulanSaya->status === \App\Models\PengumpulanTugas::STATUS_DINILAI) {
+                            $tugasBtnLabel = 'Lihat Nilai';
+                            $tugasBtnClass = 'bg-emerald-600 hover:bg-emerald-700';
+                            $tugasBtnIcon  = 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
+                        } elseif ($pengumpulanSaya) {
+                            $tugasBtnLabel = 'Lihat Pengumpulan';
+                            $tugasBtnClass = 'bg-slate-600 hover:bg-slate-700';
+                            $tugasBtnIcon  = 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z';
+                        } else {
+                            $tugasBtnLabel = 'Kerjakan';
+                            $tugasBtnClass = 'bg-[#002B6B] hover:bg-blue-800';
+                            $tugasBtnIcon  = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14';
+                        }
+                    @endphp
+                    <div x-show="tab === 'semua' || tab === 'tugas'" class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center transition duration-200 hover:shadow-md">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $overdue && !$pengumpulanSaya ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-semibold text-gray-800 truncate">{{ $tugas->judul }}</p>
+                            <p class="mt-0.5 text-xs text-gray-400">
+                                Deadline: {{ $dl->format('d M Y, H:i') }}
+                                @if ($pengumpulanSaya)
+                                    <span class="ml-1 font-semibold text-emerald-600">· Sudah dikumpulkan</span>
+                                @elseif ($overdue)
+                                    <span class="ml-1 font-semibold text-red-500">· Sudah lewat</span>
+                                @elseif ($daysLeft <= 2)
+                                    <span class="ml-1 font-semibold text-amber-600">· {{ $daysLeft === 0 ? 'Hari ini' : $daysLeft.' hari lagi' }}</span>
+                                @endif
+                            </p>
+                        </div>
+
+                        <div class="flex shrink-0 items-center gap-2">
+                            @if ($tugas->bobot_nilai)
+                                <span class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">{{ $tugas->bobot_nilai }}%</span>
+                            @endif
+
+                            @if ($pengumpulanSaya?->is_graded)
+                                <span class="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700">{{ $pengumpulanSaya->nilai }}/100</span>
+                            @endif
+
+                            <a href="{{ route('mahasiswa.pengumpulan-tugas.show', $tugas->id) }}"
+                               class="inline-flex items-center gap-1.5 rounded-xl {{ $tugasBtnClass }} px-4 py-2.5 text-xs font-bold text-white transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $tugasBtnIcon }}"/></svg>
+                                {{ $tugasBtnLabel }}
+                            </a>
+                        </div>
+                    </div>
+                @elseif ($timelineItem->timeline_type === 'absensi')
+                    @php 
+                        $item = $timelineItem;
+                        $attendance = $item->absensiMahasiswa->first();
+                        $status = $attendance?->status;
+                        if (!$status) {
+                            if ($item->isBuka()) {
+                                $status = 'terbuka';
+                            } elseif ($item->isDraft()) {
+                                $status = 'draft';
+                            } else {
+                                $status = 'alpha';
+                            }
+                        }
+
+                        $absenMap = [
+                            'hadir'    => ['label' => 'Hadir',         'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/30', 'icon' => 'M5 13l4 4L19 7'],
+                            'izin'     => ['label' => 'Izin',           'class' => 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30',           'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                            'sakit'    => ['label' => 'Sakit',          'class' => 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/30',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                            'alpha'    => ['label' => 'Tidak Hadir',    'class' => 'bg-red-50 text-red-700 border-red-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/30',              'icon' => 'M6 18L18 6M6 6l12 12'],
+                            'terbuka'  => ['label' => 'Terbuka',        'class' => 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-900/30',  'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
+                            'draft'    => ['label' => 'Belum Dimulai',  'class' => 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-900/40 dark:text-slate-400 dark:border-slate-800',        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
+                        ];
+                        $ab = $absenMap[$status] ?? $absenMap['alpha'];
+                    @endphp
+                    <div x-show="tab === 'semua' || tab === 'absensi'" class="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm transition-colors duration-200 hover:shadow-md">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border {{ $ab['class'] }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $ab['icon'] }}"/></svg>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-250">Pertemuan {{ $item->pertemuan_ke }}</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-450">{{ $item->tanggal->format('d M Y') }}
+                                @if ($item->rangkuman)
+                                    • {{ Str::limit($item->rangkuman, 80) }}
+                                @endif
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            @php
+                                $showAbsenBtn = false;
+                                if ($status === 'terbuka' && $item->tanggal->isToday()) {
+                                    $currentTime = now()->format('H:i:s');
+                                    $jamSelesai = \Carbon\Carbon::parse($item->jam_selesai)->format('H:i:s');
+                                    if ($currentTime <= $jamSelesai) {
+                                        $showAbsenBtn = true;
+                                    }
+                                }
+                            @endphp
+                            @if($showAbsenBtn)
+                                <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white hover:text-white text-decoration-none transition shadow-sm">
+                                    Absen Masuk
+                                </a>
+                            @endif
+                            <span class="shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold {{ $ab['class'] }}">{{ $ab['label'] }}</span>
+                        </div>
+                    </div>
+                @endif
             @empty
-                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'absensi'">
-                    Belum ada data absensi.
+                <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'semua'">
+                    Belum ada aktivitas di kelas ini.
                 </div>
             @endforelse
+
+            {{-- Fallbacks (Empty states) --}}
+            <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'materi' && {{ $materiList->isEmpty() ? 'true' : 'false' }}" style="display: none;">
+                Belum ada materi untuk kelas ini.
+            </div>
+            <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'tugas' && {{ $tugasList->isEmpty() ? 'true' : 'false' }}" style="display: none;">
+                Belum ada tugas untuk kelas ini.
+            </div>
+            <div class="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-400" x-show="tab === 'absensi' && {{ $rekapAbsen->isEmpty() ? 'true' : 'false' }}" style="display: none;">
+                Belum ada data absensi.
+            </div>
         </div>
 
         {{-- FORUM --}}

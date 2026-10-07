@@ -49,7 +49,7 @@
             @foreach (['admin' => 'Administrator', 'dosen' => 'Dosen Pengajar', 'mahasiswa' => 'Mahasiswa'] as $r => $label)
                 <a href="{{ route('admin.user.index', ['role' => $r, 'per_page' => request('per_page', 10)]) }}"
                     class="btn btn-sm d-flex align-items-center gap-2 text-decoration-none px-3.5 py-2 font-bold"
-                    style="border-radius: 0.75rem; font-size: 0.825rem; {{ $role === $r ? 'background-color: #002B6B; color: white; border: 1px solid #002B6B; box-shadow: 0 4px 10px rgba(0,43,107,0.15);' : 'background-color: white; color: #475569; border: 1px solid #e2e8f0;' }}">
+                    style="border-radius: 0.75rem; font-size: 0.825rem; {{ $role === $r ? 'background-color: #002B6B; color: white; border: 1px solid #002B6B; box-shadow: 0 4px 10px rgba(0,43,107,0.15);' : ' color: #475569; border: 1px solid #e2e8f0;' }}">
                     @if($r === 'admin')
                         <i class="bi bi-shield-check"></i>
                     @elseif($r === 'dosen')

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class JadwalController extends Controller
 {
     /**
-     * Menampilkan jadwal mengajar dosen
+     * Menampilkan jadwal mengajar dan log mengajar dosen dalam satu halaman terpadu
      */
     public function index(Request $request)
     {
@@ -23,34 +23,125 @@ class JadwalController extends Controller
                         $q->where('users.id', $user->id);
                     });
             })
-            ->with(['mataKuliah.programStudi', 'semester', 'mahasiswa'])
+            ->with([
+                'mataKuliah.programStudi',
+                'semester',
+                'mahasiswa',
+                'dosen',
+                'dosenPengampuTambahan',
+                'absensi' => fn ($q) => $q
+                    ->withCount([
+                        'absensiMahasiswa as hadir_count' => fn ($query) => $query->where('status', 'hadir'),
+                    ])
+                    ->orderBy('pertemuan_ke'),
+            ])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
             ->orderByRaw("FIELD(LOWER(TRIM(hari)), 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu')")
             ->orderBy('jam_mulai')
             ->get();
 
-        // Kelompokkan berdasarkan hari (case-insensitive & trim, agar data seperti "selasa" atau " Selasa " tetap cocok)
+        // Kelompokkan berdasarkan hari (case-insensitive & trim)
         $jadwalByDay = [];
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
         foreach ($days as $day) {
             $jadwalByDay[$day] = $kelasPerkuliahan
                 ->filter(function ($kelas) use ($day) {
-                    return strtolower(trim($kelas->hari)) === strtolower($day);
+                    return strtolower(trim($kelas->hari ?? '')) === strtolower($day);
                 })
                 ->sortBy('jam_mulai')
                 ->values();
         }
 
-        // Hitung statistik
+        // Tampilan log mengajar dikelompokkan berdasarkan kelas & mata kuliah
+        $kelasList = $kelasPerkuliahan
+            ->filter(fn (KelasPerkuliahan $kelas) => $kelas->mataKuliah !== null)
+            ->groupBy(fn (KelasPerkuliahan $kelas) => $kelas->kode_kelas ?: 'Tanpa Kode Kelas')
+            ->map(function ($mataKuliahDalamKelas, $kodeKelas) {
+                return (object) [
+                    'id' => md5($kodeKelas),
+                    'kode' => $kodeKelas,
+                    'jumlah_mata_kuliah' => $mataKuliahDalamKelas->count(),
+                    'total_pertemuan' => $mataKuliahDalamKelas->sum(fn ($k) => $k->absensi->count()),
+                    'mata_kuliah' => $mataKuliahDalamKelas
+                        ->sortBy(fn (KelasPerkuliahan $kelas) => $kelas->mataKuliah->nama_mk)
+                        ->values(),
+                ];
+            })
+            ->sortBy('kode')
+            ->values();
+
+        // Hitung statistik komprehensif
         $totalKelas = $kelasPerkuliahan->count();
-        $totalMahasiswa = $kelasPerkuliahan->sum('jumlah_mahasiswa');
+        $totalMahasiswa = $kelasPerkuliahan->sum(fn($k) => $k->mahasiswa->count());
         $totalSKS = $kelasPerkuliahan->sum(function($kelas) {
             return $kelas->mataKuliah->sks ?? 0;
         });
 
-        return view('dosen.jadwal.index', compact('kelasPerkuliahan', 'jadwalByDay', 'totalKelas', 'totalMahasiswa', 'totalSKS', 'days'));
+        // Statistik Sesi Pertemuan (Log Mengajar)
+        $allAbsensi = $kelasPerkuliahan->flatMap->absensi;
+        $totalSesi = $allAbsensi->count();
+        $sesiBuka = $allAbsensi->where('session_status', 'buka')->count();
+        $sesiDraft = $allAbsensi->where('session_status', 'draft')->count();
+        $sesiTutup = $allAbsensi->where('session_status', 'tutup')->count();
+
+        // Daftar 12 bulan tetap (Januari - Desember) untuk filter dropdown
+        $namaBulan = [
+            '01' => 'Januari', '02' => 'Februari', '03' => 'Maret',
+            '04' => 'April',   '05' => 'Mei',      '06' => 'Juni',
+            '07' => 'Juli',    '08' => 'Agustus',  '09' => 'September',
+            '10' => 'Oktober', '11' => 'November', '12' => 'Desember',
+        ];
+
+        $monthCounts = $allAbsensi
+            ->filter(fn ($a) => !empty($a->tanggal))
+            ->groupBy(fn ($a) => \Carbon\Carbon::parse($a->tanggal)->format('m'))
+            ->map->count();
+
+        $availableMonths = collect($namaBulan)->map(fn ($label, $key) => [
+            'key'   => $key,
+            'label' => $label,
+            'count' => $monthCounts[$key] ?? 0,
+        ])->values();
+
+        // Agenda Hari Ini
+        $dayMap = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+        $todayEnglish = now()->format('l');
+        $todayName = $dayMap[$todayEnglish] ?? 'Senin';
+        $kelasHariIni = $jadwalByDay[$todayName] ?? collect();
+
+        // Tab aktif default (bisa diatur via parameter ?tab=log atau jika dari route log-book)
+        $activeTab = $request->query('tab');
+        if (!$activeTab) {
+            $activeTab = $request->routeIs('dosen.log-book') ? 'log' : 'jadwal';
+        }
+
+        return view('dosen.jadwal.index', compact(
+            'kelasPerkuliahan',
+            'jadwalByDay',
+            'kelasList',
+            'totalKelas',
+            'totalMahasiswa',
+            'totalSKS',
+            'totalSesi',
+            'sesiBuka',
+            'sesiDraft',
+            'sesiTutup',
+            'availableMonths',
+            'days',
+            'todayName',
+            'kelasHariIni',
+            'activeTab'
+        ));
     }
 
     /**

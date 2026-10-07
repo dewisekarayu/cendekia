@@ -64,6 +64,36 @@
             {!! nl2br(e($tugas->instruksi)) !!}
         </div>
 
+        {{-- Link Eksternal (jika ada) --}}
+        @if ($tugas->link_lampiran)
+            <div class="mt-4" x-data="{ link: '{{ $tugas->link_lampiran }}', previewUrl() { 
+                let ytMatch = this.link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+                if(ytMatch) return { type: 'youtube', id: ytMatch[1] };
+                return { type: 'link', url: this.link };
+            } }">
+                <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                    <template x-if="previewUrl().type === 'youtube'">
+                        <div class="aspect-w-16 aspect-h-9 w-full">
+                            <iframe :src="'https://www.youtube.com/embed/' + previewUrl().id" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-64 object-cover"></iframe>
+                        </div>
+                    </template>
+                    <template x-if="previewUrl().type === 'link'">
+                        <a :href="previewUrl().url" target="_blank" class="p-4 flex items-center gap-3 hover:bg-slate-100 transition">
+                            <div class="bg-blue-100 p-2.5 rounded-lg text-blue-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </div>
+                            <div class="overflow-hidden flex-1">
+                                <p class="text-sm font-bold text-slate-800 truncate" x-text="previewUrl().url"></p>
+                                <p class="text-xs text-slate-500 mt-0.5">Tautan Eksternal Terlampir (Klik untuk Buka)</p>
+                            </div>
+                        </a>
+                    </template>
+                </div>
+            </div>
+        @endif
+
         {{-- File lampiran (jika ada) --}}
         @if ($tugas->files->count())
             <div class="mt-4 space-y-2">

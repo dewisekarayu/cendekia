@@ -85,12 +85,10 @@ class KalenderAkademikController extends Controller
         $endDate   = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->endOfMonth();
 
         // ============================================================
-        // BUG FIX: Admin sebelumnya groupBy('tanggal_mulai') saja —
-        // event multi-hari hanya muncul di tanggal mulai.
-        // Perbaikan: sama seperti controller mahasiswa, expand per hari.
+        // Load all published events for the semester so month navigation
+        // works client-side without redirect.
         // ============================================================
         $monthEventsQuery = KalenderAkademik::published()
-            ->byDateRange($startDate, $endDate)
             ->with('semester')
             ->orderBy('tanggal_mulai')
             ->orderBy('waktu_mulai');
@@ -105,10 +103,8 @@ class KalenderAkademikController extends Controller
         foreach ($monthEvents as $event) {
             $start     = $event->tanggal_mulai->copy();
             $end       = $event->tanggal_selesai ? $event->tanggal_selesai->copy() : $start->copy();
-            $loopStart = $start->lt($startDate) ? $startDate->copy() : $start->copy();
-            $loopEnd   = $end->gt($endDate)     ? $endDate->copy()   : $end->copy();
 
-            for ($date = $loopStart; $date->lte($loopEnd); $date->addDay()) {
+            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
                 $key = $date->format('Y-m-d');
                 $eventsByDate[$key][] = $event;
             }

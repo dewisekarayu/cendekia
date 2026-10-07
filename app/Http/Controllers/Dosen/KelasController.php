@@ -100,6 +100,7 @@ class KelasController extends Controller
             'instruksi' => ['required', 'string', 'max:5000'],
             'deadline' => ['required', 'date', 'after:now'],
             'poin' => ['required', 'integer', 'min:1', 'max:100'],
+            'link_lampiran' => ['nullable', 'url', 'max:2048'],
             'template' => ['nullable', 'array', 'max:5'],
             'template.*' => [
                 'file',
@@ -109,6 +110,7 @@ class KelasController extends Controller
         ], [
             'deadline.after' => 'Deadline harus lebih besar dari waktu saat ini.',
             'template.*.max' => 'Ukuran setiap lampiran maksimal 25MB.',
+            'link_lampiran.url' => 'Format tautan tidak valid. Pastikan menggunakan awalan http:// atau https://',
         ]);
 
         $tugas = Tugas::create([
@@ -117,6 +119,7 @@ class KelasController extends Controller
             'instruksi' => $validated['instruksi'],
             'deadline' => $validated['deadline'],
             'bobot_nilai' => $validated['poin'],
+            'link_lampiran' => $validated['link_lampiran'] ?? null,
         ]);
 
         if ($request->hasFile('template')) {
@@ -147,6 +150,7 @@ class KelasController extends Controller
             'instruksi' => ['required', 'string', 'max:5000'],
             'deadline' => ['required', 'date'],
             'poin' => ['required', 'integer', 'min:1', 'max:100'],
+            'link_lampiran' => ['nullable', 'url', 'max:2048'],
             'hapus_files' => ['nullable', 'array'],
             'hapus_files.*' => ['integer'],
             'template' => ['nullable', 'array', 'max:5'],
@@ -157,6 +161,7 @@ class KelasController extends Controller
             ],
         ], [
             'template.*.max' => 'Ukuran setiap lampiran maksimal 25MB.',
+            'link_lampiran.url' => 'Format tautan tidak valid. Pastikan menggunakan awalan http:// atau https://',
         ]);
 
         // 1. Update data utama tugas
@@ -165,6 +170,7 @@ class KelasController extends Controller
             'instruksi' => $validated['instruksi'], // PENTING: Bersihkan via XSS Purifier di level Request/Model jika ini Rich Text!
             'deadline' => $validated['deadline'],
             'bobot_nilai' => $validated['poin'],
+            'link_lampiran' => $validated['link_lampiran'] ?? null,
         ]);
 
         // 2. Hapus file lama yang dicentang oleh dosen

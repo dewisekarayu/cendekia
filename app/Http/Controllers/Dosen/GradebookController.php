@@ -27,9 +27,10 @@ class GradebookController extends Controller
             $perPage = 10;
         }
 
-        // Semua mahasiswa yang terdaftar di kelas ini, gabung dengan nilai_akhir (jika ada)
-        $students = $kelas
-            ? $kelas->mahasiswa()
+        $sort = request('sort', 'nama_asc');
+
+        if ($kelas) {
+            $query = $kelas->mahasiswa()
                 ->leftJoin('nilai_akhir', function($join) use ($kelas) {
                     $join->on('users.id', '=', 'nilai_akhir.mahasiswa_id')
                          ->where('nilai_akhir.kelas_perkuliahan_id', '=', $kelas->id);
@@ -38,12 +39,20 @@ class GradebookController extends Controller
                          'nilai_akhir.nilai_kehadiran', 'nilai_akhir.nilai_tugas', 
                          'nilai_akhir.nilai_quiz', 'nilai_akhir.nilai_project', 
                          'nilai_akhir.nilai_uts', 'nilai_akhir.nilai_uas', 
-                         'nilai_akhir.nilai_akhir', 'nilai_akhir.grade')
-                ->orderByDesc('nilai_akhir.nilai_akhir')
-                ->orderBy('users.name')
-                ->paginate($perPage)
-                ->withQueryString()
-            : collect();
+                         'nilai_akhir.nilai_akhir', 'nilai_akhir.grade');
+            
+            if ($sort === 'nilai_desc') {
+                $query->orderByDesc('nilai_akhir.nilai_akhir')->orderBy('users.name');
+            } elseif ($sort === 'nilai_asc') {
+                $query->orderBy('nilai_akhir.nilai_akhir')->orderBy('users.name');
+            } else {
+                $query->orderBy('users.name');
+            }
+            
+            $students = $query->paginate($perPage)->withQueryString();
+        } else {
+            $students = collect();
+        }
 
         // Jumlah total mahasiswa di kelas (termasuk yang belum punya nilai akhir)
         $totalStudents = $kelas
@@ -55,7 +64,8 @@ class GradebookController extends Controller
             'kelas',
             'students',
             'totalStudents',
-            'perPage'
+            'perPage',
+            'sort'
         ));
     }
 
@@ -94,13 +104,12 @@ class GradebookController extends Controller
     {
         $request->validate([
             'kelas_id' => 'required|exists:kelas_perkuliahan,id',
-            'mahasiswa_id' => 'required|exists:users,id',
-            'nilai_kehadiran' => 'nullable|numeric|min:0|max:100',
-            'nilai_tugas' => 'nullable|numeric|min:0|max:100',
-            'nilai_quiz' => 'nullable|numeric|min:0|max:100',
-            'nilai_project' => 'nullable|numeric|min:0|max:100',
-            'nilai_uts' => 'nullable|numeric|min:0|max:100',
-            'nilai_uas' => 'nullable|numeric|min:0|max:100',
+            'students' => 'required|array',
+            'students.*.mahasiswa_id' => 'required|exists:users,id',
+            'students.*.nilai_kehadiran' => 'nullable|numeric|min:0|max:100',
+            'students.*.nilai_tugas' => 'nullable|numeric|min:0|max:100',
+            'students.*.nilai_uts' => 'nullable|numeric|min:0|max:100',
+            'students.*.nilai_uas' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $kelas = KelasPerkuliahan::where('id', $request->kelas_id)
@@ -111,61 +120,45 @@ class GradebookController extends Controller
                     });
             })->firstOrFail();
 
-        // Calculate final grade
-        $kehadiran = $request->nilai_kehadiran ?? 0;
-        $tugas = $request->nilai_tugas ?? 0;
-        $quiz = $request->nilai_quiz ?? 0;
-        $project = $request->nilai_project ?? 0;
-        $uts = $request->nilai_uts ?? 0;
-        $uas = $request->nilai_uas ?? 0;
+        $bTugas = ($kelas->bobot_tugas ?? 30) / 100;
+        $bUts = ($kelas->bobot_uts ?? 30) / 100;
+        $bUas = ($kelas->bobot_uas ?? 40) / 100;
 
-        // Determine weights. If class has custom weights (tugas, uts, uas), use them. 
-        // Otherwise fallback to default
-        $bTugas = $kelas->bobot_tugas ?? 20;
-        $bUts = $kelas->bobot_uts ?? 30;
-        $bUas = $kelas->bobot_uas ?? 50;
+        foreach ($request->students as $studentData) {
+            $kehadiran = $studentData['nilai_kehadiran'] ?? 0;
+            $tugas = $studentData['nilai_tugas'] ?? 0;
+            $uts = $studentData['nilai_uts'] ?? 0;
+            $uas = $studentData['nilai_uas'] ?? 0;
 
-        // Since the requirement usually includes quiz, project, dll, we use a custom formula
-        // Default formula if total is 100
-        $nilai_akhir = round(
-            ($kehadiran * 0.10) +
-            ($tugas * 0.20) +
-            ($quiz * 0.10) +
-            ($project * 0.20) +
-            ($uts * 0.20) +
-            ($uas * 0.20),
-            2
-        );
+            $nilai_akhir = round(($tugas * $bTugas) + ($uts * $bUts) + ($uas * $bUas), 2);
 
-        // Calculate Grade
-        $grade = match (true) {
-            $nilai_akhir >= 85 => 'A',
-            $nilai_akhir >= 80 => 'AB',
-            $nilai_akhir >= 75 => 'B',
-            $nilai_akhir >= 70 => 'BC',
-            $nilai_akhir >= 65 => 'C',
-            $nilai_akhir >= 55 => 'D',
-            default => 'E',
-        };
+            $grade = match (true) {
+                $nilai_akhir >= 90 => 'A',
+                $nilai_akhir >= 80 => 'B',
+                $nilai_akhir >= 70 => 'C',
+                $nilai_akhir >= 60 => 'D',
+                default => 'E',
+            };
 
-        NilaiAkhir::updateOrCreate(
-            [
-                'kelas_perkuliahan_id' => $kelas->id,
-                'mahasiswa_id' => $request->mahasiswa_id,
-            ],
-            [
-                'nilai_kehadiran' => $kehadiran,
-                'nilai_tugas' => $tugas,
-                'nilai_quiz' => $quiz,
-                'nilai_project' => $project,
-                'nilai_uts' => $uts,
-                'nilai_uas' => $uas,
-                'nilai_akhir' => $nilai_akhir,
-                'grade' => $grade,
-            ]
-        );
+            NilaiAkhir::updateOrCreate(
+                [
+                    'kelas_perkuliahan_id' => $kelas->id,
+                    'mahasiswa_id' => $studentData['mahasiswa_id'],
+                ],
+                [
+                    'nilai_kehadiran' => $kehadiran,
+                    'nilai_tugas' => $tugas,
+                    'nilai_quiz' => 0,
+                    'nilai_project' => 0,
+                    'nilai_uts' => $uts,
+                    'nilai_uas' => $uas,
+                    'nilai_akhir' => $nilai_akhir,
+                    'grade' => $grade,
+                ]
+            );
+        }
 
-        return back()->with('success', 'Nilai mahasiswa berhasil disimpan.');
+        return back()->with('success', 'Nilai seluruh mahasiswa berhasil disimpan.');
     }
 
     public function syncAbsensi(Request $request)
@@ -200,30 +193,22 @@ class GradebookController extends Controller
 
             $nilaiAkhirRecord->nilai_kehadiran = $nilaiHadir;
             
-            // Recalculate Nilai Akhir if it exists
+            // Recalculate Nilai Akhir
             $tugas = $nilaiAkhirRecord->nilai_tugas ?? 0;
-            $quiz = $nilaiAkhirRecord->nilai_quiz ?? 0;
-            $project = $nilaiAkhirRecord->nilai_project ?? 0;
             $uts = $nilaiAkhirRecord->nilai_uts ?? 0;
             $uas = $nilaiAkhirRecord->nilai_uas ?? 0;
             
-            // Average of tugas/quiz/project
-            $avgTugas = ($tugas + $quiz + $project) / 3;
-            
-            $wTugas = ($kelas->bobot_tugas ?? 20) / 100;
+            $wTugas = ($kelas->bobot_tugas ?? 30) / 100;
             $wUts = ($kelas->bobot_uts ?? 30) / 100;
-            $wUas = ($kelas->bobot_uas ?? 50) / 100;
+            $wUas = ($kelas->bobot_uas ?? 40) / 100;
 
-            // Optional: Include attendance in calculation if you want, but for now stick to original formula
-            $nilai_akhir = ($avgTugas * $wTugas) + ($uts * $wUts) + ($uas * $wUas);
+            $nilai_akhir = round(($tugas * $wTugas) + ($uts * $wUts) + ($uas * $wUas), 2);
 
             $grade = match (true) {
-                $nilai_akhir >= 85 => 'A',
-                $nilai_akhir >= 80 => 'AB',
-                $nilai_akhir >= 75 => 'B',
-                $nilai_akhir >= 70 => 'BC',
-                $nilai_akhir >= 65 => 'C',
-                $nilai_akhir >= 55 => 'D',
+                $nilai_akhir >= 90 => 'A',
+                $nilai_akhir >= 80 => 'B',
+                $nilai_akhir >= 70 => 'C',
+                $nilai_akhir >= 60 => 'D',
                 default => 'E',
             };
 

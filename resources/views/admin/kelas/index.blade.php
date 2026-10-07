@@ -95,6 +95,9 @@
         font-weight: 600;
         border: 1px solid #e2e8f0;
     }
+    .kuota-badge { background-color: #eff6ff; color: #1d4ed8 !important; border-radius: 8px; }
+    html.dark .kuota-badge { background-color: rgba(59,130,246,.15) !important; color: #93c5fd !important; border: 1px solid rgba(59,130,246,.3); }
+    html.dark .team-teaching-badge { background-color: #0f172a; color: #cbd5e1; border-color: #334155; }
 </style>
 @endpush
 

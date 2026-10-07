@@ -156,7 +156,7 @@
                                                 <i class="bi bi-person-badge me-1"></i> Dosen
                                             </span>
                                         @else
-                                            <span class="badge-code" style="background-color: #f8fafc; color: #475569; border-color: #e2e8f0;">
+                                            <span class="badge-code" style=" color: #475569; border-color: #e2e8f0;">
                                                 <i class="bi bi-mortarboard me-1"></i> Mahasiswa
                                             </span>
                                         @endif

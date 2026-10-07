@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; background: white; overflow: hidden;">
+<div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
     <div class="p-4 border-bottom bg-white">
         <div class="row align-items-center">
             <div class="col-md-5">

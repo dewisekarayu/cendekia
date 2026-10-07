@@ -189,11 +189,11 @@ class Absensi extends Model
     }
 
     /**
-     * Check if attendance is locked (session tutup or older than 1 day)
+     * Check if attendance is locked (older than 1 day)
      */
     public function isLocked(): bool
     {
-        return $this->isTutup() || $this->tanggal->diffInDays(today()) > 0;
+        return $this->tanggal->copy()->startOfDay()->isBefore(today()->startOfDay());
     }
 
     /**
@@ -220,7 +220,7 @@ class Absensi extends Model
      */
     public function canBeOpened(): bool
     {
-        return $this->isDraft() && !$this->isLocked();
+        return ($this->isDraft() || $this->isTutup()) && !$this->isLocked();
     }
 
     /**
@@ -229,5 +229,42 @@ class Absensi extends Model
     public function canBeClosed(): bool
     {
         return $this->isBuka();
+    }
+
+    /**
+     * Secara otomatis membuka sesi jika statusnya masih draft 
+     * dan waktu sekarang sudah masuk jam perkuliahan hari ini.
+     */
+    public function checkAndAutoOpen(): bool
+    {
+        if ($this->session_status === 'draft' && $this->tanggal->isToday()) {
+            $currentTime = now()->format('H:i:s');
+            $jamMulai = \Carbon\Carbon::parse($this->jam_mulai)->format('H:i:s');
+            $jamSelesai = \Carbon\Carbon::parse($this->jam_selesai)->format('H:i:s');
+
+            if ($currentTime >= $jamMulai && $currentTime <= $jamSelesai) {
+                $this->bukaSession();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Secara otomatis menutup sesi jika statusnya buka
+     * dan waktu sekarang sudah melewati jam selesai hari ini.
+     */
+    public function checkAndAutoClose(): bool
+    {
+        if ($this->session_status === 'buka' && $this->tanggal->isToday()) {
+            $currentTime = now()->format('H:i:s');
+            $jamSelesai = \Carbon\Carbon::parse($this->jam_selesai)->format('H:i:s');
+
+            if ($currentTime > $jamSelesai) {
+                $this->tutupSession();
+                return true;
+            }
+        }
+        return false;
     }
 }

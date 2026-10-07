@@ -57,6 +57,11 @@ class KelasController extends Controller
             ->latest('pertemuan_ke')
             ->get();
 
+        foreach ($rekapAbsen as $absen) {
+            $absen->checkAndAutoOpen();
+            $absen->checkAndAutoClose();
+        }
+
         $totalHadir = AbsensiMahasiswa::whereIn('absensi_id', $rekapAbsen->pluck('id'))
             ->where('mahasiswa_id', $request->user()->id)
             ->where('status', 'hadir')
