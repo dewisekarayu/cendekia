@@ -13,6 +13,7 @@ class MataKuliahController extends Controller
     public function index(Request $request)
     {
         $search = trim($request->input('search', ''));
+        $prodiFilter = $request->input('program_studi_id');
 
         $query = MataKuliah::with(['programStudi']);
 
@@ -24,16 +25,24 @@ class MataKuliahController extends Controller
             });
         }
 
+        if ($prodiFilter) {
+            $query->where('program_studi_id', $prodiFilter);
+        }
+
         $perPage = (int) $request->input('per_page', $request->input('show', 10));
         $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
-        $mataKuliah = $query->latest()->paginate($perPage)->withQueryString();
+        
+        // Ensure that mata kuliah is grouped or ordered by program studi
+        $mataKuliah = $query->orderBy('program_studi_id')->latest()->paginate($perPage)->withQueryString();
+
+        $programStudiList = ProgramStudi::orderBy('nama_prodi')->get();
 
         // Mengembalikan potongan tabel jika diakses via AJAX Live Search
         if ($request->has('ajax')) {
             return view('admin.mata-kuliah.table', compact('mataKuliah'))->render();
         }
 
-        return view('admin.mata-kuliah.index', compact('mataKuliah'));
+        return view('admin.mata-kuliah.index', compact('mataKuliah', 'programStudiList', 'prodiFilter'));
     }
 
     public function create()

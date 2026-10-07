@@ -42,6 +42,18 @@
                     <div id="searchSpinner" class="spinner-border spinner-border-sm text-secondary d-none" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);" role="status"></div>
                     <i id="searchIcon" class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1rem;"></i>
                 </div>
+                
+                {{-- Dropdown Filter Prodi --}}
+                <div class="flex-shrink-0">
+                    <select id="prodiFilter" class="form-select" style="height: 44px; min-width: 200px;">
+                        <option value="">Semua Program Studi</option>
+                        @if(isset($programStudiList))
+                            @foreach($programStudiList as $prodi)
+                                <option value="{{ $prodi->id }}" {{ (isset($prodiFilter) && $prodiFilter == $prodi->id) ? 'selected' : '' }}>{{ $prodi->nama_prodi }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -55,6 +67,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('liveSearchMK');
+            const prodiFilter = document.getElementById('prodiFilter');
             const tableContainer = document.getElementById('tableContainer');
             const searchIcon = document.getElementById('searchIcon');
             const spinner = document.getElementById('searchSpinner');
@@ -63,8 +76,14 @@
 
             searchInput.addEventListener('input', function () {
                 clearTimeout(typingTimer);
-                typingTimer = setTimeout(performSearch, doneTypingInterval);
+                typingTimer = setTimeout(() => performSearch(1), doneTypingInterval);
             });
+
+            if (prodiFilter) {
+                prodiFilter.addEventListener('change', function() {
+                    performSearch(1);
+                });
+            }
 
             document.addEventListener('change', function (e) {
                 if (e.target && e.target.id === 'perPageSelect') {
@@ -77,10 +96,13 @@
                 if (spinner) spinner.classList.remove('d-none');
 
                 const keyword = searchInput.value;
+                const prodi = prodiFilter ? prodiFilter.value : '';
                 const perPageEl = document.getElementById('perPageSelect');
                 const perPage = perPageEl ? perPageEl.value : 10;
+                
                 const url = new URL(window.location.origin + window.location.pathname);
-                url.searchParams.set('search', keyword);
+                if (keyword) url.searchParams.set('search', keyword);
+                if (prodi) url.searchParams.set('program_studi_id', prodi);
                 url.searchParams.set('page', page);
                 url.searchParams.set('per_page', perPage);
                 url.searchParams.set('ajax', '1');
@@ -94,7 +116,9 @@
 
                         const browserUrl = new URL(window.location.origin + window.location.pathname);
                         if(keyword) browserUrl.searchParams.set('search', keyword);
+                        if(prodi) browserUrl.searchParams.set('program_studi_id', prodi);
                         if(perPage) browserUrl.searchParams.set('per_page', perPage);
+                        if(page > 1) browserUrl.searchParams.set('page', page);
                         window.history.pushState({}, '', browserUrl);
                     })
                     .catch(error => {
