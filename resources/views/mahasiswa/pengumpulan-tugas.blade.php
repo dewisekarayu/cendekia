@@ -62,31 +62,7 @@
                             Terbuka
                         </span>
                     @endif
-        {{-- Header: judul + batas waktu (HP: ditumpuk) --}}
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-            <div class="min-w-0">
-                <h1 class="text-lg sm:text-xl font-bold text-slate-900 break-words">{{ $tugas->judul }}</h1>
-                <p class="text-blue-600 font-medium text-sm mt-0.5 break-words">{{ $tugas->sub_judul ?? $tugas->deskripsi_singkat }}</p>
-            </div>
-
-            <div class="shrink-0 flex items-center justify-between gap-3 rounded-xl bg-slate-50 border border-slate-100 px-3.5 py-2.5 sm:block sm:bg-transparent sm:border-0 sm:p-0 sm:text-right">
-                <div>
-                    <p class="text-[11px] tracking-wide text-slate-400 font-medium">BATAS WAKTU</p>
-                    <p class="text-red-500 font-semibold text-sm">
-                        {{ \Carbon\Carbon::parse($tugas->deadline)->translatedFormat('j M Y, H.i') }}
-                    </p>
                 </div>
-
-                @if ($pengumpulan?->is_graded)
-                    <div class="text-right sm:text-right sm:mt-2">
-                        <span class="inline-block bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-md">GRADED</span>
-                        <p class="text-blue-600 font-bold text-sm mt-1">{{ $pengumpulan->nilai }}/100</p>
-                    </div>
-                @elseif ($pengumpulan)
-                    <span class="inline-block bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-md text-center sm:mt-2">
-                        MENUNGGU PENILAIAN
-                    </span>
-                @endif
             </div>
         </div>
 
