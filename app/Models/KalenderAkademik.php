@@ -27,6 +27,7 @@ class KalenderAkademik extends Model
         'waktu_mulai',
         'waktu_selesai',
         'lokasi',
+        'target_audience',
         'created_by',
         'updated_by',
     ];
@@ -105,6 +106,16 @@ class KalenderAkademik extends Model
     public function scopeByJenisKegiatan($query, $jenis)
     {
         return $query->where('jenis_kegiatan', $jenis);
+    }
+
+    public function scopeTargetAudience($query, $role)
+    {
+        if ($role === 'dosen') {
+            return $query->whereIn('target_audience', ['semua', 'dosen']);
+        } elseif ($role === 'mahasiswa') {
+            return $query->whereIn('target_audience', ['semua', 'mahasiswa']);
+        }
+        return $query;
     }
 
     /**

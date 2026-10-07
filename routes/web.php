@@ -132,6 +132,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('admin/dosen/import', [AdminDosenController::class, 'importView'])->name('admin.dosen.import.view');
     Route::post('admin/dosen/import', [AdminDosenController::class, 'importCsv'])->name('admin.dosen.import');
 
+    Route::get('admin/kelas/{kelas}/mahasiswa', [KelasController::class, 'mahasiswa'])->name('admin.kelas.mahasiswa');
+    Route::post('admin/kelas/{kelas}/mahasiswa', [KelasController::class, 'syncMahasiswa'])->name('admin.kelas.mahasiswa.sync');
     Route::resource('admin/kelas', KelasController::class)
         ->names('admin.kelas')
         ->parameters(['kelas' => 'kelas']);

@@ -33,21 +33,153 @@
         </div>
     @endif
 
-    <div class="table-card">
-        <div class="p-4 border-bottom">
-            <div class="row align-items-center">
-                <div class="col-md-5">
-                    <div class="position-relative">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Cari Kode Kelas, Mata Kuliah, Dosen..." value="{{ $search ?? '' }}" style="border-radius: 8px; padding: 0.6rem 1rem 0.6rem 2.5rem; border-color: #e2e8f0; font-size: 0.9rem;">
-                        <i class="bi bi-search position-absolute text-muted" style="left: 12px; top: 50%; transform: translateY(-50%);" id="searchIcon"></i>
-                        <div class="spinner-border spinner-border-sm text-primary position-absolute d-none" role="status" style="left: 12px; top: 50%; transform: translateY(-50%); width: 1rem; height: 1rem;" id="searchSpinner"></div>
-                    </div>
+    <div class="card border-0 shadow-sm mb-4">
+        
+        <!-- Filters -->
+        <div class="card-header bg-white p-4 border-bottom">
+            <form id="filterForm" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Pencarian</label>
+                    <input type="text" id="searchInput" name="search" class="form-control" placeholder="Kode Kelas, Matkul..." value="{{ $search ?? '' }}">
                 </div>
-            </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold">Program Studi</label>
+                    <select name="program_studi_id" id="prodiFilter" class="form-select">
+                        <option value="">Semua</option>
+                        @foreach($prodis as $p)
+                            <option value="{{ $p->id }}" {{ request('program_studi_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_prodi }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold">Dosen</label>
+                    <select name="dosen_id" id="dosenFilter" class="form-select">
+                        <option value="">Semua</option>
+                        @foreach($dosens as $d)
+                            <option value="{{ $d->id }}" {{ request('dosen_id') == $d->id ? 'selected' : '' }}>{{ $d->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small d-block">&nbsp;</label>
+                    <button type="button" class="btn btn-primary w-100 text-nowrap" id="applyFilterBtn">Terapkan Filter</button>
+                </div>
+            </form>
         </div>
 
-        <div id="tableContainer">
-            @include('admin.kelas.table', ['kelasList' => $kelasList])
+        <div class="card-body p-4 bg-light">
+            <div class="d-flex flex-column gap-3">
+                @forelse($groupedByDosen as $dosenId => $data)
+                    <div class="card border-0 shadow-sm" x-data="{ open: true }">
+                        <div class="card-header bg-white border-bottom-0 p-3" @click="open = !open" style="cursor: pointer;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold text-dark">
+                                    <i class="bi bi-person-fill me-2 text-primary"></i>{{ $data['dosen']->name }} 
+                                    <span class="badge bg-light text-primary border ms-2" style="font-size: 0.8rem;">{{ count($data['kelas']) }} Kelas</span>
+                                </h5>
+                                <i class="bi text-muted fs-5" :class="open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                            </div>
+                        </div>
+                        <div x-show="open" x-transition.opacity class="card-body p-0 border-top">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 bg-white">
+                                    <thead class="table-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+                                        <tr>
+                                            <th style="width: 60px; text-align: center; padding-left: 1.5rem;">NO</th>
+                                            <th>MATA KULIAH & KELAS</th>
+                                            <th>PERAN DOSEN</th>
+                                            <th>JADWAL & RUANG</th>
+                                            <th class="text-center">MAHASISWA</th>
+                                            <th>STATUS</th>
+                                            <th class="text-center" style="width: 120px;">AKSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($data['kelas'] as $kelas)
+                                            <tr>
+                                                <td style="padding-left: 1.5rem;" class="text-center font-monospace text-slate-500 fw-bold">
+                                                    {{ $loop->iteration }}
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-slate-800" style="font-size: 0.95rem;">{{ $kelas->mataKuliah?->nama_mk ?? '-' }}</div>
+                                                    <div class="d-flex align-items-center gap-2 mt-1">
+                                                        <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 0.75rem;">{{ $kelas->mataKuliah?->kode_mk ?? '-' }}</span>
+                                                        <span class="text-primary fw-semibold" style="font-size: 0.8rem;">Kelas {{ $kelas->kode_kelas }}</span>
+                                                    </div>
+                                                    <div class="text-muted mt-1" style="font-size: 0.75rem;">
+                                                        Prodi: {{ $kelas->programStudi?->nama_prodi ?? '-' }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @if($kelas->dosen_id == $dosenId)
+                                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1"><i class="bi bi-star-fill me-1 small"></i>Dosen Utama</span>
+                                                    @else
+                                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1"><i class="bi bi-people-fill me-1 small"></i>Team Teaching</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($kelas->jadwals && $kelas->jadwals->count() > 0)
+                                                        @foreach($kelas->jadwals as $jadwal)
+                                                            <div class="mb-1 pb-1 border-bottom border-light">
+                                                                <div class="fw-semibold text-slate-800" style="font-size: 0.85rem;">
+                                                                    {{ $jadwal->hari }}, {{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}
+                                                                </div>
+                                                                <div class="text-muted" style="font-size: 0.8rem;">
+                                                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ $jadwal->ruangan ?: 'TBA' }}
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @else
+                                                        <span class="text-muted small">Belum ada jadwal</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 fw-bold">
+                                                        <i class="bi bi-people-fill me-1"></i> {{ $kelas->mahasiswa->count() }} / {{ $kelas->kuota_mahasiswa }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    @if ($kelas->is_active && $kelas->status_kelas == 'aktif')
+                                                        <span class="badge-status badge-status-aktif">
+                                                            <span class="status-dot"></span> Aktif
+                                                        </span>
+                                                    @else
+                                                        <span class="badge-status badge-status-nonaktif">
+                                                            <span class="status-dot"></span> {{ ucfirst($kelas->status_kelas) }}
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons justify-content-center">
+                                                        <a href="{{ route('admin.kelas.mahasiswa', $kelas->id) }}" class="action-btn action-btn-view" title="Kelola Mahasiswa">
+                                                            <i class="bi bi-people-fill"></i>
+                                                        </a>
+                                                        <a href="{{ route('admin.kelas.edit', $kelas->id) }}" class="action-btn action-btn-edit" title="Edit">
+                                                            <i class="bi bi-pencil-fill"></i>
+                                                        </a>
+                                                        <form action="{{ route('admin.kelas.destroy', $kelas->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin hapus kelas ini? Semua data mahasiswa yang terdaftar akan ikut terhapus.')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="action-btn action-btn-delete" title="Hapus">
+                                                                <i class="bi bi-trash-fill"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-5 text-muted bg-white rounded border border-dashed">
+                        <i class="bi bi-inbox fs-1 mb-3 d-block"></i>
+                        Belum ada data kelas yang dapat ditampilkan.
+                    </div>
+                @endforelse
+            </div>
         </div>
     </div>
 @endsection
@@ -84,20 +216,6 @@
     .action-btn-edit:hover { background-color: rgba(59, 130, 246, 0.2); color: #2563eb; }
     .action-btn-delete { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
     .action-btn-delete:hover { background-color: rgba(239, 68, 68, 0.2); color: #dc2626; }
-    
-    .team-teaching-badge {
-        font-size: 0.7rem;
-        background-color: #f1f5f9;
-        color: #475569;
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
-        margin-left: 0.3rem;
-        font-weight: 600;
-        border: 1px solid #e2e8f0;
-    }
-    .kuota-badge { background-color: #eff6ff; color: #1d4ed8 !important; border-radius: 8px; }
-    html.dark .kuota-badge { background-color: rgba(59,130,246,.15) !important; color: #93c5fd !important; border: 1px solid rgba(59,130,246,.3); }
-    html.dark .team-teaching-badge { background-color: #0f172a; color: #cbd5e1; border-color: #334155; }
 </style>
 @endpush
 
@@ -105,64 +223,33 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('searchInput');
-        const searchIcon = document.getElementById('searchIcon');
-        const spinner = document.getElementById('searchSpinner');
-        const tableContainer = document.getElementById('tableContainer');
-        let debounceTimer;
+        const filterForm = document.getElementById('filterForm');
+        const applyFilterBtn = document.getElementById('applyFilterBtn');
 
-        if (searchInput) {
-            searchInput.addEventListener('keyup', function () {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    performSearch(1);
-                }, 300);
-            });
+        function performSearch() {
+            const url = new URL(window.location.origin + window.location.pathname);
+            
+            if (searchInput) url.searchParams.set('search', searchInput.value);
+            if (filterForm) {
+                const formData = new FormData(filterForm);
+                for (const [key, value] of formData.entries()) {
+                    if (value) url.searchParams.set(key, value);
+                }
+            }
+            
+            window.location.href = url.toString();
         }
 
-        document.addEventListener('click', function (e) {
-            const paginationLink = e.target.closest('.pagination a');
-            if (paginationLink) {
-                e.preventDefault();
-                const url = new URL(paginationLink.href);
-                const page = url.searchParams.get('page');
-                performSearch(page);
-            }
-        });
+        if (applyFilterBtn) {
+            applyFilterBtn.addEventListener('click', () => performSearch());
+        }
 
-        document.addEventListener('change', function (e) {
-            if (e.target && e.target.id === 'perPageSelect') {
-                performSearch(1);
-            }
-        });
-
-        function performSearch(page = 1) {
-            searchIcon.classList.add('d-none');
-            spinner.classList.remove('d-none');
-
-            const keyword = searchInput ? searchInput.value : '';
-            const perPageEl = document.getElementById('perPageSelect');
-            const perPage = perPageEl ? perPageEl.value : 10;
-            const url = new URL(window.location.origin + window.location.pathname);
-            url.searchParams.set('search', keyword);
-            url.searchParams.set('page', page);
-            url.searchParams.set('per_page', perPage);
-            url.searchParams.set('ajax', '1');
-
-            fetch(url, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => response.text())
-                .then(html => {
-                    tableContainer.innerHTML = html;
-                    spinner.classList.add('d-none');
-                    searchIcon.classList.remove('d-none');
-                    
-                    const browserUrl = new URL(window.location.origin + window.location.pathname);
-                    if(keyword) browserUrl.searchParams.set('search', keyword);
-                    if(perPage) browserUrl.searchParams.set('per_page', perPage);
-                    window.history.pushState({}, '', browserUrl);
-                });
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function (e) {
+                if(e.key === 'Enter') performSearch();
+            });
         }
     });
 </script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 @endpush

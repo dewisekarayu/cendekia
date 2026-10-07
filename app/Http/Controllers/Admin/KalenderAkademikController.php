@@ -177,6 +177,7 @@ class KalenderAkademikController extends Controller
             'waktu_mulai'    => ['nullable', 'date_format:H:i'],
             'waktu_selesai'  => ['nullable', 'date_format:H:i', 'after:waktu_mulai'],
             'lokasi'         => ['nullable', 'string', 'max:255'],
+            'target_audience'=> ['required', 'in:semua,dosen,mahasiswa'],
         ]);
 
         $validated['is_published'] = $request->boolean('is_published');
@@ -242,6 +243,7 @@ class KalenderAkademikController extends Controller
             'waktu_mulai'    => ['nullable', 'date_format:H:i'],
             'waktu_selesai'  => ['nullable', 'date_format:H:i', 'after:waktu_mulai'],
             'lokasi'         => ['nullable', 'string', 'max:255'],
+            'target_audience'=> ['required', 'in:semua,dosen,mahasiswa'],
         ]);
 
         $validated['is_published'] = $request->boolean('is_published');

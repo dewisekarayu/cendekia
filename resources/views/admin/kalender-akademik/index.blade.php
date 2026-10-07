@@ -592,6 +592,17 @@
                                class="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition">
                     </div>
 
+                    {{-- Target Audience --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Ditampilkan Untuk <span class="text-red-500">*</span></label>
+                        <select name="target_audience" x-model="editForm.target_audience" required
+                                class="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm font-medium text-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition appearance-none">
+                            <option value="semua">Semua (Dosen & Mahasiswa)</option>
+                            <option value="dosen">Hanya Dosen</option>
+                            <option value="mahasiswa">Hanya Mahasiswa</option>
+                        </select>
+                    </div>
+
                     {{-- Deskripsi --}}
                     <div>
                         <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Deskripsi</label>

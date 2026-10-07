@@ -14,28 +14,54 @@ class KelasController extends Controller
     public function index(Request $request)
     {
         $search = trim($request->input('search', ''));
-        $query = KelasPerkuliahan::with(['mataKuliah.programStudi', 'dosen', 'dosenPengampuTambahan', 'semester', 'mahasiswa']);
+        $prodiFilter = $request->input('program_studi_id');
+        $dosenFilter = $request->input('dosen_id');
+        $matkulFilter = $request->input('mata_kuliah_id');
+
+        $query = KelasPerkuliahan::with(['mataKuliah.programStudi', 'dosen', 'semester', 'mahasiswa', 'jadwals']);
 
         if ($search !== '') {
-            $query->whereHas('mataKuliah', function ($q) use ($search) {
-                $q->where('nama_mk', 'like', "%{$search}%")
-                  ->orWhere('kode_mk', 'like', "%{$search}%");
-            })->orWhere('kode_kelas', 'like', "%{$search}%")
-              ->orWhereHas('dosen', function ($q) use ($search) {
-                  $q->where('name', 'like', "%{$search}%");
-              });
+            $query->where(function($q) use ($search) {
+                $q->whereHas('mataKuliah', function ($sub) use ($search) {
+                    $sub->where('nama_mk', 'like', "%{$search}%")
+                      ->orWhere('kode_mk', 'like', "%{$search}%");
+                })->orWhere('kode_kelas', 'like', "%{$search}%")
+                  ->orWhereHas('dosen', function ($sub) use ($search) {
+                      $sub->where('name', 'like', "%{$search}%");
+                  });
+            });
         }
 
-        $perPage = (int) $request->input('per_page', 10);
-        $perPage = in_array($perPage, [10, 25, 50, 100]) ? $perPage : 10;
+        if ($prodiFilter) $query->where('program_studi_id', $prodiFilter);
+        if ($dosenFilter) {
+            $query->where(function($q) use ($dosenFilter) {
+                $q->where('dosen_id', $dosenFilter);
+            });
+        }
+        if ($matkulFilter) $query->where('mata_kuliah_id', $matkulFilter);
 
-        $kelasList = $query->latest()->paginate($perPage)->withQueryString();
+        // Data for filters
+        $semesters = Semester::all();
+        $prodis = \App\Models\ProgramStudi::all();
+        $dosens = User::role('dosen')->get();
+        $matkuls = MataKuliah::all();
 
-        if ($request->ajax()) {
-            return view('admin.kelas.table', compact('kelasList'))->render();
+        $allClasses = $query->latest()->get();
+        $groupedByDosen = [];
+        foreach ($allClasses as $k) {
+            $d = $k->dosen;
+            if ($d) {
+                if (!isset($groupedByDosen[$d->id])) {
+                    $groupedByDosen[$d->id] = [
+                        'dosen' => $d,
+                        'kelas' => []
+                    ];
+                }
+                $groupedByDosen[$d->id]['kelas'][] = $k;
+            }
         }
 
-        return view('admin.kelas.index', compact('kelasList', 'search'));
+        return view('admin.kelas.index', compact('search', 'semesters', 'prodis', 'dosens', 'matkuls', 'groupedByDosen'));
     }
 
     public function create()
@@ -65,40 +91,40 @@ class KelasController extends Controller
             'program_studi_id' => 'required|exists:program_studi,id',
             'semester_id' => 'required|exists:semesters,id',
             'kode_kelas' => 'required|string|max:10',
-            'hari' => 'required|string',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required|after:jam_mulai',
-            'ruangan' => 'nullable|string|max:100',
             'kuota_mahasiswa' => 'required|integer|min:1|max:200',
-            'dosen_pengampu' => 'nullable|array',
-            'dosen_pengampu.*' => 'exists:users,id',
+            'jadwals' => 'required|array|min:1',
+            'jadwals.*.hari' => 'required|string',
+            'jadwals.*.jam_mulai' => 'required',
+            'jadwals.*.jam_selesai' => 'required|after:jadwals.*.jam_mulai',
+            'jadwals.*.ruangan' => 'nullable|string|max:100',
         ]);
 
         $validated['is_active'] = true;
         $validated['status_kelas'] = 'aktif';
         
+        $jadwalCek = $validated['jadwals'];
+
         // Validasi bentrok jadwal dosen
-        $kelas = new KelasPerkuliahan($validated);
-        if ($kelas->hasBentrokJadwalDosen()) {
+        if (KelasPerkuliahan::cekBentrokDosenCustom($jadwalCek, $validated['dosen_id'], [])) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Dosen memiliki jadwal yang bentrok pada hari dan waktu yang sama.');
         }
         
         // Validasi bentrok ruangan
-        if ($kelas->hasBentrokRuangan()) {
+        if (KelasPerkuliahan::cekBentrokRuanganCustom($jadwalCek)) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Ruangan sudah digunakan pada hari dan waktu yang sama.');
         }
 
         $kelasData = $validated;
-        unset($kelasData['dosen_pengampu']);
+        unset($kelasData['jadwals']);
         
         $kelas = KelasPerkuliahan::create($kelasData);
 
-        if (!empty($validated['dosen_pengampu'])) {
-            $kelas->dosenPengampuTambahan()->sync($validated['dosen_pengampu']);
+        foreach ($jadwalCek as $j) {
+            $kelas->jadwals()->create($j);
         }
 
         return redirect()->route('admin.kelas.index')
@@ -132,43 +158,40 @@ class KelasController extends Controller
             'program_studi_id' => 'required|exists:program_studi,id',
             'semester_id' => 'required|exists:semesters,id',
             'kode_kelas' => 'required|string|max:10',
-            'hari' => 'required|string',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required|after:jam_mulai',
-            'ruangan' => 'nullable|string|max:100',
             'kuota_mahasiswa' => 'required|integer|min:1|max:200',
-            'dosen_pengampu' => 'nullable|array',
-            'dosen_pengampu.*' => 'exists:users,id',
             'status_kelas' => 'required|in:aktif,nonaktif,selesai,draft',
             'is_active' => 'nullable|boolean',
+            'jadwals' => 'required|array|min:1',
+            'jadwals.*.hari' => 'required|string',
+            'jadwals.*.jam_mulai' => 'required',
+            'jadwals.*.jam_selesai' => 'required|after:jadwals.*.jam_mulai',
+            'jadwals.*.ruangan' => 'nullable|string|max:100',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
         
-        // Validasi bentrok jadwal dosen (kecuali untuk diri sendiri)
-        $kelas->fill($validated);
-        if ($kelas->hasBentrokJadwalDosen()) {
+        $jadwalCek = $validated['jadwals'];
+
+        if (KelasPerkuliahan::cekBentrokDosenCustom($jadwalCek, $validated['dosen_id'], [], $kelas->id)) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Dosen memiliki jadwal yang bentrok pada hari dan waktu yang sama.');
         }
         
-        // Validasi bentrok ruangan
-        if ($kelas->hasBentrokRuangan()) {
+        if (KelasPerkuliahan::cekBentrokRuanganCustom($jadwalCek, $kelas->id)) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Ruangan sudah digunakan pada hari dan waktu yang sama.');
         }
 
         $kelasData = $validated;
-        unset($kelasData['dosen_pengampu']);
+        unset($kelasData['jadwals']);
         
         $kelas->update($kelasData);
 
-        if (isset($validated['dosen_pengampu'])) {
-            $kelas->dosenPengampuTambahan()->sync($validated['dosen_pengampu']);
-        } else {
-            $kelas->dosenPengampuTambahan()->sync([]);
+        $kelas->jadwals()->delete();
+        foreach ($jadwalCek as $j) {
+            $kelas->jadwals()->create($j);
         }
 
         return redirect()->route('admin.kelas.index')
@@ -181,5 +204,30 @@ class KelasController extends Controller
 
         return redirect()->route('admin.kelas.index')
             ->with('success', 'Kelas berhasil dihapus.');
+    }
+
+    public function mahasiswa(KelasPerkuliahan $kelas)
+    {
+        // Get all mahasiswa in the same program studi as the class
+        $mahasiswas = User::role('mahasiswa')
+            ->where('program_studi_id', $kelas->program_studi_id)
+            ->get();
+            
+        $mahasiswaIds = $kelas->mahasiswa->pluck('id')->toArray();
+
+        return view('admin.kelas.mahasiswa', compact('kelas', 'mahasiswas', 'mahasiswaIds'));
+    }
+
+    public function syncMahasiswa(Request $request, KelasPerkuliahan $kelas)
+    {
+        $request->validate([
+            'mahasiswas' => 'nullable|array',
+            'mahasiswas.*' => 'exists:users,id',
+        ]);
+
+        $kelas->mahasiswa()->sync($request->mahasiswas ?? []);
+
+        return redirect()->route('admin.kelas.index')
+            ->with('success', 'Peserta kelas berhasil diperbarui.');
     }
 }

@@ -31,6 +31,7 @@ class KalenderAkademikController extends Controller
             ->get();
 
         $query = KalenderAkademik::published()
+            ->targetAudience('dosen')
             ->with('semester')
             ->orderBy('tanggal_mulai')
             ->orderBy('waktu_mulai');
@@ -56,6 +57,7 @@ class KalenderAkademikController extends Controller
 
         $todayStr     = now()->toDateString();
         $todaysQuery  = KalenderAkademik::published()
+            ->targetAudience('dosen')
             ->with('semester')
             ->whereDate('tanggal_mulai', '<=', $todayStr)
             ->where(function ($q) use ($todayStr) {
@@ -72,6 +74,7 @@ class KalenderAkademikController extends Controller
         $todaysEvents = $todaysQuery->get();
 
         $upcomingQuery = KalenderAkademik::published()
+            ->targetAudience('dosen')
             ->with('semester')
             ->upcoming(60);
 
@@ -82,6 +85,7 @@ class KalenderAkademikController extends Controller
         $upcomingEvents = $upcomingQuery->take(15)->get();
 
         $historyQuery = KalenderAkademik::published()
+            ->targetAudience('dosen')
             ->with('semester')
             ->whereDate('tanggal_mulai', '<', $todayStr)
             ->where(function ($q) use ($todayStr) {

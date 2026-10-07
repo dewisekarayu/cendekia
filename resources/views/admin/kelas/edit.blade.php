@@ -5,7 +5,6 @@
 @php
     // Fallback: kalau program_studi_id di kelas kosong, ambil dari mata kuliahnya
     $selectedProdiId = old('program_studi_id', $kelas->program_studi_id ?? $kelas->mataKuliah?->program_studi_id);
-    $selectedTambahan = old('dosen_pengampu', $kelas->dosenPengampuTambahan->pluck('id')->toArray());
 @endphp
 
 @section('content')
@@ -100,7 +99,7 @@
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
                         <i class="bi bi-people-fill" style="color: #002B6B;"></i>
-                        <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Dosen Pengampu & Team Teaching</h6>
+                        <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Dosen Pengampu</h6>
                     </div>
 
                     <div class="row g-3">
@@ -116,60 +115,84 @@
                             </select>
                             @error('dosen_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-
-                        <div class="col-12">
-                            <label for="dosen_pengampu" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Dosen Tambahan (Team Teaching) <span class="text-muted fw-normal text-lowercase">opsional</span></label>
-                            <select name="dosen_pengampu[]" id="dosen_pengampu" class="form-select @error('dosen_pengampu') is-invalid @enderror" multiple="multiple" style="border-radius: 8px;">
-                                @foreach ($dosenList as $dosen)
-                                    <option value="{{ $dosen->id }}" {{ in_array($dosen->id, $selectedTambahan) ? 'selected' : '' }}>
-                                        {{ $dosen->name }} ({{ $dosen->nip_nim }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Pilih beberapa dosen jika kelas ini menggunakan sistem team teaching. Dosen utama otomatis tidak bisa dipilih lagi di sini.</small>
-                            @error('dosen_pengampu') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-4">
-                <!-- Waktu & Tempat -->
-                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
-                    <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
-                        <i class="bi bi-clock-fill" style="color: #002B6B;"></i>
-                        <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Waktu & Ruang</h6>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="hari" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Hari <span class="text-danger">*</span></label>
-                        <select name="hari" id="hari" class="form-select @error('hari') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
-                            <option value="">-- Pilih Hari --</option>
-                            @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $hari)
-                                <option value="{{ $hari }}" {{ old('hari', $kelas->hari) == $hari ? 'selected' : '' }}>{{ $hari }}</option>
-                            @endforeach
-                        </select>
-                        @error('hari') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label for="jam_mulai" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Jam Mulai <span class="text-danger">*</span></label>
-                            <input type="time" name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai', substr($kelas->jam_mulai ?? '', 0, 5)) }}" class="form-control @error('jam_mulai') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
-                            @error('jam_mulai') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                <!-- Jadwal (Multiple) & Kuota -->
+                @php
+                    $existingJadwals = old('jadwals', $kelas->jadwals->toArray());
+                    if (empty($existingJadwals)) {
+                        $existingJadwals = [['hari' => '', 'jam_mulai' => '', 'jam_selesai' => '', 'ruangan' => '']];
+                    }
+                    // Prepare data for JS
+                    $jadwalData = [];
+                    foreach ($existingJadwals as $idx => $j) {
+                        $jadwalData[] = [
+                            'id' => $idx + 1,
+                            'hari' => $j['hari'] ?? '',
+                            'jam_mulai' => substr($j['jam_mulai'] ?? '', 0, 5),
+                            'jam_selesai' => substr($j['jam_selesai'] ?? '', 0, 5),
+                            'ruangan' => $j['ruangan'] ?? ''
+                        ];
+                    }
+                @endphp
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;" x-data="{
+                    jadwals: {{ json_encode($jadwalData) }},
+                    addJadwal() {
+                        this.jadwals.push({ id: Date.now(), hari: '', jam_mulai: '', jam_selesai: '', ruangan: '' });
+                    },
+                    removeJadwal(index) {
+                        this.jadwals.splice(index, 1);
+                    }
+                }">
+                    <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar-range-fill" style="color: #002B6B;"></i>
+                            <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Waktu & Ruang</h6>
                         </div>
-                        <div class="col-6">
-                            <label for="jam_selesai" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Selesai <span class="text-danger">*</span></label>
-                            <input type="time" name="jam_selesai" id="jam_selesai" value="{{ old('jam_selesai', substr($kelas->jam_selesai ?? '', 0, 5)) }}" class="form-control @error('jam_selesai') is-invalid @enderror" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
-                            @error('jam_selesai') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="ruangan" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Ruangan / Lab</label>
-                        <input type="text" name="ruangan" id="ruangan" value="{{ old('ruangan', $kelas->ruangan) }}" class="form-control @error('ruangan') is-invalid @enderror" placeholder="Cth: R.301 / Lab Komputer" style="border-radius: 8px; padding: 0.65rem 0.75rem;">
-                        @error('ruangan') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
+                    <template x-for="(jadwal, index) in jadwals" :key="jadwal.id">
+                        <div class="p-3 mb-3 bg-light border rounded position-relative">
+                            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2" @click="removeJadwal(index)" x-show="jadwals.length > 1" title="Hapus Jadwal">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            
+                            <div class="mb-2 fw-semibold text-muted small">Jadwal Ke-<span x-text="index + 1"></span></div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Hari <span class="text-danger">*</span></label>
+                                <select x-model="jadwal.hari" :name="`jadwals[${index}][hari]`" class="form-select" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
+                                    <option value="">-- Pilih Hari --</option>
+                                    @foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'] as $hari)
+                                        <option value="{{ $hari }}">{{ $hari }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Jam Mulai <span class="text-danger">*</span></label>
+                                    <input type="time" x-model="jadwal.jam_mulai" :name="`jadwals[${index}][jam_mulai]`" class="form-control" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Selesai <span class="text-danger">*</span></label>
+                                    <input type="time" x-model="jadwal.jam_selesai" :name="`jadwals[${index}][jam_selesai]`" class="form-control" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
+                                </div>
+                            </div>
+
+                            <div class="mb-1">
+                                <label class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Ruangan / Lab</label>
+                                <input type="text" x-model="jadwal.ruangan" :name="`jadwals[${index}][ruangan]`" class="form-control" placeholder="Cth: R.301 / Lab Komputer" style="border-radius: 8px; padding: 0.65rem 0.75rem;">
+                            </div>
+                        </div>
+                    </template>
+
+                    <button type="button" class="btn btn-sm btn-outline-primary mb-4" @click="addJadwal" style="border-radius: 8px;">
+                        <i class="bi bi-plus-circle me-1"></i> Tambah Jadwal Lain
+                    </button>
 
                     <div class="mb-3">
                         <label for="kuota_mahasiswa" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Kuota Mahasiswa <span class="text-danger">*</span></label>
@@ -285,6 +308,7 @@
 {{-- Pakai jQuery milik layout kalau sudah ada, kalau belum baru dimuat --}}
 <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"><\/script>')</script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script>
     const mkList = @json($mataKuliahList);
     const oldMkId = "{{ old('mata_kuliah_id', $kelas->mata_kuliah_id) }}";
@@ -296,26 +320,6 @@
             placeholder: '-- Pilih Dosen Utama --',
             allowClear: true
         });
-
-        $('#dosen_pengampu').select2({
-            theme: 'bootstrap-5',
-            width: '100%',
-            placeholder: 'Pilih dosen tambahan (opsional)',
-            closeOnSelect: false
-        });
-
-        // Dosen utama tidak boleh sekaligus menjadi dosen tambahan
-        function syncTeam() {
-            const main = $('#dosen_id').val();
-            $('#dosen_pengampu option').each(function () {
-                const same = main && this.value === main;
-                $(this).prop('disabled', !!same);
-                if (same) this.selected = false;
-            });
-            $('#dosen_pengampu').trigger('change.select2');
-        }
-        $('#dosen_id').on('change', syncTeam);
-        syncTeam();
 
         const initialProdiId = document.getElementById('program_studi_id').value;
         if (initialProdiId) updateMataKuliah(initialProdiId, oldMkId);
