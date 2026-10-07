@@ -91,7 +91,7 @@ class EnhancedKelasPerkuliahanSeeder extends Seeder
                     }
                 }
 
-                KelasPerkuliahan::updateOrCreate(
+                $kelas = KelasPerkuliahan::updateOrCreate(
                     [
                         'mata_kuliah_id' => $mk->id,
                         'semester_id' => $semester->id,
@@ -101,14 +101,22 @@ class EnhancedKelasPerkuliahanSeeder extends Seeder
                         'dosen_id' => $dosen->id,
                         'program_studi_id' => $mk->program_studi_id,
                         'tahun_akademik' => date('Y') . '/' . (date('Y') + 1),
-                        'hari' => $hari,
-                        'jam_mulai' => $jam[0],
-                        'jam_selesai' => $jam[1],
-                        'ruangan' => $ruangan,
                         'kuota_mahasiswa' => rand(30, 60),
                         'status_kelas' => 'aktif',
                         'is_active' => true,
                         'dosen_pengampu' => !empty($dosenPengampu) ? $dosenPengampu : null,
+                    ]
+                );
+
+                \App\Models\KelasJadwal::updateOrCreate(
+                    [
+                        'kelas_perkuliahan_id' => $kelas->id,
+                        'hari' => $hari,
+                    ],
+                    [
+                        'jam_mulai' => $jam[0],
+                        'jam_selesai' => $jam[1],
+                        'ruangan' => $ruangan,
                     ]
                 );
             }
