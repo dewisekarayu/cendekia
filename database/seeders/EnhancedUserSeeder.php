@@ -49,14 +49,7 @@ class EnhancedUserSeeder extends Seeder
     private array $namaDosen = [
         'Ahmad Subagjo',
         'Nadia Kurniasari',
-        'Rizal Pratama',
-        'Maya Lestari',
-        'Fajar Nugroho',
-        'Sinta Paramita',
-        'Bima Arya',
-        'Ratih Wulandari',
-        'Hendra Wijaya',
-        'Dewi Maharani'
+        'Rizal Pratama'
     ];
 
     public function run(): void
@@ -169,26 +162,20 @@ class EnhancedUserSeeder extends Seeder
             $mahasiswa->syncRoles('mahasiswa');
         }
 
-        // Create remaining 97 mahasiswa (50 laki-laki, 47 perempuan for balance)
+        // Create remaining 7 mahasiswa (for a total of 10)
         $lakiCounter = 1; // Start from 1 since one main account is laki-laki
         $perempuanCounter = 2; // Start from 2 since two main accounts are perempuan
 
-        for ($i = 4; $i <= 100; $i++) {
-            // Create 49 more laki-laki (total 50 dengan main account)
-            // Create 47 more perempuan (total 49 dengan 2 main accounts)
-            
+        for ($i = 4; $i <= 10; $i++) {
             $alternateIndex = $i - 4;
             
-            if ($alternateIndex < 49) {
+            if ($alternateIndex % 2 == 0) {
                 // Create laki-laki
                 $nama = $this->namaLakiLaki[$lakiCounter - 1] . ' ' . $this->namaBelakang[($lakiCounter - 1) % count($this->namaBelakang)];
                 $lakiCounter++;
             } else {
                 // Create perempuan
-                $perempuanIndex = $alternateIndex - 49;
-                if ($perempuanIndex >= count($this->namaPerempuan)) {
-                    continue;
-                }
+                $perempuanIndex = $alternateIndex / 2;
                 $nama = $this->namaPerempuan[$perempuanIndex] . ' ' . $this->namaBelakang[$perempuanIndex % count($this->namaBelakang)];
             }
 
