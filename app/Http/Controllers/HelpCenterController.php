@@ -91,8 +91,41 @@ class HelpCenterController extends Controller
 
         return view('help-center.faq', [
             'faqs'        => collect($faqs),
-            'adminOnline' => false,
+            'adminOnline' => $this->isAdminOnline(),
         ]);
+    }
+
+    /**
+     * Endpoint JSON untuk polling status admin.
+     */
+    public function adminStatus()
+    {
+        return response()->json(['online' => $this->isAdminOnline()]);
+    }
+
+    /**
+     * Cek apakah ada admin yang aktif dalam N menit terakhir (berdasarkan tabel sessions).
+     * N diatur lewat ADMIN_ONLINE_MINUTES di .env (default 5).
+     */
+    protected function isAdminOnline(): bool
+    {
+        try {
+            $minutes = (int) env('ADMIN_ONLINE_MINUTES', 5);
+            $userIds = \Illuminate\Support\Facades\DB::table('sessions')
+                ->whereNotNull('user_id')
+                ->where('last_activity', '>=', now()->subMinutes($minutes)->getTimestamp())
+                ->pluck('user_id')
+                ->unique();
+
+            if ($userIds->isEmpty()) {
+                return false;
+            }
+
+            return \App\Models\User::whereIn('id', $userIds)->get()
+                ->contains(fn ($user) => $user->hasRole('admin'));
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     /**
@@ -104,7 +137,7 @@ class HelpCenterController extends Controller
 
         return view('help-center.index', [
             'faqs'        => collect($faqs),
-            'adminOnline' => false,
+            'adminOnline' => $this->isAdminOnline(),
         ]);
     }
 

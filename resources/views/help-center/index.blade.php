@@ -32,13 +32,37 @@
                     Pusat Bantuan
                 </span>
 
-                <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+                <span id="admin-status-badge" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
                     <span class="relative flex h-2 w-2">
-                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 {{ $adminOnline ? 'bg-emerald-400' : 'bg-slate-400' }}"></span>
-                        <span class="relative inline-flex h-2 w-2 rounded-full {{ $adminOnline ? 'bg-emerald-500' : 'bg-slate-500' }}"></span>
+                        <span id="admin-status-ping" class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 {{ $adminOnline ? 'bg-emerald-400' : 'bg-slate-400' }}"></span>
+                        <span id="admin-status-dot" class="relative inline-flex h-2 w-2 rounded-full {{ $adminOnline ? 'bg-emerald-500' : 'bg-slate-500' }}"></span>
                     </span>
-                    Admin {{ $adminOnline ? 'sedang online' : 'offline' }}
+                    <span id="admin-status-text">Admin {{ $adminOnline ? 'sedang online' : 'offline' }}</span>
                 </span>
+                <script>
+                    (function () {
+                        const url = @json(route('help-center.admin-status'));
+                        const ping = document.getElementById('admin-status-ping');
+                        const dot = document.getElementById('admin-status-dot');
+                        const text = document.getElementById('admin-status-text');
+                        function apply(online) {
+                            ping.classList.toggle('bg-emerald-400', online);
+                            ping.classList.toggle('bg-slate-400', !online);
+                            dot.classList.toggle('bg-emerald-500', online);
+                            dot.classList.toggle('bg-slate-500', !online);
+                            text.textContent = 'Admin ' + (online ? 'sedang online' : 'offline');
+                        }
+                        async function refresh() {
+                            if (document.hidden) return;
+                            try {
+                                const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                                if (res.ok) apply((await res.json()).online);
+                            } catch (e) {}
+                        }
+                        setInterval(refresh, 30000);
+                        document.addEventListener('visibilitychange', refresh);
+                    })();
+                </script>
             </div>
 
             <h1 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">Ada yang bisa kami bantu?</h1>
