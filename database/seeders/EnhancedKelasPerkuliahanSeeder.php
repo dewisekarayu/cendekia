@@ -37,15 +37,25 @@ class EnhancedKelasPerkuliahanSeeder extends Seeder
         ];
 
         $jadwalUsed = [];
-        $dosenIdx = 0; // Simple round-robin: assign MK to dosen in order
+        $dosenUsedCount = []; // Track how many MKs each dosen teaches
 
         foreach ($mkList as $i => $mk) {
             // Create 2-3 kelas per mata kuliah (A, B, sometimes C)
             $numSections = ($i % 3) === 2 ? 3 : 2;
 
-            // Assign MK to dosen secara round-robin (1 dosen = 1 MK saja)
-            $dosen = $dosenList[$dosenIdx % $dosenList->count()];
-            $dosenIdx++; // Move to next dosen for next MK
+            // Find dosens in the same prodi
+            $prodiDosens = $dosenList->where('program_studi_id', $mk->program_studi_id)->values();
+            if ($prodiDosens->isEmpty()) {
+                // Fallback to any dosen if prodi has no dosens
+                $prodiDosens = $dosenList;
+            }
+
+            // Find the dosen with the least number of assigned MKs in this prodi
+            $dosen = $prodiDosens->sortBy(function($d) use ($dosenUsedCount) {
+                return $dosenUsedCount[$d->id] ?? 0;
+            })->first();
+
+            $dosenUsedCount[$dosen->id] = ($dosenUsedCount[$dosen->id] ?? 0) + 1;
 
             for ($sectionIdx = 0; $sectionIdx < $numSections; $sectionIdx++) {
                 $section = chr(65 + $sectionIdx); // A, B, C
