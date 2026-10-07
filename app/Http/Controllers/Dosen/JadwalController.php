@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Dosen;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KelasPerkuliahan;
+use App\Models\Absensi;
+use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class JadwalController extends Controller
 {
@@ -125,6 +128,34 @@ class JadwalController extends Controller
             $activeTab = $request->routeIs('dosen.log-book') ? 'log' : 'jadwal';
         }
 
+        $totalSesi = $kelasList->flatMap->mata_kuliah->flatMap->absensi->count();
+
+        // Ambil data jadwal pengganti (Reschedule)
+        $kelasIds = $kelasPerkuliahan->pluck('id')->toArray();
+        $nowDate = now()->toDateString();
+        $nowTime = now()->toTimeString();
+
+        $reschedules = \App\Models\Absensi::where('is_pengganti', true)
+            ->whereIn('kelas_perkuliahan_id', $kelasIds)
+            ->where(function($query) use ($nowDate, $nowTime) {
+                $query->whereDate('tanggal', '>', $nowDate)
+                      ->orWhere(function($q) use ($nowDate, $nowTime) {
+                          $q->whereDate('tanggal', '=', $nowDate)
+                            ->where('jam_selesai', '>=', $nowTime);
+                      });
+            })
+            ->with(['kelasPerkuliahan.mataKuliah'])
+            ->orderBy('tanggal')
+            ->get();
+
+        // Ambil daftar ruangan unik dari semua kelas yang ada di tabel kelas_perkuliahan
+        $availableRooms = \App\Models\KelasPerkuliahan::whereNotNull('ruangan')
+            ->where('ruangan', '!=', '')
+            ->distinct()
+            ->pluck('ruangan')
+            ->sort()
+            ->values();
+
         return view('dosen.jadwal.index', compact(
             'kelasPerkuliahan',
             'jadwalByDay',
@@ -140,7 +171,9 @@ class JadwalController extends Controller
             'days',
             'todayName',
             'kelasHariIni',
-            'activeTab'
+            'activeTab',
+            'availableRooms',
+            'reschedules'
         ));
     }
 
@@ -221,6 +254,126 @@ class JadwalController extends Controller
         }
 
         return view('dosen.jadwal.calendar', compact('calendarEvents'));
+    }
+
+    /**
+     * Simpan data reschedule kelas pengganti.
+     * - Membuat record Absensi baru dengan flag is_pengganti = true.
+     * - Otomatis membuat Pengumuman untuk seluruh mahasiswa di kelas tersebut.
+     */
+    public function reschedule(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'kelas_perkuliahan_id' => ['required', 'exists:kelas_perkuliahan,id'],
+            'tanggal_pengganti'    => ['required', 'date', 'after_or_equal:today'],
+            'jam_mulai'            => ['required', 'string', 'max:10'],
+            'jam_selesai'          => ['required', 'string', 'max:10', 'after:jam_mulai'],
+            'ruangan_pengganti'    => ['required', 'string', 'max:100'],
+            'alasan_pengganti'     => ['nullable', 'string', 'max:1000'],
+        ], [
+            'tanggal_pengganti.after_or_equal' => 'Tanggal pengganti tidak boleh di masa lalu.',
+            'jam_selesai.after' => 'Jam selesai harus setelah jam mulai.',
+            'alasan_pengganti.required' => 'Alasan reschedule wajib diisi.',
+            'ruangan_pengganti.required' => 'Ruangan pengganti wajib diisi.',
+        ]);
+
+        // Verifikasi bahwa dosen memang mengampu kelas ini
+        $kelas = KelasPerkuliahan::where('id', $validated['kelas_perkuliahan_id'])
+            ->where(function ($query) use ($user) {
+                $query->where('dosen_id', $user->id)
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                        $q->where('users.id', $user->id);
+                    });
+            })
+            ->with('mataKuliah')
+            ->firstOrFail();
+
+        // Hitung pertemuan_ke berikutnya
+        $nextPertemuan = (Absensi::where('kelas_perkuliahan_id', $kelas->id)->max('pertemuan_ke') ?? 0) + 1;
+
+        $tanggalFormatted = Carbon::parse($validated['tanggal_pengganti'])->translatedFormat('l, d F Y');
+        $jamRange = substr($validated['jam_mulai'], 0, 5) . ' - ' . substr($validated['jam_selesai'], 0, 5) . ' WIB';
+
+        \Illuminate\Support\Facades\DB::transaction(function() use ($validated, $kelas, $user, $tanggalFormatted, $jamRange, $nextPertemuan) {
+            // Buat sesi absensi pengganti
+            $absensi = Absensi::create([
+                'kelas_perkuliahan_id' => $kelas->id,
+                'pertemuan_ke'         => $nextPertemuan,
+                'tanggal'              => $validated['tanggal_pengganti'],
+                'jam_mulai'            => $validated['jam_mulai'],
+                'jam_selesai'          => $validated['jam_selesai'],
+                'session_status'       => 'draft',
+                'is_pengganti'         => true,
+                'ruangan_pengganti'    => $validated['ruangan_pengganti'],
+                'alasan_pengganti'     => $validated['alasan_pengganti'],
+            ]);
+
+            // Auto-create pengumuman untuk seluruh mahasiswa di kelas
+            $pengumuman = Pengumuman::create([
+                'kelas_perkuliahan_id' => $kelas->id,
+                'dibuat_oleh'          => $user->id,
+                'judul'                => '🔄 Kelas Pengganti: ' . $kelas->mataKuliah->nama_mk,
+                'isi'                  => "Diberitahukan kepada seluruh mahasiswa bahwa perkuliahan **{$kelas->mataKuliah->nama_mk}** ({$kelas->kode_kelas}) akan diadakan kelas pengganti dengan jadwal sebagai berikut:\n\n"
+                                        . "📅 **Tanggal:** {$tanggalFormatted}\n"
+                                        . "🕐 **Jam:** {$jamRange}\n"
+                                        . "🏫 **Ruangan:** {$validated['ruangan_pengganti']}\n\n"
+                                        . "📝 **Alasan:** " . ($validated['alasan_pengganti'] ?: '-') . "\n\n"
+                                        . "Mohon untuk hadir tepat waktu. Terima kasih.",
+                'untuk_semua'          => false,
+            ]);
+
+            // Buat notifikasi untuk semua mahasiswa di kelas
+            $mahasiswaIds = $kelas->mahasiswa->pluck('id');
+            $notifikasiData = [];
+            $now = now();
+            foreach ($mahasiswaIds as $mhsId) {
+                $notifikasiData[] = [
+                    'user_id' => $mhsId,
+                    'kelas_perkuliahan_id' => $kelas->id,
+                    'judul' => 'Pengumuman: Kelas Pengganti ' . $kelas->mataKuliah->nama_mk,
+                    'pesan' => "Terdapat perubahan jadwal (reschedule) untuk kelas {$kelas->mataKuliah->nama_mk}. Silakan cek pengumuman atau jadwal terbaru.",
+                    'tipe' => 'informasi',
+                    'url' => route('mahasiswa.schedule'),
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+            if (!empty($notifikasiData)) {
+                \App\Models\Notifikasi::insert($notifikasiData);
+            }
+        });
+
+        return redirect()->route('dosen.jadwal.index')
+            ->with('success', 'Kelas pengganti berhasil dijadwalkan untuk ' . $tanggalFormatted . '. Pengumuman otomatis telah dikirim ke seluruh mahasiswa.');
+    }
+
+    /**
+     * Membatalkan/Menghapus jadwal kelas pengganti (Undo)
+     */
+    public function undoReschedule(Request $request, $id)
+    {
+        $user = Auth::user();
+        
+        $absensi = \App\Models\Absensi::where('id', $id)
+            ->where('is_pengganti', true)
+            ->firstOrFail();
+
+        // Pastikan dosen ini berhak menghapus jadwal di kelas tersebut
+        $kelas = KelasPerkuliahan::where('id', $absensi->kelas_perkuliahan_id)
+            ->where(function ($query) use ($user) {
+                $query->where('dosen_id', $user->id)
+                    ->orWhereHas('dosenPengampuTambahan', function ($q) use ($user) {
+                        $q->where('users.id', $user->id);
+                    });
+            })->firstOrFail();
+
+        // Hapus absensi (reschedule)
+        $absensi->delete();
+
+        return redirect()->route('dosen.jadwal.index')
+            ->with('success', 'Jadwal kelas pengganti berhasil dibatalkan.');
     }
 
     /**

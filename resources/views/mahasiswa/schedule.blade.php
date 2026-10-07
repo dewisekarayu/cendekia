@@ -65,6 +65,8 @@
             </a>
         </div>
     @else
+
+
         <!-- VIEW SELECTOR & DAY SELECTOR TABS -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 rounded-2xl shadow-sm">
             <div class="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 p-1 rounded-xl w-fit">
@@ -74,6 +76,11 @@
                 <button @click="viewMode = 'daily'" :class="viewMode === 'daily' ? 'bg-[#002B6B] text-white dark:bg-blue-600' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" class="px-4 py-2 text-xs font-bold rounded-lg transition">
                     Daily View
                 </button>
+                @if(isset($reschedules) && $reschedules->isNotEmpty())
+                <button @click="viewMode = 'reschedule'" :class="viewMode === 'reschedule' ? 'bg-[#002B6B] text-white' : 'text-[#002B6B] hover:text-blue-800'" class="px-4 py-2 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
+                    Kelas Pengganti <span :class="viewMode === 'reschedule' ? 'bg-white/20' : 'bg-blue-100 text-[#002B6B]'" class="px-1.5 py-0.5 rounded text-[10px]">{{ $reschedules->count() }}</span>
+                </button>
+                @endif
             </div>
             
             <div x-show="viewMode === 'daily'" x-transition class="flex flex-wrap gap-1">
@@ -241,6 +248,80 @@
                 </div>
             @endforeach
         </div>
+        <!-- KELAS PENGGANTI VIEW -->
+        @if(isset($reschedules) && $reschedules->isNotEmpty())
+            <div x-show="viewMode === 'reschedule'" x-transition class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                        <span>Kelas Pengganti (Reschedule)</span>
+                    </h2>
+                    <span class="rounded-full bg-blue-100 text-blue-800 px-3 py-1 text-xs font-bold">{{ $reschedules->count() }} Kelas</span>
+                </div>
+
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-sm overflow-hidden mb-6">
+                    <div class="divide-y divide-blue-100">
+                        @foreach($reschedules as $reschedule)
+                            <div class="px-6 py-4 hover:bg-blue-50/80 transition bg-white/50">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                            <span class="inline-flex items-center gap-1 bg-blue-500 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                </svg>
+                                                Kelas Pengganti
+                                            </span>
+                                            <h4 class="text-base font-semibold text-gray-800">{{ $reschedule->kelasPerkuliahan->mataKuliah->nama_mk ?? '-' }}</h4>
+                                            <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-0.5 rounded">{{ $reschedule->kelasPerkuliahan->kode_kelas ?? '-' }}</span>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-2 mt-2">
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                </svg>
+                                                <span class="font-semibold text-blue-700">{{ \Carbon\Carbon::parse($reschedule->tanggal)->translatedFormat('l, d F Y') }}</span>
+                                            </div>
+                                            
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <span class="font-semibold text-blue-700">{{ substr($reschedule->jam_mulai, 0, 5) }} - {{ substr($reschedule->jam_selesai, 0, 5) }} WIB</span>
+                                            </div>
+                                            
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                                </svg>
+                                                <span class="font-semibold text-blue-700">{{ $reschedule->ruangan_pengganti }}</span>
+                                            </div>
+                                            
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                                </svg>
+                                                <span>{{ $reschedule->kelasPerkuliahan->dosen->name ?? '-' }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        @if($reschedule->alasan_pengganti)
+                                            <div class="bg-blue-100 rounded-lg px-3 py-2 mt-3 text-xs text-blue-800 flex items-start gap-2 border border-blue-200">
+                                                <svg class="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <span><strong>Alasan Reschedule:</strong> {{ $reschedule->alasan_pengganti }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
 
     @endif
 </div>

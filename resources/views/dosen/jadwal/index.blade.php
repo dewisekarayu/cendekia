@@ -257,6 +257,73 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">Anda belum tercatat sebagai dosen pengampu pada kelas perkuliahan aktif di semester ini.</p>
             </div>
         @else
+            {{-- KELAS PENGGANTI (RESCHEDULE) SECTION --}}
+            @if(isset($reschedules) && $reschedules->isNotEmpty())
+                <div class="mb-6 rounded-2xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/20 p-4 shadow-sm" x-show="selectedDay === 'Semua'">
+                    <div class="flex items-center gap-2.5 mb-4">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3 class="text-sm font-extrabold text-blue-800 dark:text-blue-300">Jadwal Kelas Pengganti</h3>
+                            <p class="text-[11px] text-blue-700/80 dark:text-blue-400/80 mt-0.5">Daftar kelas reschedule yang akan datang.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        @foreach($reschedules as $reschedule)
+                            @php
+                                $kelas = $reschedule->kelasPerkuliahan;
+                            @endphp
+                            <div class="relative rounded-xl border border-blue-200 dark:border-blue-800 bg-white dark:bg-slate-900 p-4 shadow-sm hover:shadow-md transition group overflow-hidden">
+                                <div class="absolute top-0 right-0 p-3">
+                                    <span class="animate-pulse inline-flex items-center gap-1 rounded-md bg-indigo-100 dark:bg-indigo-900 px-2 py-0.5 text-[10px] font-bold text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                        Kelas Pengganti
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="rounded bg-indigo-100 dark:bg-indigo-900/50 px-2 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                                        {{ \Carbon\Carbon::parse($reschedule->tanggal)->translatedFormat('l, d F Y') }}
+                                    </span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800 dark:text-white line-clamp-1 pr-24">{{ $kelas->mataKuliah->nama_mk }}</h4>
+                                <p class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-1 mb-2">Kode: {{ $kelas->kode_kelas }}</p>
+
+                                <div class="space-y-1.5 border-t border-slate-100 dark:border-slate-800 pt-3">
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <span class="font-medium text-blue-600 dark:text-blue-400">{{ substr($reschedule->jam_mulai, 0, 5) }} - {{ substr($reschedule->jam_selesai, 0, 5) }}</span>
+                                    </p>
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                        {{ $reschedule->ruangan_pengganti }}
+                                    </p>
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 flex items-start gap-1.5 mt-2 bg-blue-50/50 dark:bg-blue-900/10 p-2 rounded-lg border border-blue-100 dark:border-blue-800/30">
+                                        <svg class="w-3.5 h-3.5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <span class="text-[11px] leading-tight text-blue-800 dark:text-blue-200">Alasan: {{ $reschedule->alasan_pengganti }}</span>
+                                    </p>
+
+                                    <div class="mt-4 pt-3 border-t border-blue-100 dark:border-blue-800/50 text-right">
+                                        <form action="{{ route('dosen.jadwal.undo-reschedule', $reschedule->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan jadwal kelas pengganti ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-[11px] font-bold text-red-600 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 transition">
+                                                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+                                                Batal Reschedule
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <div class="space-y-4">
                 @foreach($days as $day)
                     @if($jadwalByDay[$day]->isNotEmpty())
@@ -345,6 +412,18 @@
                                                     @endforeach
                                                 </div>
                                             @endif
+                                        </div>
+
+                                        {{-- Reschedule Button --}}
+                                        <div class="flex items-center gap-2 shrink-0 self-start mt-1 lg:mt-0">
+                                            <button type="button"
+                                                    @click="rescheduleKelasId = {{ $kelas->id }}; rescheduleNamaMk = '{{ addslashes($kelas->mataKuliah->nama_mk) }}'; rescheduleKodeKelas = '{{ addslashes($kelas->kode_kelas) }}'; showRescheduleModal = true"
+                                                    class="inline-flex items-center gap-1.5 rounded-lg border border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/40 px-3 py-1.5 text-xs font-bold text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/60 transition shadow-sm">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                </svg>
+                                                <span>Reschedule</span>
+                                            </button>
                                         </div>
                                     </div>
                                 @endforeach
@@ -602,6 +681,131 @@
         @endif
     </section>
 
+    {{-- ======================================================== --}}
+    {{-- MODAL: RESCHEDULE KELAS PENGGANTI                        --}}
+    {{-- ======================================================== --}}
+    <div x-show="showRescheduleModal" x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center p-4"
+         @keydown.escape.window="showRescheduleModal = false">
+        {{-- Backdrop --}}
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="showRescheduleModal = false"></div>
+
+        {{-- Modal Content --}}
+        <div class="relative w-full max-w-lg rounded-2xl bg-white dark:bg-slate-800 shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+             @click.stop x-transition>
+            {{-- Header --}}
+            <div class="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <h3 class="text-base font-extrabold text-white">Jadwalkan Kelas Pengganti</h3>
+                            <p class="text-xs text-white/80 mt-0.5" x-text="rescheduleNamaMk + ' (' + rescheduleKodeKelas + ')'"></p>
+                        </div>
+                    </div>
+                    <button @click="showRescheduleModal = false" class="text-white/70 hover:text-white transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            {{-- Body --}}
+            <form method="POST" action="{{ route('dosen.jadwal.reschedule') }}" class="p-6 space-y-4">
+                @csrf
+                <input type="hidden" name="kelas_perkuliahan_id" :value="rescheduleKelasId">
+                <input type="hidden" name="nama_mk" :value="rescheduleNamaMk">
+                <input type="hidden" name="kode_kelas" :value="rescheduleKodeKelas">
+
+                {{-- Info Banner --}}
+                @if ($errors->any())
+                    <div class="rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 p-3 mb-4">
+                        <div class="flex items-start gap-2.5">
+                            <svg class="w-4 h-4 text-red-600 dark:text-red-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div>
+                                <h4 class="text-xs font-bold text-red-800 dark:text-red-200">Gagal menyimpan jadwal pengganti:</h4>
+                                <ul class="mt-1 list-disc list-inside text-[11px] text-red-700 dark:text-red-300">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <div class="rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 p-3 flex items-start gap-2.5">
+                    <svg class="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
+                        Pengumuman otomatis akan dikirim ke seluruh mahasiswa di kelas ini saat Anda menyimpan jadwal pengganti.
+                    </p>
+                </div>
+
+                {{-- Tanggal Pengganti --}}
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Pengganti <span class="text-red-500">*</span></label>
+                    <input type="date" name="tanggal_pengganti" required min="{{ date('Y-m-d') }}" value="{{ old('tanggal_pengganti') }}"
+                           class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition">
+                </div>
+
+                {{-- Jam Mulai & Selesai --}}
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Jam Mulai <span class="text-red-500">*</span></label>
+                        <input type="time" name="jam_mulai" required value="{{ old('jam_mulai') }}"
+                               class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Jam Selesai <span class="text-red-500">*</span></label>
+                        <input type="time" name="jam_selesai" required value="{{ old('jam_selesai') }}"
+                               class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition">
+                    </div>
+                </div>
+
+                {{-- Ruangan Pengganti --}}
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Ruangan Pengganti <span class="text-red-500">*</span></label>
+                    <select name="ruangan_pengganti" required
+                            class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition">
+                        <option value="" disabled selected>-- Pilih Ruangan Pengganti --</option>
+                        @foreach($availableRooms as $room)
+                            <option value="{{ $room }}" {{ old('ruangan_pengganti') == $room ? 'selected' : '' }}>{{ $room }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Alasan --}}
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Alasan Reschedule <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                    <textarea name="alasan_pengganti" rows="3" placeholder="Jelaskan alasan perubahan jadwal (opsional)..."
+                              class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition resize-none">{{ old('alasan_pengganti') }}</textarea>
+                </div>
+
+                {{-- Actions --}}
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" @click="showRescheduleModal = false"
+                            class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                        Batal
+                    </button>
+                    <button type="submit"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold shadow-md hover:shadow-lg hover:from-orange-600 hover:to-amber-600 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Simpan & Kirim Pengumuman
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -612,6 +816,11 @@
             selectedMonth: 'Semua',
             searchQuery: '',
             openKelasId: @json($kelasList->isNotEmpty() ? $kelasList->first()->id : null),
+            // Reschedule modal state
+            showRescheduleModal: {{ $errors->any() ? 'true' : 'false' }},
+            rescheduleKelasId: {{ old('kelas_perkuliahan_id') ?: 'null' }},
+            rescheduleNamaMk: '{{ old('nama_mk', old('kelas_perkuliahan_id') ? 'Kelas Pengganti' : '') }}',
+            rescheduleKodeKelas: '{{ old('kode_kelas', '') }}',
             switchTab(tab) {
                 this.activeTab = tab;
                 try {

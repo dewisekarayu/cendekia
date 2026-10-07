@@ -285,6 +285,8 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     // Jadwal Dosen
     Route::prefix('dosen/jadwal')->name('dosen.jadwal.')->group(function () {
         Route::get('/', [DosenJadwalController::class, 'index'])->name('index');
+        Route::post('/reschedule', [DosenJadwalController::class, 'reschedule'])->name('reschedule');
+        Route::delete('/reschedule/{id}', [DosenJadwalController::class, 'undoReschedule'])->name('undo-reschedule');
         Route::get('/{id}', [DosenJadwalController::class, 'show'])->name('show');
         Route::get('/calendar', [DosenJadwalController::class, 'calendar'])->name('calendar');
         Route::get('/export', [DosenJadwalController::class, 'exportPdf'])->name('export');

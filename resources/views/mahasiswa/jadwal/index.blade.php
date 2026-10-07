@@ -72,6 +72,79 @@
             </div>
         </div>
 
+        {{-- KELAS PENGGANTI (RESCHEDULE) SECTION --}}
+        @if(isset($reschedules) && $reschedules->isNotEmpty())
+            <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border-2 border-orange-200 shadow-sm overflow-hidden mb-6">
+                <div class="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <h3 class="text-base font-bold text-white">Kelas Pengganti (Reschedule)</h3>
+                    <span class="bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full">{{ $reschedules->count() }}</span>
+                </div>
+                
+                <div class="divide-y divide-orange-100">
+                    @foreach($reschedules as $reschedule)
+                        <div class="px-6 py-4 hover:bg-orange-50/80 transition">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                        <span class="inline-flex items-center gap-1 bg-orange-500 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                            </svg>
+                                            Kelas Pengganti
+                                        </span>
+                                        <h4 class="text-base font-semibold text-gray-800">{{ $reschedule->kelasPerkuliahan->mataKuliah->nama_mk ?? '-' }}</h4>
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">{{ $reschedule->kelasPerkuliahan->kode_kelas ?? '-' }}</span>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                            <span class="font-semibold text-orange-700">{{ $reschedule->tanggal->translatedFormat('l, d F Y') }}</span>
+                                        </div>
+                                        
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span class="font-semibold text-orange-700">{{ substr($reschedule->jam_mulai, 0, 5) }} - {{ substr($reschedule->jam_selesai, 0, 5) }} WIB</span>
+                                        </div>
+                                        
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                            </svg>
+                                            <span class="font-semibold text-orange-700">{{ $reschedule->ruangan_pengganti }}</span>
+                                        </div>
+                                        
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                            <span>{{ $reschedule->kelasPerkuliahan->dosen->name ?? '-' }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    @if($reschedule->alasan_pengganti)
+                                        <div class="bg-orange-100 rounded-lg px-3 py-2 text-xs text-orange-800 flex items-start gap-2">
+                                            <svg class="w-4 h-4 text-orange-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span><strong>Alasan:</strong> {{ $reschedule->alasan_pengganti }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <!-- Jadwal per hari -->
         <div class="space-y-6">
             @foreach($days as $day)
@@ -83,14 +156,26 @@
                         
                         <div class="divide-y divide-gray-100">
                             @foreach($jadwalByDay[$day] as $kelas)
-                                <div class="px-6 py-4 hover:bg-gray-50 transition">
+                                @php
+                                    // Cek apakah kelas ini memiliki reschedule aktif hari ini
+                                    $activeReschedule = isset($reschedules) ? $reschedules->firstWhere('kelas_perkuliahan_id', $kelas->id) : null;
+                                @endphp
+                                <div class="px-6 py-4 hover:bg-gray-50 transition {{ $activeReschedule ? 'border-l-4 border-orange-400 bg-orange-50/30' : '' }}">
                                     <div class="flex items-start justify-between">
                                         <div class="flex-1">
-                                            <div class="flex items-center gap-2 mb-1">
+                                            <div class="flex items-center gap-2 mb-1 flex-wrap">
                                                 <h4 class="text-base font-semibold text-gray-800">{{ $kelas->mataKuliah->nama_mk }}</h4>
                                                 <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">{{ $kelas->kode_kelas }}</span>
                                                 @if($kelas->mataKuliah->sks)
                                                     <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded">{{ $kelas->mataKuliah->sks }} SKS</span>
+                                                @endif
+                                                @if($activeReschedule)
+                                                    <span class="inline-flex items-center gap-1 bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                        </svg>
+                                                        Ada Kelas Pengganti
+                                                    </span>
                                                 @endif
                                             </div>
                                             
@@ -118,6 +203,23 @@
                                                 </div>
                                                 @endif
                                             </div>
+
+                                            {{-- Reschedule Override Info --}}
+                                            @if($activeReschedule)
+                                                <div class="bg-orange-100 rounded-lg px-3 py-2 text-xs text-orange-800 flex items-start gap-2 mb-2">
+                                                    <svg class="w-4 h-4 text-orange-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                    <span>
+                                                        <strong>Kelas Pengganti:</strong> {{ $activeReschedule->tanggal->translatedFormat('l, d F Y') }} 
+                                                        pukul {{ substr($activeReschedule->jam_mulai, 0, 5) }}-{{ substr($activeReschedule->jam_selesai, 0, 5) }} WIB
+                                                        di <strong>{{ $activeReschedule->ruangan_pengganti }}</strong>.
+                                                        @if($activeReschedule->alasan_pengganti)
+                                                            <br>Alasan: {{ $activeReschedule->alasan_pengganti }}
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            @endif
                                             
                                             <div class="text-xs text-gray-500">
                                                 <span class="inline-flex items-center">

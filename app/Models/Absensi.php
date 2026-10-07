@@ -25,12 +25,16 @@ class Absensi extends Model
         'catatan',
         'waktu_buka',
         'waktu_tutup',
+        'is_pengganti',
+        'ruangan_pengganti',
+        'alasan_pengganti',
     ];
 
     protected $casts = [
         'tanggal' => 'date',
         'waktu_buka' => 'datetime',
         'waktu_tutup' => 'datetime',
+        'is_pengganti' => 'boolean',
     ];
 
     public function kelasPerkuliahan()
