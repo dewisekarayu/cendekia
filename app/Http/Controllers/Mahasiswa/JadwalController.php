@@ -18,11 +18,9 @@ class JadwalController extends Controller
         
         // Ambil kelas yang diikuti mahasiswa
         $kelasPerkuliahan = $user->kelasDiikuti()
-            ->with(['mataKuliah.programStudi', 'dosen', 'semester'])
+            ->with(['mataKuliah.programStudi', 'dosen', 'semester', 'jadwals'])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
-            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu')")
-            ->orderBy('jam_mulai')
             ->get();
 
         // Kelompokkan berdasarkan hari untuk tampilan yang lebih terstruktur
@@ -30,7 +28,25 @@ class JadwalController extends Controller
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
         
         foreach ($days as $day) {
-            $jadwalByDay[$day] = $kelasPerkuliahan->where('hari', $day)->sortBy('jam_mulai')->values();
+            $jadwalByDay[$day] = collect();
+        }
+        
+        foreach ($kelasPerkuliahan as $kelas) {
+            foreach ($kelas->jadwals as $jadwal) {
+                $day = ucfirst(strtolower(trim($jadwal->hari)));
+                if (isset($jadwalByDay[$day])) {
+                    $kelasItem = clone $kelas;
+                    $kelasItem->hari = $jadwal->hari;
+                    $kelasItem->jam_mulai = $jadwal->jam_mulai;
+                    $kelasItem->jam_selesai = $jadwal->jam_selesai;
+                    $kelasItem->ruangan = $jadwal->ruangan;
+                    $jadwalByDay[$day]->push($kelasItem);
+                }
+            }
+        }
+        
+        foreach ($days as $day) {
+            $jadwalByDay[$day] = $jadwalByDay[$day]->sortBy('jam_mulai')->values();
         }
 
         // Hitung total SKS
@@ -68,15 +84,13 @@ class JadwalController extends Controller
         $user = Auth::user();
         
         $query = $user->kelasDiikuti()
-            ->with(['mataKuliah.programStudi', 'dosen', 'semester']);
+            ->with(['mataKuliah.programStudi', 'dosen', 'semester', 'jadwals']);
 
         if ($semesterId) {
             $query->where('semester_id', $semesterId);
         }
 
-        $kelasPerkuliahan = $query->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu')")
-            ->orderBy('jam_mulai')
-            ->get();
+        $kelasPerkuliahan = $query->get();
 
         $semesterList = \App\Models\Semester::all();
         
@@ -85,8 +99,30 @@ class JadwalController extends Controller
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
         
         foreach ($days as $day) {
-            $jadwalByDay[$day] = $kelasPerkuliahan->where('hari', $day)->sortBy('jam_mulai')->values();
+            $jadwalByDay[$day] = collect();
         }
+        
+        foreach ($kelasPerkuliahan as $kelas) {
+            foreach ($kelas->jadwals as $jadwal) {
+                $day = ucfirst(strtolower(trim($jadwal->hari)));
+                if (isset($jadwalByDay[$day])) {
+                    $kelasItem = clone $kelas;
+                    $kelasItem->hari = $jadwal->hari;
+                    $kelasItem->jam_mulai = $jadwal->jam_mulai;
+                    $kelasItem->jam_selesai = $jadwal->jam_selesai;
+                    $kelasItem->ruangan = $jadwal->ruangan;
+                    $jadwalByDay[$day]->push($kelasItem);
+                }
+            }
+        }
+        
+        foreach ($days as $day) {
+            $jadwalByDay[$day] = $jadwalByDay[$day]->sortBy('jam_mulai')->values();
+        }
+
+        $totalSKS = $kelasPerkuliahan->sum(function($kelas) {
+            return $kelas->mataKuliah->sks ?? 0;
+        });
 
         return view('mahasiswa.jadwal.semester', compact('jadwalByDay', 'totalSKS', 'days', 'semesterList', 'semesterId'));
     }
@@ -99,7 +135,7 @@ class JadwalController extends Controller
         $user = Auth::user();
         
         $kelasPerkuliahan = $user->kelasDiikuti()
-            ->with(['mataKuliah', 'dosen'])
+            ->with(['mataKuliah', 'dosen', 'jadwals'])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
             ->get();
@@ -108,32 +144,35 @@ class JadwalController extends Controller
         $calendarEvents = [];
         
         foreach ($kelasPerkuliahan as $kelas) {
-            // Map hari ke format day-of-week (1=Senin, 7=Minggu)
-            $dayMap = [
-                'Senin' => 1,
-                'Selasa' => 2,
-                'Rabu' => 3,
-                'Kamis' => 4,
-                'Jumat' => 5,
-                'Sabtu' => 6,
-                'Minggu' => 7
-            ];
-            
-            $dayOfWeek = $dayMap[$kelas->hari] ?? 1;
-            
-            $calendarEvents[] = [
-                'id' => $kelas->id,
-                'title' => $kelas->mataKuliah->nama_mk . ' - ' . $kelas->ruangan,
-                'startTime' => $kelas->jam_mulai,
-                'endTime' => $kelas->jam_selesai,
-                'daysOfWeek' => [$dayOfWeek],
-                'extendedProps' => [
-                    'kode_kelas' => $kelas->kode_kelas,
-                    'dosen' => $kelas->dosen->name,
-                    'ruangan' => $kelas->ruangan,
-                    'sks' => $kelas->mataKuliah->sks ?? 0,
-                ]
-            ];
+            foreach ($kelas->jadwals as $jadwal) {
+                // Map hari ke format day-of-week (1=Senin, 7=Minggu)
+                $dayMap = [
+                    'senin' => 1,
+                    'selasa' => 2,
+                    'rabu' => 3,
+                    'kamis' => 4,
+                    'jumat' => 5,
+                    'sabtu' => 6,
+                    'minggu' => 7
+                ];
+                
+                $hariKey = strtolower(trim($jadwal->hari));
+                $dayOfWeek = $dayMap[$hariKey] ?? 1;
+                
+                $calendarEvents[] = [
+                    'id' => $kelas->id . '-' . $jadwal->id,
+                    'title' => $kelas->mataKuliah->nama_mk . ' - ' . $jadwal->ruangan,
+                    'startTime' => $jadwal->jam_mulai,
+                    'endTime' => $jadwal->jam_selesai,
+                    'daysOfWeek' => [$dayOfWeek],
+                    'extendedProps' => [
+                        'kode_kelas' => $kelas->kode_kelas,
+                        'dosen' => $kelas->dosen->name,
+                        'ruangan' => $jadwal->ruangan,
+                        'sks' => $kelas->mataKuliah->sks ?? 0,
+                    ]
+                ];
+            }
         }
 
         return view('mahasiswa.jadwal.calendar', compact('calendarEvents'));
