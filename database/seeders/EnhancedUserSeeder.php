@@ -54,10 +54,8 @@ class EnhancedUserSeeder extends Seeder
 
     public function run(): void
     {
-        // Get all program studi
-        $programStudi = ProgramStudi::all()->mapWithKeys(function ($prodi) {
-            return [$prodi->kode_prodi => $prodi->id];
-        });
+        // Get all program studi with their fakultas
+        $allProdis = ProgramStudi::with('fakultas')->get();
 
         // =====================================================
         // 1. ADMIN ACCOUNT
@@ -74,126 +72,103 @@ class EnhancedUserSeeder extends Seeder
         );
         $admin->syncRoles('admin');
 
-        // =====================================================
-        // 2. DOSEN ACCOUNTS (10 dosen)
-        // =====================================================
-        $prodiCodes = $programStudi->keys()->values();
         $dosenPassword = Hash::make('password123');
-
-        $dosenData = [];
-        foreach ($this->namaDosen as $index => $nama) {
-            $gelarDepan = $index % 5 === 0 ? 'Prof. Dr. ' : ($index % 2 === 0 ? 'Dr. ' : '');
-            $gelarBelakang = $index % 3 === 0 ? ', M.Kom' : ', S.Kom., M.T';
-            $nidn = '197900' . str_pad((string) ($index + 1), 5, '0', STR_PAD_LEFT);
-            $slug = Str::slug($nama, '.');
-            $prodiCode = $prodiCodes[$index % $prodiCodes->count()];
-            $prodiId = $programStudi[$prodiCode];
-
-            $dosen = User::updateOrCreate(
-                ['nip_nim' => $nidn],
-                [
-                    'name' => $gelarDepan . $nama . $gelarBelakang,
-                    'email' => $slug . '@dosen.cendekia.ac.id',
-                    'email_verified_at' => now(),
-                    'password' => $dosenPassword,
-                    'program_studi_id' => $prodiId,
-                    'status' => 'aktif',
-                ]
-            );
-            $dosen->syncRoles('dosen');
-
-            $dosenData[$index] = [
-                'id' => $dosen->id,
-                'name' => $dosen->name,
-                'email' => $dosen->email,
-                'prodi_code' => $prodiCode,
-            ];
-        }
-
-        // =====================================================
-        // 3. MAHASISWA ACCOUNTS (100 total: 50 laki-laki, 50 perempuan)
-        // =====================================================
         $mahasiswaPassword = Hash::make('password123');
 
-        // Three main accounts for presentation
+        // Main accounts for TI
         $mainAccounts = [
-            [
+            '20241001' => [
                 'email' => 'kampuscendekia5@gmail.com',
                 'name' => 'Muhammad Ridho Pratama',
-                'nim' => '20241001',
                 'gender' => 'laki-laki',
-                'prodi' => 'TI'
             ],
-            [
+            '20241002' => [
                 'email' => 'maylusi431@gmail.com',
                 'name' => 'Maylusi Widia Kusumaputri',
-                'nim' => '20241002',
                 'gender' => 'perempuan',
-                'prodi' => 'TI'
             ],
-            [
+            '20241003' => [
                 'email' => 'dewisekarayu56@gmail.com',
                 'name' => 'Dewi Sayu Maharani',
-                'nim' => '20241003',
                 'gender' => 'perempuan',
-                'prodi' => 'TI'
             ],
         ];
 
-        // Create main accounts
-        foreach ($mainAccounts as $account) {
-            $mahasiswa = User::updateOrCreate(
-                ['nip_nim' => $account['nim']],
-                [
-                    'name' => $account['name'],
-                    'email' => $account['email'],
-                    'email_verified_at' => now(),
-                    'password' => $mahasiswaPassword,
-                    'program_studi_id' => $programStudi[$account['prodi']],
-                    'status' => 'aktif',
-                ]
-            );
-            $mahasiswa->syncRoles('mahasiswa');
-        }
+        $dosenIndex = 0;
+        $mahasiswaIndex = 0;
 
-        // Create remaining 7 mahasiswa (for a total of 10)
-        $lakiCounter = 1; // Start from 1 since one main account is laki-laki
-        $perempuanCounter = 2; // Start from 2 since two main accounts are perempuan
+        foreach ($allProdis as $prodi) {
+            // Generate 2 Dosen per prodi (Total = 50 Dosen across 25 prodi)
+            for ($d = 1; $d <= 2; $d++) {
+                $gelarDepan = $dosenIndex % 5 === 0 ? 'Prof. Dr. ' : ($dosenIndex % 2 === 0 ? 'Dr. ' : '');
+                $gelarBelakang = $dosenIndex % 3 === 0 ? ', M.Kom' : ', S.Kom., M.T';
+                $nidn = '197900' . str_pad((string) ($dosenIndex + 1), 5, '0', STR_PAD_LEFT);
+                
+                // Pick name based on index, loop if out of bounds
+                if ($dosenIndex < count($this->namaLakiLaki)) {
+                    $namaDasar = $this->namaLakiLaki[$dosenIndex];
+                } else {
+                    $namaDasar = $this->namaLakiLaki[$dosenIndex % count($this->namaLakiLaki)] . ' ' . $this->namaBelakang[$dosenIndex % count($this->namaBelakang)];
+                }
+                
+                $nama = $gelarDepan . $namaDasar . $gelarBelakang;
+                $slug = Str::slug($namaDasar, '.');
 
-        for ($i = 4; $i <= 10; $i++) {
-            $alternateIndex = $i - 4;
-            
-            if ($alternateIndex % 2 == 0) {
-                // Create laki-laki
-                $nama = $this->namaLakiLaki[$lakiCounter - 1] . ' ' . $this->namaBelakang[($lakiCounter - 1) % count($this->namaBelakang)];
-                $lakiCounter++;
-            } else {
-                // Create perempuan
-                $perempuanIndex = $alternateIndex / 2;
-                $nama = $this->namaPerempuan[$perempuanIndex] . ' ' . $this->namaBelakang[$perempuanIndex % count($this->namaBelakang)];
+                $dosen = User::updateOrCreate(
+                    ['nip_nim' => $nidn],
+                    [
+                        'name' => $nama,
+                        'email' => $slug . '@dosen.cendekia.ac.id',
+                        'email_verified_at' => now(),
+                        'password' => $dosenPassword,
+                        'program_studi_id' => $prodi->id,
+                        'status' => 'aktif',
+                    ]
+                );
+                $dosen->syncRoles('dosen');
+                $dosenIndex++;
             }
 
-            $nim = '2024' . str_pad((string) $i, 4, '0', STR_PAD_LEFT);
-            $emailName = Str::slug($nama, '.');
-            $emailDomain = ['gmail.com', 'yahoo.com', 'outlook.com', 'mail.com', 'student.ac.id'];
-            $domain = $emailDomain[($i - 4) % count($emailDomain)];
-            $email = $emailName . '.' . str_pad((string) ($i - 3), 2, '0', STR_PAD_LEFT) . '@' . $domain;
+            // Generate 4 Mahasiswa per prodi (Total = 100 Mahasiswa across 25 prodi)
+            for ($m = 1; $m <= 4; $m++) {
+                $nim = '2024' . str_pad((string) ($mahasiswaIndex + 1), 4, '0', STR_PAD_LEFT);
 
-            // Distribute students across program studi
-            $prodiCode = $prodiCodes[($i - 4) % $prodiCodes->count()];
-
-            $mahasiswa = User::updateOrCreate(
-                ['nip_nim' => $nim],
-                [
-                    'name' => $nama,
-                    'email' => $email,
-                    'email_verified_at' => now(),
-                    'password' => $mahasiswaPassword,
-                    'program_studi_id' => $programStudi[$prodiCode],
-                    'status' => 'aktif',
-                ]
-            );
-            $mahasiswa->syncRoles('mahasiswa');
+                // Check if this NIM is one of our main accounts (ensure they get mapped to TI, or just let them take these NIMs wherever they fall, wait, main accounts are specifically for TI)
+                // Actually, let's inject main accounts into TI directly.
+                if ($prodi->kode_prodi === 'TI' && isset($mainAccounts[$nim])) {
+                    $account = $mainAccounts[$nim];
+                    $mahasiswa = User::updateOrCreate(
+                        ['nip_nim' => $nim],
+                        [
+                            'name' => $account['name'],
+                            'email' => $account['email'],
+                            'email_verified_at' => now(),
+                            'password' => $mahasiswaPassword,
+                            'program_studi_id' => $prodi->id,
+                            'status' => 'aktif',
+                        ]
+                    );
+                } else {
+                    $isLaki = $mahasiswaIndex % 2 === 0;
+                    $namaDepan = $isLaki ? $this->namaLakiLaki[($mahasiswaIndex / 2) % count($this->namaLakiLaki)] : $this->namaPerempuan[floor($mahasiswaIndex / 2) % count($this->namaPerempuan)];
+                    $namaLengkap = $namaDepan . ' ' . $this->namaBelakang[$mahasiswaIndex % count($this->namaBelakang)];
+                    $emailName = Str::slug($namaLengkap, '.');
+                    
+                    $mahasiswa = User::updateOrCreate(
+                        ['nip_nim' => $nim],
+                        [
+                            'name' => $namaLengkap,
+                            'email' => $emailName . '@student.ac.id',
+                            'email_verified_at' => now(),
+                            'password' => $mahasiswaPassword,
+                            'program_studi_id' => $prodi->id,
+                            'status' => 'aktif',
+                        ]
+                    );
+                }
+                $mahasiswa->syncRoles('mahasiswa');
+                $mahasiswaIndex++;
+            }
         }
     }
 }
