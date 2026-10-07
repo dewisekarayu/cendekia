@@ -1,6 +1,7 @@
 @extends('layouts.portal')
 
 @section('title', 'Early Warning System (EWS) Analytics')
+@section('activeMenu', 'Early Warning System')
 
 @section('content')
 <div class="mb-6 rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">

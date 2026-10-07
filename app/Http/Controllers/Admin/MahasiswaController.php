@@ -459,7 +459,7 @@ class MahasiswaController extends Controller
                     'telepon'           => !empty($item['telepon']) ? $item['telepon'] : null,
                     'program_studi_id'  => $item['program_studi_id'] ?? null,
                     'status'            => $item['status'] ?? 'aktif',
-                    'password'          => Hash::make($item['nim']), // Kata sandi awal = NIM
+                    'password'          => Hash::make('mahasiswa123'), // Kata sandi awal = mahasiswa123
                     'email_verified_at' => now(),
                 ]);
 

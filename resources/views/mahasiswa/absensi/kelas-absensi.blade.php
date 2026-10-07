@@ -3,13 +3,13 @@
 @section('title', 'Presensi Kelas - ' . $kelas->mataKuliah->nama_mk)
 
 @section('content')
-<div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4">
+<div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto p-3 sm:p-4 overflow-x-hidden">
 
     {{-- ===== HEADER BANNER ===== --}}
-    <div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] dark:from-indigo-950 dark:to-purple-900 p-6 sm:p-7 shadow-lg shadow-blue-950/15 relative transition-all">
+    <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] dark:from-indigo-950 dark:to-purple-900 p-4 sm:p-7 shadow-lg shadow-blue-950/15 relative transition-all">
         <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
         <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
-        <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="relative z-10 flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div class="min-w-0">
                 <div class="mb-2 flex flex-wrap items-center gap-2">
                     <span class="rounded-lg bg-white/15 border border-white/20 px-2.5 py-1 text-xs font-bold text-white">
@@ -17,15 +17,15 @@
                     </span>
                     <span class="text-xs text-blue-200/80">Kelas {{ $kelas->kode_kelas }}</span>
                 </div>
-                <h1 class="text-xl font-extrabold leading-tight text-white sm:text-2xl">
+                <h1 class="text-lg font-extrabold leading-tight text-white break-words sm:text-2xl">
                     {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
                 </h1>
-                <p class="mt-1.5 text-sm text-blue-100/80">
+                <p class="mt-1.5 text-xs sm:text-sm text-blue-100/80 break-words">
                     Bersama {{ $kelas->dosen?->name ?? 'Dosen pengampu' }}
                 </p>
             </div>
             <a href="{{ route('mahasiswa.kelas-saya') }}"
-               class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 transition">
+               class="shrink-0 inline-flex w-fit items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                 Kembali
             </a>
@@ -33,7 +33,7 @@
     </div>
 
     {{-- ===== INFO CARDS ===== --}}
-    <div class="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div class="grid grid-cols-2 gap-2.5 sm:gap-3 sm:grid-cols-4">
         @php
             $infoCards = [
                 ['icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'label' => 'Dosen', 'value' => $kelas->dosen?->name ?? '-', 'color' => 'text-blue-600 bg-blue-50 dark:text-purple-400 dark:bg-purple-950/40'],
@@ -43,20 +43,20 @@
             ];
         @endphp
         @foreach ($infoCards as $card)
-            <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-3.5 shadow-sm transition-colors duration-200">
-                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $card['color'] }}">
+            <div class="flex min-w-0 items-center gap-2.5 sm:gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 sm:p-3.5 shadow-sm transition-colors duration-200">
+                <div class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl {{ $card['color'] }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $card['icon'] }}"/></svg>
                 </div>
-                <div class="min-w-0">
+                <div class="min-w-0 flex-1">
                     <p class="truncate text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">{{ $card['value'] }}</p>
-                    <p class="text-[10px] text-gray-400 dark:text-gray-550">{{ $card['label'] }}</p>
+                    <p class="truncate text-[10px] text-gray-400 dark:text-gray-550">{{ $card['label'] }}</p>
                 </div>
             </div>
         @endforeach
     </div>
 
     {{-- ===== TAB BUTTONS ===== --}}
-    <div class="flex gap-2 overflow-x-auto pb-1">
+    <div class="no-scrollbar -mx-3 flex gap-2 overflow-x-auto px-3 pb-1 sm:mx-0 sm:px-0">
         @php
             $tabLinks = [
                 'semua'   => route('mahasiswa.kelas-detail', $kelas->id) . '?tab=semua',
@@ -68,7 +68,7 @@
         @endphp
         @foreach (['semua' => 'Semua', 'materi' => 'Materi', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'forum' => 'Forum'] as $key => $label)
             <a href="{{ $tabLinks[$key] }}"
-               class="whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold transition-all duration-200
+               class="shrink-0 whitespace-nowrap rounded-full px-4 sm:px-5 py-2 text-xs font-bold transition-all duration-200
                    {{ $key === 'absensi'
                        ? 'bg-[#002B6B] dark:bg-purple-650 text-white shadow-sm shadow-blue-900/20 shadow-purple-900/20'
                        : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-[#002B6B] dark:hover:border-purple-500 hover:text-[#002B6B] dark:hover:text-purple-400' }}">
@@ -78,7 +78,7 @@
     </div>
 
     <a href="{{ route('mahasiswa.kelas-detail', $kelas->id) }}?tab=absensi"
-        class="inline-flex items-center gap-1.5 mb-4 text-sm font-medium text-slate-500 hover:text-[#002B6B] transition">
+        class="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-[#002B6B] transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
@@ -86,56 +86,56 @@
     </a>
 
     <!-- Main Grid Content -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 
         <!-- LEFT SIDE -->
-        <div class="lg:col-span-2 space-y-4">
+        <div class="lg:col-span-2 min-w-0 space-y-4">
 
             @if($absensiAktif)
                 <!-- Banner Sesi Presensi Aktif -->
-                <div class="bg-gradient-to-r from-[#002B6B] to-blue-600 rounded-2xl p-5 text-white shadow-md shadow-blue-200 relative overflow-hidden">
+                <div class="bg-gradient-to-r from-[#002B6B] to-blue-600 rounded-2xl p-4 sm:p-5 text-white shadow-md shadow-blue-200 relative overflow-hidden">
                     <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10"></div>
-                    <div class="flex items-start justify-between relative z-10">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/25">
+                    <div class="flex flex-wrap items-center justify-between gap-2.5 relative z-10">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/25">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <div>
-                                <h2 class="text-lg font-extrabold tracking-tight">Sesi Presensi Aktif</h2>
+                            <div class="min-w-0">
+                                <h2 class="text-base sm:text-lg font-extrabold tracking-tight leading-tight">Sesi Presensi Aktif</h2>
                                 <p class="text-blue-100 text-xs mt-0.5">Silakan segera melakukan presensi</p>
                             </div>
                         </div>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white/25 backdrop-blur-md border border-white/30 text-white tracking-wide">
+                        <span class="inline-flex shrink-0 items-center px-3 py-1 rounded-full text-xs font-bold bg-white/25 backdrop-blur-md border border-white/30 text-white tracking-wide">
                             ● Terbuka
                         </span>
                     </div>
                 </div>
 
                 <!-- Detail Grid Info Sesi -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="bg-blue-50/60 rounded-xl p-4 border border-blue-100/70 shadow-sm">
-                        <p class="text-[11px] font-bold text-blue-500 uppercase tracking-wider mb-1">Pertemuan</p>
-                        <p class="text-2xl font-black text-blue-800 font-mono">{{ $absensiAktif->pertemuan_ke }}</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+                    <div class="bg-blue-50/60 rounded-xl p-3 sm:p-4 border border-blue-100/70 shadow-sm">
+                        <p class="text-[10px] sm:text-[11px] font-bold text-blue-500 uppercase tracking-wider mb-1">Pertemuan</p>
+                        <p class="text-xl sm:text-2xl font-black text-blue-800 font-mono">{{ $absensiAktif->pertemuan_ke }}</p>
                     </div>
-                    <div class="bg-sky-50/60 rounded-xl p-4 border border-sky-100/70 shadow-sm">
-                        <p class="text-[11px] font-bold text-sky-500 uppercase tracking-wider mb-1">Tanggal</p>
+                    <div class="bg-sky-50/60 rounded-xl p-3 sm:p-4 border border-sky-100/70 shadow-sm">
+                        <p class="text-[10px] sm:text-[11px] font-bold text-sky-500 uppercase tracking-wider mb-1">Tanggal</p>
                         <p class="text-lg font-black text-sky-800 font-mono">{{ $absensiAktif->tanggal->format('d M') }}</p>
                     </div>
-                    <div class="bg-indigo-50/60 rounded-xl p-4 border border-indigo-100/70 shadow-sm">
-                        <p class="text-[11px] font-bold text-indigo-500 uppercase tracking-wider mb-1">Mulai</p>
+                    <div class="bg-indigo-50/60 rounded-xl p-3 sm:p-4 border border-indigo-100/70 shadow-sm">
+                        <p class="text-[10px] sm:text-[11px] font-bold text-indigo-500 uppercase tracking-wider mb-1">Mulai</p>
                         <p class="text-base font-black text-indigo-800 font-mono">{{ $absensiAktif->jam_mulai }}</p>
                     </div>
-                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 shadow-sm">
-                        <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Selesai</p>
+                    <div class="bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200 shadow-sm">
+                        <p class="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Selesai</p>
                         <p class="text-base font-black text-slate-800 font-mono">{{ $absensiAktif->jam_selesai }}</p>
                     </div>
                 </div>
 
                 @if($sudahAbsen)
                     <!-- Status: Sudah Absen -->
-                    <div class="bg-white border border-blue-100 rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center text-center space-y-4">
+                    <div class="bg-white border border-blue-100 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col items-center justify-center text-center space-y-4">
                         <div class="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shadow-inner">
                             <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
@@ -143,7 +143,7 @@
                         </div>
                         <div>
                             <h3 class="text-base font-black text-slate-800">Anda Sudah Melakukan Presensi</h3>
-                            <p class="text-xs font-semibold text-slate-500 mt-1 flex items-center justify-center gap-3 flex-wrap">
+                            <p class="text-xs font-semibold text-slate-500 mt-2 flex items-center justify-center gap-x-3 gap-y-2 flex-wrap">
                                 @php
                                     $statusBadge = match($sudahAbsen->status) {
                                         'hadir' => 'bg-blue-100 text-blue-800',
@@ -154,7 +154,7 @@
                                 @endphp
                                 <span>Status: <strong class="{{ $statusBadge }} px-2 py-0.5 rounded-md font-bold uppercase tracking-wide text-[11px]">{{ $sudahAbsen->getStatusLabel() }}</strong></span>
                                 @if($sudahAbsen->waktu_absensi)
-                                    <span class="text-slate-300">|</span>
+                                    <span class="hidden sm:inline text-slate-300">|</span>
                                     <span class="flex items-center gap-1 font-mono text-slate-600">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         {{ $sudahAbsen->waktu_absensi->format('H:i') }} WIB
@@ -168,59 +168,59 @@
                     </div>
                 @else
                     <!-- Sesi Masih Terbuka info -->
-                    <div class="flex items-center gap-3 rounded-2xl bg-blue-50/60 border border-blue-100 p-4">
+                    <div class="flex items-center gap-3 rounded-2xl bg-blue-50/60 border border-blue-100 p-3.5 sm:p-4">
                         <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <div>
+                        <div class="min-w-0">
                             <p class="text-sm font-bold text-blue-900">Sesi Masih Terbuka</p>
                             <p class="text-xs text-blue-500 font-medium">Lakukan presensi sekarang jika Anda hadir di kelas</p>
                         </div>
                     </div>
 
                     <!-- Form Pilih Status & Submit -->
-                    <div x-data="{ status: 'hadir' }" class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-5">
+                    <div x-data="{ status: 'hadir' }" class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm space-y-5">
                         <form action="{{ route('mahasiswa.absensi.masuk', ['kelasId' => $kelas->id, 'absensiId' => $absensiAktif->id]) }}" method="POST" class="space-y-5">
                             @csrf
                             <input type="hidden" name="status" :value="status">
 
                             <div>
                                 <p class="flex items-center gap-1.5 text-sm font-bold text-slate-700 mb-3">
-                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <svg class="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     Pilih Status Kehadiran Anda
                                 </p>
 
-                                <div class="grid grid-cols-3 gap-3">
+                                <div class="grid grid-cols-3 gap-2 sm:gap-3">
                                     <button type="button" @click="status = 'hadir'"
                                             :class="status === 'hadir' ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-slate-200 bg-white hover:border-blue-200'"
-                                            class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 py-5 px-2 transition">
-                                        <div class="w-9 h-9 rounded-full bg-[#002B6B] flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                            class="flex min-w-0 flex-col items-center justify-center gap-1.5 sm:gap-2 rounded-2xl border-2 py-3.5 sm:py-5 px-1 sm:px-2 transition">
+                                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#002B6B] flex items-center justify-center">
+                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                                         </div>
-                                        <span class="text-sm font-bold text-slate-800">Hadir</span>
-                                        <span class="text-[11px] text-slate-400">Saya hadir</span>
+                                        <span class="text-xs sm:text-sm font-bold text-slate-800">Hadir</span>
+                                        <span class="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Saya hadir</span>
                                     </button>
 
                                     <button type="button" @click="status = 'izin'"
                                             :class="status === 'izin' ? 'border-sky-400 bg-sky-50 ring-2 ring-sky-200' : 'border-slate-200 bg-white hover:border-sky-200'"
-                                            class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 py-5 px-2 transition">
-                                        <div class="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 7H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V17a2 2 0 01-2 2z"/></svg>
+                                            class="flex min-w-0 flex-col items-center justify-center gap-1.5 sm:gap-2 rounded-2xl border-2 py-3.5 sm:py-5 px-1 sm:px-2 transition">
+                                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-sky-100 flex items-center justify-center">
+                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 7H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V17a2 2 0 01-2 2z"/></svg>
                                         </div>
-                                        <span class="text-sm font-bold text-slate-800">Izin</span>
-                                        <span class="text-[11px] text-slate-400">Tidak hadir</span>
+                                        <span class="text-xs sm:text-sm font-bold text-slate-800">Izin</span>
+                                        <span class="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Tidak hadir</span>
                                     </button>
 
                                     <button type="button" @click="status = 'sakit'"
                                             :class="status === 'sakit' ? 'border-amber-400 bg-amber-50 ring-2 ring-amber-200' : 'border-slate-200 bg-white hover:border-amber-200'"
-                                            class="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 py-5 px-2 transition">
-                                        <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            class="flex min-w-0 flex-col items-center justify-center gap-1.5 sm:gap-2 rounded-2xl border-2 py-3.5 sm:py-5 px-1 sm:px-2 transition">
+                                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-amber-100 flex items-center justify-center">
+                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         </div>
-                                        <span class="text-sm font-bold text-slate-800">Sakit</span>
-                                        <span class="text-[11px] text-slate-400">Tidak sehat</span>
+                                        <span class="text-xs sm:text-sm font-bold text-slate-800">Sakit</span>
+                                        <span class="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Tidak sehat</span>
                                     </button>
                                 </div>
                             </div>
@@ -230,12 +230,12 @@
                                 <textarea id="keterangan" name="keterangan" rows="3"
                                           :required="status !== 'hadir'"
                                           placeholder="Tulis alasan berhalangan Anda..."
-                                          class="w-full px-3 py-2 border border-slate-200 bg-slate-50 text-slate-800 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm resize-none"></textarea>
+                                          class="w-full px-3 py-2 border border-slate-200 bg-slate-50 text-slate-800 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-base sm:text-sm resize-none"></textarea>
                             </div>
 
                             <button type="submit"
-                                    class="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl bg-gradient-to-r from-[#002B6B] to-blue-600 hover:from-blue-900 hover:to-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-500/10 hover:shadow-xl transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    class="w-full flex items-center justify-center gap-2.5 py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-[#002B6B] to-blue-600 hover:from-blue-900 hover:to-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-500/10 hover:shadow-xl transition-all duration-300 sm:hover:scale-[1.01] active:scale-[0.99]">
+                                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <span>Presensi / Absen Masuk</span>
                             </button>
                         </form>
@@ -243,37 +243,37 @@
                 @endif
             @else
                 <!-- Tidak Ada Sesi Aktif -->
-                <div class="bg-slate-50/70 rounded-2xl border-2 border-dashed border-slate-200 p-10 text-center shadow-sm">
+                <div class="bg-slate-50/70 rounded-2xl border-2 border-dashed border-slate-200 p-6 sm:p-10 text-center shadow-sm">
                     <div class="w-14 h-14 rounded-full bg-white border border-slate-200 flex items-center justify-center mx-auto mb-4 shadow-sm">
                         <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-1">Tidak Ada Sesi Presensi Aktif</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-1">Tidak Ada Sesi Presensi Aktif</h3>
                     <p class="text-sm text-slate-500">Sesi presensi mandiri belum dibuka oleh dosen untuk hari ini.</p>
                 </div>
             @endif
 
             <!-- Informasi Kelas -->
-            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-                <div class="flex items-center gap-2 mb-4">
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-3 sm:mb-4">
                     <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <h3 class="text-sm font-black text-slate-800">Informasi Kelas</h3>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div class="rounded-xl p-4 bg-gradient-to-br from-blue-50 to-blue-50/40 border border-blue-100/70">
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                    <div class="col-span-2 sm:col-span-1 min-w-0 rounded-xl p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-blue-50/40 border border-blue-100/70">
                         <p class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">Pengajar</p>
-                        <p class="text-sm font-black text-blue-900 truncate">{{ $kelas->dosen?->name ?? '-' }}</p>
+                        <p class="text-sm font-black text-blue-900 break-words sm:truncate">{{ $kelas->dosen?->name ?? '-' }}</p>
                     </div>
-                    <div class="rounded-xl p-4 bg-gradient-to-br from-sky-50 to-sky-50/40 border border-sky-100/70">
+                    <div class="min-w-0 rounded-xl p-3 sm:p-4 bg-gradient-to-br from-sky-50 to-sky-50/40 border border-sky-100/70">
                         <p class="text-[10px] font-bold text-sky-500 uppercase tracking-wider mb-1">Ruangan</p>
                         <p class="text-sm font-black text-sky-900 truncate">{{ $kelas->ruangan ?? '-' }}</p>
                     </div>
-                    <div class="rounded-xl p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/40 border border-indigo-100/70">
+                    <div class="min-w-0 rounded-xl p-3 sm:p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/40 border border-indigo-100/70">
                         <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider mb-1">Hari</p>
                         <p class="text-sm font-black text-indigo-900 truncate">{{ $kelas->hari ?? '-' }}</p>
                     </div>
-                    <div class="rounded-xl p-4 bg-gradient-to-br from-blue-50 to-blue-50/40 border border-blue-100/70 sm:col-span-3">
+                    <div class="col-span-2 sm:col-span-3 rounded-xl p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-blue-50/40 border border-blue-100/70">
                         <p class="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">Jam Kuliah</p>
                         <p class="text-sm font-black text-blue-900">{{ substr($kelas->jam_mulai,0,5) }} - {{ substr($kelas->jam_selesai,0,5) }}</p>
                     </div>
@@ -282,18 +282,18 @@
         </div>
 
         <!-- RIGHT SIDE: Sidebar -->
-        <div class="space-y-4">
+        <div class="min-w-0 space-y-4">
 
             @if($riwayatAbsensi->count() > 0)
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="bg-blue-50/60 px-4 py-3.5 border-b border-blue-100 flex items-center gap-2">
-                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-blue-50/60 px-4 py-3 sm:py-3.5 border-b border-blue-100 flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <h3 class="text-xs font-black text-blue-900 uppercase tracking-wider">Presensi 5 Terakhir</h3>
                     </div>
 
-                    <div class="p-4 space-y-2.5">
+                    <div class="p-3 sm:p-4 space-y-2.5">
                         @foreach($riwayatAbsensi->take(5) as $absensi)
                             @php
                                 $attendance = $absensi->absensiMahasiswa->first();
@@ -306,12 +306,12 @@
                                 };
                                 $rowLabel = $attendance?->getStatusLabel() ?? 'Alpha';
                             @endphp
-                            <div class="flex items-center justify-between p-3 rounded-xl {{ $rowStyle['bg'] }} border {{ $rowStyle['border'] }} hover:brightness-95 transition">
+                            <div class="flex items-center justify-between gap-2 p-3 rounded-xl {{ $rowStyle['bg'] }} border {{ $rowStyle['border'] }} hover:brightness-95 transition">
                                 <div class="min-w-0">
-                                    <p class="text-sm font-bold text-slate-800">Pertemuan {{ $absensi->pertemuan_ke }}</p>
+                                    <p class="text-sm font-bold text-slate-800 truncate">Pertemuan {{ $absensi->pertemuan_ke }}</p>
                                     <p class="text-[11px] font-medium text-slate-400 mt-0.5 font-mono">{{ $absensi->tanggal->format('d M Y') }}</p>
                                 </div>
-                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-black tracking-wide uppercase {{ $rowStyle['badge'] }} flex-shrink-0 ml-2">{{ $rowLabel }}</span>
+                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-black tracking-wide uppercase {{ $rowStyle['badge'] }} flex-shrink-0">{{ $rowLabel }}</span>
                             </div>
                         @endforeach
                     </div>
@@ -319,7 +319,7 @@
             @endif
 
             <!-- Tips Presensi -->
-            <div class="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl border border-blue-100 p-5 shadow-sm">
+            <div class="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl border border-blue-100 p-4 sm:p-5 shadow-sm">
                 <div class="flex items-start gap-3">
                     <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -343,6 +343,11 @@
 </div>
 
 <style>
+/* Sembunyikan scrollbar pada tab horizontal (mobile) */
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+[x-cloak] { display: none !important; }
+
 /* ============================================
    DARK MODE — Presensi Kelas (Absen Mahasiswa)
    ============================================ */

@@ -472,7 +472,7 @@ class DosenController extends Controller
                     'telepon'           => !empty($item['telepon']) ? $item['telepon'] : null,
                     'program_studi_id'  => $item['program_studi_id'] ?? null,
                     'status'            => $item['status'] ?? 'aktif',
-                    'password'          => Hash::make($nip), // Kata sandi awal = NIP
+                    'password'          => Hash::make('dosen123'), // Kata sandi awal = dosen123
                     'email_verified_at' => now(),
                 ]);
 

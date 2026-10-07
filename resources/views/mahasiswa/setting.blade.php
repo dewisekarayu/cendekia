@@ -191,11 +191,11 @@
             document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
             document.getElementById(tabId + '-content').classList.remove('hidden');
             document.querySelectorAll('.active-tab').forEach(t => {
-                t.classList.remove('border-[#321270]', 'text-slate-800', 'dark:text-white', 'border-b-2');
+                t.classList.remove('border-[#002B6B]', 'text-slate-800', 'dark:text-white', 'border-b-2');
                 t.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
             });
             this.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-            this.classList.add('border-[#321270]', 'text-slate-800', 'dark:text-white', 'border-b-2');
+            this.classList.add('border-[#002B6B]', 'text-slate-800', 'dark:text-white', 'border-b-2');
         });
     });
     
@@ -203,7 +203,7 @@
     const activeTabButton = document.querySelector('.active-tab');
     if (activeTabButton) {
         activeTabButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-        activeTabButton.classList.add('border-[#321270]', 'text-slate-800', 'dark:text-white', 'border-b-2');
+        activeTabButton.classList.add('border-[#002B6B]', 'text-slate-800', 'dark:text-white', 'border-b-2');
     }
 
     // Dynamic selection highlighting for Theme Cards
@@ -231,7 +231,7 @@
             icon: 'success',
             title: "{{ app()->getLocale() === 'en' ? 'Success' : 'Berhasil' }}",
             text: "{{ session('success') }}",
-            confirmButtonColor: '#321270',
+            confirmButtonColor: '#002B6B',
         });
     });
 </script>

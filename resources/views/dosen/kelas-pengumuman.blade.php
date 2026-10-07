@@ -1,7 +1,7 @@
 @extends('layouts.portal')
 
 @section('title', 'Announcements')
-@section('activeMenu', 'Announcements')
+@section('activeMenu', 'Pengumuman')
 
 @section('content')
 
