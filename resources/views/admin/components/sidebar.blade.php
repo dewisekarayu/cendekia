@@ -41,92 +41,89 @@
         <div class="nav-section-title text-[10px] font-normal tracking-wider text-white/40 pb-1 px-2.5 uppercase">
             Master Data
         </div>
-        <div class="nav-item">
-            <a href="{{ route('admin.dosen.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.dosen.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-person-badge text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Data Dosen</span>
-            </a>
+
+        <!-- Data Pengguna -->
+        <div class="nav-item" x-data="{ open: {{ request()->routeIs('admin.dosen.*', 'admin.mahasiswa.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" type="button" class="nav-link w-full flex items-center justify-between px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none text-white/70 hover:bg-white/10 hover:text-white cursor-pointer border-0 bg-transparent text-left">
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-people-fill text-base w-5 flex justify-center flex-shrink-0"></i>
+                    <span>Data Pengguna</span>
+                </div>
+                <i class="bi bi-chevron-down text-[10px] transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" x-collapse class="pl-8 pr-2 py-1 space-y-1 mt-1">
+                <a href="{{ route('admin.dosen.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.dosen.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Data Dosen
+                </a>
+                <a href="{{ route('admin.mahasiswa.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.mahasiswa.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Data Mahasiswa
+                </a>
+            </div>
         </div>
 
-        <div class="nav-item">
-            <a href="{{ route('admin.mahasiswa.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.mahasiswa.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-people-fill text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Data Mahasiswa</span>
-            </a>
+        <!-- Data Akademik -->
+        <div class="nav-item" x-data="{ open: {{ request()->routeIs('admin.fakultas.*', 'admin.program-studi.*', 'admin.kurikulum.*', 'admin.tahun-akademik.*', 'admin.kalender-akademik.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" type="button" class="nav-link w-full flex items-center justify-between px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none text-white/70 hover:bg-white/10 hover:text-white cursor-pointer border-0 bg-transparent text-left">
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-building text-base w-5 flex justify-center flex-shrink-0"></i>
+                    <span>Data Akademik</span>
+                </div>
+                <i class="bi bi-chevron-down text-[10px] transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" x-collapse class="pl-8 pr-2 py-1 space-y-1 mt-1">
+                <a href="{{ route('admin.fakultas.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.fakultas.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Fakultas
+                </a>
+                <a href="{{ route('admin.program-studi.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.program-studi.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Program Studi
+                </a>
+                <a href="{{ route('admin.kurikulum.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.kurikulum.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Kurikulum
+                </a>
+                <a href="{{ route('admin.tahun-akademik.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.tahun-akademik.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Tahun Akademik
+                </a>
+                <a href="{{ route('admin.kalender-akademik.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.kalender-akademik.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Kalender Akademik
+                </a>
+            </div>
         </div>
 
-        <div class="nav-item">
-            <a href="{{ route('admin.mata-kuliah.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.mata-kuliah.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-book-fill text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Mata Kuliah</span>
-            </a>
-        </div>
-
-        <div class="nav-item">
-            <a href="{{ route('admin.fakultas.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.fakultas.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-building text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Fakultas</span>
-            </a>
-        </div>
-
-        <div class="nav-item">
-            <a href="{{ route('admin.program-studi.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.program-studi.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-diagram-3 text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Program Studi</span>
-            </a>
-        </div>
-
-        <div class="nav-item">
-            <a href="{{ route('admin.kurikulum.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.kurikulum.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-journal-bookmark text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Kurikulum</span>
-            </a>
-        </div>
-
-        <div class="nav-item">
-            <a href="{{ route('admin.tahun-akademik.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.tahun-akademik.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-calendar-event text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Tahun Akademik</span>
-            </a>
-        </div>
-
-        <div class="nav-item">
-            <a href="{{ route('admin.kalender-akademik.index') }}"
-               class="nav-link flex items-center gap-3 px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
-               {{ request()->routeIs('admin.kalender-akademik.*') 
-                  ? 'bg-white/15 text-white shadow-sm' 
-                  : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <i class="bi bi-calendar3 text-base w-5 flex justify-center flex-shrink-0"></i>
-                <span>Kalender Akademik</span>
-            </a>
+        <!-- Perkuliahan -->
+        <div class="nav-item" x-data="{ open: {{ request()->routeIs('admin.mata-kuliah.*', 'admin.kelas.*') ? 'true' : 'false' }} }">
+            <button @click="open = !open" type="button" class="nav-link w-full flex items-center justify-between px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none text-white/70 hover:bg-white/10 hover:text-white cursor-pointer border-0 bg-transparent text-left">
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-book-fill text-base w-5 flex justify-center flex-shrink-0"></i>
+                    <span>Perkuliahan</span>
+                </div>
+                <i class="bi bi-chevron-down text-[10px] transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+            </button>
+            <div x-show="open" x-collapse class="pl-8 pr-2 py-1 space-y-1 mt-1">
+                <a href="{{ route('admin.mata-kuliah.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.mata-kuliah.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Mata Kuliah
+                </a>
+                <a href="{{ route('admin.kelas.index') }}"
+                   class="block px-3 py-2 text-sm font-normal rounded-lg transition-all duration-200 decoration-none
+                   {{ request()->routeIs('admin.kelas.*') ? 'bg-white/15 text-white shadow-sm' : 'text-white/60 hover:bg-white/10 hover:text-white' }}">
+                    Kelas Perkuliahan
+                </a>
+            </div>
         </div>
 
         <!-- Konten -->

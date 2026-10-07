@@ -7,7 +7,6 @@
                 <th>TAHUN AJARAN</th>
                 <th>JENIS</th>
                 <th>TANGGAL PERIODE</th>
-                <th>STATUS</th>
                 <th class="text-center" style="width: 140px;">AKSI</th>
             </tr>
         </thead>
@@ -34,19 +33,6 @@
                         </div>
                     </td>
                     <td>
-                        @if($ta->is_active)
-                            <span class="badge-status badge-status-aktif">
-                                <span class="status-dot"></span>
-                                Aktif
-                            </span>
-                        @else
-                            <span class="badge-status badge-status-nonaktif">
-                                <span class="status-dot"></span>
-                                Nonaktif
-                            </span>
-                        @endif
-                    </td>
-                    <td>
                         <div class="action-buttons justify-content-center">
                             <a href="{{ route('admin.tahun-akademik.show', $ta->id) }}" class="action-btn action-btn-view" title="Lihat">
                                 <i class="bi bi-eye-fill"></i>
@@ -66,7 +52,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center py-5">
+                    <td colspan="6" class="text-center py-5">
                         <div class="d-flex flex-column align-items-center justify-content-center text-muted">
                             <i class="bi bi-calendar-x fs-1 text-slate-300 mb-2"></i>
                             <p class="fw-semibold mb-0">Belum ada data tahun akademik.</p>

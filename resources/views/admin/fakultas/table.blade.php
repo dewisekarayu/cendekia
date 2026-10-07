@@ -2,39 +2,49 @@
     <table class="table table-hover align-middle mb-0" style="min-width: 800px;">
         <thead class="table-light">
             <tr>
-                <th scope="col" class="py-3 px-4 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px; width: 50px;">No</th>
-                <th scope="col" class="py-3 px-4 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Kode</th>
-                <th scope="col" class="py-3 px-4 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Nama Fakultas</th>
-                <th scope="col" class="py-3 px-4 text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px; width: 120px;">Aksi</th>
+                <th scope="col" class="py-3 px-4 text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; width: 60px;">No</th>
+                <th scope="col" class="py-3 px-4 text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px;">Kode</th>
+                <th scope="col" class="py-3 px-4 text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px;">Nama Fakultas</th>
+                <th scope="col" class="py-3 px-4 text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; text-align: center;">Total Prodi</th>
+                <th scope="col" class="py-3 px-4 text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; width: 120px; text-align: center;">Aksi</th>
             </tr>
         </thead>
         <tbody class="border-top-0">
             @forelse($fakultasList as $key => $fakultas)
                 <tr>
-                    <td class="px-4 text-muted">{{ $fakultasList->firstItem() + $key }}</td>
-                    <td class="px-4"><span class="badge bg-light text-dark border">{{ $fakultas->kode_fakultas }}</span></td>
-                    <td class="px-4 fw-semibold">{{ $fakultas->nama_fakultas }}</td>
-                    <td class="px-4">
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('admin.fakultas.show', $fakultas->id) }}" class="btn btn-sm btn-light text-secondary border" data-bs-toggle="tooltip" title="Lihat">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light text-primary border" data-bs-toggle="tooltip" title="Edit">
+                    <td class="px-4 py-4 text-muted">{{ $fakultasList->firstItem() + $key }}</td>
+                    <td class="px-4 py-4">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold border border-primary border-opacity-25" style="font-size: 0.85rem;">
+                            <i class="bi bi-hash"></i> {{ $fakultas->kode_fakultas }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-4">
+                        <span class="fw-bold text-dark" style="font-size: 0.95rem;">{{ $fakultas->nama_fakultas }}</span>
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-pill px-3 py-2" style="font-weight: 600;">
+                            <i class="bi bi-diagram-2 me-1"></i> {{ $fakultas->programStudi->count() }} Prodi
+                        </span>
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        <div class="d-flex gap-2 justify-content-center">
+                            <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light text-primary border rounded-3" data-bs-toggle="tooltip" title="Edit Fakultas">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <form action="{{ route('admin.fakultas.destroy', $fakultas->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus fakultas ini? Data program studi di bawahnya mungkin terpengaruh.');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-light text-danger border" data-bs-toggle="tooltip" title="Hapus">
+                                <button type="submit" class="btn btn-sm btn-light text-danger border rounded-3" data-bs-toggle="tooltip" title="Hapus Fakultas">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
                         </div>
                     </td>
                 </tr>
+
             @empty
                 <tr>
-                    <td colspan="4" class="text-center py-5">
+                    <td colspan="5" class="text-center py-5">
                         <div class="d-flex flex-column align-items-center">
                             <i class="bi bi-building fs-1 text-muted mb-3 opacity-50"></i>
                             <h6 class="fw-semibold text-muted mb-1">Data Fakultas Tidak Ditemukan</h6>

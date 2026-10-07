@@ -23,4 +23,9 @@ class Semester extends Model
         'tanggal_selesai' => 'date',
         'is_active' => 'boolean',
     ];
+
+    public function fakultas()
+    {
+        return $this->hasMany(Fakultas::class, 'semester_id');
+    }
 }

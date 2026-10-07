@@ -75,8 +75,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.program-studi')
         ->parameters(['program-studi' => 'programStudi']);
 
-    Route::resource('admin/kurikulum', \App\Http\Controllers\Admin\KurikulumController::class)
-        ->names('admin.kurikulum');
+
 
     Route::resource('admin/tahun-akademik', \App\Http\Controllers\Admin\TahunAkademikController::class)
         ->names('admin.tahun-akademik')
@@ -167,8 +166,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/bulk-delete', [App\Http\Controllers\Admin\AbsensiController::class, 'bulkDelete'])->name('bulkDelete');
     });
 
-    // Global Analytics (EWS)
-    Route::get('/admin/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('admin.analytics');
+    // (Global Analytics removed)
 
     // Kalender Akademik
     Route::resource('admin/kalender-akademik', KalenderAkademikController::class)

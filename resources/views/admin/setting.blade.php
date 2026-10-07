@@ -14,12 +14,7 @@
         </div>
 
         <div class="flex items-center gap-2 flex-wrap">
-            <a href="{{ route('admin.notification-preferences.index') }}" 
-               class="btn btn-light border bg-white dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 d-inline-flex align-items-center gap-2 px-3.5 py-2 text-sm font-semibold shadow-sm"
-               style="border-radius: 0.75rem;">
-                <i class="bi bi-bell"></i>
-                <span>Pengaturan Notifikasi Pengguna</span>
-            </a>
+            <!-- Tombol Notifikasi Dihapus -->
         </div>
     </div>
 
@@ -174,60 +169,7 @@
             </form>
         </div>
 
-        {{-- Ganti Password Form --}}
-        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm overflow-hidden p-5 sm:p-7">
-            <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                <div class="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 font-extrabold text-sm flex items-center justify-center border border-amber-200 dark:border-amber-900/50">
-                    <i class="bi bi-key"></i>
-                </div>
-                <div>
-                    <h2 class="text-base font-bold text-slate-900 dark:text-white m-0">Keamanan & Kata Sandi</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 m-0">Gunakan kata sandi kombinasi huruf, angka, dan simbol untuk keamanan maksimal</p>
-                </div>
-            </div>
-
-            <form action="{{ route('admin.setting.password') }}" method="POST" class="space-y-4">
-                @csrf
-                @method('PUT')
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label for="current_password" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                            Kata Sandi Saat Ini <span class="text-red-500">*</span>
-                        </label>
-                        <input type="password" name="current_password" id="current_password" class="form-control w-full" required>
-                        @error('current_password')
-                            <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                            Kata Sandi Baru <span class="text-red-500">*</span>
-                        </label>
-                        <input type="password" name="password" id="password" class="form-control w-full" required>
-                        @error('password')
-                            <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="password_confirmation" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                            Konfirmasi Sandi Baru <span class="text-red-500">*</span>
-                        </label>
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control w-full" required>
-                    </div>
-                </div>
-
-                <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex justify-end">
-                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition flex items-center gap-2">
-                        <i class="bi bi-shield-check"></i>
-                        <span>Perbarui Kata Sandi</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-
+        {{-- Ganti Password Form (Telah dihapus sesuai permintaan) --}}
     </div>
 
     {{-- TAB 2: TAMPILAN & BAHASA --}}

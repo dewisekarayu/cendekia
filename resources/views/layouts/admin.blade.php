@@ -856,52 +856,79 @@
 
             <!-- Navigation Menu -->
             <nav class="flex-1 px-3 py-4 space-y-1">
-                @php
-                    $menu = [
-                        ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                        ['label' => 'Data Dosen', 'route' => 'admin.dosen.index', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
-                        ['label' => 'Data Mahasiswa', 'route' => 'admin.mahasiswa.index', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
-                        ['label' => 'Fakultas', 'route' => 'admin.fakultas.index', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
-                        ['label' => 'Program Studi', 'route' => 'admin.program-studi.index', 'icon' => 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.42A12.02 12.02 0 0112 21.5a12.02 12.02 0 01-6.16-10.92L12 14z'],
-                        ['label' => 'Kurikulum', 'route' => 'admin.kurikulum.index', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                        ['label' => 'Tahun Akademik', 'route' => 'admin.tahun-akademik.index', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                        ['label' => 'Kelas Perkuliahan', 'route' => 'admin.kelas.index', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
-                        ['label' => 'Mata Kuliah', 'route' => 'admin.mata-kuliah.index', 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                        ['label' => 'Global Analytics (EWS)', 'route' => 'admin.analytics', 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'],
-                        ['label' => 'Kalender Akademik', 'route' => 'admin.kalender-akademik.index', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                        ['label' => 'Pengumuman', 'route' => 'admin.pengumuman.index', 'icon' => 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z'],
-                    ];
-                @endphp
+                @php $isActive = request()->routeIs('admin.dashboard'); @endphp
+                <a href="{{ route('admin.dashboard') }}"
+                    class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isActive ? 'sidebar-link-active' : '' }}"
+                    style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <span>Dashboard</span>
+                </a>
 
-                @foreach ($menu as $item)
-                    @php
-                        $activeLabel = View::yieldContent('activeMenu') ?: '';
-                        $isActive = ($item['label'] === $activeLabel) || (
-                            ($item['route'] === 'admin.dashboard' && request()->routeIs('admin.dashboard')) ||
-                            ($item['route'] === 'admin.dosen.index' && request()->routeIs('admin.dosen.*')) ||
-                            ($item['route'] === 'admin.mahasiswa.index' && request()->routeIs('admin.mahasiswa.*')) ||
-                            ($item['route'] === 'admin.mata-kuliah.index' && request()->routeIs('admin.mata-kuliah.*')) ||
-                            ($item['route'] === 'admin.fakultas.index' && request()->routeIs('admin.fakultas.*')) ||
-                            ($item['route'] === 'admin.kurikulum.index' && request()->routeIs('admin.kurikulum.*')) ||
-                            ($item['route'] === 'admin.tahun-akademik.index' && request()->routeIs('admin.tahun-akademik.*')) ||
-                            ($item['route'] === 'admin.kelas.index' && request()->routeIs('admin.kelas.*')) ||
-                            ($item['route'] === 'admin.program-studi.index' && request()->routeIs('admin.program-studi.*')) ||
-                            ($item['route'] === 'admin.fakultas.index' && request()->routeIs('admin.fakultas.*')) ||
-                            ($item['route'] === 'admin.kurikulum.index' && request()->routeIs('admin.kurikulum.*')) ||
-                            ($item['route'] === 'admin.kalender-akademik.index' && request()->routeIs('admin.kalender-akademik.*')) ||
-                            ($item['route'] === 'admin.pengumuman.index' && request()->routeIs('admin.pengumuman.*'))
-                        );
-                    @endphp
-                    <a
-                        href="{{ route($item['route']) }}"
-                        class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isActive ? 'sidebar-link-active' : '' }}"
-                        style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
-                        </svg>
-                        <span>{{ $item['label'] }}</span>
-                    </a>
-                @endforeach
+                <div x-data="{ open: {{ request()->routeIs('admin.dosen.*', 'admin.mahasiswa.*') ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition cursor-pointer border-0 bg-transparent text-left sidebar-link" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};" x-bind:style="open ? 'color: {{ $activeText }};' : 'color: {{ $sidebarText }};'">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z"/></svg>
+                            <span>Data Pengguna</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-10 pr-2 py-1 space-y-1">
+                        @php $isActive = request()->routeIs('admin.dosen.*'); @endphp
+                        <a href="{{ route('admin.dosen.index') }}" class="block px-3 py-2 text-sm font-medium rounded-lg transition text-decoration-none sidebar-link {{ $isActive ? 'sidebar-link-active' : '' }}" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">Data Dosen</a>
+                        @php $isActive = request()->routeIs('admin.mahasiswa.*'); @endphp
+                        <a href="{{ route('admin.mahasiswa.index') }}" class="block px-3 py-2 text-sm font-medium rounded-lg transition text-decoration-none sidebar-link {{ $isActive ? 'sidebar-link-active' : '' }}" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">Data Mahasiswa</a>
+                    </div>
+                </div>
+
+                <div x-data="{ open: {{ request()->routeIs('admin.fakultas.*', 'admin.program-studi.*', 'admin.tahun-akademik.*') ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition cursor-pointer border-0 bg-transparent text-left sidebar-link" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};" x-bind:style="open ? 'color: {{ $activeText }};' : 'color: {{ $sidebarText }};'">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <span>Data Akademik</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-10 pr-2 py-1 space-y-1">
+                        @php $isActive = request()->routeIs('admin.fakultas.*'); @endphp
+                        <a href="{{ route('admin.fakultas.index') }}" class="block px-3 py-2 text-sm font-medium rounded-lg transition text-decoration-none sidebar-link {{ $isActive ? 'sidebar-link-active' : '' }}" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">Fakultas</a>
+                        @php $isActive = request()->routeIs('admin.program-studi.*'); @endphp
+                        <a href="{{ route('admin.program-studi.index') }}" class="block px-3 py-2 text-sm font-medium rounded-lg transition text-decoration-none sidebar-link {{ $isActive ? 'sidebar-link-active' : '' }}" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">Program Studi</a>
+                        @php $isActive = request()->routeIs('admin.tahun-akademik.*'); @endphp
+                        <a href="{{ route('admin.tahun-akademik.index') }}" class="block px-3 py-2 text-sm font-medium rounded-lg transition text-decoration-none sidebar-link {{ $isActive ? 'sidebar-link-active' : '' }}" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">Tahun Akademik</a>
+                    </div>
+                </div>
+
+                <div x-data="{ open: {{ request()->routeIs('admin.mata-kuliah.*', 'admin.kelas.*') ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition cursor-pointer border-0 bg-transparent text-left sidebar-link" style="color: {{ $sidebarText }}; --hover-bg: {{ $sidebarHover }};" x-bind:style="open ? 'color: {{ $activeText }};' : 'color: {{ $sidebarText }};'">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            <span>Perkuliahan</span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div x-show="open" x-collapse class="pl-10 pr-2 py-1 space-y-1">
+                        @php $isActive = request()->routeIs('admin.kelas.*'); @endphp
+                        <a href="{{ route('admin.kelas.index') }}" class="block px-3 py-2 text-sm font-medium rounded-lg transition text-decoration-none sidebar-link {{ $isActive ? 'sidebar-link-active' : '' }}" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">Kelas Perkuliahan</a>
+                        @php $isActive = request()->routeIs('admin.mata-kuliah.*'); @endphp
+                        <a href="{{ route('admin.mata-kuliah.index') }}" class="block px-3 py-2 text-sm font-medium rounded-lg transition text-decoration-none sidebar-link {{ $isActive ? 'sidebar-link-active' : '' }}" style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">Mata Kuliah</a>
+                    </div>
+                </div>
+
+                @php $isActive = request()->routeIs('admin.kalender-akademik.*'); @endphp
+                <a href="{{ route('admin.kalender-akademik.index') }}"
+                    class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isActive ? 'sidebar-link-active' : '' }}"
+                    style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span>Kalender Akademik</span>
+                </a>
+
+                @php $isActive = request()->routeIs('admin.pengumuman.*'); @endphp
+                <a href="{{ route('admin.pengumuman.index') }}"
+                    class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isActive ? 'sidebar-link-active' : '' }}"
+                    style="{{ $isActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+                    <span>Pengumuman</span>
+                </a>
 
                 <!-- Bottom Links Section (Matching Dosen layout) -->
                 <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
@@ -916,16 +943,7 @@
                         <span>Pengaturan</span>
                     </a>
 
-                    @php $isUserActive = request()->routeIs('admin.user.*'); @endphp
-                    <a
-                        href="{{ route('admin.user.index') }}"
-                        class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isUserActive ? 'sidebar-link-active' : '' }}"
-                        style="{{ $isUserActive ? 'background-color: '.$activeBg.'; color: '.$activeText.';' : 'color: '.$sidebarText.';' }} --hover-bg: {{ $sidebarHover }};">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2m17-10a4 4 0 11-8 0 4 4 0 018 0zm6 10v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-                        </svg>
-                        <span>Kelola Akun Pengguna</span>
-                    </a>
+                    <!-- Kelola Akun Pengguna dihapus sesuai permintaan -->
 
                     @php $isHelpActive = request()->routeIs('admin.help-center.*') || request()->routeIs('help-center.*'); @endphp
                     <a

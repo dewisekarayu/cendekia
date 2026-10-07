@@ -8,101 +8,121 @@
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
         <div>
             <h1 class="page-title mb-1">Manajemen Fakultas</h1>
-            <p class="text-muted mb-2" style="font-size: 0.875rem;">Kelola seluruh data fakultas di lingkungan kampus.</p>
+            <p class="text-muted mb-2" style="font-size: 0.875rem;">Kelola seluruh data fakultas dan program studi di lingkungan kampus.</p>
             <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><span class="text-slate-500">Master Data</span></li>
+                    <li class="breadcrumb-item"><span class="text-slate-500">Data Akademik</span></li>
                     <li class="breadcrumb-item active" aria-current="page">Fakultas</li>
                 </ol>
             </nav>
         </div>
-
-        <a href="{{ route('admin.fakultas.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
-            <i class="bi bi-plus-lg"></i>
-            <span>Tambah Fakultas</span>
-        </a>
     </div>
 
-    {{-- Flash Alert --}}
-    @if(session('success'))
-        <div class="alert alert-success d-flex align-items-center justify-content-between border-0 shadow-sm mb-4" style="border-radius: 0.85rem; background-color: #ecfdf5; color: #065f46;" role="alert">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-check-circle-fill fs-5 text-success"></i>
-                <span class="fw-semibold">{{ session('success') }}</span>
+    @foreach($semesters as $semester)
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0 fw-bold" style="color: #002B6B;">Tahun Akademik: {{ $semester->tahun_ajaran }} - {{ $semester->jenis }}</h5>
+                <span class="badge {{ $semester->is_active ? 'bg-success' : 'bg-secondary' }} mt-1">{{ $semester->is_active ? 'Aktif' : 'Tidak Aktif' }}</span>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <a href="{{ route('admin.fakultas.create') }}" class="btn btn-sm btn-primary">
+                <i class="bi bi-plus"></i> Tambah Fakultas di Sini
+            </a>
         </div>
-    @endif
-
-    {{-- Table Card Container --}}
-    <div class="table-card">
-        <div class="p-3.5 sm:p-4 border-b border-slate-100 bg-slate-50/50">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                <div class="position-relative flex-grow-1" style="max-width: 480px;">
-                    <input type="text" id="liveSearchFakultas" class="form-control ps-4" value="{{ $search ?? '' }}" placeholder="Cari Kode atau Nama Fakultas..." style="height: 44px; padding-right: 2.75rem;" autocomplete="off">
-                    <div id="searchSpinner" class="spinner-border spinner-border-sm text-secondary d-none" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);" role="status"></div>
-                    <i id="searchIcon" class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1rem;"></i>
+        <div class="card-body p-0">
+            @if($semester->fakultas->count() > 0)
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-4 py-3 text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Kode Fakultas</th>
+                                <th class="px-4 py-3 text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Fakultas</th>
+                                <th class="px-4 py-3 text-uppercase text-muted fw-bold" style="font-size: 0.75rem; text-align: center;">Total Prodi</th>
+                                <th class="px-4 py-3 text-uppercase text-muted fw-bold" style="font-size: 0.75rem; text-align: center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody x-data="{ expandedId: null }">
+                            @foreach($semester->fakultas as $fakultas)
+                                <tr class="align-middle" :class="expandedId === {{ $fakultas->id }} ? 'bg-slate-50 border-primary' : ''" style="transition: all 0.2s; border-bottom: 1px solid #f1f5f9;">
+                                    <td class="px-4 py-4">
+                                        <button @click="expandedId = expandedId === {{ $fakultas->id }} ? null : {{ $fakultas->id }}" 
+                                                class="btn btn-sm text-white d-inline-flex align-items-center gap-2 rounded-pill shadow-sm border-0"
+                                                :class="expandedId === {{ $fakultas->id }} ? 'bg-primary' : 'bg-indigo-600'" 
+                                                style="font-weight: 600; padding: 0.4rem 1rem; font-size: 0.875rem;">
+                                            <i class="bi bi-chevron-right transition-transform" :class="expandedId === {{ $fakultas->id }} ? 'rotate-90' : ''" style="font-size: 0.75rem;"></i>
+                                            {{ $fakultas->kode_fakultas }}
+                                        </button>
+                                    </td>
+                                    <td class="px-4 py-4 fw-bold text-dark" style="font-size: 0.95rem;">{{ $fakultas->nama_fakultas }}</td>
+                                    <td class="px-4 py-4 text-center">
+                                        <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-pill px-3 py-2" style="font-weight: 600;">
+                                            <i class="bi bi-diagram-2 me-1"></i> {{ $fakultas->programStudi->count() }} Prodi
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4 text-center">
+                                        <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light border text-primary" title="Edit Fakultas">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Child Row: Program Studi -->
+                                <tr x-show="expandedId === {{ $fakultas->id }}" x-transition.opacity.duration.300ms style="display: none;">
+                                    <td colspan="4" class="p-0 border-0">
+                                        <div class="bg-slate-50 border-bottom border-start border-primary border-4 py-4 px-5 shadow-inner">
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <div>
+                                                    <h6 class="mb-1 fw-bold text-primary"><i class="bi bi-diagram-3-fill"></i> Daftar Program Studi di {{ $fakultas->nama_fakultas }}</h6>
+                                                </div>
+                                                <a href="{{ route('admin.program-studi.create', ['fakultas_id' => $fakultas->id]) }}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-plus-lg"></i> Tambah Prodi
+                                                </a>
+                                            </div>
+                                            
+                                            <div class="bg-white rounded-3 shadow-sm border border-slate-200 overflow-hidden">
+                                                <table class="table table-sm table-hover align-middle mb-0">
+                                                    <thead style="background-color: #f8fafc;">
+                                                        <tr>
+                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Kode</th>
+                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Nama Prodi</th>
+                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Jenjang</th>
+                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse($fakultas->programStudi as $prodi)
+                                                        <tr>
+                                                            <td class="px-4 py-2"><span class="badge bg-slate-100 text-slate-700 border">{{ $prodi->kode_prodi }}</span></td>
+                                                            <td class="px-4 py-2 fw-semibold">{{ $prodi->nama_prodi }}</td>
+                                                            <td class="px-4 py-2"><span class="badge bg-indigo-50 text-indigo-700 border">{{ $prodi->jenjang }}</span></td>
+                                                            <td class="px-4 py-2">
+                                                                <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="btn btn-sm btn-light border text-primary py-0"><i class="bi bi-pencil" style="font-size: 0.75rem;"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        @empty
+                                                        <tr>
+                                                            <td colspan="4" class="text-center py-3 text-muted small">Belum ada program studi di fakultas ini.</td>
+                                                        </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-        </div>
-
-        {{-- DOM Target Penggantian Tabel Otomatis --}}
-        <div id="tableContainer">
-            @include('admin.fakultas.table')
+            @else
+                <div class="text-center py-5">
+                    <i class="bi bi-folder-x fs-1 text-muted opacity-25 d-block mb-3"></i>
+                    <p class="text-muted mb-0">Belum ada Fakultas pada Tahun Akademik ini.</p>
+                </div>
+            @endif
         </div>
     </div>
+    @endforeach
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('liveSearchFakultas');
-        const tableContainer = document.getElementById('tableContainer');
-        const searchIcon = document.getElementById('searchIcon');
-        const spinner = document.getElementById('searchSpinner');
-        let typingTimer;
-
-        searchInput.addEventListener('input', function () {
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(performSearch, 350);
-        });
-
-        document.addEventListener('change', function (e) {
-            if (e.target && e.target.id === 'perPageSelect') {
-                performSearch(1);
-            }
-        });
-
-        function performSearch(page = 1) {
-            searchIcon.classList.add('d-none');
-            spinner.classList.remove('d-none');
-
-            const keyword = searchInput.value;
-            const perPageEl = document.getElementById('perPageSelect');
-            const perPage = perPageEl ? perPageEl.value : 10;
-            const url = new URL(window.location.origin + window.location.pathname);
-            url.searchParams.set('search', keyword);
-            url.searchParams.set('page', page);
-            url.searchParams.set('per_page', perPage);
-            url.searchParams.set('ajax', '1');
-
-            fetch(url, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => response.text())
-                .then(html => {
-                    tableContainer.innerHTML = html;
-                    spinner.classList.add('d-none');
-                    searchIcon.classList.remove('d-none');
-                    
-                    const browserUrl = new URL(window.location.origin + window.location.pathname);
-                    if(keyword) browserUrl.searchParams.set('search', keyword);
-                    if(perPage) browserUrl.searchParams.set('per_page', perPage);
-                    window.history.pushState({}, '', browserUrl);
-                });
-        }
-    });
-</script>
-@endpush

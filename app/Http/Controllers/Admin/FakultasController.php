@@ -10,27 +10,15 @@ class FakultasController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->input('search');
-        $perPage = $request->input('per_page', 10);
-        
-        $fakultasList = Fakultas::when($search, function($q) use ($search) {
-                $q->where('kode_fakultas', 'like', "%{$search}%")
-                  ->orWhere('nama_fakultas', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
-            
-        if ($request->ajax()) {
-            return view('admin.fakultas.table', compact('fakultasList'))->render();
-        }
-
-        return view('admin.fakultas.index', compact('fakultasList', 'search'));
+        // Load hierarchical data: Semester -> Fakultas -> Program Studi
+        $semesters = \App\Models\Semester::with(['fakultas.programStudi'])->latest('tanggal_mulai')->get();
+        return view('admin.fakultas.index', compact('semesters'));
     }
 
     public function create()
     {
-        return view('admin.fakultas.create');
+        $semesters = \App\Models\Semester::latest()->get();
+        return view('admin.fakultas.create', compact('semesters'));
     }
 
     public function store(Request $request)
@@ -38,6 +26,7 @@ class FakultasController extends Controller
         $validated = $request->validate([
             'kode_fakultas' => 'required|string|unique:fakultas,kode_fakultas',
             'nama_fakultas' => 'required|string|max:255',
+            'semester_id'   => 'required|exists:semesters,id',
         ]);
 
         Fakultas::create($validated);
@@ -51,7 +40,8 @@ class FakultasController extends Controller
 
     public function edit(Fakultas $fakultas)
     {
-        return view('admin.fakultas.edit', compact('fakultas'));
+        $semesters = \App\Models\Semester::latest()->get();
+        return view('admin.fakultas.edit', compact('fakultas', 'semesters'));
     }
 
     public function update(Request $request, Fakultas $fakultas)
@@ -59,6 +49,7 @@ class FakultasController extends Controller
         $validated = $request->validate([
             'kode_fakultas' => 'required|string|unique:fakultas,kode_fakultas,' . $fakultas->id,
             'nama_fakultas' => 'required|string|max:255',
+            'semester_id'   => 'required|exists:semesters,id',
         ]);
 
         $fakultas->update($validated);

@@ -30,6 +30,18 @@
                     <input type="text" class="form-control @error('nama_fakultas') is-invalid @enderror" id="nama_fakultas" name="nama_fakultas" value="{{ old('nama_fakultas', $fakultas->nama_fakultas) }}" required>
                     @error('nama_fakultas') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
+                <div class="col-md-12 mt-3">
+                    <label for="semester_id" class="form-label fw-semibold small text-muted">Tahun Akademik / Semester <span class="text-danger">*</span></label>
+                    <select class="form-select @error('semester_id') is-invalid @enderror" id="semester_id" name="semester_id" required>
+                        <option value="">-- Pilih Tahun Akademik --</option>
+                        @foreach($semesters as $semester)
+                            <option value="{{ $semester->id }}" {{ old('semester_id', $fakultas->semester_id) == $semester->id ? 'selected' : '' }}>
+                                {{ $semester->tahun_ajaran }} - {{ $semester->jenis }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('semester_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
             </div>
             <div class="d-flex gap-2 mt-4">
                 <button type="submit" class="btn btn-primary px-4">Update Fakultas</button>

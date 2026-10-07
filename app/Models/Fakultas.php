@@ -14,7 +14,13 @@ class Fakultas extends Model
     protected $fillable = [
         'kode_fakultas',
         'nama_fakultas',
+        'semester_id',
     ];
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'semester_id');
+    }
 
     public function programStudi()
     {
