@@ -32,6 +32,7 @@ class JadwalController extends Controller
                 'mahasiswa',
                 'dosen',
                 'dosenPengampuTambahan',
+                'jadwals',
                 'absensi' => fn ($q) => $q
                     ->withCount([
                         'absensiMahasiswa as hadir_count' => fn ($query) => $query->where('status', 'hadir'),
@@ -40,8 +41,6 @@ class JadwalController extends Controller
             ])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
-            ->orderByRaw("FIELD(LOWER(TRIM(hari)), 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu')")
-            ->orderBy('jam_mulai')
             ->get();
 
         // Kelompokkan berdasarkan hari (case-insensitive & trim)
@@ -49,12 +48,27 @@ class JadwalController extends Controller
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
         foreach ($days as $day) {
-            $jadwalByDay[$day] = $kelasPerkuliahan
-                ->filter(function ($kelas) use ($day) {
-                    return strtolower(trim($kelas->hari ?? '')) === strtolower($day);
-                })
-                ->sortBy('jam_mulai')
-                ->values();
+            $jadwalByDay[$day] = collect();
+        }
+
+        foreach ($kelasPerkuliahan as $kelas) {
+            foreach ($kelas->jadwals as $jadwal) {
+                $day = ucfirst(strtolower(trim($jadwal->hari)));
+                if (isset($jadwalByDay[$day])) {
+                    // Inject schedule specifics so the view can render it easily
+                    $kelasItem = clone $kelas;
+                    $kelasItem->hari = $jadwal->hari;
+                    $kelasItem->jam_mulai = $jadwal->jam_mulai;
+                    $kelasItem->jam_selesai = $jadwal->jam_selesai;
+                    $kelasItem->ruangan = $jadwal->ruangan;
+                    
+                    $jadwalByDay[$day]->push($kelasItem);
+                }
+            }
+        }
+
+        foreach ($days as $day) {
+            $jadwalByDay[$day] = $jadwalByDay[$day]->sortBy('jam_mulai')->values();
         }
 
         // Tampilan log mengajar dikelompokkan berdasarkan kelas & mata kuliah
@@ -214,7 +228,7 @@ class JadwalController extends Controller
                         $q->where('users.id', $user->id);
                     });
             })
-            ->with(['mataKuliah', 'mahasiswa'])
+            ->with(['mataKuliah', 'mahasiswa', 'jadwals'])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
             ->get();
@@ -223,34 +237,36 @@ class JadwalController extends Controller
         $calendarEvents = [];
         
         foreach ($kelasPerkuliahan as $kelas) {
-            // Map hari ke format day-of-week (case-insensitive & trim)
-            $dayMap = [
-                'senin' => 1,
-                'selasa' => 2,
-                'rabu' => 3,
-                'kamis' => 4,
-                'jumat' => 5,
-                'sabtu' => 6,
-                'minggu' => 7,
-            ];
+            foreach ($kelas->jadwals as $jadwal) {
+                // Map hari ke format day-of-week (case-insensitive & trim)
+                $dayMap = [
+                    'senin' => 1,
+                    'selasa' => 2,
+                    'rabu' => 3,
+                    'kamis' => 4,
+                    'jumat' => 5,
+                    'sabtu' => 6,
+                    'minggu' => 7,
+                ];
 
-            $hariKey = strtolower(trim($kelas->hari));
-            $dayOfWeek = $dayMap[$hariKey] ?? 1;
-            
-            $calendarEvents[] = [
-                'id' => $kelas->id,
-                'title' => $kelas->mataKuliah->nama_mk . ' - ' . $kelas->kode_kelas,
-                'startTime' => $kelas->jam_mulai,
-                'endTime' => $kelas->jam_selesai,
-                'daysOfWeek' => [$dayOfWeek],
-                'backgroundColor' => $this->getColorByProgramStudi($kelas->program_studi_id),
-                'extendedProps' => [
-                    'kode_kelas' => $kelas->kode_kelas,
-                    'ruangan' => $kelas->ruangan,
-                    'jumlah_mahasiswa' => $kelas->jumlah_mahasiswa,
-                    'sks' => $kelas->mataKuliah->sks ?? 0,
-                ]
-            ];
+                $hariKey = strtolower(trim($jadwal->hari));
+                $dayOfWeek = $dayMap[$hariKey] ?? 1;
+                
+                $calendarEvents[] = [
+                    'id' => $kelas->id . '-' . $jadwal->id,
+                    'title' => $kelas->mataKuliah->nama_mk . ' - ' . $kelas->kode_kelas,
+                    'startTime' => $jadwal->jam_mulai,
+                    'endTime' => $jadwal->jam_selesai,
+                    'daysOfWeek' => [$dayOfWeek],
+                    'backgroundColor' => $this->getColorByProgramStudi($kelas->program_studi_id),
+                    'extendedProps' => [
+                        'kode_kelas' => $kelas->kode_kelas,
+                        'ruangan' => $jadwal->ruangan,
+                        'jumlah_mahasiswa' => $kelas->jumlah_mahasiswa,
+                        'sks' => $kelas->mataKuliah->sks ?? 0,
+                    ]
+                ];
+            }
         }
 
         return view('dosen.jadwal.calendar', compact('calendarEvents'));
@@ -389,11 +405,9 @@ class JadwalController extends Controller
                         $q->where('users.id', $user->id);
                     });
             })
-            ->with(['mataKuliah.programStudi', 'semester'])
+            ->with(['mataKuliah.programStudi', 'semester', 'jadwals'])
             ->where('status_kelas', 'aktif')
             ->where('is_active', true)
-            ->orderByRaw("FIELD(LOWER(TRIM(hari)), 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu')")
-            ->orderBy('jam_mulai')
             ->get();
 
         // Data untuk PDF
