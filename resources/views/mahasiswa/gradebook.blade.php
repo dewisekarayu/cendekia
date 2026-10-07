@@ -25,9 +25,9 @@
 {{-- ===== HEADER ===== --}}
 <div class="mb-6 rounded-2xl bg-[#002B6B] px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg shadow-blue-950/10">
     <div class="relative z-10">
-        <p class="text-xs font-bold uppercase tracking-wide text-blue-200/70">Akademik</p>
-        <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Gradebook</h1>
-        <p class="mt-1 text-sm text-blue-100/70">Rekap nilai akhir dan tugas dari semua kelas yang kamu ikuti.</p>
+        <p class="text-xs font-bold uppercase tracking-wide text-blue-200/70">Akademik & EWS</p>
+        <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Gradebook & Self-Analytics</h1>
+        <p class="mt-1 text-sm text-blue-100/70">Rekap nilai akhir, tugas, dan pantauan performa akademik Anda secara mandiri (EWS).</p>
     </div>
     <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/5 pointer-events-none"></div>
     <div class="absolute right-20 -bottom-8 w-24 h-24 rounded-full bg-white/5 pointer-events-none"></div>
@@ -162,110 +162,101 @@
             </table>
         </div>
     </div>
+</div>
 
-    {{-- TWO COLUMN LAYOUT AT BOTTOM --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {{-- Grade Distribution --}}
-        <div class="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-800 mb-4">Distribusi Grade</h3>
-
-            @if (empty($gradeDistribusi))
-                <p class="text-xs text-gray-400 py-4 text-center">Belum ada data grade.</p>
-            @else
-                <div class="space-y-2.5">
-                    @foreach (['A','AB','B','BC','C','D','E'] as $g)
-                        @php
-                            $count = $gradeDistribusi[$g] ?? 0;
-                            $gc2   = $gradeColors[$g] ?? $gradeColors['E'];
-                            $pct   = $totalKelas > 0 ? ($count / $totalKelas) * 100 : 0;
-                        @endphp
-                        @if ($count > 0)
-                            <div class="flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-lg {{ $gc2['bg'] }} {{ $gc2['text'] }} flex items-center justify-center text-xs font-extrabold shrink-0">
-                                    {{ $g }}
-                                </span>
-                                <div class="flex-1 min-w-0">
-                                    <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
-                                        <div class="h-full rounded-full {{ $gc2['bar'] }}" style="width: {{ $pct }}%"></div>
-                                    </div>
-                                </div>
-                                <span class="text-xs font-bold text-gray-600 w-4 text-right">{{ $count }}</span>
-                            </div>
-                        @endif
-                    @endforeach
+    {{-- ===== SELF-ANALYTICS (EWS) ===== --}}
+    <div class="mt-8">
+        <h2 class="text-xl font-extrabold text-slate-800 mb-4">Self-Analytics & Prediksi Risiko (EWS)</h2>
+        
+        {{-- Global Status Cards --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center {{ $globalAttendance < 75 ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                 </div>
-
-                {{-- Summary --}}
-                <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-3 text-center">
-                    <div>
-                        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">Total Kelas Diikuti</p>
-                        <p class="text-xl font-extrabold text-[#002B6B] mt-1">{{ $totalKelas }}</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">Rata-rata Nilai</p>
-                        <p class="text-xl font-extrabold text-emerald-600 mt-1">
-                            {{ $rataRata ? number_format($rataRata, 1) : '-' }}
-                        </p>
-                    </div>
+                <div>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase">Rata-rata Kehadiran</p>
+                    <h3 class="text-xl font-black text-slate-800">{{ $globalAttendance }}%</h3>
                 </div>
-            @endif
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center {{ $globalAvgScore < 60 ? 'bg-rose-100 text-rose-600' : 'bg-blue-100 text-blue-600' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase">Rata-rata Nilai Tugas</p>
+                    <h3 class="text-xl font-black text-slate-800">{{ $globalAvgScore ?: '-' }}</h3>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center {{ $globalMissed > 0 ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-500' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase">Tugas Terlewat</p>
+                    <h3 class="text-xl font-black text-slate-800">{{ $globalMissed }} <span class="text-sm font-normal text-gray-500">tugas</span></h3>
+                </div>
+            </div>
         </div>
 
-        {{-- Nilai Tugas Terbaru --}}
-        <div class="rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-800 mb-4">Nilai Tugas Terbaru</h3>
-
-            @if ($nilaiTugasList->isEmpty())
-                <div class="py-6 text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 mx-auto text-gray-200 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <p class="text-xs text-gray-400">Belum ada tugas yang dinilai.</p>
-                </div>
-            @else
-                <div class="space-y-3">
-                    @foreach ($nilaiTugasList->take(8) as $tugas)
-                        @php
-                            $n = (float) $tugas->nilai;
-                            $tugasGc = $n >= 85 ? $gradeColors['A']
-                                : ($n >= 75 ? $gradeColors['B']
-                                : ($n >= 65 ? $gradeColors['C']
-                                : $gradeColors['E']));
-                        @endphp
-                        <div class="flex items-center gap-3">
-                            {{-- Score badge --}}
-                            <div class="shrink-0 w-10 h-10 rounded-xl {{ $tugasGc['bg'] }} {{ $tugasGc['border'] }} border flex items-center justify-center">
-                                <span class="text-sm font-extrabold {{ $tugasGc['text'] }}">{{ (int) $n }}</span>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-slate-50/50">
+                <h3 class="font-bold text-slate-800">Prediksi Risiko Per Kelas</h3>
+            </div>
+            
+            <div class="divide-y divide-gray-100">
+                @forelse($analyticsPerClass as $data)
+                    <div class="p-5 hover:bg-slate-50/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-1">
+                                <h4 class="font-extrabold text-slate-800 text-base">{{ $data->kelas->mataKuliah->nama_mk }}</h4>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border {{ $data->status_color }}">
+                                    {{ $data->status_label }}
+                                </span>
                             </div>
-
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs font-semibold text-slate-700 truncate">
-                                    {{ $tugas->tugas?->judul ?? 'Tugas' }}
-                                </p>
-                                <p class="text-[10px] text-gray-400 truncate mt-0.5">
-                                    {{ $tugas->tugas?->kelasPerkuliahan?->mataKuliah?->nama_mk ?? '-' }}
-                                </p>
-                            </div>
-
-                            {{-- Mini progress --}}
-                            <div class="shrink-0 w-16">
-                                <div class="h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">
-                                    <div class="h-full rounded-full {{ $tugasGc['bar'] }}" style="width: {{ min(100, $n) }}%"></div>
+                            <p class="text-xs text-gray-500">{{ $data->kelas->kode_kelas }} &middot; Dosen: {{ $data->kelas->dosen->name }}</p>
+                            
+                            @if(count($data->reasons) > 0)
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    @foreach($data->reasons as $reason)
+                                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-rose-50 text-rose-600 text-[10px] font-semibold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                            </svg>
+                                            {{ $reason }}
+                                        </span>
+                                    @endforeach
                                 </div>
+                            @endif
+                        </div>
+                        
+                        <div class="flex items-center gap-6 md:w-auto w-full md:border-l border-gray-200 md:pl-6">
+                            <div class="text-center">
+                                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Kehadiran</p>
+                                <p class="font-black text-lg {{ $data->attendance_rate < 75 ? 'text-rose-600' : 'text-emerald-600' }}">{{ $data->attendance_rate }}%</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Rata Nilai</p>
+                                <p class="font-black text-lg {{ $data->avg_score < 60 ? 'text-amber-600' : 'text-slate-700' }}">{{ $data->avg_score ?: '-' }}</p>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-
-                @if ($nilaiTugasList->count() > 8)
-                    <p class="mt-3 text-center text-xs text-gray-400">
-                        + {{ $nilaiTugasList->count() - 8 }} tugas lainnya
-                    </p>
-                @endif
-            @endif
+                    </div>
+                @empty
+                    <div class="p-12 text-center text-gray-500">
+                        <p>Anda belum terdaftar di kelas manapun semester ini.</p>
+                    </div>
+                @endforelse
+            </div>
         </div>
     </div>
-
 </div>
 
 @endsection
