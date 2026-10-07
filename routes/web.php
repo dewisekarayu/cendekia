@@ -210,6 +210,8 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
 
     // Tugas Dosen
     Route::put('/dosen/kelas/{id}/tugas/{tugasId}', [DosenKelasController::class, 'updateTugas'])->name('dosen.kelas-tugas.update');
+    Route::post('/dosen/kelas/{id}/tugas/{tugasId}/buka', [DosenKelasController::class, 'bukaTugas'])->name('dosen.kelas-tugas.buka');
+    Route::post('/dosen/kelas/{id}/tugas/{tugasId}/tutup', [DosenKelasController::class, 'tutupTugas'])->name('dosen.kelas-tugas.tutup');
     Route::get('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'tugas'])->name('dosen.kelas-tugas');
     Route::post('/dosen/kelas/{id}/tugas', [DosenKelasController::class, 'storeTugas'])->name('dosen.kelas-tugas.store');
     Route::delete('/dosen/kelas/{id}/tugas/{tugasId}', [DosenKelasController::class, 'hapusTugas'])->name('dosen.kelas-tugas.destroy');
@@ -392,6 +394,7 @@ Route::middleware('auth')->group(function () {
 Route::prefix('help-center')->name('help-center.')->group(function () {
     Route::get('/', [HelpCenterController::class, 'index'])->name('index');
     Route::get('/faq', [HelpCenterController::class, 'faqPage'])->name('faq');
+    Route::get('/admin-status', [HelpCenterController::class, 'adminStatus'])->name('admin-status');
     Route::get('/search-faq', [HelpCenterController::class, 'searchFaq'])->name('search-faq');
     Route::get('/faq/{faq}', [HelpCenterController::class, 'faqDetail'])->name('faq-detail');
     Route::post('/faq/feedback', [HelpCenterController::class, 'faqFeedback'])->name('faq-feedback');

@@ -19,6 +19,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="mb-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm px-4 py-3">
+            {{ session('error') }}
+        </div>
+    @endif
+
     {{-- ===================== CARD: DETAIL TUGAS ===================== --}}
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
 
@@ -31,6 +37,9 @@
         </div>
 
         {{-- Header: judul + batas waktu --}}
+        @php
+            $isClosed = $tugas->isTutup();
+        @endphp
         <div class="flex items-start justify-between gap-4">
             <div>
                 <h1 class="text-xl font-bold text-slate-900">{{ $tugas->judul }}</h1>
@@ -39,9 +48,21 @@
 
             <div class="text-right shrink-0">
                 <p class="text-[11px] tracking-wide text-slate-400 font-medium">BATAS WAKTU</p>
-                <p class="text-red-500 font-semibold text-sm">
+                <p class="{{ $isClosed ? 'text-rose-600' : 'text-slate-800' }} font-bold text-sm">
                     {{ \Carbon\Carbon::parse($tugas->deadline)->translatedFormat('j M Y, H.i') }}
                 </p>
+                <div class="mt-1">
+                    @if ($isClosed)
+                        <span class="inline-flex items-center gap-1 rounded-md bg-rose-100 text-rose-700 px-2 py-0.5 text-xs font-semibold">
+                            Tugas Ditutup
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1 rounded-md bg-emerald-100 text-emerald-700 px-2 py-0.5 text-xs font-semibold">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Terbuka
+                        </span>
+                    @endif
+                </div>
 
                 @if ($pengumpulan?->is_graded)
                     <span class="inline-block mt-2 bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-md">
@@ -166,8 +187,36 @@
                     <p class="text-sm text-blue-900/80">{{ $pengumpulan->feedback_dosen }}</p>
                 </div>
             @endif
+
+            @if ($isClosed)
+                <div class="mt-4 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 flex items-center gap-2 text-xs text-slate-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Pengumpulan tugas ini telah ditutup. Berkas yang sudah Anda kumpulkan tersimpan dengan aman.
+                </div>
+            @endif
+        @elseif ($isClosed)
+            {{-- Belum mengumpulkan dan tugas sudah ditutup --}}
+            <div class="rounded-2xl border border-rose-200 bg-rose-50/60 p-8 text-center">
+                <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold text-slate-800">Pengumpulan Tugas Telah Ditutup</h3>
+                <p class="mt-2 text-sm text-slate-600 max-w-md mx-auto">
+                    Batas waktu pengumpulan tugas ini telah berakhir pada <strong>{{ \Carbon\Carbon::parse($tugas->deadline)->translatedFormat('d M Y, H:i') }}</strong>. Sistem saat ini tidak menerima berkas jawaban baru.
+                </p>
+                <div class="mt-4 inline-flex items-center gap-2 rounded-xl bg-white border border-rose-200/80 px-4 py-2 text-xs font-medium text-slate-600 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Jika memerlukan perpanjangan waktu, silakan hubungi dosen pengampu untuk membuka kembali tugas ini.
+                </div>
+            </div>
         @else
-            {{-- Belum mengumpulkan: form upload --}}
+            {{-- Belum mengumpulkan dan tugas masih terbuka: form upload --}}
             <form action="{{ route('mahasiswa.pengumpulan-tugas.store', $tugas->id) }}" method="POST" enctype="multipart/form-data" x-data="{ fileNames: [] }">
                 @csrf
 

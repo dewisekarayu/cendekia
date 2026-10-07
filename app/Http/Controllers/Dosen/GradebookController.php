@@ -97,7 +97,43 @@ class GradebookController extends Controller
             'bobot_uas' => $request->bobot_uas,
         ]);
 
-        return back()->with('success', 'Bobot penilaian berhasil diperbarui.');
+        // Hitung ulang nilai akhir semua mahasiswa dengan bobot baru
+        $kelas->refresh();
+        NilaiAkhir::where('kelas_perkuliahan_id', $kelas->id)->get()
+            ->each(function (NilaiAkhir $record) use ($kelas) {
+                [$record->nilai_akhir, $record->grade] = $this->hitungNilai(
+                    $kelas,
+                    $record->nilai_tugas ?? 0,
+                    $record->nilai_uts ?? 0,
+                    $record->nilai_uas ?? 0
+                );
+                $record->save();
+            });
+
+        return back()->with('success', 'Bobot penilaian berhasil diperbarui dan nilai akhir telah dihitung ulang.');
+    }
+
+    /**
+     * Rumus tunggal nilai akhir & grade berdasarkan bobot kelas.
+     */
+    protected function hitungNilai(KelasPerkuliahan $kelas, $tugas, $uts, $uas): array
+    {
+        $nilai = round(
+            ($tugas * ($kelas->bobot_tugas ?? 30) / 100)
+            + ($uts * ($kelas->bobot_uts ?? 30) / 100)
+            + ($uas * ($kelas->bobot_uas ?? 40) / 100),
+            2
+        );
+
+        $grade = match (true) {
+            $nilai >= 90 => 'A',
+            $nilai >= 80 => 'B',
+            $nilai >= 70 => 'C',
+            $nilai >= 60 => 'D',
+            default => 'E',
+        };
+
+        return [$nilai, $grade];
     }
 
     public function updateNilai(Request $request)
@@ -120,25 +156,13 @@ class GradebookController extends Controller
                     });
             })->firstOrFail();
 
-        $bTugas = ($kelas->bobot_tugas ?? 30) / 100;
-        $bUts = ($kelas->bobot_uts ?? 30) / 100;
-        $bUas = ($kelas->bobot_uas ?? 40) / 100;
-
         foreach ($request->students as $studentData) {
             $kehadiran = $studentData['nilai_kehadiran'] ?? 0;
             $tugas = $studentData['nilai_tugas'] ?? 0;
             $uts = $studentData['nilai_uts'] ?? 0;
             $uas = $studentData['nilai_uas'] ?? 0;
 
-            $nilai_akhir = round(($tugas * $bTugas) + ($uts * $bUts) + ($uas * $bUas), 2);
-
-            $grade = match (true) {
-                $nilai_akhir >= 90 => 'A',
-                $nilai_akhir >= 80 => 'B',
-                $nilai_akhir >= 70 => 'C',
-                $nilai_akhir >= 60 => 'D',
-                default => 'E',
-            };
+            [$nilai_akhir, $grade] = $this->hitungNilai($kelas, $tugas, $uts, $uas);
 
             NilaiAkhir::updateOrCreate(
                 [
@@ -193,24 +217,12 @@ class GradebookController extends Controller
 
             $nilaiAkhirRecord->nilai_kehadiran = $nilaiHadir;
             
-            // Recalculate Nilai Akhir
-            $tugas = $nilaiAkhirRecord->nilai_tugas ?? 0;
-            $uts = $nilaiAkhirRecord->nilai_uts ?? 0;
-            $uas = $nilaiAkhirRecord->nilai_uas ?? 0;
-            
-            $wTugas = ($kelas->bobot_tugas ?? 30) / 100;
-            $wUts = ($kelas->bobot_uts ?? 30) / 100;
-            $wUas = ($kelas->bobot_uas ?? 40) / 100;
-
-            $nilai_akhir = round(($tugas * $wTugas) + ($uts * $wUts) + ($uas * $wUas), 2);
-
-            $grade = match (true) {
-                $nilai_akhir >= 90 => 'A',
-                $nilai_akhir >= 80 => 'B',
-                $nilai_akhir >= 70 => 'C',
-                $nilai_akhir >= 60 => 'D',
-                default => 'E',
-            };
+            [$nilai_akhir, $grade] = $this->hitungNilai(
+                $kelas,
+                $nilaiAkhirRecord->nilai_tugas ?? 0,
+                $nilaiAkhirRecord->nilai_uts ?? 0,
+                $nilaiAkhirRecord->nilai_uas ?? 0
+            );
 
             $nilaiAkhirRecord->nilai_akhir = $nilai_akhir;
             $nilaiAkhirRecord->grade = $grade;

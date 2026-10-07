@@ -34,6 +34,12 @@ class PengumpulantugasController extends Controller
 
     public function store(Request $request, Tugas $tugas)
     {
+        if ($tugas->isTutup()) {
+            return redirect()
+                ->route('mahasiswa.pengumpulan-tugas.show', $tugas->id)
+                ->with('error', 'Pengumpulan tugas ini telah ditutup.');
+        }
+
         $validated = $request->validate([
             'file_jawaban'   => ['required', 'array', 'min:1', 'max:5'],
             'file_jawaban.*' => [
@@ -96,6 +102,12 @@ class PengumpulantugasController extends Controller
 
     public function destroy(Tugas $tugas)
     {
+        if ($tugas->isTutup()) {
+            return redirect()
+                ->route('mahasiswa.pengumpulan-tugas.show', $tugas->id)
+                ->with('error', 'Tugas sudah ditutup, pengumpulan tidak dapat dibatalkan.');
+        }
+
         $pengumpulan = PengumpulanTugas::with('files')
             ->where('tugas_id', $tugas->id)
             ->where('mahasiswa_id', Auth::id())

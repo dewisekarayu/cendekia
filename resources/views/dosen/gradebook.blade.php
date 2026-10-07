@@ -280,8 +280,8 @@
             <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-5 shadow-sm transition-colors duration-200">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-bold text-slate-800 dark:text-white">Pengaturan Bobot</h3>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#321270]/10 text-[#321270] dark:bg-purple-900/30 dark:text-purple-300">
-                        Total 100%
+                    <span id="bobot-total" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#321270]/10 text-[#321270] dark:bg-purple-900/30 dark:text-purple-300">
+                        Total {{ ($kelas->bobot_tugas ?? 30) + ($kelas->bobot_uts ?? 30) + ($kelas->bobot_uas ?? 40) }}%
                     </span>
                 </div>
                 
@@ -315,10 +315,28 @@
                         </div>
                     </div>
                     
-                    <button type="submit" class="w-full py-2 bg-[#321270] hover:bg-purple-900 dark:bg-purple-600 dark:hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
+                    <button id="bobot-submit" type="submit" class="w-full py-2 bg-[#321270] hover:bg-purple-900 dark:bg-purple-600 dark:hover:bg-purple-500 text-white rounded-xl text-xs font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
                         Simpan Bobot
                     </button>
                 </form>
+                <script>
+                    (function () {
+                        const names = ['bobot_tugas', 'bobot_uts', 'bobot_uas'];
+                        const inputs = names.map(n => document.querySelector(`input[name="${n}"]`));
+                        const badge = document.getElementById('bobot-total');
+                        const btn = document.getElementById('bobot-submit');
+                        function update() {
+                            const total = inputs.reduce((s, i) => s + (parseInt(i.value) || 0), 0);
+                            const ok = total === 100;
+                            badge.textContent = 'Total ' + total + '%';
+                            badge.classList.toggle('!bg-red-100', !ok);
+                            badge.classList.toggle('!text-red-600', !ok);
+                            btn.disabled = !ok;
+                        }
+                        inputs.forEach(i => i.addEventListener('input', update));
+                        update();
+                    })();
+                </script>
             </div>
 
             <div class="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-5 shadow-sm transition-colors duration-200">
