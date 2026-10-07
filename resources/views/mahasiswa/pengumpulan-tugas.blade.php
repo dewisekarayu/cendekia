@@ -4,9 +4,9 @@
 @section('title', $tugas->judul ?? 'Detail Tugas')
 
 @section('content')
-<div class="w-full px-4 py-8 sm:px-6 lg:px-8">
+<div class="w-full max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:px-8">
     <a href="{{ route('mahasiswa.kelas-detail', $tugas->kelas_perkuliahan_id) }}?tab=tugas"
-       class="inline-flex items-center gap-1.5 mb-4 text-sm font-medium text-slate-500 hover:text-[#002B6B] transition">
+       class="inline-flex items-center gap-1.5 mb-4 py-1 text-sm font-medium text-slate-500 hover:text-[#002B6B] transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
@@ -26,14 +26,14 @@
     @endif
 
     {{-- ===================== CARD: DETAIL TUGAS ===================== --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6 mb-4 sm:mb-6">
 
-        {{-- Breadcrumb --}}
-        <div class="flex items-center gap-2 text-xs text-slate-400 mb-3">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        {{-- Mata kuliah --}}
+        <div class="flex items-start gap-2 text-xs text-slate-400 mb-3">
+            <svg class="w-4 h-4 shrink-0 mt-px" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.42A12.083 12.083 0 0121 13.5c0 2.65-.895 5.09-2.4 7.03M12 14l-6.16-3.42A12.083 12.083 0 003 13.5c0 2.65.895 5.09 2.4 7.03" />
             </svg>
-            <span>{{ $tugas->kelasPerkuliahan?->mataKuliah?->nama_mk ?? 'Mata Kuliah' }} · Kelas {{ $tugas->kelasPerkuliahan?->kode_kelas ?? '-' }}</span>
+            <span class="min-w-0 break-words">{{ $tugas->kelasPerkuliahan?->mataKuliah?->nama_mk ?? 'Mata Kuliah' }} · Kelas {{ $tugas->kelasPerkuliahan?->kode_kelas ?? '-' }}</span>
         </div>
 
         {{-- Header: judul + batas waktu --}}
@@ -62,15 +62,28 @@
                             Terbuka
                         </span>
                     @endif
+        {{-- Header: judul + batas waktu (HP: ditumpuk) --}}
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <div class="min-w-0">
+                <h1 class="text-lg sm:text-xl font-bold text-slate-900 break-words">{{ $tugas->judul }}</h1>
+                <p class="text-blue-600 font-medium text-sm mt-0.5 break-words">{{ $tugas->sub_judul ?? $tugas->deskripsi_singkat }}</p>
+            </div>
+
+            <div class="shrink-0 flex items-center justify-between gap-3 rounded-xl bg-slate-50 border border-slate-100 px-3.5 py-2.5 sm:block sm:bg-transparent sm:border-0 sm:p-0 sm:text-right">
+                <div>
+                    <p class="text-[11px] tracking-wide text-slate-400 font-medium">BATAS WAKTU</p>
+                    <p class="text-red-500 font-semibold text-sm">
+                        {{ \Carbon\Carbon::parse($tugas->deadline)->translatedFormat('j M Y, H.i') }}
+                    </p>
                 </div>
 
                 @if ($pengumpulan?->is_graded)
-                    <span class="inline-block mt-2 bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-md">
-                        GRADED
-                    </span>
-                    <p class="text-blue-600 font-bold text-sm mt-1">{{ $pengumpulan->nilai }}/100</p>
+                    <div class="text-right sm:text-right sm:mt-2">
+                        <span class="inline-block bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-md">GRADED</span>
+                        <p class="text-blue-600 font-bold text-sm mt-1">{{ $pengumpulan->nilai }}/100</p>
+                    </div>
                 @elseif ($pengumpulan)
-                    <span class="inline-block mt-2 bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-md">
+                    <span class="inline-block bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-md text-center sm:mt-2">
                         MENUNGGU PENILAIAN
                     </span>
                 @endif
@@ -81,33 +94,33 @@
 
         {{-- Instruksi --}}
         <h2 class="font-semibold text-slate-800 mb-2">Instruksi Pengerjaan</h2>
-        <div class="text-sm text-slate-600 leading-relaxed space-y-2">
+        <div class="text-sm text-slate-600 leading-relaxed space-y-2 break-words">
             {!! nl2br(e($tugas->instruksi)) !!}
         </div>
 
         {{-- Link Eksternal (jika ada) --}}
         @if ($tugas->link_lampiran)
-            <div class="mt-4" x-data="{ link: '{{ $tugas->link_lampiran }}', previewUrl() { 
+            <div class="mt-4" x-data="{ link: '{{ $tugas->link_lampiran }}', previewUrl() {
                 let ytMatch = this.link.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
                 if(ytMatch) return { type: 'youtube', id: ytMatch[1] };
                 return { type: 'link', url: this.link };
             } }">
                 <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
                     <template x-if="previewUrl().type === 'youtube'">
-                        <div class="aspect-w-16 aspect-h-9 w-full">
-                            <iframe :src="'https://www.youtube.com/embed/' + previewUrl().id" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-64 object-cover"></iframe>
+                        <div class="aspect-video w-full bg-black">
+                            <iframe :src="'https://www.youtube.com/embed/' + previewUrl().id" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
                         </div>
                     </template>
                     <template x-if="previewUrl().type === 'link'">
-                        <a :href="previewUrl().url" target="_blank" class="p-4 flex items-center gap-3 hover:bg-slate-100 transition">
-                            <div class="bg-blue-100 p-2.5 rounded-lg text-blue-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <a :href="previewUrl().url" target="_blank" rel="noopener" class="p-3 sm:p-4 flex items-center gap-3 hover:bg-slate-100 transition">
+                            <div class="bg-blue-100 p-2.5 rounded-lg text-blue-600 shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
                             </div>
-                            <div class="overflow-hidden flex-1">
+                            <div class="min-w-0 flex-1">
                                 <p class="text-sm font-bold text-slate-800 truncate" x-text="previewUrl().url"></p>
-                                <p class="text-xs text-slate-500 mt-0.5">Tautan Eksternal Terlampir (Klik untuk Buka)</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Tautan eksternal terlampir (ketuk untuk membuka)</p>
                             </div>
                         </a>
                     </template>
@@ -119,7 +132,7 @@
         @if ($tugas->files->count())
             <div class="mt-4 space-y-2">
                 @foreach ($tugas->files as $file)
-                    <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-4 py-3">
+                    <div class="flex items-center gap-2.5 sm:gap-3 bg-slate-50 border border-slate-100 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3">
                         <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -136,8 +149,8 @@
 
                         {{-- Icon panah = unduh --}}
                         <a href="{{ Storage::url($file->file_path) }}" download
-                        title="Unduh file"
-                        class="w-8 h-8 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 shrink-0">
+                           title="Unduh file" aria-label="Unduh file"
+                           class="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 shrink-0">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                             </svg>
@@ -149,16 +162,17 @@
     </div>
 
     {{-- ===================== CARD: UPLOAD / STATUS JAWABAN ===================== --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6">
         @if ($pengumpulan)
             {{-- Sudah mengumpulkan: tampilkan file-file yang diunggah --}}
+            <h2 class="font-semibold text-slate-800 mb-3">Jawaban Anda</h2>
             <div class="space-y-2">
                 @foreach ($pengumpulan->files as $file)
                     @php
                         $ext = strtolower(pathinfo($file->file_path, PATHINFO_EXTENSION));
                         $isImage = in_array($ext, ['jpg', 'jpeg', 'png']);
                     @endphp
-                    <div class="flex items-center gap-3 border border-slate-100 rounded-xl px-4 py-3 bg-slate-50">
+                    <div class="flex items-center gap-2.5 sm:gap-3 border border-slate-100 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-50">
                         <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
                             @if ($isImage)
                                 <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -172,19 +186,19 @@
                         </div>
                         <p class="flex-1 min-w-0 text-sm text-slate-700 truncate">{{ $file->nama_asli ?? basename($file->file_path) }}</p>
                         <a href="{{ Storage::url($file->file_path) }}" target="_blank"
-                        class="text-blue-600 text-xs font-semibold hover:underline shrink-0">Lihat</a>
+                           class="text-blue-600 text-xs font-semibold hover:underline shrink-0 px-2 py-2">Lihat</a>
                     </div>
                 @endforeach
             </div>
 
             @if ($pengumpulan->catatan)
-                <p class="text-sm text-slate-500 mt-3"><span class="font-medium text-slate-600">Catatan Anda:</span> {{ $pengumpulan->catatan }}</p>
+                <p class="text-sm text-slate-500 mt-3 break-words"><span class="font-medium text-slate-600">Catatan Anda:</span> {{ $pengumpulan->catatan }}</p>
             @endif
 
             @if ($pengumpulan->is_graded)
                 <div class="mt-4 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
                     <p class="text-sm font-semibold text-blue-700 mb-1">Feedback Dosen</p>
-                    <p class="text-sm text-blue-900/80">{{ $pengumpulan->feedback_dosen }}</p>
+                    <p class="text-sm text-blue-900/80 break-words">{{ $pengumpulan->feedback_dosen }}</p>
                 </div>
             @endif
 
@@ -221,7 +235,7 @@
                 @csrf
 
                 <label for="file_jawaban"
-                    class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl py-10 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition">
+                    class="flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-2xl px-4 py-8 sm:py-10 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition">
                     <div class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center mb-3">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -230,23 +244,26 @@
                     <p class="font-semibold text-slate-700 text-sm">Unggah Jawaban (bisa lebih dari 1 file)</p>
 
                     <template x-if="fileNames.length === 0">
-                        <p class="text-xs text-slate-400 mt-1">Seret berkas di sini atau klik untuk memilih</p>
+                        <p class="text-xs text-slate-400 mt-1">
+                            <span class="sm:hidden">Ketuk untuk memilih berkas</span>
+                            <span class="hidden sm:inline">Seret berkas di sini atau klik untuk memilih</span>
+                        </p>
                     </template>
                     <template x-if="fileNames.length > 0">
-                        <ul class="text-xs text-slate-500 mt-1 space-y-0.5 text-center">
+                        <ul class="text-xs text-slate-600 mt-2 space-y-1 w-full max-w-sm">
                             <template x-for="name in fileNames" :key="name">
-                                <li x-text="name"></li>
+                                <li class="rounded-lg bg-slate-50 border border-slate-100 px-3 py-1.5 truncate" x-text="name"></li>
                             </template>
                         </ul>
                     </template>
 
-                    <div class="flex flex-wrap items-center justify-center gap-2 mt-4">
+                    <div class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4">
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">PDF</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">DOC</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">PPT</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">JPG/PNG</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">ZIP</span>
-                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">MAX 10MB/FILE</span>
+                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">MAKS 10MB/FILE</span>
                     </div>
 
                     <input id="file_jawaban" name="file_jawaban[]" type="file"
@@ -263,9 +280,9 @@
                 <textarea name="catatan" rows="2" placeholder="Catatan tambahan (opsional)"
                           class="w-full mt-4 text-sm border border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300">{{ old('catatan') }}</textarea>
 
-                {{-- Footer status + aksi --}}
-                <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100">
-                    <div class="flex items-start gap-2">
+                {{-- Footer status + aksi (HP: status di atas, tombol di bawah) --}}
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-5 sm:mt-6 pt-4 border-t border-slate-100">
+                    <div class="flex items-start gap-2 min-w-0">
                         <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                         </svg>
@@ -275,13 +292,13 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2 shrink-0">
+                    <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:shrink-0">
                         <a href="{{ url()->previous() }}"
-                           class="px-4 py-2 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">
+                           class="text-center px-4 py-2.5 sm:py-2 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">
                             Batal
                         </a>
                         <button type="submit"
-                                class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                                class="px-4 py-2.5 sm:py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700">
                             Kumpulkan Tugas
                         </button>
                     </div>

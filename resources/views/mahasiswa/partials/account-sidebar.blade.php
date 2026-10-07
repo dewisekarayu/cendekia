@@ -14,7 +14,7 @@
 
 <div class="lg:col-span-1 space-y-4">
     <div class="overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors duration-200">
-        <div class="border-t-4 border-[#321270] dark:border-purple-600 px-5 pt-6 pb-5">
+        <div class="border-t-4 border-[#002B6B] dark:border-blue-600 px-5 pt-6 pb-5">
             <div class="space-y-1 text-center">
                 {{-- AVATAR EDITABLE --}}
                 <form action="{{ route($isDosen ? 'dosen.profil.foto' : 'mahasiswa.setting.foto') }}" method="POST" enctype="multipart/form-data" id="formFoto">
@@ -22,7 +22,7 @@
                     @method('PUT')
                     <div class="relative mx-auto mb-3 h-24 w-24 group/avatar">
                         <img id="avatarPreview"
-                             src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=321270&color=fff&bold=true' }}"
+                             src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}"
                              alt="Foto Profil"
                              class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700">
 
@@ -38,7 +38,7 @@
 
                     <div id="fotoActions" class="hidden justify-center gap-2 mb-3">
                         <button type="submit"
-                                class="rounded-full bg-[#321270] dark:bg-purple-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#321270]/90 dark:hover:bg-purple-800 transition">
+                                class="rounded-full bg-[#002B6B] dark:bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#002B6B]/90 dark:hover:bg-blue-800 transition">
                             Simpan Foto
                         </button>
                         <button type="button" onclick="batalFoto()"
@@ -53,7 +53,7 @@
 
                 <h3 class="text-lg font-bold text-slate-800 dark:text-white">{{ $user->name }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
-                <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#321270]/10 dark:bg-purple-950/40 px-3 py-1 text-xs font-semibold text-[#321270] dark:text-purple-300">
+                <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#002B6B]/10 dark:bg-blue-950/40 px-3 py-1 text-xs font-semibold text-[#002B6B] dark:text-blue-300">
                     <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                     {{ $roleLabel }}
                 </div>

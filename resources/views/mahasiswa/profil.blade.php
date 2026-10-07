@@ -35,7 +35,7 @@
         {{-- PROFILE CARD --}}
         <div class="lg:col-span-1">
             <div class="overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors duration-200">
-                <div class="border-t-4 border-[#321270] dark:border-purple-600 px-5 pt-6 pb-5">
+                <div class="border-t-4 border-[#002B6B] dark:border-blue-600 px-5 pt-6 pb-5">
                     <div class="space-y-1 text-center">
                         {{-- AVATAR EDITABLE --}}
                         <form action="{{ route('mahasiswa.setting.foto') }}" method="POST" enctype="multipart/form-data" id="formFoto">
@@ -43,7 +43,7 @@
                             @method('PUT')
                             <div class="relative mx-auto mb-3 h-24 w-24 group/avatar">
                                 <img id="avatarPreview"
-                                     src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=321270&color=fff&bold=true' }}"
+                                     src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}"
                                      alt="Foto Profil"
                                      class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700">
 
@@ -59,7 +59,7 @@
 
                             <div id="fotoActions" class="hidden justify-center gap-2 mb-3">
                                 <button type="submit"
-                                        class="rounded-full bg-[#321270] dark:bg-purple-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#321270]/90 dark:hover:bg-purple-750 transition">
+                                        class="rounded-full bg-[#002B6B] dark:bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#002B6B]/90 dark:hover:bg-blue-700 transition">
                                     Simpan Foto
                                 </button>
                                 <button type="button" onclick="batalFoto()"
@@ -74,7 +74,7 @@
 
                         <h3 class="text-lg font-bold text-slate-800 dark:text-white">{{ $user->name }}</h3>
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
-                        <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#321270]/10 dark:bg-purple-950/40 px-3 py-1 text-xs font-semibold text-[#321270] dark:text-purple-300">
+                        <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#002B6B]/10 dark:bg-blue-950/40 px-3 py-1 text-xs font-semibold text-[#002B6B] dark:text-blue-300">
                             <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                             Mahasiswa
                         </div>
@@ -100,14 +100,14 @@
                 {{-- TAB SWITCH --}}
                 <div class="flex border-b border-gray-100 dark:border-slate-700 px-5 pt-4 gap-1">
                     <button type="button" onclick="switchTab('informasi')" id="tabBtnInformasi"
-                            class="tab-btn relative px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-colors text-[#321270] dark:text-white">
+                            class="tab-btn relative px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-colors text-[#002B6B] dark:text-white">
                         Informasi Pribadi
-                        <span id="tabIndicatorInformasi" class="absolute left-0 right-0 -bottom-px h-0.5 bg-[#321270] dark:bg-purple-500 rounded-full"></span>
+                        <span id="tabIndicatorInformasi" class="absolute left-0 right-0 -bottom-px h-0.5 bg-[#002B6B] dark:bg-blue-500 rounded-full"></span>
                     </button>
                     <button type="button" onclick="switchTab('keamanan')" id="tabBtnKeamanan"
                             class="tab-btn relative px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-colors text-gray-400 dark:text-slate-500">
                         Keamanan Akun
-                        <span id="tabIndicatorKeamanan" class="absolute left-0 right-0 -bottom-px h-0.5 bg-[#321270] dark:bg-purple-500 rounded-full hidden"></span>
+                        <span id="tabIndicatorKeamanan" class="absolute left-0 right-0 -bottom-px h-0.5 bg-[#002B6B] dark:bg-blue-500 rounded-full hidden"></span>
                     </button>
                 </div>
 
@@ -121,7 +121,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Nama Lengkap</label>
                                 <input type="text" name="name" value="{{ old('name', $user->name) }}" placeholder="Nama lengkap"
-                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#002B6B] dark:focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10 transition">
                                 @error('name')
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
@@ -129,7 +129,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Email</label>
                                 <input type="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Email"
-                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#002B6B] dark:focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10 transition">
                                 @error('email')
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
@@ -140,7 +140,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Nomor Telepon</label>
                                 <input type="tel" name="telepon" value="{{ old('telepon', $user->telepon) }}" placeholder="Nomor telepon"
-                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#002B6B] dark:focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10 transition">
                                 @error('telepon')
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
@@ -148,7 +148,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Nomor Induk Mahasiswa (NIM)</label>
                                 <input type="text" name="nip_nim" value="{{ old('nip_nim', $user->nip_nim) }}" placeholder="NIM"
-                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#002B6B] dark:focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10 transition">
                                 @error('nip_nim')
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
@@ -160,7 +160,7 @@
                                     class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-750 transition">
                                 Batal
                             </button>
-                            <button type="submit" class="rounded-lg bg-[#321270] dark:bg-[#6c2bd9] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5b21b6] hover:bg-[#321270]/90 transition">
+                            <button type="submit" class="rounded-lg bg-[#002B6B] dark:bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-blue-700 hover:bg-[#002B6B]/90 transition">
                                 Simpan Perubahan
                             </button>
                         </div>
@@ -176,7 +176,7 @@
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Password Saat Ini</label>
                             <input type="password" name="current_password" placeholder="Masukkan password saat ini"
-                                   class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                                   class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#002B6B] dark:focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10 transition">
                             @error('current_password')
                                 <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                             @enderror
@@ -186,7 +186,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Password Baru</label>
                                 <input type="password" name="password" placeholder="Masukkan password baru"
-                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#002B6B] dark:focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10 transition">
                                 @error('password')
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
@@ -194,7 +194,7 @@
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Konfirmasi Password</label>
                                 <input type="password" name="password_confirmation" placeholder="Konfirmasi password baru"
-                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                                       class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 focus:border-[#002B6B] dark:focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10 transition">
                             </div>
                         </div>
 
@@ -203,7 +203,7 @@
                                     class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-750 transition">
                                 Batal
                             </button>
-                            <button type="submit" class="rounded-lg bg-[#321270] dark:bg-[#6c2bd9] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5b21b6] hover:bg-[#321270]/90 transition">
+                            <button type="submit" class="rounded-lg bg-[#002B6B] dark:bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-blue-700 hover:bg-[#002B6B]/90 transition">
                                 Update Password
                             </button>
                         </div>
@@ -225,12 +225,12 @@
 
             if (name === tab) {
                 panel.classList.remove('hidden');
-                btn.classList.add('text-[#321270]', 'dark:text-white');
+                btn.classList.add('text-[#002B6B]', 'dark:text-white');
                 btn.classList.remove('text-gray-400', 'dark:text-slate-500');
                 indicator.classList.remove('hidden');
             } else {
                 panel.classList.add('hidden');
-                btn.classList.remove('text-[#321270]', 'dark:text-white');
+                btn.classList.remove('text-[#002B6B]', 'dark:text-white');
                 btn.classList.add('text-gray-400', 'dark:text-slate-500');
                 indicator.classList.add('hidden');
             }
@@ -253,7 +253,7 @@
         document.getElementById('fotoInput').value = '';
         document.getElementById('fotoActions').classList.add('hidden');
         document.getElementById('fotoActions').classList.remove('flex');
-        document.getElementById('avatarPreview').src = "{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=321270&color=fff&bold=true' }}";
+        document.getElementById('avatarPreview').src = "{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}";
     }
 </script>
 
