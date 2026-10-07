@@ -100,11 +100,9 @@ class EnhancedKelasPerkuliahanSeeder extends Seeder
                     [
                         'dosen_id' => $dosen->id,
                         'program_studi_id' => $mk->program_studi_id,
-                        'tahun_akademik' => date('Y') . '/' . (date('Y') + 1),
                         'kuota_mahasiswa' => rand(30, 60),
                         'status_kelas' => 'aktif',
                         'is_active' => true,
-                        'dosen_pengampu' => !empty($dosenPengampu) ? $dosenPengampu : null,
                     ]
                 );
 

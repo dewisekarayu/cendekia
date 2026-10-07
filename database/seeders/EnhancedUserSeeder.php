@@ -54,15 +54,9 @@ class EnhancedUserSeeder extends Seeder
 
     public function run(): void
     {
-        // Create or get program studi
-        $programStudi = collect([
-            ['kode_prodi' => 'TI', 'nama_prodi' => 'Teknik Informatika', 'jenjang' => 'S1'],
-            ['kode_prodi' => 'SI', 'nama_prodi' => 'Sistem Informasi', 'jenjang' => 'S1'],
-            ['kode_prodi' => 'PPLG', 'nama_prodi' => 'Pengembangan Perangkat Lunak', 'jenjang' => 'S1'],
-            ['kode_prodi' => 'TIFO', 'nama_prodi' => 'Teknologi Informasi', 'jenjang' => 'S1'],
-        ])->mapWithKeys(function (array $item) {
-            $prodi = ProgramStudi::updateOrCreate(['kode_prodi' => $item['kode_prodi']], $item);
-            return [$item['kode_prodi'] => $prodi->id];
+        // Get all program studi
+        $programStudi = ProgramStudi::all()->mapWithKeys(function ($prodi) {
+            return [$prodi->kode_prodi => $prodi->id];
         });
 
         // =====================================================
