@@ -17,10 +17,6 @@ class KelasPerkuliahan extends Model
         'program_studi_id',
         'semester_id',
         'kode_kelas',
-        'hari',
-        'jam_mulai',
-        'jam_selesai',
-        'ruangan',
         'kuota_mahasiswa',
         'status_kelas',
         'is_active',
@@ -67,6 +63,14 @@ class KelasPerkuliahan extends Model
             ->orWhereHas('dosenPengampuTambahan', function ($q) use ($dosenId) {
                 $q->where('users.id', $dosenId);
             });
+    }
+
+    /**
+     * Relasi: jadwal kelas (multiple)
+     */
+    public function jadwals()
+    {
+        return $this->hasMany(KelasJadwal::class, 'kelas_perkuliahan_id');
     }
 
     /**
@@ -157,78 +161,94 @@ class KelasPerkuliahan extends Model
     }
 
     /**
-     * Validasi: apakah ada bentrok jadwal dosen
+     * Validasi: apakah ada bentrok jadwal dosen (dinamis dari parameter atau jadwal yang sudah ada)
+     * $jadwalCek: array of ['hari' =>, 'jam_mulai' =>, 'jam_selesai' =>]
+     * $dosenIdUtama: ID Dosen Utama (jika beda dengan $this->dosen_id, misal saat create)
+     * $dosenTambahanIds: Array ID Dosen Tambahan
      */
-    public function hasBentrokJadwalDosen()
+    public static function cekBentrokDosenCustom($jadwalCek, $dosenIdUtama, $dosenTambahanIds = [], $ignoreKelasId = null)
     {
-        // Cek bentrok untuk dosen utama
-        $bentrokDosenUtama = self::where('dosen_id', $this->dosen_id)
-            ->where('id', '!=', $this->id)
-            ->where('hari', $this->hari)
-            ->where(function($query) {
-                $query->whereBetween('jam_mulai', [$this->jam_mulai, $this->jam_selesai])
-                    ->orWhereBetween('jam_selesai', [$this->jam_mulai, $this->jam_selesai])
-                    ->orWhere(function($q) {
-                        $q->where('jam_mulai', '<=', $this->jam_mulai)
-                            ->where('jam_selesai', '>=', $this->jam_selesai);
-                    });
-            })
-            ->exists();
+        $semuaDosen = array_merge([$dosenIdUtama], $dosenTambahanIds);
+        $semuaDosen = array_unique(array_filter($semuaDosen));
 
-        // Cek bentrok untuk dosen team teaching
-        $bentrokTeamTeaching = false;
-        $dosenTambahanIds = $this->dosenPengampuTambahan->pluck('id');
-        if ($dosenTambahanIds->isNotEmpty()) {
-            foreach ($dosenTambahanIds as $dosenId) {
-                $bentrok = self::where(function ($q) use ($dosenId) {
-                        $q->where('dosen_id', $dosenId)
-                            ->orWhereHas('dosenPengampuTambahan', function ($sub) use ($dosenId) {
-                                $sub->where('users.id', $dosenId);
+        if (empty($semuaDosen) || empty($jadwalCek)) return false;
+
+        foreach ($jadwalCek as $jadwal) {
+            foreach ($semuaDosen as $dosenId) {
+                // Cari kelas_jadwal yang bentrok, yang terhubung ke kelas_perkuliahan dimana dosenId ini mengajar
+                $bentrok = KelasJadwal::where('hari', $jadwal['hari'])
+                    ->where(function($query) use ($jadwal) {
+                        $query->whereBetween('jam_mulai', [$jadwal['jam_mulai'], $jadwal['jam_selesai']])
+                            ->orWhereBetween('jam_selesai', [$jadwal['jam_mulai'], $jadwal['jam_selesai']])
+                            ->orWhere(function($q) use ($jadwal) {
+                                $q->where('jam_mulai', '<=', $jadwal['jam_mulai'])
+                                    ->where('jam_selesai', '>=', $jadwal['jam_selesai']);
                             });
                     })
-                    ->where('id', '!=', $this->id)
-                    ->where('hari', $this->hari)
-                    ->where(function($query) {
-                        $query->whereBetween('jam_mulai', [$this->jam_mulai, $this->jam_selesai])
-                            ->orWhereBetween('jam_selesai', [$this->jam_mulai, $this->jam_selesai])
-                            ->orWhere(function($q) {
-                                $q->where('jam_mulai', '<=', $this->jam_mulai)
-                                    ->where('jam_selesai', '>=', $this->jam_selesai);
-                            });
+                    ->whereHas('kelasPerkuliahan', function($q) use ($dosenId, $ignoreKelasId) {
+                        if ($ignoreKelasId) {
+                            $q->where('id', '!=', $ignoreKelasId);
+                        }
+                        $q->where(function ($sub) use ($dosenId) {
+                            $sub->where('dosen_id', $dosenId)
+                                ->orWhereHas('dosenPengampuTambahan', function ($sub2) use ($dosenId) {
+                                    $sub2->where('users.id', $dosenId);
+                                });
+                        });
                     })
                     ->exists();
 
-                if ($bentrok) {
-                    $bentrokTeamTeaching = true;
-                    break;
-                }
+                if ($bentrok) return true;
             }
         }
+        return false;
+    }
 
-        return $bentrokDosenUtama || $bentrokTeamTeaching;
+    /**
+     * Cek bentrok untuk kelas ini berdasarkan jadwals (dipanggil setelah save atau cek dinamis)
+     */
+    public function hasBentrokJadwalDosen()
+    {
+        $jadwalCek = $this->jadwals->toArray();
+        $dosenTambahanIds = $this->dosenPengampuTambahan->pluck('id')->toArray();
+        return self::cekBentrokDosenCustom($jadwalCek, $this->dosen_id, $dosenTambahanIds, $this->id);
     }
 
     /**
      * Validasi: apakah ada bentrok penggunaan ruangan
      */
-    public function hasBentrokRuangan()
+    public static function cekBentrokRuanganCustom($jadwalCek, $ignoreKelasId = null)
     {
-        if (!$this->ruangan) {
-            return false;
+        if (empty($jadwalCek)) return false;
+
+        foreach ($jadwalCek as $jadwal) {
+            if (empty($jadwal['ruangan'])) continue;
+
+            $bentrok = KelasJadwal::where('ruangan', $jadwal['ruangan'])
+                ->where('hari', $jadwal['hari'])
+                ->where(function($query) use ($jadwal) {
+                    $query->whereBetween('jam_mulai', [$jadwal['jam_mulai'], $jadwal['jam_selesai']])
+                        ->orWhereBetween('jam_selesai', [$jadwal['jam_mulai'], $jadwal['jam_selesai']])
+                        ->orWhere(function($q) use ($jadwal) {
+                            $q->where('jam_mulai', '<=', $jadwal['jam_mulai'])
+                                ->where('jam_selesai', '>=', $jadwal['jam_selesai']);
+                        });
+                });
+
+            if ($ignoreKelasId) {
+                $bentrok->where('kelas_perkuliahan_id', '!=', $ignoreKelasId);
+            }
+
+            if ($bentrok->exists()) return true;
         }
 
-        return self::where('ruangan', $this->ruangan)
-            ->where('id', '!=', $this->id)
-            ->where('hari', $this->hari)
-            ->where(function($query) {
-                $query->whereBetween('jam_mulai', [$this->jam_mulai, $this->jam_selesai])
-                    ->orWhereBetween('jam_selesai', [$this->jam_mulai, $this->jam_selesai])
-                    ->orWhere(function($q) {
-                        $q->where('jam_mulai', '<=', $this->jam_mulai)
-                            ->where('jam_selesai', '>=', $this->jam_selesai);
-                    });
-            })
-            ->exists();
+        return false;
+    }
+
+    public function hasBentrokRuangan()
+    {
+        $jadwalCek = $this->jadwals->toArray();
+        return self::cekBentrokRuanganCustom($jadwalCek, $this->id);
     }
 
     public function absensi()

@@ -10,9 +10,21 @@ class FakultasController extends Controller
 {
     public function index(Request $request)
     {
-        // Load hierarchical data: Semester -> Fakultas -> Program Studi
-        $semesters = \App\Models\Semester::with(['fakultas.programStudi'])->latest('tanggal_mulai')->get();
-        return view('admin.fakultas.index', compact('semesters'));
+        $semesters = \App\Models\Semester::orderBy('tanggal_mulai', 'desc')->get();
+        
+        $semester_id = $request->input('semester_id');
+        
+        if ($semester_id) {
+            $selectedSemester = \App\Models\Semester::with(['fakultas.programStudi'])->find($semester_id);
+        } else {
+            // Default to active semester, or the latest one
+            $selectedSemester = \App\Models\Semester::with(['fakultas.programStudi'])->where('is_active', true)->first();
+            if (!$selectedSemester && $semesters->count() > 0) {
+                $selectedSemester = \App\Models\Semester::with(['fakultas.programStudi'])->find($semesters->first()->id);
+            }
+        }
+
+        return view('admin.fakultas.index', compact('semesters', 'selectedSemester'));
     }
 
     public function create()

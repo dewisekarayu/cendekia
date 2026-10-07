@@ -19,19 +19,29 @@
         </div>
     </div>
 
-    @foreach($semesters as $semester)
     <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
-        <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
-            <div>
-                <h5 class="mb-0 fw-bold" style="color: #002B6B;">Tahun Akademik: {{ $semester->tahun_ajaran }} - {{ $semester->jenis }}</h5>
-                <span class="badge {{ $semester->is_active ? 'bg-success' : 'bg-secondary' }} mt-1">{{ $semester->is_active ? 'Aktif' : 'Tidak Aktif' }}</span>
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <form action="{{ route('admin.fakultas.index') }}" method="GET" class="d-flex align-items-center gap-2">
+                    <label for="semester_id" class="fw-semibold text-muted mb-0" style="font-size: 0.9rem; white-space: nowrap;">Tahun Akademik:</label>
+                    <select name="semester_id" id="semester_id" class="form-select form-select-sm border-0 bg-light fw-bold" style="min-width: 250px; color: #002B6B;" onchange="this.form.submit()">
+                        @foreach($semesters as $sem)
+                            <option value="{{ $sem->id }}" {{ ($selectedSemester && $selectedSemester->id == $sem->id) ? 'selected' : '' }}>
+                                {{ $sem->tahun_ajaran }} - {{ $sem->jenis }} {{ $sem->is_active ? '(Aktif)' : '' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
             </div>
-            <a href="{{ route('admin.fakultas.create') }}" class="btn btn-sm btn-primary">
-                <i class="bi bi-plus"></i> Tambah Fakultas di Sini
-            </a>
+            <div>
+                <a href="{{ route('admin.fakultas.create') }}" class="btn btn-sm btn-primary shadow-sm" style="background-color: #002B6B; border: none;">
+                    <i class="bi bi-plus-lg"></i> Tambah Fakultas
+                </a>
+            </div>
         </div>
+        
         <div class="card-body p-0">
-            @if($semester->fakultas->count() > 0)
+            @if($selectedSemester && $selectedSemester->fakultas->count() > 0)
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
@@ -43,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody x-data="{ expandedId: null }">
-                            @foreach($semester->fakultas as $fakultas)
+                            @foreach($selectedSemester->fakultas as $fakultas)
                                 <tr class="align-middle" :class="expandedId === {{ $fakultas->id }} ? 'bg-slate-50 border-primary' : ''" style="transition: all 0.2s; border-bottom: 1px solid #f1f5f9;">
                                     <td class="px-4 py-4">
                                         <button @click="expandedId = expandedId === {{ $fakultas->id }} ? null : {{ $fakultas->id }}" 
@@ -118,11 +128,10 @@
             @else
                 <div class="text-center py-5">
                     <i class="bi bi-folder-x fs-1 text-muted opacity-25 d-block mb-3"></i>
-                    <p class="text-muted mb-0">Belum ada Fakultas pada Tahun Akademik ini.</p>
+                    <p class="text-muted mb-0">Belum ada Fakultas pada Tahun Akademik yang dipilih.</p>
                 </div>
             @endif
         </div>
     </div>
-    @endforeach
 </div>
 @endsection

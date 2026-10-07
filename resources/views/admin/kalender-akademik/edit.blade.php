@@ -289,6 +289,21 @@
                                     <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            {{-- Target Audience --}}
+                            <div>
+                                <label for="target_audience" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                                    Ditampilkan Untuk <span class="text-red-500">*</span>
+                                </label>
+                                <select name="target_audience" id="target_audience" class="form-select w-full" required onchange="updatePreview()">
+                                    <option value="semua" {{ old('target_audience', $kalenderAkademik->target_audience) == 'semua' ? 'selected' : '' }}>Semua (Dosen & Mahasiswa)</option>
+                                    <option value="dosen" {{ old('target_audience', $kalenderAkademik->target_audience) == 'dosen' ? 'selected' : '' }}>Hanya Dosen</option>
+                                    <option value="mahasiswa" {{ old('target_audience', $kalenderAkademik->target_audience) == 'mahasiswa' ? 'selected' : '' }}>Hanya Mahasiswa</option>
+                                </select>
+                                @error('target_audience')
+                                    <span class="text-red-500 text-xs mt-1 block font-medium">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
 
                         {{-- Catatan Khusus Admin --}}

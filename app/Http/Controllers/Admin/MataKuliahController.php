@@ -14,7 +14,7 @@ class MataKuliahController extends Controller
     {
         $search = trim($request->input('search', ''));
 
-        $query = MataKuliah::with(['programStudi', 'kurikulum']);
+        $query = MataKuliah::with(['programStudi']);
 
         // Fitur Filter Pencarian Instan
         if ($search !== '') {
@@ -39,16 +39,14 @@ class MataKuliahController extends Controller
     public function create()
     {
         $prodiList = ProgramStudi::orderBy('nama_prodi')->get();
-        $kurikulumList = Kurikulum::where('is_active', true)->orderBy('nama_kurikulum')->get();
 
-        return view('admin.mata-kuliah.create', compact('prodiList', 'kurikulumList'));
+        return view('admin.mata-kuliah.create', compact('prodiList'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'program_studi_id' => 'required|exists:program_studi,id',
-            'kurikulum_id'     => 'nullable|exists:kurikulum,id',
             'kode_mk'          => 'required|string|max:20|unique:mata_kuliah,kode_mk',
             'nama_mk'          => 'required|string|max:255',
             'sks'              => 'required|integer|min:1|max:6',
@@ -66,12 +64,10 @@ class MataKuliahController extends Controller
     {
         $mataKuliah = MataKuliah::findOrFail($id);
         $prodiList = ProgramStudi::all();
-        $kurikulumList = Kurikulum::orderBy('nama_kurikulum')->get();
 
         return view('admin.mata-kuliah.edit', [
             'mk'             => $mataKuliah,
             'prodiList'      => $prodiList,
-            'kurikulumList'  => $kurikulumList,
         ]);
     }
 
@@ -81,7 +77,6 @@ class MataKuliahController extends Controller
 
         $validated = $request->validate([
             'program_studi_id' => 'required|exists:program_studi,id',
-            'kurikulum_id'     => 'nullable|exists:kurikulum,id',
             'kode_mk'          => 'required|string|max:20|unique:mata_kuliah,kode_mk,' . $mataKuliah->id,
             'nama_mk'          => 'required|string|max:255',
             'sks'              => 'required|integer|min:1|max:6',

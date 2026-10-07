@@ -31,6 +31,7 @@ class KalenderAkademikController extends Controller
             ->get();
 
         $query = KalenderAkademik::published()
+            ->targetAudience('mahasiswa')
             ->with('semester')
             ->orderBy('tanggal_mulai')
             ->orderBy('waktu_mulai');
@@ -65,6 +66,7 @@ class KalenderAkademikController extends Controller
         // ============================================================
         $todayStr     = now()->toDateString();
         $todaysQuery  = KalenderAkademik::published()
+            ->targetAudience('mahasiswa')
             ->with('semester')
             ->whereDate('tanggal_mulai', '<=', $todayStr)
             ->where(function ($q) use ($todayStr) {
@@ -85,6 +87,7 @@ class KalenderAkademikController extends Controller
         // Tambah orderBy ascending
         // ============================================================
         $upcomingQuery = KalenderAkademik::published()
+            ->targetAudience('mahasiswa')
             ->with('semester')
             ->upcoming(60);   // 60 hari ke depan agar cukup tampil di sidebar
 
@@ -98,6 +101,7 @@ class KalenderAkademikController extends Controller
         // BUG FIX 5: Riwayat agenda (past) — diurutkan descending terbaru dulu
         // ============================================================
         $historyQuery = KalenderAkademik::published()
+            ->targetAudience('mahasiswa')
             ->with('semester')
             ->whereDate('tanggal_mulai', '<', $todayStr)
             ->where(function ($q) use ($todayStr) {
