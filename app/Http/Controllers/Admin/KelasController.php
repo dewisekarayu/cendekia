@@ -202,7 +202,7 @@ class KelasController extends Controller
     {
         $kelas->delete();
 
-        return redirect()->route('admin.kelas.index')
+        return redirect()->back()
             ->with('success', 'Kelas berhasil dihapus.');
     }
 
