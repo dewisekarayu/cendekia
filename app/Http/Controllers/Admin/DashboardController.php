@@ -64,9 +64,9 @@ class DashboardController extends Controller
         $totalAktivitas = 0;
 
         foreach ($bulanList as $bulanNum => $bulanLabel) {
-            $c1 = class_exists(AktivitasPengguna::class) ? AktivitasPengguna::whereYear('created_at', $currentYear)->whereMonth('created_at', $bulanNum)->count() : 0;
-            $c2 = class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::whereYear('created_at', $currentYear)->whereMonth('created_at', $bulanNum)->count() : 0;
-            $c3 = class_exists(PengumpulanTugas::class) ? PengumpulanTugas::whereYear('created_at', $currentYear)->whereMonth('created_at', $bulanNum)->count() : 0;
+            $c1 = class_exists(AktivitasPengguna::class) ? AktivitasPengguna::whereYear('terjadi_pada', $currentYear)->whereMonth('terjadi_pada', $bulanNum)->count() : 0;
+            $c2 = class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::whereYear('waktu_absensi', $currentYear)->whereMonth('waktu_absensi', $bulanNum)->count() : 0;
+            $c3 = class_exists(PengumpulanTugas::class) ? PengumpulanTugas::whereYear('waktu_kumpul', $currentYear)->whereMonth('waktu_kumpul', $bulanNum)->count() : 0;
 
             $totalMonthly = $c1 + $c2 + $c3;
             $totalAktivitas += $totalMonthly;
@@ -93,9 +93,9 @@ class DashboardController extends Controller
             $date = now()->subDays($i);
             $dayName = $hariIndo[$date->format('l')] ?? $date->format('D');
             
-            $c1 = class_exists(AktivitasPengguna::class) ? AktivitasPengguna::whereDate('created_at', $date->toDateString())->count() : 0;
-            $c2 = class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::whereDate('created_at', $date->toDateString())->count() : 0;
-            $c3 = class_exists(PengumpulanTugas::class) ? PengumpulanTugas::whereDate('created_at', $date->toDateString())->count() : 0;
+            $c1 = class_exists(AktivitasPengguna::class) ? AktivitasPengguna::whereDate('terjadi_pada', $date->toDateString())->count() : 0;
+            $c2 = class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::whereDate('waktu_absensi', $date->toDateString())->count() : 0;
+            $c3 = class_exists(PengumpulanTugas::class) ? PengumpulanTugas::whereDate('waktu_kumpul', $date->toDateString())->count() : 0;
 
             $dailyTotal = $c1 + $c2 + $c3;
 
