@@ -47,11 +47,12 @@ RUN npm install && npm run build
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Use the PORT environment variable in Apache configuration files.
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
-
 # Create entrypoint script
 RUN echo '#!/bin/bash\n\
+set -e\n\
+# Use the PORT environment variable in Apache configuration files at runtime.\n\
+sed -i "s/80/${PORT:-80}/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf\n\
+\n\
 php artisan config:cache\n\
 php artisan route:cache\n\
 php artisan view:cache\n\
