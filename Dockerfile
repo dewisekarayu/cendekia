@@ -53,6 +53,16 @@ set -e\n\
 # Use the PORT environment variable in Apache configuration files at runtime.\n\
 sed -i "s/80/${PORT:-80}/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf\n\
 \n\
+# Map Railway MySQL variables to Laravel DB variables if they exist\n\
+if [ -n "$MYSQL_HOST" ]; then\n\
+  export DB_HOST=$MYSQL_HOST\n\
+  export DB_PORT=$MYSQL_PORT\n\
+  export DB_DATABASE=$MYSQL_DATABASE\n\
+  export DB_USERNAME=$MYSQL_USER\n\
+  export DB_PASSWORD=$MYSQL_PASSWORD\n\
+  export DB_CONNECTION=mysql\n\
+fi\n\
+\n\
 php artisan config:cache\n\
 php artisan route:cache\n\
 php artisan view:cache\n\
