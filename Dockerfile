@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.3-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -19,18 +19,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql zip exif pcntl gd
-
-# Force disable conflicting MPMs and enable prefork (required for mod_php)
-RUN a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork || true
-
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
-
-# Change Apache document root to public/
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # Set working directory
 WORKDIR /var/www/html
@@ -54,34 +42,12 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 # Create entrypoint script
 RUN echo '#!/bin/bash\n\
 set -e\n\
-# Use the PORT environment variable in Apache configuration files at runtime.\n\
-sed -i "s/80/${PORT:-80}/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf\n\
-\n\
-# Map Railway MySQL variables to Laravel DB variables if they exist\n\
-if [ -n "$MYSQLHOST" ]; then\n\
-  export DB_HOST=$MYSQLHOST\n\
-  export DB_PORT=$MYSQLPORT\n\
-  export DB_DATABASE=$MYSQLDATABASE\n\
-  export DB_USERNAME=$MYSQLUSER\n\
-  export DB_PASSWORD=$MYSQLPASSWORD\n\
-  export DB_CONNECTION=mysql\n\
-fi\n\
-\n\
-# Also check for variables with underscores just in case\n\
-if [ -n "$MYSQL_HOST" ]; then\n\
-  export DB_HOST=$MYSQL_HOST\n\
-  export DB_PORT=$MYSQL_PORT\n\
-  export DB_DATABASE=$MYSQL_DATABASE\n\
-  export DB_USERNAME=$MYSQL_USER\n\
-  export DB_PASSWORD=$MYSQL_PASSWORD\n\
-  export DB_CONNECTION=mysql\n\
-fi\n\
 \n\
 php artisan config:cache\n\
 php artisan route:cache\n\
 php artisan view:cache\n\
 php artisan migrate --force\n\
-exec apache2-foreground' > /usr/local/bin/entrypoint.sh \
+exec php artisan serve --host=0.0.0.0 --port=${PORT:-80}' > /usr/local/bin/entrypoint.sh \
     && chmod +x /usr/local/bin/entrypoint.sh
 
 # Start command
