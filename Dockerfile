@@ -20,6 +20,10 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql zip exif pcntl gd
 
+# Force disable conflicting MPMs and enable prefork (required for mod_php)
+RUN a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork || true
+
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
