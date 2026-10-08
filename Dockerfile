@@ -54,6 +54,16 @@ set -e\n\
 sed -i "s/80/${PORT:-80}/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf\n\
 \n\
 # Map Railway MySQL variables to Laravel DB variables if they exist\n\
+if [ -n "$MYSQLHOST" ]; then\n\
+  export DB_HOST=$MYSQLHOST\n\
+  export DB_PORT=$MYSQLPORT\n\
+  export DB_DATABASE=$MYSQLDATABASE\n\
+  export DB_USERNAME=$MYSQLUSER\n\
+  export DB_PASSWORD=$MYSQLPASSWORD\n\
+  export DB_CONNECTION=mysql\n\
+fi\n\
+\n\
+# Also check for variables with underscores just in case\n\
 if [ -n "$MYSQL_HOST" ]; then\n\
   export DB_HOST=$MYSQL_HOST\n\
   export DB_PORT=$MYSQL_PORT\n\
