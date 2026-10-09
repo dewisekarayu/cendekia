@@ -14,13 +14,6 @@
                 <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white leading-tight">My Courses</h1>
                 <p class="mt-1 text-sm text-blue-100/70">{{ $kelasList->count() }} kelas terdaftar semester ini</p>
             </div>
-            <a href="{{ route('mahasiswa.jelajahi-kelas') }}"
-               class="inline-flex items-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 px-4 py-2 text-sm font-semibold text-white transition shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                Jelajahi Kelas
-            </a>
         </div>
         {{-- decorative --}}
         <div class="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/5 pointer-events-none"></div>
