@@ -45,12 +45,12 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             {{-- Month Nav --}}
                             <div class="flex items-center justify-between sm:justify-start gap-1 bg-slate-50 dark:bg-slate-900 p-1 rounded-xl w-full sm:w-fit border border-gray-100 dark:border-slate-800">
-                                <button @click="changeMonth(-1)" aria-label="Bulan sebelumnya" class="p-2.5 sm:p-2 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                <button @click="changeMonth(-1)" aria-label="Bulan sebelumnya" class="p-2.5 sm:p-2 flex-shrink-0 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
+                                    <svg class="w-5 h-5 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                                 </button>
-                                <h2 class="text-sm font-extrabold text-gray-800 dark:text-white px-2 sm:px-3 sm:min-w-[160px] text-center uppercase tracking-wider truncate" x-text="currentMonthYear"></h2>
-                                <button @click="changeMonth(1)" aria-label="Bulan berikutnya" class="p-2.5 sm:p-2 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                <h2 class="text-base sm:text-sm font-extrabold text-gray-800 dark:text-white px-2 sm:px-3 sm:min-w-[160px] text-center uppercase tracking-wider truncate" x-text="currentMonthYear"></h2>
+                                <button @click="changeMonth(1)" aria-label="Bulan berikutnya" class="p-2.5 sm:p-2 flex-shrink-0 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
+                                    <svg class="w-5 h-5 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </button>
                             </div>
 

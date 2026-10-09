@@ -12,7 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE kalender_akademik MODIFY COLUMN jenis_kegiatan VARCHAR(100) NOT NULL');
+        Schema::table('kalender_akademik', function (Blueprint $table) {
+            $table->string('jenis_kegiatan', 100)->change();
+        });
     }
 
     /**
