@@ -21,10 +21,10 @@
 
     <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
         <div class="card-header bg-white border-bottom py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-            <div class="d-flex align-items-center gap-3">
-                <form action="{{ route('admin.fakultas.index') }}" method="GET" class="d-flex align-items-center gap-2">
+            <div class="d-flex w-100 align-items-center gap-3">
+                <form action="{{ route('admin.fakultas.index') }}" method="GET" class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-2 w-100">
                     <label for="semester_id" class="fw-semibold text-muted mb-0" style="font-size: 0.9rem; white-space: nowrap;">Tahun Akademik:</label>
-                    <select name="semester_id" id="semester_id" class="form-select form-select-sm border-0 bg-light fw-bold" style="min-width: 250px; color: #002B6B;" onchange="this.form.submit()">
+                    <select name="semester_id" id="semester_id" class="form-select form-select-sm border-0 bg-light fw-bold w-100" style="min-width: 200px; color: #002B6B;" onchange="this.form.submit()">
                         @foreach($semesters as $sem)
                             <option value="{{ $sem->id }}" {{ ($selectedSemester && $selectedSemester->id == $sem->id) ? 'selected' : '' }}>
                                 {{ $sem->tahun_ajaran }} - {{ $sem->jenis }} {{ $sem->is_active ? '(Aktif)' : '' }}
@@ -80,43 +80,45 @@
                                 <!-- Child Row: Program Studi -->
                                 <tr x-show="expandedId === {{ $fakultas->id }}" x-transition.opacity.duration.300ms style="display: none;">
                                     <td colspan="4" class="p-0 border-0">
-                                        <div class="bg-slate-50 border-bottom border-start border-primary border-4 py-4 px-5 shadow-inner">
-                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <div class="bg-slate-50 border-bottom border-start border-primary border-4 py-3 py-md-4 px-3 px-md-5 shadow-inner">
+                                            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2 mb-3">
                                                 <div>
                                                     <h6 class="mb-1 fw-bold text-primary"><i class="bi bi-diagram-3-fill"></i> Daftar Program Studi di {{ $fakultas->nama_fakultas }}</h6>
                                                 </div>
-                                                <a href="{{ route('admin.program-studi.create', ['fakultas_id' => $fakultas->id]) }}" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ route('admin.program-studi.create', ['fakultas_id' => $fakultas->id]) }}" class="btn btn-sm btn-outline-primary text-nowrap">
                                                     <i class="bi bi-plus-lg"></i> Tambah Prodi
                                                 </a>
                                             </div>
                                             
                                             <div class="bg-white rounded-3 shadow-sm border border-slate-200 overflow-hidden">
-                                                <table class="table table-sm table-hover align-middle mb-0">
-                                                    <thead style="background-color: #f8fafc;">
-                                                        <tr>
-                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Kode</th>
-                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Nama Prodi</th>
-                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Jenjang</th>
-                                                            <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Aksi</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @forelse($fakultas->programStudi as $prodi)
-                                                        <tr>
-                                                            <td class="px-4 py-2"><span class="badge bg-slate-100 text-slate-700 border">{{ $prodi->kode_prodi }}</span></td>
-                                                            <td class="px-4 py-2 fw-semibold">{{ $prodi->nama_prodi }}</td>
-                                                            <td class="px-4 py-2"><span class="badge bg-indigo-50 text-indigo-700 border">{{ $prodi->jenjang }}</span></td>
-                                                            <td class="px-4 py-2">
-                                                                <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="btn btn-sm btn-light border text-primary py-0"><i class="bi bi-pencil" style="font-size: 0.75rem;"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                        @empty
-                                                        <tr>
-                                                            <td colspan="4" class="text-center py-3 text-muted small">Belum ada program studi di fakultas ini.</td>
-                                                        </tr>
-                                                        @endforelse
-                                                    </tbody>
-                                                </table>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover align-middle mb-0">
+                                                        <thead style="background-color: #f8fafc;">
+                                                            <tr>
+                                                                <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Kode</th>
+                                                                <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Nama Prodi</th>
+                                                                <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Jenjang</th>
+                                                                <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Aksi</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @forelse($fakultas->programStudi as $prodi)
+                                                            <tr>
+                                                                <td class="px-4 py-2"><span class="badge bg-slate-100 text-slate-700 border">{{ $prodi->kode_prodi }}</span></td>
+                                                                <td class="px-4 py-2 fw-semibold">{{ $prodi->nama_prodi }}</td>
+                                                                <td class="px-4 py-2"><span class="badge bg-indigo-50 text-indigo-700 border">{{ $prodi->jenjang }}</span></td>
+                                                                <td class="px-4 py-2">
+                                                                    <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="btn btn-sm btn-light border text-primary py-0"><i class="bi bi-pencil" style="font-size: 0.75rem;"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                            @empty
+                                                            <tr>
+                                                                <td colspan="4" class="text-center py-3 text-muted small">Belum ada program studi di fakultas ini.</td>
+                                                            </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>

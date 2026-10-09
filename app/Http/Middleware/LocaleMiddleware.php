@@ -45,7 +45,24 @@ class LocaleMiddleware
                         return $matches[1]; // Return tag attributes untouched
                     }
                     if (isset($matches[2]) && $matches[2] !== '') {
-                        return strtr($matches[2], $translations); // Translate text nodes safely
+                        $text = $matches[2];
+                        
+                        // Handle whitespaces that break exact match
+                        $trimmed = trim($text);
+                        if ($trimmed === '') {
+                            return $text; // It's just whitespace
+                        }
+                        
+                        // Extract leading and trailing whitespaces
+                        preg_match('/^(\s*)/', $text, $leadingMatches);
+                        preg_match('/(\s*)$/', $text, $trailingMatches);
+                        $leading = $leadingMatches[1] ?? '';
+                        $trailing = $trailingMatches[1] ?? '';
+                        
+                        // Attempt translation on trimmed text, otherwise try strtr for partials
+                        $translated = $translations[$trimmed] ?? strtr($trimmed, $translations);
+                        
+                        return $leading . $translated . $trailing;
                     }
                     return '';
                 }, $content);

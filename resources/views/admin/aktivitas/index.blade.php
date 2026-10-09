@@ -3,49 +3,56 @@
 @section('title', 'Log Aktivitas Pengguna')
 
 @section('content')
-<style>
-    .log-container {
-        background: #fff;
-        border-radius: 12px;
-        padding: 24px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-    .log-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-    }
-    .log-header h3 {
-        margin: 0;
-        font-weight: 700;
-        color: #0f172a;
-    }
-    .table-hover tbody tr:hover {
-    }
-    .badge-dosen { background: #3b82f6; color: white; }
-    .badge-mahasiswa { background: #10b981; color: white; }
-    .badge-admin { background: #f59e0b; color: white; }
-</style>
+    <style>
+        .log-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .log-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 24px;
+        }
+        @media (min-width: 768px) {
+            .log-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .log-header h3 {
+            margin: 0;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .table-hover tbody tr:hover {
+        }
+        .badge-dosen { background: #3b82f6; color: white; }
+        .badge-mahasiswa { background: #10b981; color: white; }
+        .badge-admin { background: #f59e0b; color: white; }
+    </style>
 
-<div class="log-container">
-    <div class="log-header">
-        <div>
-            <h3>🕵️‍♂️ Log Aktivitas Pengguna</h3>
-            <p class="text-muted mb-0 mt-1">Pantau semua tindakan (Audit Trail) yang terjadi di dalam Cendekia LMS.</p>
+    <div class="log-container">
+        <div class="log-header">
+            <div>
+                <h3>🕵️‍♂️ Log Aktivitas Pengguna</h3>
+                <p class="text-muted mb-0 mt-1">Pantau semua tindakan (Audit Trail) yang terjadi di dalam Cendekia LMS.</p>
+            </div>
+            
+            <form action="{{ route('admin.aktivitas.index') }}" method="GET" class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
+                <select name="role" class="form-select form-select-sm" style="width: 100%; min-width: 130px;">
+                    <option value="">Semua Peran</option>
+                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="dosen" {{ request('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
+                    <option value="mahasiswa" {{ request('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                </select>
+                <input type="text" name="search" class="form-control form-control-sm w-100" placeholder="Cari nama atau aktivitas..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-dark btn-sm px-3 text-nowrap">Cari</button>
+            </form>
         </div>
-        
-        <form action="{{ route('admin.aktivitas.index') }}" method="GET" class="d-flex gap-2">
-            <select name="role" class="form-select form-select-sm" style="width: auto;">
-                <option value="">Semua Peran</option>
-                <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="dosen" {{ request('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
-                <option value="mahasiswa" {{ request('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-            </select>
-            <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari nama atau aktivitas..." value="{{ request('search') }}">
-            <button type="submit" class="btn btn-dark btn-sm px-3">Cari</button>
-        </form>
-    </div>
 
     <div class="table-responsive">
         <table class="table table-hover align-middle">
