@@ -10,12 +10,42 @@
             <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Semua Notifikasi</h1>
             <p class="text-sm font-medium text-slate-400 dark:text-slate-500 mt-0.5">Pantau semua pembaruan dan informasi penting.</p>
         </div>
-        <form action="{{ route('notifikasi.baca-semua') }}" method="POST">
-            @csrf
-            <button type="submit" class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/80 transition shadow-sm">
-                Tandai Semua Dibaca
-            </button>
-        </form>
+        <div class="flex flex-col sm:flex-row gap-2">
+            @if ($isMahasiswa)
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <form action="{{ route('notifikasi.index') }}" method="GET" class="flex items-center gap-2">
+                        <input type="hidden" name="lihat_pengumuman" id="lihatPengumumanFilter" value="{{ request()->boolean('lihat_pengumuman') ? '1' : '' }}">
+                        <label for="tanggalNotifikasi" class="sr-only">Filter notifikasi berdasarkan tanggal</label>
+                        <input
+                            id="tanggalNotifikasi"
+                            type="date"
+                            name="tanggal"
+                            value="{{ $selectedDate }}"
+                            max="{{ now()->toDateString() }}"
+                            class="px-3 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm text-gray-700 dark:text-gray-300 focus:border-[#002B6B] focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10"
+                        >
+                        <button type="submit" class="px-4 py-2 bg-[#002B6B] rounded-xl text-sm font-bold text-white hover:bg-blue-800 transition shadow-sm">
+                            Filter
+                        </button>
+                    </form>
+                    <button
+                        id="togglePengumuman"
+                        type="button"
+                        aria-expanded="{{ request()->boolean('lihat_pengumuman') ? 'true' : 'false' }}"
+                        aria-controls="daftarPengumuman"
+                        class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/80 transition shadow-sm text-center"
+                    >
+                        {{ request()->boolean('lihat_pengumuman') ? 'Sembunyikan Pengumuman' : 'Tampilkan Semua Pengumuman' }}
+                    </button>
+                </div>
+            @endif
+            <form action="{{ route('notifikasi.baca-semua') }}" method="POST">
+                @csrf
+                <button type="submit" class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/80 transition shadow-sm">
+                    Tandai Semua Dibaca
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700 shadow-sm overflow-hidden">
@@ -56,8 +86,12 @@
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 dark:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-slate-700 text-gray-400 mb-4">
                     <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
                 </div>
-                <h3 class="text-base font-bold text-gray-800 dark:text-white mb-1">Belum Ada Notifikasi</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Anda akan melihat notifikasi di sini ketika ada aktivitas baru.</p>
+                <h3 class="text-base font-bold text-gray-800 dark:text-white mb-1">
+                    {{ $isMahasiswa ? 'Tidak Ada Notifikasi pada Tanggal Ini' : 'Belum Ada Notifikasi' }}
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ $isMahasiswa ? 'Pilih tanggal lain untuk melihat notifikasi sebelumnya.' : 'Anda akan melihat notifikasi di sini ketika ada aktivitas baru.' }}
+                </p>
             </div>
         @endforelse
     </div>
@@ -65,5 +99,70 @@
     <div class="mt-4">
         {{ $notifikasis->links() }}
     </div>
+
+    @if ($isMahasiswa)
+        <section id="daftarPengumuman" class="{{ request()->boolean('lihat_pengumuman') ? '' : 'hidden' }} space-y-4" aria-label="Semua pengumuman">
+            <h2 class="text-lg font-black text-slate-800 dark:text-white">Semua Pengumuman</h2>
+            @forelse ($pengumuman as $item)
+                <article class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700 p-5 shadow-sm">
+                    <div class="mb-2 flex flex-wrap items-center gap-2">
+                        @if ($item->untuk_semua || is_null($item->kelas_perkuliahan_id))
+                            <span class="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 border border-amber-200/40 dark:border-amber-900/30 text-amber-600 dark:text-amber-300 px-2.5 py-0.5 rounded-md">Penting / Global</span>
+                        @endif
+                        @if ($item->kelasPerkuliahan)
+                            <span class="text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/30 text-[#002B6B] dark:text-blue-300 px-2.5 py-0.5 rounded-md">
+                                Kelas: {{ $item->kelasPerkuliahan->kode_kelas }}
+                            </span>
+                        @endif
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-white">{{ $item->judul }}</h3>
+                    <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600 dark:text-slate-300">{{ $item->isi }}</p>
+                    <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-700 pt-3 text-xs text-slate-400 dark:text-slate-500">
+                        <span>Oleh: {{ $item->pembuat->name ?? 'Administrator' }}</span>
+                        <span>{{ $item->created_at?->format('d M Y') }}</span>
+                    </div>
+                </article>
+            @empty
+                <div class="rounded-2xl border border-slate-200/60 dark:border-slate-700 bg-white dark:bg-slate-800 p-8 text-center text-sm text-slate-500">
+                    Tidak ada pengumuman saat ini.
+                </div>
+            @endforelse
+
+            @if ($pengumuman->hasPages())
+                <div>
+                    {{ $pengumuman->appends([
+                        'tanggal' => $selectedDate,
+                        'lihat_pengumuman' => 1,
+                    ])->links() }}
+                </div>
+            @endif
+        </section>
+    @endif
 </div>
+
+@if ($isMahasiswa)
+    @push('scripts')
+        <script>
+            document.getElementById('togglePengumuman').addEventListener('click', function () {
+                const section = document.getElementById('daftarPengumuman');
+                const isVisible = !section.classList.contains('hidden');
+                const params = new URLSearchParams(window.location.search);
+
+                section.classList.toggle('hidden', isVisible);
+                this.setAttribute('aria-expanded', String(!isVisible));
+                this.textContent = isVisible ? 'Tampilkan Semua Pengumuman' : 'Sembunyikan Pengumuman';
+                document.getElementById('lihatPengumumanFilter').value = isVisible ? '' : '1';
+
+                if (isVisible) {
+                    params.delete('lihat_pengumuman');
+                } else {
+                    params.set('lihat_pengumuman', '1');
+                }
+
+                const query = params.toString();
+                window.history.replaceState(null, '', window.location.pathname + (query ? '?' + query : ''));
+            });
+        </script>
+    @endpush
+@endif
 @endsection
