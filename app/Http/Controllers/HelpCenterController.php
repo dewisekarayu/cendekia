@@ -27,56 +27,56 @@ class HelpCenterController extends Controller
                 [
                     'id' => 2,
                     'category' => 'akun',
-                    'question' => 'How to reset my password?',
-                    'answer' => 'Click the "Forgot Password" button on the login page. Enter your registered email, then check your email for the password reset link. If you do not receive an email, check your spam folder or contact the admin.',
+                    'question' => 'Bagaimana cara reset password?',
+                    'answer' => 'Klik tombol "Lupa Password" di halaman login. Masukkan email terdaftar Anda, kemudian cek email untuk tautan reset password. Jika tidak menerima email, periksa folder spam atau hubungi admin.',
                 ],
             ],
             'absensi' => [
                 [
                     'id' => 5,
                     'category' => 'absensi',
-                    'question' => 'Attendance page is not showing or showing "unauthorized" error?',
-                    'answer' => 'This happens if you are not registered in the class or the lecturer has not opened the attendance yet. Make sure you have enrolled in the class via the Classes menu. Contact your lecturer if the error persists.',
+                    'question' => 'Halaman absensi tidak muncul atau error "tidak diizinkan"?',
+                    'answer' => 'Ini terjadi jika Anda belum terdaftar di kelas tersebut atau dosen belum membuka absensi. Pastikan Anda sudah mendaftar kelas melalui menu Kelas. Hubungi dosen jika masih error.',
                 ],
             ],
             'nilai' => [
                 [
                     'id' => 9,
                     'category' => 'nilai',
-                    'question' => 'My grades are not out or the gradebook is still empty?',
-                    'answer' => 'The lecturer might not have inputted the grades yet. Check the academic calendar for the grading deadline. If it is past the deadline, contact your lecturer for confirmation.',
+                    'question' => 'Nilai saya belum keluar atau gradeBook masih kosong?',
+                    'answer' => 'Dosen mungkin masih belum menginput nilai. Cek kalender akademik untuk deadline pengumpulan nilai. Jika sudah lewat deadline, hubungi dosen untuk pengecekan.',
                 ],
             ],
             'tugas' => [
                 [
                     'id' => 12,
                     'category' => 'tugas',
-                    'question' => 'Cannot upload assignments, always failing with an error?',
-                    'answer' => 'Make sure the file does not exceed the maximum size set by the lecturer (usually 10-20MB). Try a different file format (PDF, DOC). If the error persists, try a different browser or contact the admin.',
+                    'question' => 'Tidak bisa upload tugas, selalu gagal dengan error?',
+                    'answer' => 'Pastikan file tidak melampaui ukuran maksimal yang ditentukan dosen (biasanya 10-20MB). Coba format file lain (PDF, DOC). Jika error persisten, coba browser berbeda atau hubungi admin.',
                 ],
             ],
             'kelas' => [
                 [
                     'id' => 17,
                     'category' => 'kelas',
-                    'question' => 'Class materials are not showing, only announcements are visible?',
-                    'answer' => 'The lecturer might not have uploaded the materials yet. Check the announcement date. If the lecturer was supposed to upload but it is still empty, contact your lecturer for confirmation.',
+                    'question' => 'Materi kelas tidak muncul, hanya terlihat pengumuman?',
+                    'answer' => 'Dosen mungkin belum upload materi. Cek tanggal posting pengumuman. Jika dosen sudah harusnya upload tapi masih kosong, hubungi dosen untuk konfirmasi.',
                 ],
             ],
             'teknis' => [
                 [
                     'id' => 19,
                     'category' => 'teknis',
-                    'question' => 'Blank page or nothing is showing, only loading?',
-                    'answer' => 'Try refreshing the page (F5 or Ctrl+Shift+R for a hard refresh). If it is still blank, try a different browser or device. If the problem persists on all devices, contact the admin.',
+                    'question' => 'Halaman blank atau tidak muncul apa-apa, hanya loading?',
+                    'answer' => 'Coba refresh halaman (F5 atau Ctrl+Shift+R untuk hard refresh). Jika tetap blank, coba browser lain atau device berbeda. Jika masalah berlanjut di semua device, hubungi admin.',
                 ],
             ],
             'lainnya' => [
                 [
                     'id' => 26,
                     'category' => 'lainnya',
-                    'question' => 'System notifications are not going to my email?',
-                    'answer' => 'Make sure your email is verified in your profile. Check the spam/junk folder as well. If you are still not receiving them, contact the admin to check your email status in the database.',
+                    'question' => 'Notifikasi dari sistem tidak masuk ke email saya?',
+                    'answer' => 'Pastikan email Anda sudah ter-verifikasi di profil. Cek folder spam/junk juga. Jika masih tidak menerima, hubungi admin untuk check status email di database.',
                 ],
             ],
         ];
