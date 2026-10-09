@@ -1124,7 +1124,80 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        window.adminConfirm = function (message, title = 'Konfirmasi') {
+            return Swal.fire({
+                title: title,
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, lanjutkan',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                focusCancel: true,
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'admin-confirm-popup',
+                    title: 'admin-confirm-title',
+                    htmlContainer: 'admin-confirm-message',
+                    confirmButton: 'admin-confirm-accept',
+                    cancelButton: 'admin-confirm-cancel',
+                    actions: 'admin-confirm-actions'
+                }
+            }).then(result => result.isConfirmed);
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('submit', function(event) {
+                const form = event.target.closest('form[data-confirm]');
+                if (!form) return;
+
+                if (form.dataset.confirmed === 'true') {
+                    delete form.dataset.confirmed;
+                    return;
+                }
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if (form.dataset.confirmPending === 'true') return;
+                form.dataset.confirmPending = 'true';
+
+                const submitter = event.submitter;
+                window.adminConfirm(form.dataset.confirm).then(confirmed => {
+                    delete form.dataset.confirmPending;
+                    if (!confirmed) return;
+
+                    form.dataset.confirmed = 'true';
+                    if (submitter) {
+                        form.requestSubmit(submitter);
+                    } else {
+                        form.requestSubmit();
+                    }
+                });
+            }, true);
+
+            document.addEventListener('click', function(event) {
+                const button = event.target.closest('button[data-confirm]');
+                if (!button) return;
+
+                if (button.dataset.confirmed === 'true') {
+                    delete button.dataset.confirmed;
+                    return;
+                }
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if (button.dataset.confirmPending === 'true') return;
+                button.dataset.confirmPending = 'true';
+
+                window.adminConfirm(button.dataset.confirm).then(confirmed => {
+                    delete button.dataset.confirmPending;
+                    if (!confirmed) return;
+
+                    button.dataset.confirmed = 'true';
+                    button.click();
+                });
+            }, true);
+
             document.addEventListener('click', function(e) {
                 const deleteBtn = e.target.closest('.action-btn-delete');
                 if (deleteBtn) {
@@ -1144,6 +1217,52 @@
             });
         });
     </script>
+    <style>
+        .admin-confirm-popup {
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        .admin-confirm-title {
+            color: #0f172a;
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        .admin-confirm-message {
+            color: #64748b;
+            font-size: 0.925rem;
+        }
+        .admin-confirm-actions {
+            gap: 0.625rem;
+        }
+        .admin-confirm-accept,
+        .admin-confirm-cancel {
+            border: 0;
+            border-radius: 0.625rem;
+            padding: 0.625rem 1rem;
+            font-weight: 600;
+        }
+        .admin-confirm-accept {
+            background: #002b6b;
+            color: #fff;
+        }
+        .admin-confirm-cancel {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        html.dark .admin-confirm-popup {
+            background: #1e293b;
+        }
+        html.dark .admin-confirm-title {
+            color: #f8fafc;
+        }
+        html.dark .admin-confirm-message {
+            color: #cbd5e1;
+        }
+        html.dark .admin-confirm-cancel {
+            background: #334155;
+            color: #f8fafc;
+        }
+    </style>
 
     @stack('scripts')
 </body>

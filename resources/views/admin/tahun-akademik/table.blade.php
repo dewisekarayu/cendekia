@@ -40,7 +40,7 @@
                             <a href="{{ route('admin.tahun-akademik.edit', $ta->id) }}" class="action-btn action-btn-edit" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <form method="POST" action="{{ route('admin.tahun-akademik.destroy', $ta->id) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data tahun akademik ini?')">
+                            <form method="POST" action="{{ route('admin.tahun-akademik.destroy', $ta->id) }}" style="display:inline-block;" data-confirm="Apakah Anda yakin ingin menghapus data tahun akademik ini?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="action-btn action-btn-delete" title="Hapus">

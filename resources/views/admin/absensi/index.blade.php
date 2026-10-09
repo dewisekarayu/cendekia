@@ -164,7 +164,7 @@
                                             Edit
                                         </a>
                                         <form action="{{ route('admin.absensi.destroy', $absensi->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus sesi presensi ini?');" class="inline">
+                                            data-confirm="Yakin ingin menghapus sesi presensi ini?" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-semibold transition">

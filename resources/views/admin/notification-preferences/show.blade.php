@@ -109,10 +109,10 @@
                 <button type="submit" form="formEnableAll" class="btn btn-sm btn-light border text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-xs font-bold px-3 py-1.5" style="border-radius: 0.6rem;">
                     <i class="bi bi-check-all me-1"></i> Aktifkan Semua
                 </button>
-                <button type="submit" form="formDisableAll" class="btn btn-sm btn-light border text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-xs font-bold px-3 py-1.5" style="border-radius: 0.6rem;" onclick="return confirm('Nonaktifkan semua preferensi notifikasi untuk pengguna ini?')">
+                <button type="submit" form="formDisableAll" class="btn btn-sm btn-light border text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-xs font-bold px-3 py-1.5" style="border-radius: 0.6rem;" data-confirm="Nonaktifkan semua preferensi notifikasi untuk pengguna ini?">
                     <i class="bi bi-x-lg me-1"></i> Nonaktifkan Semua
                 </button>
-                <button type="submit" form="formResetDefault" class="btn btn-sm btn-light border text-slate-700 dark:text-slate-300 text-xs font-bold px-3 py-1.5" style="border-radius: 0.6rem;" onclick="return confirm('Reset preferensi notifikasi ke default?')">
+                <button type="submit" form="formResetDefault" class="btn btn-sm btn-light border text-slate-700 dark:text-slate-300 text-xs font-bold px-3 py-1.5" style="border-radius: 0.6rem;" data-confirm="Reset preferensi notifikasi ke default?">
                     <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Default
                 </button>
             </div>

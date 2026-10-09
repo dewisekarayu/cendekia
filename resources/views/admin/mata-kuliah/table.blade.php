@@ -33,7 +33,7 @@
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
 
-                            <form action="{{ route('admin.mata-kuliah.destroy', $mk->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini?')">
+                            <form action="{{ route('admin.mata-kuliah.destroy', $mk->id) }}" method="POST" style="display:inline-block;" data-confirm="Apakah Anda yakin ingin menghapus mata kuliah ini?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="action-btn action-btn-delete" title="Hapus">

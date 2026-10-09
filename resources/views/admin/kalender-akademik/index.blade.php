@@ -449,7 +449,8 @@
                 </div>
 
                 <div class="flex justify-end gap-2 pt-4 border-t border-gray-100 dark:border-slate-700">
-                    <button type="button" @click="if(confirm('Hapus agenda ini secara permanen?')) { $refs.deleteForm.action = '/admin/kalender-akademik/' + editForm.id; $refs.deleteForm.submit(); }"
+                    <button type="button" @click="$refs.deleteForm.action = '/admin/kalender-akademik/' + editForm.id; $refs.deleteForm.requestSubmit()"
+                            data-confirm="Hapus agenda ini secara permanen?"
                             class="px-4 py-2.5 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors shadow-sm border border-red-200">
                         Hapus Agenda
                     </button>
