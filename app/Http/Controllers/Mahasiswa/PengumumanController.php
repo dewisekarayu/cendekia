@@ -27,7 +27,7 @@ class PengumumanController extends Controller
                       ->orWhereIn('kelas_perkuliahan_id', $kelasIds);
             })
             ->latest()
-            ->paginate(10);
+            ->paginate(5);
 
         return view('mahasiswa.pengumuman.index', compact('pengumuman'));
     }
