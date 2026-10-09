@@ -132,14 +132,13 @@
                     {{-- Grid Tanggal-Tanggal --}}
                     <div class="grid grid-cols-7 gap-1">
                         <template x-for="(day, idx) in calendarDays" :key="idx">
-                            <div class="relative rounded-xl cursor-pointer select-none transition-all duration-150 border flex flex-col justify-between"
+                            <div class="relative rounded-xl cursor-pointer select-none transition-all duration-150 border flex flex-col justify-between aspect-square sm:aspect-auto sm:min-h-[100px]"
                                 :class="{
                                     'bg-blue-50/70 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900 ring-1 ring-blue-300 dark:ring-blue-800': day.isToday && !day.isSelected,
                                     'bg-blue-600 border-blue-600 shadow-md ring-2 ring-blue-400 text-white': day.isSelected,
                                     'hover:bg-gray-50 dark:hover:bg-slate-700/50 bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700': !day.isToday && !day.isSelected,
                                     'opacity-35': !day.isCurrentMonth,
                                 }"
-                                style="min-height:95px;"
                                 @click="selectDay(day)"
                                 @dblclick="openModalForDate(day)"
                                 @keydown.enter.prevent="selectDay(day)"
@@ -147,18 +146,18 @@
                                 tabindex="0">
 
                                 {{-- Header Kotak Tanggal --}}
-                                <div class="p-2 pb-0 flex justify-between items-start">
-                                    <span class="text-xs font-bold tracking-tight"
+                                <div class="p-1.5 sm:p-2 sm:pb-0 flex flex-col sm:flex-row justify-center sm:justify-between items-center sm:items-start h-full sm:h-auto gap-0.5 sm:gap-0">
+                                    <span class="text-sm sm:text-xs font-bold tracking-tight"
                                           :class="day.isSelected ? 'text-white' : (day.isToday ? 'text-blue-600 dark:text-blue-400' : (day.isCurrentMonth ? 'text-gray-800 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600'))"
                                           x-text="day.date"></span>
                                     <span x-show="day.filteredEvents.length > 0"
-                                          class="text-[9px] px-1 py-0.5 rounded font-black"
-                                          :class="day.isSelected ? 'bg-blue-700 text-blue-100' : 'bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400'"
+                                          class="text-[9px] px-1.5 py-0.5 rounded-full sm:rounded font-black leading-none"
+                                          :class="day.isSelected ? 'bg-blue-700 text-blue-100' : 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400'"
                                           x-text="day.filteredEvents.length"></span>
                                 </div>
 
-                                {{-- Agenda List Preview di dalam tanggal (Maksimal 2 baris agar rapi) --}}
-                                <div class="px-1.5 pb-1.5 pt-1 space-y-1 overflow-hidden mt-auto">
+                                {{-- Agenda List Preview di dalam tanggal (Maksimal 2 baris agar rapi) - Sembunyikan di mobile agar kotak tetap kecil --}}
+                                <div class="px-1.5 pb-1.5 pt-1 space-y-1 overflow-hidden mt-auto hidden sm:block">
                                     <template x-for="event in day.filteredEvents.slice(0, 2)" :key="event.id">
                                         <div class="px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-medium truncate border"
                                              :style="day.isSelected
