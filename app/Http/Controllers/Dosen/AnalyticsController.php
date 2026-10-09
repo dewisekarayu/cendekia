@@ -26,7 +26,8 @@ class AnalyticsController extends Controller
 
         $availableClasses = [];
         foreach ($kelasList as $k) {
-            $availableClasses[$k->id] = ($k->mataKuliah->nama_mata_kuliah ?? '-') . ' - ' . $k->kode_kelas;
+            $namaMataKuliah = $k->mataKuliah?->nama_mk;
+            $availableClasses[$k->id] = ($namaMataKuliah ? $namaMataKuliah . ' - ' : '') . $k->kode_kelas;
         }
 
         // 2. Semua mahasiswa di kelas-kelas tersebut

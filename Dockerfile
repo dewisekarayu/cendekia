@@ -46,6 +46,7 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 RUN echo '#!/bin/bash\n\
 set -e\n\
 \n\
+php artisan storage:link --force\n\
 php artisan config:cache\n\
 php artisan route:cache\n\
 php artisan view:cache\n\
