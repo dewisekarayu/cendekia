@@ -463,17 +463,6 @@
 
                     {{-- Profile / Settings per role --}}
                     @if (auth()->user()->hasRole('mahasiswa'))
-                        @php $isProfilActive = request()->routeIs('mahasiswa.profil'); @endphp
-                        <a
-                            href="{{ route('mahasiswa.profil') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isProfilActive ? 'sidebar-link-active' : '' }}"
-                            style="{{ $isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z" />
-                            </svg>
-                            Profil
-                        </a>
-
                         @php $isSettingActive = request()->routeIs('mahasiswa.setting'); @endphp
                         <a
                             href="{{ route('mahasiswa.setting') }}"
@@ -485,17 +474,6 @@
                             Setting
                         </a>
                     @elseif (auth()->user()->hasRole('dosen'))
-                        @php $isProfilActive = request()->routeIs('dosen.profil.index'); @endphp
-                        <a
-                            href="{{ route('dosen.profil.index') }}"
-                            class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition {{ $isProfilActive ? 'sidebar-link-active' : '' }}"
-                            style="{{ $isProfilActive ? 'background-color: ' . $activeBg . '; color: ' . $activeText . ';' : 'color: ' . $sidebarText . ';' }} --hover-bg: {{ $sidebarHover }};">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z" />
-                            </svg>
-                            Profile
-                        </a>
-
                         @php $isSettingActive = request()->routeIs('dosen.setting'); @endphp
                         <a
                             href="{{ route('dosen.setting') }}"

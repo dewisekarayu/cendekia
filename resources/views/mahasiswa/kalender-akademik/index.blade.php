@@ -3,6 +3,13 @@
 @section('activeMenu', 'Jadwal')
 @section('content')
 
+<style>
+    /* Cegah halaman bisa digeser ke samping di HP */
+    html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
+    @supports (overflow: clip) { html, body { overflow-x: clip; } }
+    body { touch-action: pan-y pinch-zoom; }
+</style>
+
 <div x-data="calendar()" class="min-h-screen overflow-x-hidden bg-slate-50 dark:bg-slate-900 py-4 sm:py-6 px-3 sm:px-6 lg:px-8 mb-12">
     <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6">
 
@@ -68,27 +75,6 @@
                                     </select>
                                     <div class="absolute right-3 pointer-events-none text-gray-400"><svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg></div>
                                 </div>
-                            </div>
-                        </div>
-
-                        {{-- Category Filter (geser ke samping di HP) --}}
-                        <div class="overflow-x-auto scrollbar-none -mx-3 px-3 sm:mx-0 sm:px-0">
-                            <div class="flex gap-2 pb-1 flex-nowrap">
-                                @foreach([
-                                    'uts' => 'UTS', 'uas' => 'UAS', 'libur_nasional' => 'Libur', 'libur_akademik' => 'Akademik',
-                                    'deadline_tugas' => 'Tugas', 'deadline_skripsi' => 'Skripsi', 'pengumuman_nilai' => 'Nilai',
-                                    'praktikum' => 'Praktikum', 'wisuda' => 'Wisuda', 'seminar' => 'Seminar', 'workshop' => 'Workshop',
-                                    'presentasi_proyek' => 'Presentasi', 'sidang' => 'Sidang', 'orientasi_mahasiswa_baru' => 'Orientasi',
-                                    'pembayaran_ukt' => 'UKT', 'pengisian_krs' => 'KRS', 'pengisian_khs' => 'KHS', 'cuti_akademik' => 'Cuti',
-                                    'pengumuman_akademik' => 'Pengumuman', 'lainnya' => 'Lainnya'
-                                ] as $cat => $label)
-                                    <label class="flex items-center gap-1.5 sm:gap-2 cursor-pointer px-3 py-1.5 rounded-xl border transition-all text-xs font-bold whitespace-nowrap flex-shrink-0 select-none active:scale-95"
-                                           :class="visibleCategories.has('{{ $cat }}') ? 'bg-[#002B6B] border-[#002B6B] text-white' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'">
-                                        <input type="checkbox" @click="toggleCategory('{{ $cat }}')" :checked="visibleCategories.has('{{ $cat }}')" class="sr-only">
-                                        <span class="w-1.5 h-1.5 rounded-full" :class="visibleCategories.has('{{ $cat }}') ? 'bg-white' : 'bg-gray-400 dark:bg-slate-600'"></span>
-                                        <span>{{ $label }}</span>
-                                    </label>
-                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -260,186 +246,190 @@
     </div>
 
     {{-- ============================================================ --}}
-    {{-- MODAL 1: DETAIL TANGGAL (bottom sheet di HP)                 --}}
+    {{-- MODAL 1: DETAIL TANGGAL (popup di tengah layar)              --}}
     {{-- ============================================================ --}}
-    <div x-data="{
-            dayOpen: false,
-            day: null,
-            openDay(d) { this.day = d; this.dayOpen = true; },
-            closeDay() { this.dayOpen = false; },
-            get dayEvents() { return this.day ? uniqEvents(this.day.events) : []; },
-            get dayLabel() {
-                if (!this.day) return '';
-                const raw = String(this.day.dateStr).slice(0, 10);
-                const d = new Date(raw + 'T00:00:00');
-                return isNaN(d) ? raw : d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            }
-         }"
-         @select-day.window="openDay($event.detail.day)"
-         @keydown.escape.window="closeDay()"
-         x-effect="document.body.classList.toggle('overflow-hidden', dayOpen)">
+    <template x-teleport="body">
+        <div x-data="{
+                dayOpen: false,
+                day: null,
+                openDay(d) { this.day = d; this.dayOpen = true; },
+                closeDay() { this.dayOpen = false; },
+                get dayEvents() { return this.day ? window.uniqEvents(this.day.events) : []; },
+                get dayLabel() {
+                    if (!this.day) return '';
+                    const raw = String(this.day.dateStr).slice(0, 10);
+                    const d = new Date(raw + 'T00:00:00');
+                    return isNaN(d) ? raw : d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                }
+             }"
+             @select-day.window="openDay($event.detail.day)"
+             @keydown.escape.window="closeDay()"
+             x-effect="document.body.classList.toggle('overflow-hidden', dayOpen)">
 
-        <div x-show="dayOpen" x-cloak
-             x-transition.opacity.duration.200ms
-             class="fixed inset-0 z-40 flex items-end sm:items-center justify-center sm:p-4 bg-slate-950/40 backdrop-blur-sm sm:backdrop-blur-md"
-             @click.self="closeDay()">
+            <div x-show="dayOpen" x-cloak
+                 x-transition.opacity.duration.200ms
+                 class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm touch-none overscroll-none"
+                 @click.self="closeDay()">
 
-            <div x-show="dayOpen"
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                 class="bg-white dark:bg-slate-800 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-lg max-h-[88vh] sm:max-h-[85vh] flex flex-col shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden"
-                 role="dialog" aria-modal="true" aria-labelledby="dayModalTitle">
+                <div x-show="dayOpen"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-lg max-h-[85dvh] flex flex-col shadow-2xl border border-gray-100 dark:border-slate-700 overflow-hidden"
+                     role="dialog" aria-modal="true" aria-labelledby="dayModalTitle">
 
-                <div class="sm:hidden pt-2 flex justify-center"><span class="h-1 w-10 rounded-full bg-slate-300 dark:bg-slate-600"></span></div>
-
-                {{-- Header --}}
-                <div class="px-4 sm:px-5 py-3 sm:py-5 border-b border-gray-100 dark:border-slate-700/60 flex items-start justify-between gap-3">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-10 h-10 rounded-xl bg-[#002B6B] flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        </div>
-                        <div class="min-w-0">
-                            <h3 id="dayModalTitle" class="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base leading-snug" x-text="dayLabel"></h3>
-                            <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5" x-text="dayEvents.length > 0 ? dayEvents.length + ' agenda pada tanggal ini' : 'Tidak ada agenda'"></p>
-                        </div>
-                    </div>
-                    <button @click="closeDay()" aria-label="Tutup" class="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition active:scale-90 flex-shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </div>
-
-                {{-- Body --}}
-                <div class="p-4 sm:p-5 overflow-y-auto space-y-3" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
-                    <template x-for="event in dayEvents" :key="event.id">
-                        <div class="rounded-2xl border border-gray-100 dark:border-slate-700/60 p-4 space-y-3"
-                             :style="'border-left: 4px solid ' + (event.warna || '#002B6B') + '; background-color: ' + (event.warna || '#002B6B') + '08'">
-
-                            <div class="flex flex-wrap items-start justify-between gap-2">
-                                <h4 class="font-bold text-sm text-gray-900 dark:text-white leading-snug min-w-0 flex-1" x-text="event.judul"></h4>
-                                <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wide flex-shrink-0"
-                                      :style="'background-color: ' + (event.warna || '#002B6B') + '20; color: ' + (event.warna || '#002B6B')"
-                                      x-text="event.jenis_kegiatan_label || 'Kegiatan'"></span>
-                            </div>
-
-                            <div class="space-y-1.5 text-xs text-gray-600 dark:text-slate-300">
-                                <div class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                                    <span class="font-semibold">
-                                        <span x-text="fmtTanggal(event.tanggal_mulai)"></span>
-                                        <template x-if="event.tanggal_selesai && fmtTanggal(event.tanggal_selesai) !== fmtTanggal(event.tanggal_mulai)">
-                                            <span x-text="' s/d ' + fmtTanggal(event.tanggal_selesai)"></span>
-                                        </template>
-                                    </span>
-                                </div>
-
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    <template x-if="event.is_all_day">
-                                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>
-                                    </template>
-                                    <template x-if="!event.is_all_day">
-                                        <span class="font-semibold" x-text="event.waktu_formatted || 'Waktu belum ditentukan'"></span>
-                                    </template>
-                                </div>
-
-                                <template x-if="event.lokasi">
-                                    <div class="flex items-start gap-2">
-                                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-                                        <span class="font-semibold" x-text="event.lokasi"></span>
-                                    </div>
-                                </template>
-                            </div>
-
-                            <template x-if="event.deskripsi">
-                                <div class="pt-3 border-t border-gray-100 dark:border-slate-700/60">
-                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Keterangan</p>
-                                    <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap break-words" x-text="event.deskripsi"></p>
-                                </div>
-                            </template>
-                        </div>
-                    </template>
-
-                    <template x-if="dayEvents.length === 0">
-                        <div class="text-center py-8">
-                            <div class="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-3 text-slate-400">
-                                <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            </div>
-                            <p class="text-sm font-bold text-gray-700 dark:text-slate-200">Tidak ada agenda</p>
-                            <p class="text-xs text-gray-400 mt-1">Belum ada kegiatan akademik pada tanggal ini.</p>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- ============================================================ --}}
-    {{-- MODAL 2: DETAIL SATU AGENDA (bottom sheet di HP)             --}}
-    {{-- ============================================================ --}}
-    <div x-show="selectedEvent" x-cloak
-         @keydown.escape.window="selectedEvent && closeEventModal()"
-         class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-slate-950/40 backdrop-blur-sm sm:backdrop-blur-md">
-        <div @click.outside="closeEventModal()"
-             class="bg-white dark:bg-slate-800 rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md max-h-[88vh] overflow-y-auto shadow-2xl border border-gray-100 dark:border-slate-700">
-
-            <div class="sm:hidden pt-2 flex justify-center"><span class="h-1 w-10 rounded-full bg-slate-300 dark:bg-slate-600"></span></div>
-
-            <template x-if="selectedEvent">
-                <div>
-                    <div class="px-4 sm:px-5 py-3 sm:py-5 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between gap-3 sticky top-0 bg-white dark:bg-slate-800">
+                    {{-- Header --}}
+                    <div class="px-4 sm:px-5 py-3 sm:py-5 border-b border-gray-100 dark:border-slate-700/60 flex items-start justify-between gap-3 flex-shrink-0">
                         <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" :style="'background-color: ' + (selectedEvent.warna || '#002B6B')">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+                            <div class="w-10 h-10 rounded-xl bg-[#002B6B] flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             </div>
-                            <h3 class="font-extrabold text-gray-900 dark:text-white text-sm leading-snug" x-text="selectedEvent.judul"></h3>
+                            <div class="min-w-0">
+                                <h3 id="dayModalTitle" class="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base leading-snug" x-text="dayLabel"></h3>
+                                <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5" x-text="dayEvents.length > 0 ? dayEvents.length + ' agenda pada tanggal ini' : 'Tidak ada agenda'"></p>
+                            </div>
                         </div>
-                        <button @click="closeEventModal()" aria-label="Tutup" class="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition active:scale-90 flex-shrink-0">
+                        <button @click="closeDay()" aria-label="Tutup" class="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition active:scale-90 flex-shrink-0">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
 
-                    <div class="p-4 sm:p-6 space-y-4 text-sm" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold"
-                                  :style="'background-color: ' + (selectedEvent.warna || '#002B6B') + '15; color: ' + (selectedEvent.warna || '#002B6B')"
-                                  x-text="selectedEvent.jenis_kegiatan_label || 'Kegiatan'"></span>
-                            <span x-show="selectedEvent.is_all_day" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>
-                        </div>
+                    {{-- Body --}}
+                    <div class="p-4 sm:p-5 overflow-y-auto overscroll-contain space-y-3" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
+                        <template x-for="event in dayEvents" :key="event.id">
+                            <div class="rounded-2xl border border-gray-100 dark:border-slate-700/60 p-4 space-y-3"
+                                 :style="'border-left: 4px solid ' + (event.warna || '#002B6B') + '; background-color: ' + (event.warna || '#002B6B') + '08'">
 
-                        <div class="bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-none rounded-2xl p-4 text-xs space-y-1">
-                            <div class="flex items-start gap-2 text-gray-800 dark:text-slate-200 font-bold">
-                                <svg class="w-4 h-4 text-[#002B6B] dark:text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                                <span>
-                                    <span x-text="fmtTanggal(selectedEvent.tanggal_mulai)"></span>
-                                    <template x-if="selectedEvent.tanggal_selesai && fmtTanggal(selectedEvent.tanggal_selesai) !== fmtTanggal(selectedEvent.tanggal_mulai)">
-                                        <span x-text="' s/d ' + fmtTanggal(selectedEvent.tanggal_selesai)"></span>
+                                <div class="flex flex-wrap items-start justify-between gap-2">
+                                    <h4 class="font-bold text-sm text-gray-900 dark:text-white leading-snug min-w-0 flex-1" x-text="event.judul"></h4>
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wide flex-shrink-0"
+                                          :style="'background-color: ' + (event.warna || '#002B6B') + '20; color: ' + (event.warna || '#002B6B')"
+                                          x-text="event.jenis_kegiatan_label || 'Kegiatan'"></span>
+                                </div>
+
+                                <div class="space-y-1.5 text-xs text-gray-600 dark:text-slate-300">
+                                    <div class="flex items-start gap-2">
+                                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                                        <span class="font-semibold">
+                                            <span x-text="window.fmtTanggal(event.tanggal_mulai)"></span>
+                                            <template x-if="event.tanggal_selesai && window.fmtTanggal(event.tanggal_selesai) !== window.fmtTanggal(event.tanggal_mulai)">
+                                                <span x-text="' s/d ' + window.fmtTanggal(event.tanggal_selesai)"></span>
+                                            </template>
+                                        </span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <template x-if="event.is_all_day">
+                                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>
+                                        </template>
+                                        <template x-if="!event.is_all_day">
+                                            <span class="font-semibold" x-text="event.waktu_formatted || 'Waktu belum ditentukan'"></span>
+                                        </template>
+                                    </div>
+
+                                    <template x-if="event.lokasi">
+                                        <div class="flex items-start gap-2">
+                                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                                            <span class="font-semibold" x-text="event.lokasi"></span>
+                                        </div>
                                     </template>
-                                </span>
-                            </div>
-                            <template x-if="!selectedEvent.is_all_day && selectedEvent.waktu_formatted">
-                                <div class="text-[11px] font-semibold text-gray-400 pl-6" x-text="selectedEvent.waktu_formatted"></div>
-                            </template>
-                        </div>
+                                </div>
 
-                        <template x-if="selectedEvent.lokasi">
-                            <div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
-                                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Lokasi Ruangan</p>
-                                <p class="text-xs font-bold text-gray-800 dark:text-slate-200" x-text="selectedEvent.lokasi"></p>
+                                <template x-if="event.deskripsi">
+                                    <div class="pt-3 border-t border-gray-100 dark:border-slate-700/60">
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Keterangan</p>
+                                        <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap break-words" x-text="event.deskripsi"></p>
+                                    </div>
+                                </template>
                             </div>
                         </template>
 
-                        <template x-if="selectedEvent.deskripsi">
-                            <div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
-                                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Keterangan Detail</p>
-                                <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed font-medium whitespace-pre-wrap break-words" x-text="selectedEvent.deskripsi"></p>
+                        <template x-if="dayEvents.length === 0">
+                            <div class="text-center py-8">
+                                <div class="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-3 text-slate-400">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                                <p class="text-sm font-bold text-gray-700 dark:text-slate-200">Tidak ada agenda</p>
+                                <p class="text-xs text-gray-400 mt-1">Belum ada kegiatan akademik pada tanggal ini.</p>
                             </div>
                         </template>
                     </div>
                 </div>
-            </template>
+            </div>
         </div>
-    </div>
+    </template>
+
+    {{-- ============================================================ --}}
+    {{-- MODAL 2: DETAIL SATU AGENDA (popup di tengah layar)          --}}
+    {{-- ============================================================ --}}
+    <template x-teleport="body">
+        <div x-show="selectedEvent" x-cloak
+             x-transition.opacity.duration.200ms
+             x-effect="document.body.classList.toggle('overflow-hidden', !!selectedEvent)"
+             @keydown.escape.window="selectedEvent && closeEventModal()"
+             @click.self="closeEventModal()"
+             class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm touch-none overscroll-none">
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md max-h-[85dvh] overflow-y-auto overscroll-contain shadow-2xl border border-gray-100 dark:border-slate-700"
+                 role="dialog" aria-modal="true">
+
+                <template x-if="selectedEvent">
+                    <div>
+                        <div class="px-4 sm:px-5 py-3 sm:py-5 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between gap-3 sticky top-0 bg-white dark:bg-slate-800 z-10">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" :style="'background-color: ' + (selectedEvent.warna || '#002B6B')">
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+                                </div>
+                                <h3 class="font-extrabold text-gray-900 dark:text-white text-sm leading-snug" x-text="selectedEvent.judul"></h3>
+                            </div>
+                            <button @click="closeEventModal()" aria-label="Tutup" class="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition active:scale-90 flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="p-4 sm:p-6 space-y-4 text-sm" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-bold"
+                                      :style="'background-color: ' + (selectedEvent.warna || '#002B6B') + '15; color: ' + (selectedEvent.warna || '#002B6B')"
+                                      x-text="selectedEvent.jenis_kegiatan_label || 'Kegiatan'"></span>
+                                <span x-show="selectedEvent.is_all_day" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>
+                            </div>
+
+                            <div class="bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-none rounded-2xl p-4 text-xs space-y-1">
+                                <div class="flex items-start gap-2 text-gray-800 dark:text-slate-200 font-bold">
+                                    <svg class="w-4 h-4 text-[#002B6B] dark:text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                                    <span>
+                                        <span x-text="window.fmtTanggal(selectedEvent.tanggal_mulai)"></span>
+                                        <template x-if="selectedEvent.tanggal_selesai && window.fmtTanggal(selectedEvent.tanggal_selesai) !== window.fmtTanggal(selectedEvent.tanggal_mulai)">
+                                            <span x-text="' s/d ' + window.fmtTanggal(selectedEvent.tanggal_selesai)"></span>
+                                        </template>
+                                    </span>
+                                </div>
+                                <template x-if="!selectedEvent.is_all_day && selectedEvent.waktu_formatted">
+                                    <div class="text-[11px] font-semibold text-gray-400 pl-6" x-text="selectedEvent.waktu_formatted"></div>
+                                </template>
+                            </div>
+
+                            <template x-if="selectedEvent.lokasi">
+                                <div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
+                                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Lokasi Ruangan</p>
+                                    <p class="text-xs font-bold text-gray-800 dark:text-slate-200" x-text="selectedEvent.lokasi"></p>
+                                </div>
+                            </template>
+
+                            <template x-if="selectedEvent.deskripsi">
+                                <div class="pt-3.5 border-t border-gray-100 dark:border-slate-700/60">
+                                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Keterangan Detail</p>
+                                    <p class="text-xs text-gray-600 dark:text-slate-300 leading-relaxed font-medium whitespace-pre-wrap break-words" x-text="selectedEvent.deskripsi"></p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </template>
 </div>
 
 @push('scripts')

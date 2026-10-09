@@ -1,8 +1,3 @@
-@extends('layouts.portal')
-@section('title', 'Profil')
-@section('activeMenu', 'Profil')
-@section('content')
-
 @php
     $isEn = app()->getLocale() === 'en';
 @endphp
@@ -256,5 +251,3 @@
         document.getElementById('avatarPreview').src = "{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}";
     }
 </script>
-
-@endsection

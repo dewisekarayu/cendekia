@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -14,24 +13,7 @@ class ProfileController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user();
-
-        // Pengumuman terbaru dari kelas-kelas yang diampu dosen ini
-        $kelasIds = $user->kelasDiampu()->pluck('kelas_perkuliahan.id');
-
-        $announcements = Pengumuman::whereIn('kelas_perkuliahan_id', $kelasIds)
-            ->latest()
-            ->take(6)
-            ->get();
-
-        // Statistik akademik dosen
-        $totalKelas = $user->kelasDiampu()->count();
-
-        return view('dosen.profil', compact(
-            'user',
-            'announcements',
-            'totalKelas'
-        ));
+        return redirect()->route('dosen.setting', ['tab' => 'profil']);
     }
 
     public function updateProfile(Request $request)
@@ -57,7 +39,8 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        return back()->with('success', 'Profil berhasil diperbarui.');
+        return redirect()->route('dosen.setting', ['tab' => 'profil'])
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 
     public function updateFoto(Request $request)
@@ -81,7 +64,8 @@ class ProfileController extends Controller
 
         $user->update(['foto' => $path]);
 
-        return back()->with('success', 'Foto profil berhasil diperbarui.');
+        return redirect()->route('dosen.setting', ['tab' => 'profil'])
+            ->with('success', 'Foto profil berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request)
@@ -99,6 +83,7 @@ class ProfileController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back()->with('success', 'Password berhasil diperbarui.');
+        return redirect()->route('dosen.setting', ['tab' => 'profil'])
+            ->with('success', 'Password berhasil diperbarui.');
     }
 }
