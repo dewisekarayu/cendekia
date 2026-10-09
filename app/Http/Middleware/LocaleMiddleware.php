@@ -27,10 +27,11 @@ class LocaleMiddleware
         App::setLocale($locale);
 
         $response = $next($request);
+        $isStudent = auth()->check() && auth()->user()->hasRole('mahasiswa');
 
         // Dynamic HTML content post-processing translations for Dosen portal
         if (method_exists($response, 'getContent') && str_contains($response->headers->get('Content-Type') ?? '', 'text/html')) {
-            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*') || $request->is('help-center*')) {
+            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*') || $request->is('help-center*') || ($isStudent && $request->is('notifikasi*'))) {
                 $content = $response->getContent();
                 if ($locale === 'en') {
                     $translations = include base_path('lang/en_translations.php');
@@ -38,11 +39,17 @@ class LocaleMiddleware
                     $translations = include base_path('lang/id_translations.php');
                 }
                 
-                // Safe text-only rendering translation (ignores HTML tag attributes/paths)
+                // Translate common visible attributes only in the student portal.
                 $pattern = '/(<[^>]+>)|([^<]+)/';
-                $content = preg_replace_callback($pattern, function($matches) use ($translations) {
+                $content = preg_replace_callback($pattern, function($matches) use ($translations, $isStudent) {
                     if (isset($matches[1]) && $matches[1] !== '') {
-                        return $matches[1]; // Return tag attributes untouched
+                        if (!$isStudent) {
+                            return $matches[1];
+                        }
+
+                        return preg_replace_callback('/\b(placeholder|title|aria-label|alt)=([\'"])(.*?)\2/is', function ($attribute) use ($translations) {
+                            return $attribute[1] . '=' . $attribute[2] . strtr($attribute[3], $translations) . $attribute[2];
+                        }, $matches[1]);
                     }
                     if (isset($matches[2]) && $matches[2] !== '') {
                         $text = $matches[2];
