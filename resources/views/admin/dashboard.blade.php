@@ -193,7 +193,7 @@
                         $value = (int) ($prodi['value'] ?? 0);
                         $percentage = ($totalMahasiswa ?? 0) > 0 ? round(($value / $totalMahasiswa) * 100) : 0;
                     @endphp
-                    <div class="p-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40">
+                    <div data-prodi-item class="p-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40">
                         <div class="flex items-center justify-between text-xs font-bold mb-1.5">
                             <span class="text-slate-700 dark:text-slate-300 truncate pr-2">{{ $prodi['label'] }}</span>
                             <span class="text-[#002B6B] dark:text-blue-400 shrink-0">{{ number_format($value) }} ({{ $percentage }}%)</span>
@@ -206,6 +206,7 @@
                     <p class="text-slate-400 dark:text-slate-500 text-xs text-center py-6">Belum ada data program studi.</p>
                 @endforelse
             </div>
+            <nav id="mahasiswaPerProdiPagination" class="hidden mt-5 justify-center gap-2" aria-label="Halaman sebaran mahasiswa"></nav>
         </div>
 
     </div>
@@ -220,6 +221,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const dataBulanan = {!! json_encode($aktivitasBulanan ?? []) !!};
     const dataMingguan = {!! json_encode($aktivitasMingguan ?? []) !!};
+
+    const prodiItems = Array.from(document.querySelectorAll('[data-prodi-item]'));
+    const prodiPagination = document.getElementById('mahasiswaPerProdiPagination');
+    const prodiPageSize = 5;
+    const prodiPageCount = Math.ceil(prodiItems.length / prodiPageSize);
+
+    if (prodiPagination && prodiPageCount > 1) {
+        prodiPagination.classList.remove('hidden');
+        prodiPagination.classList.add('flex');
+
+        for (let page = 1; page <= prodiPageCount; page++) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = page;
+            button.setAttribute('aria-label', 'Halaman ' + page);
+            button.className = 'h-8 min-w-8 rounded-lg border border-slate-200 dark:border-slate-700 px-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:border-[#002B6B] hover:text-[#002B6B] dark:hover:text-blue-300 transition';
+            button.addEventListener('click', function () {
+                const start = (page - 1) * prodiPageSize;
+
+                prodiItems.forEach((item, index) => {
+                    item.classList.toggle('hidden', index < start || index >= start + prodiPageSize);
+                });
+
+                prodiPagination.querySelectorAll('button').forEach((pageButton, index) => {
+                    const isActive = index + 1 === page;
+                    pageButton.classList.toggle('bg-[#002B6B]', isActive);
+                    pageButton.classList.toggle('text-white', isActive);
+                    pageButton.classList.toggle('border-[#002B6B]', isActive);
+                    pageButton.setAttribute('aria-current', isActive ? 'page' : 'false');
+                });
+            });
+            prodiPagination.appendChild(button);
+        }
+
+        prodiPagination.querySelector('button').click();
+    }
 
     const ctx = document.getElementById('aktivitasChart').getContext('2d');
     const palette = ['#002B6B', '#0EA5E9', '#10B981', '#F59E0B', '#EF4444', '#7C3AED', '#14B8A6'];
