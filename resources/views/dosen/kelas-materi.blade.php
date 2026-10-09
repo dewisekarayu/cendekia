@@ -471,6 +471,13 @@
 
 @push('scripts')
 <script>
+    // Buka modal secara otomatis jika ada error validasi saat submit form tambah
+    @if($errors->any() && old('pertemuan_ke') !== null)
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleMateriModal('modalMateri');
+        });
+    @endif
+
     // Fungsi untuk membuka / menutup modal
     function toggleMateriModal(modalId) {
         const modal = document.getElementById(modalId);
