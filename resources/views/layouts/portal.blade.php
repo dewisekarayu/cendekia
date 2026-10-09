@@ -328,7 +328,7 @@
             aria-hidden="true"></div>
 
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
+            class="-translate-x-full lg:translate-x-0 fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:-translate-x-full'"
             style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
 

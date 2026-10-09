@@ -69,18 +69,7 @@
             </div>
         </div>
 
-        <!-- Tabs Navigation -->
-        <div class="flex gap-1 bg-purple-900/40 p-1 rounded-xl backdrop-blur-sm w-full sm:w-auto">
-            <button @click="activeTab = 'chat'" :class="{'bg-white text-purple-800 shadow': activeTab === 'chat', 'text-purple-100 hover:bg-white/10': activeTab !== 'chat'}" class="flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap">
-                Chat
-            </button>
-            <button @click="activeTab = 'material'" :class="{'bg-white text-purple-800 shadow': activeTab === 'material', 'text-purple-100 hover:bg-white/10': activeTab !== 'material'}" class="flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap">
-                Buat Materi
-            </button>
-            <button @click="activeTab = 'exam'" :class="{'bg-white text-purple-800 shadow': activeTab === 'exam', 'text-purple-100 hover:bg-white/10': activeTab !== 'exam'}" class="flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap">
-                Buat Soal
-            </button>
-        </div>
+
     </div>
 
     <!-- Content Area -->
@@ -177,100 +166,7 @@
             </div>
         </div>
 
-        <!-- 2. Material Generator Tab -->
-        <div x-show="activeTab === 'material'" x-transition.opacity class="absolute inset-0 overflow-y-auto p-3 sm:p-6 z-10" style="display: none;">
-            <div class="max-w-3xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 sm:p-8">
-                <h2 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-1 flex items-center">
-                    <svg class="w-6 h-6 shrink-0 text-[#321270] dark:text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    Pembuat Materi Kuliah
-                </h2>
-                <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-5 sm:mb-6">Isi data di bawah, lalu AI akan menyusun materi untuk satu pertemuan.</p>
 
-                <form class="space-y-4 sm:space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mata Kuliah</label>
-                        <select class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500">
-                            <option>Pilih Mata Kuliah...</option>
-                            <option>Pemrograman Web Lanjut</option>
-                            <option>Kecerdasan Buatan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Topik Pertemuan</label>
-                        <input type="text" class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500 placeholder-gray-400 dark:placeholder-gray-500" placeholder="Contoh: Pengenalan Laravel Middleware">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Pembelajaran / Instruksi Khusus</label>
-                        <textarea rows="3" class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500 placeholder-gray-400 dark:placeholder-gray-500" placeholder="Materi harus mencakup contoh implementasi autentikasi..."></textarea>
-                    </div>
-
-                    <div class="pt-4 border-t border-gray-100 dark:border-slate-700 flex sm:justify-end">
-                        <button type="button" class="w-full sm:w-auto justify-center bg-[#321270] dark:bg-purple-600 hover:bg-[#321270]/90 dark:hover:bg-purple-700 text-white px-6 py-2.5 rounded-lg shadow font-medium flex items-center transition-colors">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                            Buat Materi
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- 3. Exam Generator Tab -->
-        <div x-show="activeTab === 'exam'" x-transition.opacity class="absolute inset-0 overflow-y-auto p-3 sm:p-6 z-10" style="display: none;">
-            <div class="max-w-3xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-4 sm:p-8">
-                <h2 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-1 flex items-center">
-                    <svg class="w-6 h-6 shrink-0 text-[#321270] dark:text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                    Pembuat Soal & Kuis
-                </h2>
-                <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-5 sm:mb-6">Pilih mata kuliah dan jenis soal, lalu AI akan membuatkan soalnya.</p>
-
-                <form class="space-y-4 sm:space-y-5">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mata Kuliah</label>
-                            <select class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500">
-                                <option>Pilih Mata Kuliah...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Materi Acuan (Opsional)</label>
-                            <select class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500">
-                                <option>Pilih Materi PDF/Word...</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipe Soal</label>
-                            <select class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500">
-                                <option>Pilihan Ganda (Multiple Choice)</option>
-                                <option>Esai Singkat</option>
-                                <option>Studi Kasus</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jumlah Soal</label>
-                            <input type="number" value="10" min="1" max="50" class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tingkat Kesulitan & Konteks Tambahan</label>
-                        <textarea rows="2" class="w-full bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white rounded-lg shadow-sm focus:border-[#321270] dark:focus:border-purple-500 focus:ring-[#321270] dark:focus:ring-purple-500 placeholder-gray-400 dark:placeholder-gray-500" placeholder="Tingkat soal mudah-sedang, fokuskan pada konsep dasar algoritma."></textarea>
-                    </div>
-
-                    <div class="pt-4 border-t border-gray-100 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center gap-3">
-                        <label class="flex items-center text-sm text-gray-600 dark:text-gray-300 sm:mr-auto">
-                            <input type="checkbox" class="rounded text-[#321270] dark:text-purple-600 focus:ring-[#321270] dark:focus:ring-purple-500 mr-2 border-gray-300 dark:border-slate-600 dark:bg-slate-900" checked> Sertakan Kunci Jawaban
-                        </label>
-                        <button type="button" class="w-full sm:w-auto justify-center bg-[#321270] dark:bg-purple-600 hover:bg-[#321270]/90 dark:hover:bg-purple-700 text-white px-6 py-2.5 rounded-lg shadow font-medium flex items-center transition-colors">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Buat Soal
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 @endsection
