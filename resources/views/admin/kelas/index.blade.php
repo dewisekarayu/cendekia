@@ -17,7 +17,7 @@
             <p class="text-muted mb-0" style="font-size: 0.9rem;">Kelola alokasi rombongan belajar, dosen pengampu, ruang, dan jadwal.</p>
         </div>
 
-        <a href="{{ route('admin.kelas.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+        <a href="{{ route('admin.kelas.create') }}" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 w-100 w-md-auto" style="min-width: fit-content;">
             <i class="bi bi-plus-lg"></i>
             <span>Buat Kelas Baru</span>
         </a>
@@ -36,33 +36,32 @@
     <div class="card border-0 shadow-sm mb-4">
         
         <!-- Filters -->
-        <div class="card-header bg-white p-4 border-bottom">
-            <form id="filterForm" class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label small fw-semibold">Pencarian</label>
-                    <input type="text" id="searchInput" name="search" class="form-control" placeholder="Kode Kelas, Matkul..." value="{{ $search ?? '' }}">
+        <div class="card-header bg-white p-3 p-md-4 border-bottom">
+            <form id="filterForm" class="row g-2 align-items-end">
+                <div class="col-12 col-md-4">
+                    <label class="form-label small fw-semibold mb-1">Pencarian</label>
+                    <input type="text" id="searchInput" name="search" class="form-control form-control-sm" placeholder="Kode Kelas, Matkul..." value="{{ $search ?? '' }}">
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label small fw-semibold">Program Studi</label>
-                    <select name="program_studi_id" id="prodiFilter" class="form-select">
+                <div class="col-6 col-md-3">
+                    <label class="form-label small fw-semibold mb-1">Program Studi</label>
+                    <select name="program_studi_id" id="prodiFilter" class="form-select form-select-sm">
                         <option value="">Semua</option>
                         @foreach($prodis as $p)
                             <option value="{{ $p->id }}" {{ request('program_studi_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_prodi }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label small fw-semibold">Dosen</label>
-                    <select name="dosen_id" id="dosenFilter" class="form-select">
+                <div class="col-6 col-md-3">
+                    <label class="form-label small fw-semibold mb-1">Dosen</label>
+                    <select name="dosen_id" id="dosenFilter" class="form-select form-select-sm">
                         <option value="">Semua</option>
                         @foreach($dosens as $d)
                             <option value="{{ $d->id }}" {{ request('dosen_id') == $d->id ? 'selected' : '' }}>{{ $d->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label small d-block">&nbsp;</label>
-                    <button type="button" class="btn btn-primary w-100 text-nowrap" id="applyFilterBtn">Terapkan Filter</button>
+                <div class="col-12 col-md-2 mt-2 mt-md-0">
+                    <button type="button" class="btn btn-primary btn-sm w-100 text-nowrap" id="applyFilterBtn">Terapkan Filter</button>
                 </div>
             </form>
         </div>
@@ -70,7 +69,7 @@
         <div class="card-body p-4 bg-light">
             <div class="d-flex flex-column gap-3">
                 @forelse($groupedByDosen as $dosenId => $data)
-                    <div class="card border-0 shadow-sm" x-data="{ open: true }">
+                    <div class="card border-0 shadow-sm" x-data="{ open: false }">
                         <div class="card-header bg-white border-bottom-0 p-3" @click="open = !open" style="cursor: pointer;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 fw-bold text-dark">

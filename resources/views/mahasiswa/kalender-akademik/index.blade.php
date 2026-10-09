@@ -45,12 +45,12 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             {{-- Month Nav --}}
                             <div class="flex items-center justify-between sm:justify-start gap-1 bg-slate-50 dark:bg-slate-900 p-1 rounded-xl w-full sm:w-fit border border-gray-100 dark:border-slate-800">
-                                <button @click="changeMonth(-1)" aria-label="Bulan sebelumnya" class="p-2.5 sm:p-2 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                <button @click="changeMonth(-1)" aria-label="Bulan sebelumnya" class="p-2.5 sm:p-2 flex-shrink-0 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
+                                    <svg class="w-5 h-5 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                                 </button>
-                                <h2 class="text-sm font-extrabold text-gray-800 dark:text-white px-2 sm:px-3 sm:min-w-[160px] text-center uppercase tracking-wider truncate" x-text="currentMonthYear"></h2>
-                                <button @click="changeMonth(1)" aria-label="Bulan berikutnya" class="p-2.5 sm:p-2 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                <h2 class="text-base sm:text-sm font-extrabold text-gray-800 dark:text-white px-2 sm:px-3 sm:min-w-[160px] text-center uppercase tracking-wider truncate" x-text="currentMonthYear"></h2>
+                                <button @click="changeMonth(1)" aria-label="Bulan berikutnya" class="p-2.5 sm:p-2 flex-shrink-0 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-gray-600 dark:text-gray-400 transition active:scale-90">
+                                    <svg class="w-5 h-5 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </button>
                             </div>
 
@@ -71,26 +71,7 @@
                             </div>
                         </div>
 
-                        {{-- Category Filter (geser ke samping di HP) --}}
-                        <div class="overflow-x-auto scrollbar-none -mx-3 px-3 sm:mx-0 sm:px-0">
-                            <div class="flex gap-2 pb-1 flex-nowrap">
-                                @foreach([
-                                    'uts' => 'UTS', 'uas' => 'UAS', 'libur_nasional' => 'Libur', 'libur_akademik' => 'Akademik',
-                                    'deadline_tugas' => 'Tugas', 'deadline_skripsi' => 'Skripsi', 'pengumuman_nilai' => 'Nilai',
-                                    'praktikum' => 'Praktikum', 'wisuda' => 'Wisuda', 'seminar' => 'Seminar', 'workshop' => 'Workshop',
-                                    'presentasi_proyek' => 'Presentasi', 'sidang' => 'Sidang', 'orientasi_mahasiswa_baru' => 'Orientasi',
-                                    'pembayaran_ukt' => 'UKT', 'pengisian_krs' => 'KRS', 'pengisian_khs' => 'KHS', 'cuti_akademik' => 'Cuti',
-                                    'pengumuman_akademik' => 'Pengumuman', 'lainnya' => 'Lainnya'
-                                ] as $cat => $label)
-                                    <label class="flex items-center gap-1.5 sm:gap-2 cursor-pointer px-3 py-1.5 rounded-xl border transition-all text-xs font-bold whitespace-nowrap flex-shrink-0 select-none active:scale-95"
-                                           :class="visibleCategories.has('{{ $cat }}') ? 'bg-[#002B6B] border-[#002B6B] text-white' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800'">
-                                        <input type="checkbox" @click="toggleCategory('{{ $cat }}')" :checked="visibleCategories.has('{{ $cat }}')" class="sr-only">
-                                        <span class="w-1.5 h-1.5 rounded-full" :class="visibleCategories.has('{{ $cat }}') ? 'bg-white' : 'bg-gray-400 dark:bg-slate-600'"></span>
-                                        <span>{{ $label }}</span>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
+
                     </div>
 
                     {{-- Calendar Matrix --}}

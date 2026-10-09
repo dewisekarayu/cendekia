@@ -37,15 +37,15 @@
         <div class="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/50">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 {{-- Kotak Input Live Search Mata Kuliah --}}
-                <div class="position-relative flex-grow-1" style="max-width: 480px;">
-                    <input type="text" id="liveSearchMK" class="form-control ps-4" value="{{ $search ?? '' }}" placeholder="Cari Kode atau Nama MK..." style="height: 44px; padding-right: 2.75rem;" autocomplete="off">
+                <div class="position-relative flex-grow-1 w-100" style="max-width: 100%;">
+                    <input type="text" id="liveSearchMK" class="form-control ps-4 w-100" value="{{ $search ?? '' }}" placeholder="Cari Kode atau Nama MK..." style="height: 44px; padding-right: 2.75rem;" autocomplete="off">
                     <div id="searchSpinner" class="spinner-border spinner-border-sm text-secondary d-none" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);" role="status"></div>
                     <i id="searchIcon" class="bi bi-search" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1rem;"></i>
                 </div>
                 
                 {{-- Dropdown Filter Prodi --}}
-                <div class="flex-shrink-0">
-                    <select id="prodiFilter" class="form-select" style="height: 44px; min-width: 200px;">
+                <div class="flex-shrink-0 w-100 w-md-auto">
+                    <select id="prodiFilter" class="form-select w-100" style="height: 44px;">
                         <option value="">Semua Program Studi</option>
                         @if(isset($programStudiList))
                             @foreach($programStudiList as $prodi)
