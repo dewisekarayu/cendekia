@@ -440,7 +440,7 @@
 
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Unggah File</label>
-                            <div class="border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-purple-500 transition cursor-pointer bg-slate-50/50 dark:bg-slate-900" onclick="document.getElementById('materiFileInput').click()">
+                            <label class="block w-full border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-purple-500 transition cursor-pointer bg-slate-50/50 dark:bg-slate-900">
                                 <div class="bg-blue-50 dark:bg-purple-950/40 p-3 rounded-xl mb-3 text-[#321270] dark:text-purple-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -450,7 +450,7 @@
                                 <p class="text-xs text-gray-400 dark:text-slate-500 mt-1">Sistem mendukung banyak file sekaligus</p>
                                 <input id="materiFileInput" type="file" name="file_materi[]" multiple class="hidden" onchange="updateFileLabel(this)">
                                 <div id="selectedFilesContainer" class="mt-3 text-xs font-semibold text-purple-700 dark:text-purple-300"></div>
-                            </div>
+                            </label>
                         </div>
                     </div>
 
@@ -471,6 +471,13 @@
 
 @push('scripts')
 <script>
+    // Buka modal secara otomatis jika ada error validasi saat submit form tambah
+    @if($errors->any() && old('pertemuan_ke') !== null)
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleMateriModal('modalMateri');
+        });
+    @endif
+
     // Fungsi untuk membuka / menutup modal
     function toggleMateriModal(modalId) {
         const modal = document.getElementById(modalId);
