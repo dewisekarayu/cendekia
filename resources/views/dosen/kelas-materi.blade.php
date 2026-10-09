@@ -139,7 +139,7 @@
                         </div>
 
                         {{-- Tombol Aksi --}}
-                        <button onclick="toggleMateriModal('modalMateri')"
+                        <button type="button" onclick="toggleMateriModal('modalMateri')"
                             class="h-10 shrink-0 text-xs font-bold bg-[#321270] dark:bg-[#6c2bd9] text-white px-4 rounded-lg hover:bg-[#321270]/90 dark:hover:bg-[#5b21b6] transition flex items-center justify-center gap-1.5 whitespace-nowrap w-full xs:w-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
