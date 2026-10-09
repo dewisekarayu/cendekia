@@ -23,6 +23,11 @@
         @php
             $tabs = [
                 [
+                    'id' => 'profil',
+                    'label' => $isEn ? 'Profile' : 'Profil',
+                    'icon' => 'M15 19a4 4 0 00-8 0m4-4a4 4 0 100-8 4 4 0 000 8z'
+                ],
+                [
                     'id' => 'umum',
                     'label' => $isEn ? 'General' : 'Umum',
                     'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M12 9a3 3 0 100 6 3 3 0 000-6z'
@@ -43,6 +48,10 @@
     </div>
 
     {{-- TAB CONTENT --}}
+    <div id="profil-content" class="tab-content hidden space-y-6">
+        @include('dosen.profil')
+    </div>
+
     {{-- UMUM TAB --}}
     <div id="umum-content" class="tab-content space-y-6">
         {{-- BAHASA --}}
@@ -198,12 +207,13 @@
             this.classList.add('border-[#321270]', 'text-slate-800', 'dark:text-white', 'border-b-2');
         });
     });
-    
-    // Set active tab on load
-    const activeTabButton = document.querySelector('.active-tab');
+
+    const requestedTab = new URLSearchParams(window.location.search).get('tab');
+    const activeTabButton = Array.from(document.querySelectorAll('.active-tab'))
+        .find(tab => tab.dataset.tab === requestedTab)
+        || document.querySelector('.active-tab[data-tab="umum"]');
     if (activeTabButton) {
-        activeTabButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-        activeTabButton.classList.add('border-[#321270]', 'text-slate-800', 'dark:text-white', 'border-b-2');
+        activeTabButton.click();
     }
 
     // Dynamic selection highlighting for Theme Cards

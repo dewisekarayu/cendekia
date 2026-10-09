@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
 use App\Models\NotificationPreference;
+use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -15,8 +16,14 @@ class SettingController extends Controller
     {
         $user = $request->user();
         $preferences = NotificationPreference::forUser($user->id);
+        $kelasIds = $user->kelasDiampu()->pluck('kelas_perkuliahan.id');
+        $announcements = Pengumuman::whereIn('kelas_perkuliahan_id', $kelasIds)
+            ->latest()
+            ->take(6)
+            ->get();
+        $totalKelas = $user->kelasDiampu()->count();
 
-        return view('dosen.setting', compact('user', 'preferences'));
+        return view('dosen.setting', compact('user', 'preferences', 'announcements', 'totalKelas'));
     }
 
     /**

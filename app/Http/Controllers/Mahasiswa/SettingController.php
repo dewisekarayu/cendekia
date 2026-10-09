@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 use App\Models\NilaiAkhir;
 use App\Models\NotificationPreference;
@@ -27,7 +28,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Display settings page (Umum & Notifikasi)
+     * Display settings page.
      */
     public function index(Request $request)
     {
@@ -43,18 +44,11 @@ class SettingController extends Controller
     }
 
     /**
-     * Display profil page (Keamanan)
+     * Redirect the legacy profile page to its tab in Settings.
      */
     public function profil(Request $request)
     {
-        $user = $request->user();
-
-        $stats = $this->getStats($user);
-
-        return view('mahasiswa.profil', array_merge(
-            compact('user'),
-            $stats
-        ));
+        return redirect()->route('mahasiswa.setting', ['tab' => 'profil']);
     }
 
     /**
@@ -64,13 +58,14 @@ class SettingController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$request->user()->id],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($request->user()->id)],
+            'telepon' => ['nullable', 'string', 'max:20'],
+            'nip_nim' => ['nullable', 'string', 'max:50', Rule::unique('users', 'nip_nim')->ignore($request->user()->id)],
         ]);
 
         $request->user()->update($validated);
 
-        return redirect()->route('mahasiswa.profil')
+        return redirect()->route('mahasiswa.setting', ['tab' => 'profil'])
             ->with('success', 'Profil berhasil diperbarui');
     }
 
@@ -95,7 +90,7 @@ class SettingController extends Controller
         $path = $request->file('foto')->store('avatars/mahasiswa', 'public');
         $user->update(['foto' => $path]);
 
-        return redirect()->route('mahasiswa.profil')
+        return redirect()->route('mahasiswa.setting', ['tab' => 'profil'])
             ->with('success', 'Foto profil berhasil diperbarui');
     }
 
@@ -113,7 +108,7 @@ class SettingController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect()->route('mahasiswa.profil')
+        return redirect()->route('mahasiswa.setting', ['tab' => 'profil'])
             ->with('success', 'Password berhasil diperbarui');
     }
 
