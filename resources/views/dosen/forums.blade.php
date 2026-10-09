@@ -22,8 +22,8 @@
     .forum-chat-wrap{
         display: flex !important;
         flex-direction: column !important;
-        height: calc(100vh - 120px);
-        min-height: 520px;
+        height: calc(100dvh - 140px);
+        min-height: 400px;
         background: #fff;
         border-radius: 16px;
         overflow: hidden;
