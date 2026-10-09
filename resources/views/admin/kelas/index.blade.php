@@ -156,7 +156,7 @@
                                                         <a href="{{ route('admin.kelas.edit', $kelas->id) }}" class="action-btn action-btn-edit" title="Edit">
                                                             <i class="bi bi-pencil-fill"></i>
                                                         </a>
-                                                        <form action="{{ route('admin.kelas.destroy', $kelas->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin hapus kelas ini? Semua data mahasiswa yang terdaftar akan ikut terhapus.')">
+                                                        <form action="{{ route('admin.kelas.destroy', $kelas->id) }}" method="POST" style="display:inline-block;" data-confirm="Yakin hapus kelas ini? Semua data mahasiswa yang terdaftar akan ikut terhapus.">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="action-btn action-btn-delete" title="Hapus">

@@ -504,13 +504,15 @@
             });
 
             // E. Eksekusi Simpan Data yang Valid ke Database
-            btnKonfirmasiSimpan.addEventListener('click', function () {
+            btnKonfirmasiSimpan.addEventListener('click', async function () {
                 const validRows = parsedRows.filter(r => r.is_valid);
                 if (validRows.length === 0) return;
 
-                if (!confirm(`Konfirmasi: Simpan ${validRows.length} data mahasiswa yang valid ke database?`)) {
-                    return;
-                }
+                const confirmed = await window.adminConfirm(
+                    `Simpan ${validRows.length} data mahasiswa yang valid ke database?`,
+                    'Konfirmasi simpan data'
+                );
+                if (!confirmed) return;
 
                 spinnerSimpan.classList.remove('d-none');
                 iconSimpan.classList.add('d-none');

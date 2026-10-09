@@ -67,7 +67,7 @@
                             <a href="{{ route('admin.mahasiswa.edit', $item->id) }}" class="action-btn action-btn-edit" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <form method="POST" action="{{ route('admin.mahasiswa.destroy', $item->id) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data mahasiswa ini?')">
+                            <form method="POST" action="{{ route('admin.mahasiswa.destroy', $item->id) }}" style="display:inline-block;" data-confirm="Apakah Anda yakin ingin menghapus data mahasiswa ini?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="action-btn action-btn-delete" title="Hapus">

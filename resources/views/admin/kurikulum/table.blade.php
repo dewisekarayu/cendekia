@@ -32,7 +32,7 @@
                             <a href="{{ route('admin.kurikulum.edit', $kurikulum->id) }}" class="btn btn-sm btn-light text-primary border" data-bs-toggle="tooltip" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <form action="{{ route('admin.kurikulum.destroy', $kurikulum->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kurikulum ini?');">
+                            <form action="{{ route('admin.kurikulum.destroy', $kurikulum->id) }}" method="POST" data-confirm="Yakin ingin menghapus kurikulum ini?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-light text-danger border" data-bs-toggle="tooltip" title="Hapus">

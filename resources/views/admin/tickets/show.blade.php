@@ -175,7 +175,7 @@
                 {{-- Action to close --}}
                 @if($ticket->status !== 'closed')
                     <div class="pt-2 border-t border-gray-50">
-                        <form method="POST" action="{{ route('admin.help-center.close', $ticket->id) }}" onsubmit="return confirm('Yakin ingin menutup tiket ini? Setelah ditutup, tiket tidak dapat dibalas lagi.');">
+                        <form method="POST" action="{{ route('admin.help-center.close', $ticket->id) }}" data-confirm="Yakin ingin menutup tiket ini? Setelah ditutup, tiket tidak dapat dibalas lagi.">
                             @csrf
                             <button type="submit" class="w-full h-10 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition shadow-sm">
                                 Tutup Tiket

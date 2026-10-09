@@ -52,7 +52,7 @@
                             <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="action-btn action-btn-edit" title="Edit">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <form method="POST" action="{{ route('admin.program-studi.destroy', $prodi->id) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data program studi ini?')">
+                            <form method="POST" action="{{ route('admin.program-studi.destroy', $prodi->id) }}" style="display:inline-block;" data-confirm="Apakah Anda yakin ingin menghapus data program studi ini?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="action-btn action-btn-delete" title="Hapus">

@@ -105,7 +105,7 @@
                                     <a href="{{ route('admin.user.edit', $user->id) }}" class="action-btn action-btn-edit" title="Edit">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini?')">
+                                    <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" style="display:inline-block;" data-confirm="Apakah Anda yakin ingin menghapus akun ini?">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="action-btn action-btn-delete" title="Hapus">

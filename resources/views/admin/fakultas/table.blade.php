@@ -31,7 +31,7 @@
                             <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light text-primary border rounded-3" data-bs-toggle="tooltip" title="Edit Fakultas">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <form action="{{ route('admin.fakultas.destroy', $fakultas->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus fakultas ini? Data program studi di bawahnya mungkin terpengaruh.');">
+                            <form action="{{ route('admin.fakultas.destroy', $fakultas->id) }}" method="POST" data-confirm="Yakin ingin menghapus fakultas ini? Data program studi di bawahnya mungkin terpengaruh.">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-light text-danger border rounded-3" data-bs-toggle="tooltip" title="Hapus Fakultas">
