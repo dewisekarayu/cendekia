@@ -485,7 +485,7 @@
 
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-gray-700 dark:text-slate-300">File Lampiran Template (Opsional)</label>
-                            <div class="border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-purple-500 transition cursor-pointer bg-slate-50/50 dark:bg-slate-900" onclick="document.getElementById('fileInput').click()">
+                            <label class="block w-full border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-purple-500 transition cursor-pointer bg-slate-50/50 dark:bg-slate-900">
                                 <div class="bg-blue-50 dark:bg-purple-950/40 p-4 rounded-xl mb-3 text-[#321270] dark:text-purple-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -497,7 +497,7 @@
                                     accept=".pdf,.doc,.docx,.zip,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png"
                                     class="hidden" onchange="updateTugasFileName(this)">
                                 <ul id="tugasFileNameDisplay" class="text-sm text-emerald-600 dark:text-emerald-400 font-semibold mt-2 hidden space-y-0.5"></ul>
-                            </div>
+                            </label>
                         </div>
                     </div>
 
