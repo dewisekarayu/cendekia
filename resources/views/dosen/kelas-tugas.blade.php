@@ -597,6 +597,13 @@
 
     <script>
         // Fungsi umum untuk membuka/tutup modal apa saja
+        // Buka modal secara otomatis jika ada error validasi saat submit form tambah
+        @if($errors->any() && old('batas_waktu') !== null)
+            document.addEventListener('DOMContentLoaded', function() {
+                toggleModal('modalTugas');
+            });
+        @endif
+
         function toggleModal(modalID) {
             const modal = document.getElementById(modalID);
             if (modal) {
