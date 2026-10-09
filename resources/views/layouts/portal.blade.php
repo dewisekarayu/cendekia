@@ -641,6 +641,12 @@
             background-color: var(--hover-bg) !important;
         }
 
+        aside a,
+        aside a:hover,
+        aside a:focus {
+            text-decoration: none !important;
+        }
+
         html.dark aside {
             background-color: #0f172a !important;
             border-right: 1px solid #1e293b !important;
