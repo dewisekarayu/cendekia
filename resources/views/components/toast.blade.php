@@ -95,4 +95,19 @@
     window.alert = function(message) {
         showToast(message, 'info');
     };
+
+    // Automatically show toast for session messages and validation errors
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            setTimeout(() => showToast("{{ session('success') }}", 'success'), 100);
+        @endif
+        @if(session('error'))
+            setTimeout(() => showToast("{{ session('error') }}", 'danger'), 100);
+        @endif
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                setTimeout(() => showToast("{{ $error }}", 'danger'), 100);
+            @endforeach
+        @endif
+    });
 </script>
