@@ -40,7 +40,7 @@ class LocaleMiddleware
                 }
                 
                 // Translate common visible attributes only in the student portal.
-                $pattern = '/(<[^>]+>)|([^<]+)/';
+                $pattern = '~(<script\b[^>]*>.*?</script\s*>|<style\b[^>]*>.*?</style\s*>|<!--.*?-->|<[^>]+>)|([^<]+)~is';
                 $content = preg_replace_callback($pattern, function($matches) use ($translations, $isStudent) {
                     if (isset($matches[1]) && $matches[1] !== '') {
                         if (!$isStudent) {

@@ -502,8 +502,10 @@
                          class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm overflow-hidden transition">
                         
                         {{-- Accordion Header Bar --}}
-                        <div class="px-5 py-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/40 transition flex items-center justify-between gap-4 select-none"
-                             @click="openKelasId = openKelasId === '{{ $kelasGrup->id }}' ? null : '{{ $kelasGrup->id }}'">
+                        <button type="button"
+                                class="w-full text-left px-5 py-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/40 transition flex items-center justify-between gap-4 select-none"
+                                @click="openKelasId = openKelasId === '{{ $kelasGrup->id }}' ? null : '{{ $kelasGrup->id }}'"
+                                :aria-expanded="openKelasId === '{{ $kelasGrup->id }}'">
                             
                             <div class="flex items-center gap-3 min-w-0">
                                 <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition"
@@ -531,7 +533,7 @@
                                       x-text="openKelasId === '{{ $kelasGrup->id }}' ? 'Tutup Rincian' : 'Buka Rincian'">
                                 </span>
                             </div>
-                        </div>
+                        </button>
 
                         {{-- Accordion Body (Courses within this class) --}}
                         <div x-show="openKelasId === '{{ $kelasGrup->id }}'" x-cloak x-transition
@@ -815,7 +817,7 @@
             selectedDay: 'Semua',
             selectedMonth: 'Semua',
             searchQuery: '',
-            openKelasId: @json($kelasList->isNotEmpty() ? $kelasList->first()->id : null),
+            openKelasId: @json($kelasList->isNotEmpty() ? (string) $kelasList->first()->id : null),
             // Reschedule modal state
             showRescheduleModal: {{ $errors->any() ? 'true' : 'false' }},
             rescheduleKelasId: {{ old('kelas_perkuliahan_id') ?: 'null' }},
