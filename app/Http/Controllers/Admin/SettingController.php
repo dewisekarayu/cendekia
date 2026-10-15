@@ -53,7 +53,23 @@ class SettingController extends Controller
 
         session(['locale' => $validated['language']]);
 
-        return back()->with('success', $validated['language'] === 'en' ? 'General settings updated successfully.' : 'Pengaturan umum dan tampilan berhasil disimpan.');
+        return redirect()->route('admin.setting', ['tab' => 'tampilan'])->with('success', $validated['language'] === 'en' ? 'General settings updated successfully.' : 'Pengaturan umum dan tampilan berhasil disimpan.');
+    }
+
+    /**
+     * Switch language directly for admin.
+     */
+    public function switchLanguage(Request $request, string $locale)
+    {
+        if (in_array($locale, ['id', 'en'])) {
+            $user = $request->user();
+            if ($user) {
+                $user->update(['language' => $locale]);
+            }
+            session(['locale' => $locale]);
+        }
+
+        return back();
     }
 
     /**

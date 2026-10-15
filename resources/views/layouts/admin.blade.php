@@ -1078,7 +1078,16 @@
 
                 <div class="hidden lg:block flex-1"></div>
 
-                <div class="flex items-center justify-end gap-2 sm:gap-4">
+                <div class="flex items-center justify-end gap-2 sm:gap-3">
+                    {{-- Quick Language Switcher --}}
+                    @php $currentLocale = app()->getLocale(); @endphp
+                    <a href="{{ route('admin.switch-language', $currentLocale === 'en' ? 'id' : 'en') }}"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 transition text-decoration-none shadow-sm"
+                       title="{{ $currentLocale === 'en' ? 'Ubah ke Bahasa Indonesia' : 'Switch to English' }}">
+                        <span>{{ $currentLocale === 'en' ? '🇬🇧 EN' : '🇮🇩 ID' }}</span>
+                        <i class="bi bi-arrow-repeat text-gray-400 dark:text-gray-300"></i>
+                    </a>
+
                     <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
                         <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
                             {{ substr(auth()->user()->name ?? 'A', 0, 1) }}

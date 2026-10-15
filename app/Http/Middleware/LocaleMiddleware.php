@@ -20,18 +20,21 @@ class LocaleMiddleware
 
         if (auth()->check()) {
             $locale = auth()->user()->language ?? 'id';
+            if (session('locale') !== $locale) {
+                session(['locale' => $locale]);
+            }
         } elseif (session()->has('locale')) {
             $locale = session('locale');
         }
 
         App::setLocale($locale);
+        \Carbon\Carbon::setLocale($locale);
 
         $response = $next($request);
-        $isStudent = auth()->check() && auth()->user()->hasRole('mahasiswa');
 
-        // Dynamic HTML content post-processing translations for Dosen portal
+        // Dynamic HTML content post-processing translations
         if (method_exists($response, 'getContent') && str_contains($response->headers->get('Content-Type') ?? '', 'text/html')) {
-            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*') || $request->is('help-center*') || ($isStudent && $request->is('notifikasi*'))) {
+            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*') || $request->is('help-center*') || $request->is('notifikasi*') || $request->is('profile*') || $request->is('settings*')) {
                 $content = $response->getContent();
                 if ($locale === 'en') {
                     $translations = include base_path('lang/en_translations.php');
@@ -39,16 +42,17 @@ class LocaleMiddleware
                     $translations = include base_path('lang/id_translations.php');
                 }
                 
-                // Translate common visible attributes only in the student portal.
+                // Translate text nodes and common visible attributes
                 $pattern = '~(<script\b[^>]*>.*?</script\s*>|<style\b[^>]*>.*?</style\s*>|<!--.*?-->|<[^>]+>)|([^<]+)~is';
-                $content = preg_replace_callback($pattern, function($matches) use ($translations, $isStudent) {
+                $content = preg_replace_callback($pattern, function($matches) use ($translations) {
                     if (isset($matches[1]) && $matches[1] !== '') {
-                        if (!$isStudent) {
-                            return $matches[1];
-                        }
-
-                        return preg_replace_callback('/\b(placeholder|title|aria-label|alt)=([\'"])(.*?)\2/is', function ($attribute) use ($translations) {
-                            return $attribute[1] . '=' . $attribute[2] . strtr($attribute[3], $translations) . $attribute[2];
+                        return preg_replace_callback('/\b(placeholder|title|aria-label|alt|data-confirm|data-bs-title)=([\'"])(.*?)\2/is', function ($attribute) use ($translations) {
+                            $attrName = $attribute[1];
+                            $quote = $attribute[2];
+                            $val = $attribute[3];
+                            $trimmedVal = trim($val);
+                            $translatedVal = $translations[$trimmedVal] ?? strtr($val, $translations);
+                            return $attrName . '=' . $quote . $translatedVal . $quote;
                         }, $matches[1]);
                     }
                     if (isset($matches[2]) && $matches[2] !== '') {
@@ -61,8 +65,8 @@ class LocaleMiddleware
                         }
                         
                         // Extract leading and trailing whitespaces
-                        preg_match('/^(\s*)/', $text, $leadingMatches);
-                        preg_match('/(\s*)$/', $text, $trailingMatches);
+                        preg_match('/^(\s*)/u', $text, $leadingMatches);
+                        preg_match('/(\s*)$/u', $text, $trailingMatches);
                         $leading = $leadingMatches[1] ?? '';
                         $trailing = $trailingMatches[1] ?? '';
                         

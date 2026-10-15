@@ -143,6 +143,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->parameters(['user' => 'user']);
 
     // Admin Settings & Profile
+    Route::get('/admin/switch-language/{locale}', [App\Http\Controllers\Admin\SettingController::class, 'switchLanguage'])->name('admin.switch-language');
     Route::prefix('admin/setting')->name('admin.setting')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index']);
         Route::put('/profile', [App\Http\Controllers\Admin\SettingController::class, 'updateProfile'])->name('.profile');
