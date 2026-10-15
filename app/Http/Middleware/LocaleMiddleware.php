@@ -19,9 +19,14 @@ class LocaleMiddleware
         $locale = 'id';
 
         if (auth()->check()) {
-            $locale = auth()->user()->language ?? 'id';
+            $locale = session('locale', auth()->user()->language ?? 'id');
             if (session('locale') !== $locale) {
                 session(['locale' => $locale]);
+            }
+            if (auth()->user()->language !== $locale) {
+                try {
+                    auth()->user()->forceFill(['language' => $locale])->saveQuietly();
+                } catch (\Throwable $e) {}
             }
         } elseif (session()->has('locale')) {
             $locale = session('locale');
@@ -34,7 +39,7 @@ class LocaleMiddleware
 
         // Dynamic HTML content post-processing translations
         if (method_exists($response, 'getContent') && str_contains($response->headers->get('Content-Type') ?? '', 'text/html')) {
-            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*') || $request->is('help-center*') || $request->is('notifikasi*') || $request->is('profile*') || $request->is('settings*')) {
+            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*') || $request->is('help-center*') || $request->is('notifikasi*') || $request->is('profile*') || $request->is('settings*') || $request->is('kelas*') || $request->is('dashboard*')) {
                 $content = $response->getContent();
                 if ($locale === 'en') {
                     $translations = include base_path('lang/en_translations.php');

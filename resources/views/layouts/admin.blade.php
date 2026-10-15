@@ -62,21 +62,33 @@
 
         /* Dark mode compatibility */
         html.dark body {
-            background-color: #0f172a !important;
+            background-color: #0b1120 !important;
             color: #cbd5e1 !important;
         }
 
         html.dark .bg-white {
-            background-color: #1e293b !important;
+            background-color: #151f32 !important;
+        }
+
+        html.dark .bg-slate-50,
+        html.dark .bg-gray-50,
+        html.dark .bg-gray-50\/50,
+        html.dark .bg-light {
+            background-color: #0b1120 !important;
         }
 
         html.dark .border-slate-200,
-        html.dark .border-gray-200 {
-            border-color: #334155 !important;
+        html.dark .border-slate-100,
+        html.dark .border-gray-200,
+        html.dark .border-gray-100,
+        html.dark .border-gray-50,
+        html.dark .border-gray-250 {
+            border-color: #23334d !important;
         }
 
         html.dark .text-slate-800,
         html.dark .text-gray-900,
+        html.dark .text-gray-850,
         html.dark .text-gray-800,
         html.dark .text-dark,
         html.dark .text-black,
@@ -90,16 +102,160 @@
             color: #94a3b8 !important;
         }
 
+        html.dark .text-blue-900 {
+            color: #60a5fa !important;
+        }
+
+        html.dark .text-primary {
+            color: #60a5fa !important;
+        }
+
+        html.dark .bg-blue-900 {
+            background-color: #2563eb !important;
+            color: #ffffff !important;
+        }
+
+        /* All table headers and light containers in dark mode */
+        html.dark thead,
+        html.dark thead th,
+        html.dark thead.table-light,
+        html.dark .table-light,
+        html.dark thead[style*="background-color: #f8fafc"],
+        html.dark [style*="background-color: #f8fafc"],
+        html.dark [style*="background-color:#f8fafc"] {
+            background-color: #0b1120 !important;
+            color: #94a3b8 !important;
+            border-color: #23334d !important;
+        }
+
+        html.dark thead tr {
+            background-color: #0b1120 !important;
+            border-color: #23334d !important;
+        }
+
+        html.dark table thead th {
+            background-color: #0b1120 !important;
+            color: #94a3b8 !important;
+            border-bottom: 1px solid #23334d !important;
+        }
+
+        /* Badges & Pills in Dark Mode */
+        html.dark .badge.bg-indigo-50,
+        html.dark .badge.bg-indigo-100,
+        html.dark .bg-indigo-50 {
+            background-color: rgba(99, 102, 241, 0.18) !important;
+            color: #a5b4fc !important;
+            border-color: rgba(99, 102, 241, 0.35) !important;
+        }
+
+        html.dark .badge.bg-slate-100,
+        html.dark .badge.bg-gray-100,
+        html.dark .badge.bg-light,
+        html.dark .bg-gray-100,
+        html.dark .bg-slate-100 {
+            background-color: rgba(51, 65, 85, 0.6) !important;
+            color: #e2e8f0 !important;
+            border-color: rgba(71, 85, 105, 0.5) !important;
+        }
+
+        html.dark .badge.bg-blue-50,
+        html.dark .badge.bg-blue-100,
+        html.dark .bg-blue-50 {
+            background-color: rgba(37, 99, 235, 0.18) !important;
+            color: #93c5fd !important;
+            border-color: rgba(59, 130, 246, 0.35) !important;
+        }
+
+        html.dark .badge.bg-orange-50,
+        html.dark .badge.bg-orange-100,
+        html.dark .bg-orange-50 {
+            background-color: rgba(234, 88, 12, 0.18) !important;
+            color: #fdba74 !important;
+            border-color: rgba(234, 88, 12, 0.35) !important;
+        }
+
+        html.dark .badge.bg-emerald-50,
+        html.dark .badge.bg-emerald-100,
+        html.dark .badge.bg-green-50,
+        html.dark .bg-emerald-50 {
+            background-color: rgba(16, 185, 129, 0.18) !important;
+            color: #6ee7b7 !important;
+            border-color: rgba(16, 185, 129, 0.35) !important;
+        }
+
+        html.dark .text-indigo-700 {
+            color: #a5b4fc !important;
+        }
+        html.dark .text-slate-700 {
+            color: #cbd5e1 !important;
+        }
+        html.dark .text-blue-700 {
+            color: #93c5fd !important;
+        }
+        html.dark .text-orange-700,
+        html.dark .text-orange-600 {
+            color: #fdba74 !important;
+        }
+        html.dark .text-emerald-700,
+        html.dark .text-emerald-600 {
+            color: #6ee7b7 !important;
+        }
+        html.dark .border-indigo-100 {
+            border-color: rgba(99, 102, 241, 0.3) !important;
+        }
+        html.dark .border-blue-250,
+        html.dark .border-blue-200 {
+            border-color: rgba(59, 130, 246, 0.3) !important;
+        }
+        html.dark .border-orange-200 {
+            border-color: rgba(234, 88, 12, 0.3) !important;
+        }
+        html.dark .border-emerald-250,
+        html.dark .border-emerald-200 {
+            border-color: rgba(16, 185, 129, 0.3) !important;
+        }
+
+        /* Form Inputs & Selects in Dark Mode */
+        html.dark input[type="text"],
+        html.dark input[type="email"],
+        html.dark input[type="password"],
+        html.dark input[type="number"],
+        html.dark input[type="search"],
+        html.dark input[type="date"],
+        html.dark input[type="time"],
+        html.dark select,
+        html.dark textarea,
+        html.dark .form-control,
+        html.dark .form-select {
+            background-color: #0b1120 !important;
+            border-color: #23334d !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark input::placeholder,
+        html.dark textarea::placeholder {
+            color: #64748b !important;
+        }
+
+        html.dark select option {
+            background-color: #151f32 !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark .form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E") !important;
+        }
+
         /* Bootstrap Modals & Forms Dark Mode */
         html.dark .modal-content {
-            background-color: #1e293b !important;
-            border-color: #334155 !important;
+            background-color: #151f32 !important;
+            border-color: #23334d !important;
             color: #f8fafc !important;
         }
         
         html.dark .modal-header,
         html.dark .modal-footer {
-            border-color: #334155 !important;
+            border-color: #23334d !important;
         }
         
         html.dark .btn-close {
@@ -113,8 +269,8 @@
         /* Bootstrap Card Dark Mode */
         html.dark .card,
         html.dark .card.bg-white {
-            background-color: #1e293b !important;
-            border-color: #334155 !important;
+            background-color: #151f32 !important;
+            border-color: #23334d !important;
             color: #f8fafc !important;
         }
 
@@ -135,30 +291,31 @@
         }
 
         /* Fix judul warna #002B6B (hardcoded inline style) */
-        /* Karena tidak bisa override inline style, kita gunakan CSS variables trick */
         html.dark [style*="color: #002B6B"],
         html.dark [style*="color:#002B6B"] {
             color: #93c5fd !important;
         }
 
-        /* Fix badge bg-light di dark mode */
-        html.dark .badge.bg-light {
-            background-color: #334155 !important;
-            color: #f1f5f9 !important;
-            border-color: #475569 !important;
-        }
-
-        /* Fix btn-light di dark mode */
+        /* Fix btn-light & btn-outline-primary di dark mode */
         html.dark .btn-light {
-            background-color: #1e293b !important;
-            border-color: #475569 !important;
-            color: #cbd5e1 !important;
+            background-color: #151f32 !important;
+            border-color: #23334d !important;
+            color: #93c5fd !important;
         }
 
         html.dark .btn-light:hover {
-            background-color: #334155 !important;
-            border-color: #64748b !important;
-            color: #f1f5f9 !important;
+            background-color: #23334d !important;
+            border-color: #3b82f6 !important;
+            color: #bfdbfe !important;
+        }
+
+        html.dark .btn-outline-primary {
+            color: #93c5fd !important;
+            border-color: #3b82f6 !important;
+        }
+        html.dark .btn-outline-primary:hover {
+            background-color: #2563eb !important;
+            color: #ffffff !important;
         }
 
         /* Fix border-top pada card pengumuman */
