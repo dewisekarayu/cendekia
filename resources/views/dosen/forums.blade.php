@@ -399,27 +399,7 @@
 </div>
 
 {{-- TABS --}}
-@php
-    $tabLinks = [
-        'Beranda'      => ['url' => route('dosen.kelas-detail', $kelas->id), 'active' => request()->routeIs('dosen.kelas-detail')],
-        'Absensi'      => ['url' => route('dosen.absensi.index', $kelas->id),  'active' => request()->routeIs('dosen.absensi.*')],
-        'Materi'       => ['url' => route('dosen.kelas-materi', $kelas->id), 'active' => request()->routeIs('dosen.kelas-materi')],
-        'Tugas'        => ['url' => route('dosen.kelas-tugas', $kelas->id),  'active' => request()->routeIs('dosen.kelas-tugas')],
-        'Forum'        => ['url' => route('dosen.kelas-forum', $kelas->id),  'active' => request()->routeIs('dosen.kelas-forum')],
-        'Rekap Tugas'  => ['url' => route('dosen.kelas-tugas.rekap', $kelas->id), 'active' => request()->routeIs('dosen.kelas-tugas.rekap')],
-    ];
-@endphp
-<div class="mb-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-1.5 shadow-sm transition-colors duration-200">
-    @foreach ($tabLinks as $label => $tab)
-        <a href="{{ $tab['url'] }}"
-            class="whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold transition-all duration-200 ease-out
-                {{ $tab['active']
-                    ? 'bg-[#321270] dark:bg-purple-650 text-white shadow-sm shadow-purple-900/20 scale-[1.02]'
-                    : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-800 dark:hover:text-white hover:scale-[1.02]' }}">
-            {{ $label }}
-        </a>
-    @endforeach
-</div>
+@include('dosen.partials.kelas-tabs', ['kelas' => $kelas])
 
 <div class="forum-chat-wrap">
 
