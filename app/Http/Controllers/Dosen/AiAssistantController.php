@@ -206,45 +206,30 @@ class AiAssistantController extends Controller
     public function generateDashboardInsight(Request $request)
     {
         $user = $request->user();
-        $firstName = explode(' ', $user->name)[0];
+        $isEn = app()->getLocale() === 'en' || session('locale') === 'en';
         
         $jumlahKelas = $user->kelasDiampu()->count();
+        $totalMahasiswa = \App\Models\MahasiswaKelas::whereIn('kelas_perkuliahan_id', $user->kelasDiampu()->pluck('kelas_perkuliahan.id'))->distinct('mahasiswa_id')->count();
         $tugasPerluDinilai = \App\Models\PengumpulanTugas::whereHas('tugas.kelasPerkuliahan', fn ($q) => $q->where('dosen_id', $user->id))
             ->where('status', 'dikumpulkan')
             ->count();
         
-        $prompt = "Sapa dosen ini dengan nama '$firstName' secara profesional (misal: 'Selamat pagi, Prof/Bapak/Ibu $firstName!'). Berikan sapaan yang hangat dan memotivasi. Sebutkan bahwa hari ini ia memiliki $jumlahKelas kelas aktif yang diampu.";
-        
-        if ($tugasPerluDinilai > 0) {
-            $prompt .= " Juga, ingatkan dengan ramah bahwa ada $tugasPerluDinilai berkas tugas mahasiswa yang menunggu untuk dinilai, dan tanyakan apakah ia ingin menyelesaikannya hari ini.";
+        if ($isEn) {
+            $msg = "Welcome to the academic portal. You are currently teaching $jumlahKelas active classes with a total of $totalMahasiswa enrolled students. " . 
+                ($tugasPerluDinilai > 0 
+                    ? "There are $tugasPerluDinilai student assignments awaiting your evaluation." 
+                    : "All student assignment evaluations have been completed successfully.");
         } else {
-            $prompt .= " Berikan apresiasi karena saat ini tidak ada tumpukan tugas mahasiswa yang perlu dinilai (semua sudah beres).";
+            $msg = "Selamat datang di portal akademik. Anda saat ini mengampu $jumlahKelas kelas aktif dengan total $totalMahasiswa mahasiswa terdaftar. " . 
+                ($tugasPerluDinilai > 0 
+                    ? "Terdapat $tugasPerluDinilai tugas mahasiswa yang siap untuk dievaluasi." 
+                    : "Seluruh evaluasi tugas mahasiswa telah terselesaikan dengan baik.");
         }
-        
-        $prompt .= " Buat ringkas dalam 2-3 kalimat saja. DILARANG KERAS menggunakan format Markdown (seperti **tebal** atau *miring*), gunakan teks murni.";
 
-        $messages = [
-            ['role' => 'user', 'content' => $prompt]
-        ];
-
-        try {
-            $content = $this->callAiApi($messages);
-            if ($content) {
-                $content = str_replace('**', '', $content);
-                $content = preg_replace('/^\s*\*\s+/m', '- ', $content);
-                $content = preg_replace('/^\s*#+\s+/m', '', $content);
-                return response()->json([
-                    'success' => true,
-                    'message' => trim($content)
-                ]);
-            }
-            throw new \Exception('Respons kosong');
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => $msg
+        ]);
     }
 
     /**
