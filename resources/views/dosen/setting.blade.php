@@ -64,13 +64,16 @@
             <form method="POST" action="{{ route('dosen.setting.umum') }}" class="space-y-5 p-5">
                 @csrf
                 <input type="hidden" name="theme" value="{{ $user->theme ?? 'light' }}">
+                @php
+                    $activeLang = session('locale', $user->language ?? 'id');
+                @endphp
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         {{ $isEn ? 'Select Language' : 'Pilih Bahasa' }}
                     </label>
                     <select name="language" class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 focus:border-[#321270] focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
-                        <option value="id" {{ ($user->language ?? 'id') === 'id' ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-gray-100">Bahasa Indonesia</option>
-                        <option value="en" {{ ($user->language ?? 'id') === 'en' ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-gray-100">English</option>
+                        <option value="id" {{ $activeLang === 'id' ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-gray-100">Bahasa Indonesia</option>
+                        <option value="en" {{ $activeLang === 'en' ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-gray-100">English</option>
                     </select>
                 </div>
 
@@ -94,7 +97,7 @@
             </div>
             <form method="POST" action="{{ route('dosen.setting.umum') }}" class="space-y-5 p-5">
                 @csrf
-                <input type="hidden" name="language" value="{{ $user->language ?? 'id' }}">
+                <input type="hidden" name="language" value="{{ session('locale', $user->language ?? 'id') }}">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                         {{ $isEn ? 'Theme' : 'Tema' }}

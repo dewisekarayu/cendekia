@@ -45,7 +45,7 @@ class SettingController extends Controller
 
         session(['locale' => $validated['language']]);
 
-        return back()->with('success', $validated['language'] === 'en' ? 'General settings updated successfully.' : 'Pengaturan umum berhasil diperbarui.');
+        return redirect()->route('dosen.setting', ['tab' => 'umum'])->with('success', $validated['language'] === 'en' ? 'General settings updated successfully.' : 'Pengaturan umum berhasil diperbarui.');
     }
 
     /**

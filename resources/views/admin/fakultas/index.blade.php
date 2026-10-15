@@ -20,11 +20,11 @@
     </div>
 
     <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
-        <div class="card-header bg-white border-bottom py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div class="card-header bg-white dark:bg-slate-800 border-bottom border-slate-200 dark:border-slate-700 py-3 px-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <div class="d-flex w-100 align-items-center gap-3">
                 <form action="{{ route('admin.fakultas.index') }}" method="GET" class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-2 w-100">
                     <label for="semester_id" class="fw-semibold text-muted mb-0" style="font-size: 0.9rem; white-space: nowrap;">Tahun Akademik:</label>
-                    <select name="semester_id" id="semester_id" class="form-select form-select-sm border-0 bg-light fw-bold w-100" style="min-width: 200px; color: #002B6B;" onchange="this.form.submit()">
+                    <select name="semester_id" id="semester_id" class="form-select form-select-sm border-0 bg-light dark:bg-slate-900 fw-bold w-100" style="min-width: 200px;" onchange="this.form.submit()">
                         @foreach($semesters as $sem)
                             <option value="{{ $sem->id }}" {{ ($selectedSemester && $selectedSemester->id == $sem->id) ? 'selected' : '' }}>
                                 {{ $sem->tahun_ajaran }} - {{ $sem->jenis }} {{ $sem->is_active ? '(Aktif)' : '' }}
@@ -34,7 +34,7 @@
                 </form>
             </div>
             <div>
-                <a href="{{ route('admin.fakultas.create') }}" class="btn btn-sm btn-primary shadow-sm" style="background-color: #002B6B; border: none;">
+                <a href="{{ route('admin.fakultas.create') }}" class="btn btn-sm btn-primary shadow-sm">
                     <i class="bi bi-plus-lg"></i> Tambah Fakultas
                 </a>
             </div>
@@ -54,7 +54,7 @@
                         </thead>
                         <tbody x-data="{ expandedId: null }">
                             @foreach($selectedSemester->fakultas as $fakultas)
-                                <tr class="align-middle" :class="expandedId === {{ $fakultas->id }} ? 'bg-slate-50 border-primary' : ''" style="transition: all 0.2s; border-bottom: 1px solid #f1f5f9;">
+                                <tr class="align-middle border-bottom border-slate-100 dark:border-slate-800" :class="expandedId === {{ $fakultas->id }} ? 'bg-slate-50 dark:bg-slate-900/60 border-primary' : ''" style="transition: all 0.2s;">
                                     <td class="px-4 py-4">
                                         <button @click="expandedId = expandedId === {{ $fakultas->id }} ? null : {{ $fakultas->id }}" 
                                                 class="btn btn-sm text-white d-inline-flex align-items-center gap-2 rounded-pill shadow-sm border-0"
@@ -64,14 +64,14 @@
                                             {{ $fakultas->kode_fakultas }}
                                         </button>
                                     </td>
-                                    <td class="px-4 py-4 fw-bold text-dark" style="font-size: 0.95rem;">{{ $fakultas->nama_fakultas }}</td>
+                                    <td class="px-4 py-4 fw-bold text-dark dark:text-slate-100" style="font-size: 0.95rem;">{{ $fakultas->nama_fakultas }}</td>
                                     <td class="px-4 py-4 text-center">
-                                        <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-pill px-3 py-2" style="font-weight: 600;">
+                                        <span class="badge bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800/50 rounded-pill px-3 py-2" style="font-weight: 600;">
                                             <i class="bi bi-diagram-2 me-1"></i> {{ $fakultas->programStudi->count() }} Prodi
                                         </span>
                                     </td>
                                     <td class="px-4 py-4 text-center">
-                                        <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light border text-primary" title="Edit Fakultas">
+                                        <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light border text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-blue-400" title="Edit Fakultas">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     </td>
@@ -80,20 +80,20 @@
                                 <!-- Child Row: Program Studi -->
                                 <tr x-show="expandedId === {{ $fakultas->id }}" x-transition.opacity.duration.300ms style="display: none;">
                                     <td colspan="4" class="p-0 border-0">
-                                        <div class="bg-slate-50 border-bottom border-start border-primary border-4 py-3 py-md-4 px-3 px-md-5 shadow-inner">
+                                        <div class="bg-slate-50 dark:bg-slate-900/80 border-bottom border-start border-primary border-4 py-3 py-md-4 px-3 px-md-5 shadow-inner">
                                             <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2 mb-3">
                                                 <div>
-                                                    <h6 class="mb-1 fw-bold text-primary"><i class="bi bi-diagram-3-fill"></i> Daftar Program Studi di {{ $fakultas->nama_fakultas }}</h6>
+                                                    <h6 class="mb-1 fw-bold text-primary dark:text-blue-400"><i class="bi bi-diagram-3-fill"></i> Daftar Program Studi di {{ $fakultas->nama_fakultas }}</h6>
                                                 </div>
                                                 <a href="{{ route('admin.program-studi.create', ['fakultas_id' => $fakultas->id]) }}" class="btn btn-sm btn-outline-primary text-nowrap">
                                                     <i class="bi bi-plus-lg"></i> Tambah Prodi
                                                 </a>
                                             </div>
                                             
-                                            <div class="bg-white rounded-3 shadow-sm border border-slate-200 overflow-hidden">
+                                            <div class="bg-white dark:bg-slate-800 rounded-3 shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
                                                 <div class="table-responsive">
                                                     <table class="table table-sm table-hover align-middle mb-0">
-                                                        <thead style="background-color: #f8fafc;">
+                                                        <thead class="table-light bg-slate-50 dark:bg-slate-900">
                                                             <tr>
                                                                 <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Kode</th>
                                                                 <th class="px-4 py-2 text-uppercase text-muted" style="font-size: 0.7rem;">Nama Prodi</th>
@@ -103,12 +103,12 @@
                                                         </thead>
                                                         <tbody>
                                                             @forelse($fakultas->programStudi as $prodi)
-                                                            <tr>
-                                                                <td class="px-4 py-2"><span class="badge bg-slate-100 text-slate-700 border">{{ $prodi->kode_prodi }}</span></td>
-                                                                <td class="px-4 py-2 fw-semibold">{{ $prodi->nama_prodi }}</td>
-                                                                <td class="px-4 py-2"><span class="badge bg-indigo-50 text-indigo-700 border">{{ $prodi->jenjang }}</span></td>
+                                                            <tr class="border-bottom border-slate-100 dark:border-slate-700/50">
+                                                                <td class="px-4 py-2"><span class="badge bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border dark:border-slate-600">{{ $prodi->kode_prodi }}</span></td>
+                                                                <td class="px-4 py-2 fw-semibold text-dark dark:text-slate-100">{{ $prodi->nama_prodi }}</td>
+                                                                <td class="px-4 py-2"><span class="badge bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border dark:border-indigo-800/50">{{ $prodi->jenjang }}</span></td>
                                                                 <td class="px-4 py-2">
-                                                                    <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="btn btn-sm btn-light border text-primary py-0"><i class="bi bi-pencil" style="font-size: 0.75rem;"></i></a>
+                                                                    <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="btn btn-sm btn-light border text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-blue-400 py-0"><i class="bi bi-pencil" style="font-size: 0.75rem;"></i></a>
                                                                 </td>
                                                             </tr>
                                                             @empty

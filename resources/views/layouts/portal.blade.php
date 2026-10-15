@@ -547,6 +547,20 @@
 
                 <div class="flex items-center justify-end gap-2 sm:gap-4">
                     @php
+                        $currentLocale = session('locale', auth()->user()->language ?? 'id');
+                        $targetLocale = $currentLocale === 'en' ? 'id' : 'en';
+                    @endphp
+                    <a href="{{ route('switch-language', $targetLocale) }}" 
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 transition text-decoration-none shadow-sm"
+                       title="{{ $currentLocale === 'en' ? 'Ubah ke Bahasa Indonesia' : 'Switch to English' }}">
+                        @if($currentLocale === 'en')
+                            <span>🇬🇧</span> <span class="font-semibold">EN</span>
+                        @else
+                            <span>🇮🇩</span> <span class="font-semibold">ID</span>
+                        @endif
+                    </a>
+
+                    @php
                         $recentNotifs = auth()->check() ? auth()->user()->notifikasi()->orderBy('created_at', 'desc')->get() : collect();
                         $unreadCount = auth()->check() ? auth()->user()->notifikasi()->whereNull('dibaca_pada')->count() : 0;
                     @endphp

@@ -60,8 +60,19 @@ Route::get('/dashboard', function () {
     abort(403, 'Role tidak dikenali');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rute Notifikasi
+// Rute Notifikasi & Bahasa Universal
 Route::middleware('auth')->group(function () {
+    Route::get('/switch-language/{locale}', function ($locale) {
+        if (!in_array($locale, ['id', 'en'])) {
+            $locale = 'id';
+        }
+        session(['locale' => $locale]);
+        if (auth()->check()) {
+            auth()->user()->update(['language' => $locale]);
+        }
+        return back();
+    })->name('switch-language');
+
     Route::get('/notifikasi', [\App\Http\Controllers\NotifikasiController::class, 'index'])->name('notifikasi.index');
     Route::get('/notifikasi/{notifikasi}/baca', [\App\Http\Controllers\NotifikasiController::class, 'baca'])->name('notifikasi.baca');
     Route::post('/notifikasi/baca-semua', [\App\Http\Controllers\NotifikasiController::class, 'bacaSemua'])->name('notifikasi.baca-semua');
