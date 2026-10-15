@@ -44,13 +44,22 @@
                         </svg>
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-bold text-purple-200 uppercase tracking-widest mb-1">Cendekia AI Insight</p>
+                        <p class="text-[11px] font-bold text-purple-200 uppercase tracking-widest mb-1">Cendekia Insight</p>
                         <p id="ai_insight_text" class="text-xs sm:text-sm font-medium leading-relaxed text-purple-50">
-                            Selamat datang di portal akademik. Anda mengampu <strong class="text-white">{{ $kelasList->count() }} kelas aktif</strong> dengan total <strong class="text-white">{{ $totalMahasiswa }} mahasiswa</strong>. 
-                            @if($tugasPerluDinilai > 0)
-                                Ada <strong class="text-amber-300">{{ $tugasPerluDinilai }} tugas</strong> mahasiswa yang siap untuk dievaluasi.
+                            @if(app()->getLocale() === 'en')
+                                Welcome to the academic portal. You are currently teaching <strong class="text-white">{{ $kelasList->count() }} active classes</strong> with a total of <strong class="text-white">{{ $totalMahasiswa }} enrolled students</strong>. 
+                                @if($tugasPerluDinilai > 0)
+                                    There are <strong class="text-amber-300">{{ $tugasPerluDinilai }} student assignments</strong> awaiting your evaluation.
+                                @else
+                                    All student assignment evaluations have been completed successfully.
+                                @endif
                             @else
-                                Seluruh evaluasi tugas mahasiswa telah terselesaikan dengan baik.
+                                Selamat datang di portal akademik. Anda saat ini mengampu <strong class="text-white">{{ $kelasList->count() }} kelas aktif</strong> dengan total <strong class="text-white">{{ $totalMahasiswa }} mahasiswa terdaftar</strong>. 
+                                @if($tugasPerluDinilai > 0)
+                                    Terdapat <strong class="text-amber-300">{{ $tugasPerluDinilai }} tugas mahasiswa</strong> yang siap untuk dievaluasi.
+                                @else
+                                    Seluruh evaluasi tugas mahasiswa telah terselesaikan dengan baik.
+                                @endif
                             @endif
                         </p>
                     </div>
@@ -227,27 +236,5 @@
         @endif
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', async function() {
-        try {
-            const response = await fetch('{{ route("dosen.ai-assistant.generate-dashboard-insight") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            });
-            const data = await response.json();
-            
-            const insightText = document.getElementById('ai_insight_text');
-            if (data.success && data.message) {
-                insightText.innerHTML = data.message;
-            }
-        } catch (error) {
-            // Silently retain the default structured greeting summary
-        }
-    });
-</script>
 
 @endsection
