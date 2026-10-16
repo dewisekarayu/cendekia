@@ -1079,7 +1079,7 @@
                             <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="" />
                         </div>
                         <div class="min-w-0">
-                            <div class="text-base font-bold leading-tight truncate" style="color: {{ $sidebarTitle }};">Cendekia</div>
+                            <div class="text-base font-bold leading-tight truncate notranslate" translate="no" style="color: {{ $sidebarTitle }};">Cendekia</div>
                             <div class="text-[11px] leading-tight truncate" style="color: {{ $sidebarMuted }};">Academic Portal</div>
                         </div>
                     </a>
@@ -1237,19 +1237,24 @@
 
                 <div class="flex items-center justify-end gap-2 sm:gap-3">
                     {{-- Quick Language Switcher --}}
-                    @php $currentLocale = app()->getLocale(); @endphp
-                    <a href="{{ route('admin.switch-language', $currentLocale === 'en' ? 'id' : 'en') }}"
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 transition text-decoration-none shadow-sm"
+                    @php 
+                        $currentLocale = app()->getLocale(); 
+                        $targetLocale = $currentLocale === 'en' ? 'id' : 'en';
+                    @endphp
+                    <a href="{{ route('admin.switch-language', $targetLocale) }}"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 transition text-decoration-none shadow-sm notranslate"
+                       translate="no"
+                       onclick="if ('{{ $targetLocale }}' === 'id') { document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname + ';'; }"
                        title="{{ $currentLocale === 'en' ? 'Ubah ke Bahasa Indonesia' : 'Switch to English' }}">
                         <span>{{ $currentLocale === 'en' ? '🇬🇧 EN' : '🇮🇩 ID' }}</span>
                         <i class="bi bi-arrow-repeat text-gray-400 dark:text-gray-300"></i>
                     </a>
 
                     <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
-                        <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold">
+                        <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold notranslate" translate="no">
                             {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
                         </div>
-                        <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 dark:text-gray-200 sm:inline">{{ auth()->user()->name ?? 'Admin' }}</span>
+                        <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 dark:text-gray-200 sm:inline notranslate" translate="no">{{ auth()->user()->name ?? 'Admin' }}</span>
                     </div>
                 </div>
             </header>
@@ -1431,5 +1436,6 @@
     </style>
 
     @stack('scripts')
+    @include('partials.translator')
 </body>
 </html>

@@ -340,7 +340,7 @@
                             <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="" />
                         </div>
                         <div class="min-w-0">
-                            <div class="text-base font-bold leading-tight truncate" style="color: {{ $sidebarTitle }};">Cendekia</div>
+                            <div class="text-base font-bold leading-tight truncate notranslate" translate="no" style="color: {{ $sidebarTitle }};">Cendekia</div>
                             <div class="text-[11px] leading-tight truncate" style="color: {{ $sidebarMuted }};">Academic Portal</div>
                         </div>
                     </a>
@@ -563,7 +563,9 @@
                         $targetLocale = $currentLocale === 'en' ? 'id' : 'en';
                     @endphp
                     <a href="{{ route('switch-language', $targetLocale) }}" 
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 transition text-decoration-none shadow-sm"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 transition text-decoration-none shadow-sm notranslate"
+                       translate="no"
+                       onclick="if ('{{ $targetLocale }}' === 'id') { document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname + ';'; }"
                        title="{{ $currentLocale === 'en' ? 'Ubah ke Bahasa Indonesia' : 'Switch to English' }}">
                         @if($currentLocale === 'en')
                             <span>🇬🇧</span> <span class="font-semibold">EN</span>
@@ -817,6 +819,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('scripts')
+    @include('partials.translator')
 </body>
 
 </html>

@@ -70,6 +70,17 @@ Route::middleware('auth')->group(function () {
         if (auth()->check()) {
             auth()->user()->update(['language' => $locale]);
         }
+        if ($locale === 'en') {
+            @setcookie('googtrans', '/id/en', time() + (86400 * 365), '/');
+            $_COOKIE['googtrans'] = '/id/en';
+        } else {
+            @setcookie('googtrans', '', time() - 3600, '/');
+            $host = request()->getHost();
+            if ($host && $host !== 'localhost') {
+                @setcookie('googtrans', '', time() - 3600, '/', '.' . $host);
+            }
+            unset($_COOKIE['googtrans']);
+        }
         return back();
     })->name('switch-language');
 
