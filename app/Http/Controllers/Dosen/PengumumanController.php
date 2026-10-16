@@ -18,7 +18,10 @@ class PengumumanController extends Controller
         $kelasIds = $request->user()->kelasDiampu()->pluck('id');
 
         $pengumuman = Pengumuman::with(['pembuat', 'kelasPerkuliahan'])
-            ->whereIn('kelas_perkuliahan_id', $kelasIds)
+            ->where(function ($query) use ($kelasIds) {
+                $query->whereNull('kelas_perkuliahan_id')
+                    ->orWhereIn('kelas_perkuliahan_id', $kelasIds);
+            })
             ->latest()
             ->paginate(6);
 
@@ -68,7 +71,12 @@ class PengumumanController extends Controller
     public function update(Request $request, Pengumuman $pengumuman)
     {
         // Memastikan pengumuman tersebut memang milik dosen yang sedang aktif login
-        abort_unless($pengumuman->kelasPerkuliahan->dosen_id === $request->user()->id, 403, 'Anda tidak memiliki akses untuk mengedit pengumuman ini.');
+        abort_unless(
+            $pengumuman->kelasPerkuliahan
+                && $pengumuman->kelasPerkuliahan->dosen_id === $request->user()->id,
+            403,
+            'Anda tidak memiliki akses untuk mengedit pengumuman ini.'
+        );
 
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
@@ -90,6 +98,13 @@ class PengumumanController extends Controller
      */
     public function destroy(Pengumuman $pengumuman)
     {
+        abort_unless(
+            $pengumuman->kelasPerkuliahan
+                && $pengumuman->kelasPerkuliahan->dosen_id === request()->user()->id,
+            403,
+            'Anda tidak memiliki akses untuk menghapus pengumuman ini.'
+        );
+
         $pengumuman->delete();
 
         return redirect()->route('dosen.kelas-pengumuman.index')

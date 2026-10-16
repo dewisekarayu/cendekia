@@ -37,20 +37,26 @@
             <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition duration-150">
                 <div class="flex items-center justify-between gap-2 mb-3">
                     <div class="flex items-center gap-2">
-                        @if($p->untuk_semua)
+                        @if(is_null($p->kelas_perkuliahan_id))
+                            <span class="text-[10px] font-bold bg-blue-50 dark:bg-blue-950/40 border border-blue-200/40 dark:border-blue-900/30 text-blue-600 dark:text-blue-300 px-2.5 py-0.5 rounded-md">Pengumuman Kampus</span>
+                        @elseif($p->untuk_semua)
                             <span class="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 border border-amber-200/40 dark:border-amber-900/30 text-amber-600 dark:text-amber-300 px-2.5 py-0.5 rounded-md">Penting</span>
                         @endif
-                        <span class="text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/30 text-[#321270] dark:text-purple-300 px-2.5 py-0.5 rounded-md">
-                            {{ $p->kelasPerkuliahan->kode_kelas ?? 'Kelas' }}
-                        </span>
+                        @if($p->kelasPerkuliahan)
+                            <span class="text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/30 text-[#321270] dark:text-purple-300 px-2.5 py-0.5 rounded-md">
+                                {{ $p->kelasPerkuliahan->kode_kelas }}
+                            </span>
+                        @endif
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button type="button"
-                            onclick="openEditModal({{ $p->id }}, @js($p->judul), @js($p->isi), {{ $p->untuk_semua ? 'true' : 'false' }})"
-                            class="text-slate-400 dark:text-slate-500 hover:text-[#321270] dark:hover:text-purple-400 transition duration-150" title="Edit Pengumuman">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                        </button>
-                    </div>
+                    @if($p->kelasPerkuliahan)
+                        <div class="flex items-center gap-2">
+                            <button type="button"
+                                onclick="openEditModal({{ $p->id }}, @js($p->judul), @js($p->isi), {{ $p->untuk_semua ? 'true' : 'false' }})"
+                                class="text-slate-400 dark:text-slate-500 hover:text-[#321270] dark:hover:text-purple-400 transition duration-150" title="Edit Pengumuman">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                            </button>
+                        </div>
+                    @endif
                 </div>
 
                 <h2 class="text-base font-bold text-slate-800 dark:text-white tracking-tight">{{ $p->judul }}</h2>
@@ -72,7 +78,7 @@
                     <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
                         <span class="flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                            Oleh: <strong class="text-slate-600 dark:text-slate-300 font-semibold">{{ $p->pembuat->name ?? 'Dosen' }}</strong>
+                            Oleh: <strong class="text-slate-600 dark:text-slate-300 font-semibold">{{ $p->pembuat->name ?? ($p->kelasPerkuliahan ? 'Dosen' : 'Administrator') }}</strong>
                         </span>
                         <span class="flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -80,14 +86,16 @@
                         </span>
                     </div>
 
-                    <form action="{{ route('dosen.kelas-pengumuman.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-bold transition duration-150 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            Hapus
-                        </button>
-                    </form>
+                    @if($p->kelasPerkuliahan)
+                        <form action="{{ route('dosen.kelas-pengumuman.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-bold transition duration-150 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                Hapus
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
         @empty
