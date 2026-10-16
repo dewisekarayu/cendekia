@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,5 +38,6 @@ linear-gradient(135deg,#F8FBFF 0%,#F2F7FF 35%,#EDF4FF 70%,#F9FBFF 100%);
 
 </div>
 
+    @include('partials.translator')
 </body>
 </html>
