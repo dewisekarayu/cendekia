@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const grid  = document.getElementById('kelasGrid');
     const empty = document.getElementById('kelasEmpty');
     const count = document.getElementById('kelasCount');
+    const isEnglish = document.documentElement.lang === 'en';
     if (!input || !grid) return;
 
     input.addEventListener('input', function () {
@@ -142,7 +143,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (match) visible++;
         });
         if (empty) empty.classList.toggle('hidden', visible > 0);
-        if (count) count.textContent = visible + ' kelas';
+        if (count) {
+            const classLabel = isEnglish
+                ? (visible === 1 ? 'class' : 'classes')
+                : 'kelas';
+            count.textContent = visible + ' ' + classLabel;
+        }
     });
 });
 </script>
