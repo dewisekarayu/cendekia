@@ -15,6 +15,19 @@ class HelpCenterController extends Controller
      */
 
 
+    protected function currentLocale(): string
+    {
+        if (session('locale') === 'en' || app()->getLocale() === 'en') {
+            return 'en';
+        }
+
+        if (auth()->check() && (auth()->user()->language ?? 'id') === 'en') {
+            return 'en';
+        }
+
+        return 'id';
+    }
+
     /**
      * Data FAQ dummy, dikelompokkan per kategori.
      * Disesuaikan dengan LMS Cendekia (masalah real yang sering terjadi)
@@ -22,6 +35,67 @@ class HelpCenterController extends Controller
      */
     protected function dummyFaqs(): array
     {
+        if ($this->currentLocale() === 'en') {
+            return [
+                'akun' => [
+                    [
+                        'id' => 2,
+                        'category' => 'akun',
+                        'question' => 'How do I reset my password?',
+                        'answer' => 'Click the "Forgot Password" button on the login page. Enter your registered email address, then check your inbox for the password reset link. If you do not receive an email, check your spam folder or contact the administrator.',
+                    ],
+                ],
+                'absensi' => [
+                    [
+                        'id' => 5,
+                        'category' => 'absensi',
+                        'question' => 'Attendance page does not appear or shows an "unauthorized" error?',
+                        'answer' => 'This occurs if you are not enrolled in the class or the lecturer has not opened attendance yet. Make sure you are registered for the class via the Classes menu. Contact your lecturer if the issue persists.',
+                    ],
+                ],
+                'nilai' => [
+                    [
+                        'id' => 9,
+                        'category' => 'nilai',
+                        'question' => 'My grades are not showing or Gradebook is empty?',
+                        'answer' => 'The lecturer might still be inputting the grades. Check the academic calendar for the grade submission deadline. If the deadline has passed, please contact your lecturer.',
+                    ],
+                ],
+                'tugas' => [
+                    [
+                        'id' => 12,
+                        'category' => 'tugas',
+                        'question' => 'Unable to upload assignments, always failing with an error?',
+                        'answer' => 'Make sure your file size does not exceed the maximum limit specified by the lecturer (usually 10-20MB). Try other file formats (PDF, DOC). If the error persists, try a different browser or contact the administrator.',
+                    ],
+                ],
+                'kelas' => [
+                    [
+                        'id' => 17,
+                        'category' => 'kelas',
+                        'question' => 'Course materials do not appear, only announcements are visible?',
+                        'answer' => 'The lecturer might not have uploaded the course materials yet. Check the announcement posting date. If materials should already be available, contact your lecturer for confirmation.',
+                    ],
+                ],
+                'teknis' => [
+                    [
+                        'id' => 19,
+                        'category' => 'teknis',
+                        'question' => 'Blank page or nothing appears, only endless loading?',
+                        'answer' => 'Try refreshing the page (press F5 or Ctrl+Shift+R for a hard refresh). If it remains blank, try another browser or device. If the problem persists across all devices, contact the administrator.',
+                    ],
+                ],
+                'lainnya' => [
+                    [
+                        'id' => 26,
+                        'category' => 'lainnya',
+                        'question' => 'System notifications are not reaching my email?',
+                        'answer' => 'Ensure your email address is verified in your profile. Also check your spam/junk folder. If you still do not receive emails, contact the administrator to verify your email status in the database.',
+                    ],
+                ],
+            ];
+        }
+
         return [
             'akun' => [
                 [
@@ -178,7 +252,7 @@ class HelpCenterController extends Controller
         $faq = $faqs->firstWhere('id', $faqId);
 
         if (!$faq) {
-            abort(404, 'FAQ tidak ditemukan');
+            abort(404, $this->currentLocale() === 'en' ? 'FAQ not found' : 'FAQ tidak ditemukan');
         }
 
         return view('help-center.faq-detail', [
@@ -200,10 +274,9 @@ class HelpCenterController extends Controller
             'helpful' => 'required|in:yes,no',
         ]);
 
-        // Dummy: simpan ke session atau database
-        // Untuk sekarang cukup return success
+        $isEn = $this->currentLocale() === 'en';
         return response()->json([
-            'message' => 'Terima kasih atas feedback Anda!',
+            'message' => $isEn ? 'Thank you for your feedback!' : 'Terima kasih atas feedback Anda!',
         ]);
     }
 
@@ -374,8 +447,9 @@ class HelpCenterController extends Controller
             'status'          => 'open',
         ]);
 
+        $isEn = $this->currentLocale() === 'en';
         return response()->json([
-            'message' => 'Pesan Anda berhasil dikirim. Tim kami akan segera menghubungi Anda melalui email.',
+            'message' => $isEn ? 'Your ticket has been sent successfully. Our support team will follow up soon.' : 'Pesan Anda berhasil dikirim. Tim kami akan segera menghubungi Anda melalui email.',
             'ticket'  => $ticket,
         ]);
     }

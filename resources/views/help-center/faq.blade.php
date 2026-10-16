@@ -1,5 +1,8 @@
 @extends('layouts.portal')
-@section('title', 'FAQ & Bantuan')
+@php
+    $isEn = app()->getLocale() === 'en' || session('locale') === 'en' || (auth()->check() && (auth()->user()->language ?? 'id') === 'en');
+@endphp
+@section('title', $isEn ? 'FAQ & Help' : 'FAQ & Bantuan')
 @section('content')
 
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 my-8 sm:my-14 antialiased">
@@ -12,13 +15,13 @@
 
         <div class="relative z-10 text-center sm:text-left">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-blue-100 mb-4 backdrop-blur-sm border border-white/10">
-                🚀 Pusat Informasi LMS Cendekia
+                {{ $isEn ? '🚀 LMS Cendekia Information Center' : '🚀 Pusat Informasi LMS Cendekia' }}
             </span>
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4 leading-tight">
-                FAQ &amp; Pusat Bantuan
+                {{ $isEn ? 'FAQ & Help Center' : 'FAQ & Pusat Bantuan' }}
             </h1>
             <p class="text-sm sm:text-base text-blue-100/90 max-w-2xl mx-auto sm:mx-0 font-medium leading-relaxed">
-                Punya kendala atau pertanyaan seputar penggunaan sistem? Temukan solusi instan dan panduan lengkap di bawah ini.
+                {{ $isEn ? 'Having trouble or questions about using the system? Find instant solutions and complete guides below.' : 'Punya kendala atau pertanyaan seputar penggunaan sistem? Temukan solusi instan dan panduan lengkap di bawah ini.' }}
             </p>
         </div>
     </div>
@@ -26,7 +29,7 @@
     {{-- ============ FAQ LIST ============ --}}
     <div class="mb-14 sm:mb-16">
         <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 px-1">
-            Pertanyaan yang Sering Diajukan
+            {{ $isEn ? 'Frequently Asked Questions' : 'Pertanyaan yang Sering Diajukan' }}
         </h3>
 
         @php
@@ -65,17 +68,16 @@
                         <div class="pb-5 sm:pb-6 text-sm text-slate-600 leading-relaxed border-t border-slate-50 pt-4">
                             {{ $faq['answer'] }}
                         </div>
-                    </div>
                 </div>
             @empty
                 <div class="text-center py-16 sm:py-20 bg-white border border-slate-100 rounded-3xl shadow-sm">
                     <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0118 0Zm-9 5.25h.008v.008H12v-.008Z" />
                         </svg>
                     </div>
-                    <p class="font-bold text-slate-700 mb-1">Belum Ada FAQ</p>
-                    <p class="text-xs text-slate-400">Konten FAQ sedang diperbarui oleh admin sistem.</p>
+                    <p class="font-bold text-slate-700 mb-1">{{ $isEn ? 'No FAQs Yet' : 'Belum Ada FAQ' }}</p>
+                    <p class="text-xs text-slate-400">{{ $isEn ? 'FAQ content is currently being updated by the system admin.' : 'Konten FAQ sedang diperbarui oleh admin sistem.' }}</p>
                 </div>
             @endforelse
         </div>
@@ -84,8 +86,8 @@
     {{-- ============ SUPPORT SECTION ============ --}}
     <div class="mb-6">
         <div class="mb-6 sm:mb-8">
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">💬 Masih Punya Pertanyaan?</h2>
-            <p class="text-sm text-slate-500 mt-1">Tim support kami siap membantu kendala teknis Anda.</p>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{{ $isEn ? '💬 Still Have Questions?' : '💬 Masih Punya Pertanyaan?' }}</h2>
+            <p class="text-sm text-slate-500 mt-1">{{ $isEn ? 'Our support team is ready to assist with your technical inquiries.' : 'Tim support kami siap membantu kendala teknis Anda.' }}</p>
         </div>
 
         <div class="grid sm:grid-cols-3 gap-5 sm:gap-6">
@@ -97,11 +99,11 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
-                    <h4 class="font-bold text-slate-900 text-lg mb-2">Ajukan Pertanyaan</h4>
-                    <p class="text-sm text-slate-500 leading-relaxed mb-8">Kirim kendala akun atau sistem yang lebih spesifik langsung ke tim support. Direspons dalam 1–2 jam kerja.</p>
+                    <h4 class="font-bold text-slate-900 text-lg mb-2">{{ $isEn ? 'Ask a Question' : 'Ajukan Pertanyaan' }}</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed mb-8">{{ $isEn ? 'Send specific account or system issues directly to our support team. Responded within 1–2 business hours.' : 'Kirim kendala akun atau sistem yang lebih spesifik langsung ke tim support. Direspons dalam 1–2 jam kerja.' }}</p>
                 </div>
                 <button type="button" id="openHelpModal" class="w-full text-xs font-bold tracking-wider uppercase px-5 py-4 rounded-xl bg-[#002B6B] text-white hover:bg-blue-800 shadow-lg shadow-blue-900/10 transition-all duration-200">
-                    Buka Formulir Bantuan
+                    {{ $isEn ? 'Open Help Form' : 'Buka Formulir Bantuan' }}
                 </button>
             </div>
 
@@ -113,11 +115,11 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
                     </div>
-                    <h4 class="font-bold text-slate-900 text-lg mb-2">Email Layanan Pelanggan</h4>
-                    <p class="text-sm text-slate-500 leading-relaxed mb-8">Kirim pesan formal melalui surel institusi untuk keperluan dokumentasi akademik resmi Anda.</p>
+                    <h4 class="font-bold text-slate-900 text-lg mb-2">{{ $isEn ? 'Customer Service Email' : 'Email Layanan Pelanggan' }}</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed mb-8">{{ $isEn ? 'Send a formal message via institutional email for your official academic documentation needs.' : 'Kirim pesan formal melalui surel institusi untuk keperluan dokumentasi akademik resmi Anda.' }}</p>
                 </div>
                 <a href="mailto:support@cendekia.ac.id" class="w-full inline-flex items-center justify-center text-xs font-bold tracking-wider uppercase px-5 py-4 rounded-xl border-2 border-slate-100 text-slate-700 hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50/40 transition-all duration-200">
-                    Kirim Email Sekarang
+                    {{ $isEn ? 'Send Email Now' : 'Kirim Email Sekarang' }}
                 </a>
             </div>
 
@@ -141,11 +143,11 @@
                             Online
                         </span>
                     </div>
-                    <h4 class="font-bold text-slate-900 text-lg mb-2">Chat Live dengan Support</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed mb-8">Obrolan real-time dengan tim support untuk pertanyaan mendesak. Respons instan pada jam kerja 08:00 - 17:00.</p>
+                    <h4 class="font-bold text-slate-900 text-lg mb-2">{{ $isEn ? 'Live Chat with Support' : 'Chat Live dengan Support' }}</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-8">{{ $isEn ? 'Real-time conversation with our support team for urgent matters. Instant response during office hours 08:00 - 17:00.' : 'Obrolan real-time dengan tim support untuk pertanyaan mendesak. Respons instan pada jam kerja 08:00 - 17:00.' }}</p>
                 </div>
-                <button type="button" onclick="alert('💬 Fitur Live Chat sedang dipersiapkan. Gunakan opsi lain untuk menghubungi kami.')" class="group/btn relative w-full text-xs font-bold tracking-wider uppercase px-5 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-200 flex items-center justify-center gap-2">
-                    Mulai Chat
+                <button type="button" onclick="alert('{{ $isEn ? '💬 Live Chat feature is currently being prepared. Please use other options to contact us.' : '💬 Fitur Live Chat sedang dipersiapkan. Gunakan opsi lain untuk menghubungi kami.' }}')" class="group/btn relative w-full text-xs font-bold tracking-wider uppercase px-5 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-200 flex items-center justify-center gap-2">
+                    {{ $isEn ? 'Start Chat' : 'Mulai Chat' }}
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                     </svg>
@@ -169,10 +171,10 @@
     >
         <div class="flex items-start justify-between mb-6 gap-4">
             <div>
-                <h3 id="helpModalTitle" class="font-black text-xl text-slate-900">Ajukan Pertanyaan ke Support</h3>
-                <p class="text-xs text-slate-400 mt-0.5">Lengkapi form di bawah dan tim kami akan menghubungi Anda kembali.</p>
+                <h3 id="helpModalTitle" class="font-black text-xl text-slate-900">{{ $isEn ? 'Submit Question to Support' : 'Ajukan Pertanyaan ke Support' }}</h3>
+                <p class="text-xs text-slate-400 mt-0.5">{{ $isEn ? 'Fill out the form below and our team will get back to you shortly.' : 'Lengkapi form di bawah dan tim kami akan menghubungi Anda kembali.' }}</p>
             </div>
-            <button type="button" id="closeHelpModal" aria-label="Tutup" class="w-9 h-9 shrink-0 rounded-xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
+            <button type="button" id="closeHelpModal" aria-label="{{ $isEn ? 'Close' : 'Tutup' }}" class="w-9 h-9 shrink-0 rounded-xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -182,32 +184,32 @@
         <form id="helpForm" class="space-y-4">
             <div class="grid sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="helpName" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">Nama Lengkap</label>
-                    <input id="helpName" type="text" name="name" required placeholder="John Doe" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none transition-all">
+                    <label for="helpName" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">{{ $isEn ? 'Full Name' : 'Nama Lengkap' }}</label>
+                    <input id="helpName" type="text" name="name" required placeholder="{{ $isEn ? 'Your full name' : 'John Doe' }}" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none transition-all">
                 </div>
                 <div>
-                    <label for="helpEmail" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">Email Institusi</label>
-                    <input id="helpEmail" type="email" name="email" required placeholder="user@cendekia.ac.id" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none transition-all">
+                    <label for="helpEmail" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">{{ $isEn ? 'Institutional Email' : 'Email Institusi' }}</label>
+                    <input id="helpEmail" type="email" name="email" required placeholder="{{ $isEn ? 'user@campus.ac.id' : 'user@cendekia.ac.id' }}" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none transition-all">
                 </div>
             </div>
 
             <div>
-                <label for="helpSubject" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">Subjek Kendala</label>
-                <input id="helpSubject" type="text" name="subject" required placeholder="Contoh: Tidak bisa submit tugas" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none transition-all">
+                <label for="helpSubject" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">{{ $isEn ? 'Issue Subject' : 'Subjek Kendala' }}</label>
+                <input id="helpSubject" type="text" name="subject" required placeholder="{{ $isEn ? 'Example: Unable to submit assignment' : 'Contoh: Tidak bisa submit tugas' }}" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none transition-all">
             </div>
 
             <div>
-                <label for="helpCategory" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">Kategori Masalah</label>
+                <label for="helpCategory" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">{{ $isEn ? 'Issue Category' : 'Kategori Masalah' }}</label>
                 <div class="relative">
                     <select id="helpCategory" name="category" required class="w-full appearance-none px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none transition-all">
-                        <option value="">Pilih kategori...</option>
-                        <option value="akun">Login & Akun</option>
-                        <option value="kelas">Kelas</option>
-                        <option value="tugas">Tugas</option>
-                        <option value="absensi">Absensi</option>
-                        <option value="nilai">Nilai</option>
-                        <option value="teknis">Teknis</option>
-                        <option value="lainnya">Lainnya</option>
+                        <option value="">{{ $isEn ? 'Select category...' : 'Pilih kategori...' }}</option>
+                        <option value="akun">{{ $isEn ? 'Login & Authentication' : 'Login & Akun' }}</option>
+                        <option value="kelas">{{ $isEn ? 'Courses & Classes' : 'Kelas' }}</option>
+                        <option value="tugas">{{ $isEn ? 'Assignments' : 'Tugas' }}</option>
+                        <option value="absensi">{{ $isEn ? 'Attendance' : 'Absensi' }}</option>
+                        <option value="nilai">{{ $isEn ? 'Grades & Transcript' : 'Nilai' }}</option>
+                        <option value="teknis">{{ $isEn ? 'Technical Bugs' : 'Teknis' }}</option>
+                        <option value="lainnya">{{ $isEn ? 'Other' : 'Lainnya' }}</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
@@ -216,14 +218,14 @@
             </div>
 
             <div>
-                <label for="helpMessage" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">Deskripsi Detail Masalah</label>
-                <textarea id="helpMessage" name="message" required rows="4" placeholder="Ceritakan secara detail kronologi atau kendala sistem yang dihadapi..." class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none resize-none transition-all"></textarea>
+                <label for="helpMessage" class="block text-xs font-bold text-slate-700 uppercase mb-2 px-1">{{ $isEn ? 'Issue Description' : 'Deskripsi Detail Masalah' }}</label>
+                <textarea id="helpMessage" name="message" required rows="4" placeholder="{{ $isEn ? 'Explain in detail the timeline or system problem you encountered...' : 'Ceritakan secara detail kronologi atau kendala sistem yang dihadapi...' }}" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder:text-slate-400 text-sm focus:ring-2 focus:ring-[#002B6B]/20 focus:border-[#002B6B] focus:bg-white outline-none resize-none transition-all"></textarea>
             </div>
 
             <div id="helpStatus" class="text-xs font-semibold p-4 rounded-xl hidden" role="status"></div>
 
             <button type="submit" class="w-full bg-[#002B6B] hover:bg-blue-800 text-white text-sm font-bold rounded-xl py-4 shadow-xl shadow-blue-950/10 transition-colors duration-200 mt-2">
-                Kirim Pertanyaan
+                {{ $isEn ? 'Submit Question' : 'Kirim Pertanyaan' }}
             </button>
         </form>
     </div>
@@ -306,6 +308,7 @@
     // ---------- Form submit (AJAX) ----------
     const form = document.getElementById('helpForm');
     const status = document.getElementById('helpStatus');
+    const isEn = @json($isEn);
 
     function setStatus(text, tone) {
         const tones = {
@@ -320,7 +323,7 @@
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        setStatus('⏳ Sedang mengirimkan pertanyaan Anda...', 'info');
+        setStatus(isEn ? '⏳ Submitting your question...' : '⏳ Sedang mengirimkan pertanyaan Anda...', 'info');
 
         try {
             const res = await fetch("{{ route('help-center.store-ticket') }}", {
@@ -334,14 +337,14 @@
             const data = await res.json();
 
             if (res.ok) {
-                setStatus('✓ Sukses! Pertanyaan Anda berhasil terkirim. Silakan cek email secara berkala.', 'success');
+                setStatus(isEn ? '✓ Success! Your question has been submitted. Please check your email periodically.' : '✓ Sukses! Pertanyaan Anda berhasil terkirim. Silakan cek email secara berkala.', 'success');
                 form.reset();
                 setTimeout(hideModal, 2200);
             } else {
-                setStatus('❌ Validasi gagal. Pastikan semua data sudah diisi dengan benar.', 'error');
+                setStatus(isEn ? '❌ Validation failed. Please make sure all fields are filled correctly.' : '❌ Validasi gagal. Pastikan semua data sudah diisi dengan benar.', 'error');
             }
         } catch (err) {
-            setStatus('❌ Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
+            setStatus(isEn ? '❌ Network error occurred. Please try again.' : '❌ Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
         }
     });
 })();
