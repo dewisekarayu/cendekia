@@ -253,14 +253,22 @@
     {{-- TAB 3: NOTIFIKASI ADMIN --}}
     <div x-show="activeTab === 'notifikasi'" class="space-y-6" x-transition>
         <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm overflow-hidden p-5 sm:p-7">
-            <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
-                    <i class="bi bi-bell"></i>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                        <i class="bi bi-bell"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900 dark:text-white m-0">Preferensi Notifikasi Administrator</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 m-0">Tentukan pemberitahuan email yang ingin diterima oleh akun administrator Anda</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-base font-bold text-slate-900 dark:text-white m-0">Preferensi Notifikasi Administrator</h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 m-0">Tentukan pemberitahuan email yang ingin diterima oleh akun administrator Anda</p>
-                </div>
+                <a href="{{ route('admin.notification-preferences.index') }}"
+                   class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#002B6B] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 transition">
+                    <i class="bi bi-people"></i>
+                    <span>Manajemen Notifikasi Semua Civitas</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
 
             <form action="{{ route('admin.setting.notifikasi') }}" method="POST" class="space-y-5">
@@ -317,9 +325,6 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
-                    <a href="{{ route('admin.notification-preferences.index') }}" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                        <i class="bi bi-people me-1"></i> Buka Manajemen Notifikasi Semua Civitas →
-                    </a>
                     <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition flex items-center gap-2">
                         <i class="bi bi-check2-circle"></i>
                         <span>Simpan Notifikasi</span>
