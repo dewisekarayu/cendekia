@@ -248,6 +248,9 @@ class Absensi extends Model
 
             if ($currentTime >= $jamMulai && $currentTime <= $jamSelesai) {
                 $this->bukaSession();
+                if ($this->kelasPerkuliahan && $this->kelasPerkuliahan->dosen) {
+                    \App\Services\NotificationService::notifyAbsensiDibuka($this, $this->kelasPerkuliahan->dosen);
+                }
                 return true;
             }
         }

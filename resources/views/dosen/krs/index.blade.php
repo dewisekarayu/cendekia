@@ -28,8 +28,8 @@
     <div class="p-5 border-b border-gray-100 dark:border-slate-700">
         <h3 class="font-bold text-slate-800 dark:text-white">Daftar Mahasiswa Bimbingan</h3>
     </div>
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+    <div class="overflow-x-auto w-full">
+        <table class="w-full min-w-[640px] text-sm">
             <thead>
                 <tr class="bg-gray-50/70 dark:bg-slate-900/30 text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
                     <th class="px-5 py-3 text-left w-12">No</th>

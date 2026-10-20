@@ -447,10 +447,129 @@ class HelpCenterController extends Controller
             'status'          => 'open',
         ]);
 
+        // Beritahu Admin secara in-app bahwa ada tiket bantuan baru
+        try {
+            $admins = \App\Models\User::role('admin')->get();
+            $senderRole = auth()->check() ? (auth()->user()->getRoleNames()->first() ?? 'Pengguna') : 'Tamu';
+            foreach ($admins as $adm) {
+                \App\Models\Notifikasi::create([
+                    'user_id' => $adm->id,
+                    'kelas_perkuliahan_id' => null,
+                    'judul' => 'Tiket Bantuan Baru #' . $ticket->id,
+                    'pesan' => ucfirst($senderRole) . ' ' . $ticket->name . ': "' . \Illuminate\Support\Str::limit($ticket->subject, 30) . '"',
+                    'tipe' => 'informasi',
+                    'url' => route('admin.help-center.ticket-detail', $ticket->id),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to notify admins about new ticket: " . $e->getMessage());
+        }
+
         $isEn = $this->currentLocale() === 'en';
         return response()->json([
-            'message' => $isEn ? 'Your ticket has been sent successfully. Our support team will follow up soon.' : 'Pesan Anda berhasil dikirim. Tim kami akan segera menghubungi Anda melalui email.',
+            'message' => $isEn ? 'Your ticket has been sent successfully. Our support team will follow up soon.' : 'Pesan Anda berhasil dikirim. Tim kami akan segera menghubungi Anda.',
             'ticket'  => $ticket,
         ]);
+    }
+
+    /**
+     * Tampilkan daftar tiket bantuan milik pengguna yang sedang login (Dosen / Mahasiswa)
+     */
+    public function myTickets(Request $request)
+    {
+        $user = $request->user();
+        $query = \App\Models\Ticket::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+              ->orWhere('email', $user->email);
+        })->with(['replies.user'])->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $tickets = $query->paginate(10)->withQueryString();
+        $counts = [
+            'all' => \App\Models\Ticket::where(function($q) use ($user) { $q->where('user_id', $user->id)->orWhere('email', $user->email); })->count(),
+            'open' => \App\Models\Ticket::where(function($q) use ($user) { $q->where('user_id', $user->id)->orWhere('email', $user->email); })->where('status', 'open')->count(),
+            'responded' => \App\Models\Ticket::where(function($q) use ($user) { $q->where('user_id', $user->id)->orWhere('email', $user->email); })->where('status', 'responded')->count(),
+            'closed' => \App\Models\Ticket::where(function($q) use ($user) { $q->where('user_id', $user->id)->orWhere('email', $user->email); })->where('status', 'closed')->count(),
+        ];
+
+        $isEn = $this->currentLocale() === 'en';
+
+        return view('help-center.my-tickets', compact('tickets', 'counts', 'isEn'));
+    }
+
+    /**
+     * Tampilkan detail percakapan tiket bantuan untuk pengguna
+     */
+    public function showMyTicket(Request $request, $id)
+    {
+        $user = $request->user();
+        $ticket = \App\Models\Ticket::with(['replies.user', 'user'])->findOrFail($id);
+
+        // Otorisasi: hanya pemilik tiket atau admin yang boleh melihat
+        if ($ticket->user_id != $user->id && strtolower($ticket->email) !== strtolower($user->email) && !$user->hasRole('admin')) {
+            abort(403, 'Anda tidak memiliki akses ke tiket bantuan ini.');
+        }
+
+        // Tandai notifikasi terkait tiket ini sebagai dibaca
+        \App\Models\Notifikasi::where('user_id', $user->id)
+            ->where('url', 'like', "%/help-center/my-tickets/{$ticket->id}%")
+            ->whereNull('dibaca_pada')
+            ->update(['dibaca_pada' => now()]);
+
+        $isEn = $this->currentLocale() === 'en';
+
+        return view('help-center.my-ticket-detail', compact('ticket', 'isEn'));
+    }
+
+    /**
+     * Tanggapan lanjutan dari pengguna (Dosen / Mahasiswa) ke Admin
+     */
+    public function replyMyTicket(Request $request, $id)
+    {
+        $request->validate([
+            'message' => ['required', 'string', 'max:5000'],
+        ]);
+
+        $user = $request->user();
+        $ticket = \App\Models\Ticket::findOrFail($id);
+
+        if ($ticket->user_id != $user->id && strtolower($ticket->email) !== strtolower($user->email)) {
+            abort(403, 'Anda tidak memiliki akses ke tiket bantuan ini.');
+        }
+
+        if ($ticket->status === 'closed') {
+            return back()->with('error', 'Tiket ini telah ditutup dan tidak dapat dibalas.');
+        }
+
+        \App\Models\TicketReply::create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $user->id,
+            'message' => $request->message,
+        ]);
+
+        // Ubah status kembali ke 'open' agar admin tahu ada tanggapan baru dari pengguna
+        $ticket->update(['status' => 'open']);
+
+        // Kirim notifikasi in-app ke Admin
+        try {
+            $admins = \App\Models\User::role('admin')->get();
+            foreach ($admins as $adm) {
+                \App\Models\Notifikasi::create([
+                    'user_id' => $adm->id,
+                    'kelas_perkuliahan_id' => null,
+                    'judul' => 'Balasan Baru di Tiket #' . $ticket->id,
+                    'pesan' => $user->name . ' membalas: "' . \Illuminate\Support\Str::limit($request->message, 45) . '"',
+                    'tipe' => 'informasi',
+                    'url' => route('admin.help-center.ticket-detail', $ticket->id),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to notify admins about ticket reply: " . $e->getMessage());
+        }
+
+        return back()->with('success', 'Balasan Anda berhasil dikirim ke Admin.');
     }
 }

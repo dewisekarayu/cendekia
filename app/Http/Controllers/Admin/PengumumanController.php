@@ -33,12 +33,15 @@ class PengumumanController extends Controller
     {
         $validated = $this->validatedData($request);
 
-        Pengumuman::create([
+        $pengumuman = Pengumuman::create([
             'dibuat_oleh'  => $request->user()->id,
             'judul'        => $validated['judul'],
             'isi'          => $validated['isi'],
             'untuk_semua'  => $request->boolean('untuk_semua', true),
         ]);
+
+        // Kirim notifikasi lonceng ke seluruh civitas kampus (mahasiswa & dosen)
+        \App\Services\NotificationService::notifyPengumumanAdmin($pengumuman, $request->user());
 
         return redirect()->route('admin.pengumuman.index')
             ->with('success', 'Pengumuman berhasil diterbitkan.');
