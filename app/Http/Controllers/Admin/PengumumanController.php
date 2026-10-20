@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengumuman;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class PengumumanController extends Controller
@@ -33,12 +34,15 @@ class PengumumanController extends Controller
     {
         $validated = $this->validatedData($request);
 
-        Pengumuman::create([
+        $pengumuman = Pengumuman::create([
             'dibuat_oleh'  => $request->user()->id,
             'judul'        => $validated['judul'],
             'isi'          => $validated['isi'],
             'untuk_semua'  => $request->boolean('untuk_semua', true),
         ]);
+
+        // Kirim notifikasi ke Dosen & Mahasiswa agar muncul di notifikasi atas (navbar bell)
+        NotificationService::notifyPengumumanBaru($pengumuman, $request->user());
 
         return redirect()->route('admin.pengumuman.index')
             ->with('success', 'Pengumuman berhasil diterbitkan.');

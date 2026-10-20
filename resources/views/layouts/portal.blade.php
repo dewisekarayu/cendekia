@@ -573,6 +573,9 @@
                     </a>
 
                     @php
+                        if (auth()->check()) {
+                            \App\Services\NotificationService::syncMissingGlobalPengumuman(auth()->user());
+                        }
                         $recentNotifs = auth()->check() ? auth()->user()->notifikasi()->orderBy('created_at', 'desc')->get() : collect();
                         $unreadCount = auth()->check() ? auth()->user()->notifikasi()->whereNull('dibaca_pada')->count() : 0;
                     @endphp

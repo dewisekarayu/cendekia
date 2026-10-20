@@ -23,8 +23,10 @@ class PengumumanBaru extends Mailable
 
     public function envelope(): Envelope
     {
+        $senderName = $this->dosen->name ?? 'Administrator';
+        $senderEmail = $this->dosen->email ?? config('mail.from.address');
         return new Envelope(
-            from: new Address($this->dosen->email, $this->dosen->name ?? 'Dosen'),
+            from: new Address($senderEmail, $senderName),
             subject: "📢 Pengumuman Baru: {$this->pengumuman->judul}",
         );
     }
@@ -38,7 +40,7 @@ class PengumumanBaru extends Mailable
                 'dosen' => $this->dosen,
                 'pengumuman' => $this->pengumuman,
                 'kelas' => $this->pengumuman->kelasPerkuliahan,
-                'createdAt' => $this->pengumuman->created_at->format('d M Y H:i'),
+                'createdAt' => $this->pengumuman->created_at ? $this->pengumuman->created_at->format('d M Y H:i') : now()->format('d M Y H:i'),
             ],
         );
     }
