@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\KelasEnrollmentService;
 
 class MahasiswaController extends Controller
 {
@@ -123,8 +124,22 @@ class MahasiswaController extends Controller
 
         $mahasiswa->assignRole('mahasiswa');
 
+        // Otomatisasi pendaftaran kelas perkuliahan sesuai program studi
+        $autoEnroll = $request->boolean('auto_enroll_kelas', true);
+        $enrollmentInfo = null;
+        if ($autoEnroll && $mahasiswa->program_studi_id) {
+            $enrollService = app(KelasEnrollmentService::class);
+            $enrollmentInfo = $enrollService->autoEnrollMahasiswa($mahasiswa, 1);
+        }
+
+        $successMsg = "Mahasiswa {$mahasiswa->name} berhasil ditambahkan.";
+        if ($enrollmentInfo && !empty($enrollmentInfo['total_enrolled'])) {
+            $successMsg .= " Otomatis didaftarkan ke {$enrollmentInfo['total_enrolled']} kelas perkuliahan prodi.";
+        }
+        $successMsg .= " Password awal: mahasiswa123";
+
         return redirect()->route('admin.mahasiswa.index')
-            ->with('success', "Mahasiswa {$mahasiswa->name} berhasil ditambahkan. Password awal: mahasiswa123");
+            ->with('success', $successMsg);
     }
 
     /**
@@ -434,6 +449,8 @@ class MahasiswaController extends Controller
         }
 
         $importedCount = 0;
+        $totalKelasEnrolled = 0;
+        $enrollService = app(KelasEnrollmentService::class);
 
         DB::beginTransaction();
         try {
@@ -464,15 +481,30 @@ class MahasiswaController extends Controller
                 ]);
 
                 $user->assignRole('mahasiswa');
+
+                // Otomatisasi pendaftaran kelas perkuliahan prodi untuk data impor
+                if (!empty($user->program_studi_id)) {
+                    $enrollRes = $enrollService->autoEnrollMahasiswa($user, 1);
+                    if (!empty($enrollRes['total_enrolled'])) {
+                        $totalKelasEnrolled += $enrollRes['total_enrolled'];
+                    }
+                }
+
                 $importedCount++;
             }
 
             DB::commit();
 
+            $successMsg = "Sukses! Sebanyak {$importedCount} data mahasiswa berhasil diimpor ke sistem.";
+            if ($totalKelasEnrolled > 0) {
+                $successMsg .= " Dan {$totalKelasEnrolled} pendaftaran kelas perkuliahan berhasil dilakukan secara otomatis.";
+            }
+
             return response()->json([
                 'success'        => true,
                 'imported_count' => $importedCount,
-                'message'        => "Sukses! Sebanyak {$importedCount} data mahasiswa berhasil diimpor ke sistem.",
+                'total_kelas'    => $totalKelasEnrolled,
+                'message'        => $successMsg,
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();

@@ -59,13 +59,13 @@
         ];
     @endphp
     @foreach ($infoCards as $card)
-        <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+        <div class="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-3.5 shadow-sm transition-colors duration-200">
             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $card['color'] }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $card['icon'] }}"/></svg>
             </div>
             <div class="min-w-0">
-                <p class="truncate text-xs font-semibold text-slate-800 leading-tight">{{ $card['value'] }}</p>
-                <p class="text-[10px] text-gray-400">{{ $card['label'] }}</p>
+                <p class="truncate text-xs font-semibold text-slate-800 dark:text-white leading-tight">{{ $card['value'] }}</p>
+                <p class="text-[10px] text-gray-400 dark:text-slate-400">{{ $card['label'] }}</p>
             </div>
         </div>
     @endforeach
@@ -97,8 +97,8 @@
             @foreach ($tabs as $key => $t)
                 <button @click="tab = '{{ $key }}'"
                         :class="tab === '{{ $key }}'
-                            ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20'
-                            : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]'"
+                            ? 'bg-[#002B6B] dark:bg-blue-600 text-white shadow-sm shadow-blue-900/20'
+                            : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-[#002B6B] hover:text-[#002B6B] dark:hover:border-blue-400 dark:hover:text-blue-300'"
                         class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition inline-flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="{{ $t['icon'] }}"/>
@@ -137,23 +137,23 @@
             @forelse ($timeline as $timelineItem)
                 @if ($timelineItem->timeline_type === 'materi')
                     @php $materi = $timelineItem; @endphp
-                    <div x-show="tab === 'semua' || tab === 'materi'" class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center transition duration-200 hover:shadow-md">
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#002B6B]">
+                    <div x-show="tab === 'semua' || tab === 'materi'" class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm sm:flex-row sm:items-center transition duration-200 hover:shadow-md">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#002B6B] dark:text-blue-300">
                             @php
                                 $icons = ['pdf' => 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z', 'mp4' => 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z'];
-                                $iconPath = $icons[$materi->tipe_file ?? ''] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477-4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
+                                $iconPath = $icons[$materi->tipe_file ?? ''] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
                             @endphp
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}"/></svg>
                         </div>
                         <div class="min-w-0 flex-1">
                             <div class="mb-1 flex flex-wrap items-center gap-2">
-                                <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-600">Pertemuan {{ $materi->pertemuan_ke }}</span>
+                                <span class="rounded-full bg-slate-100 dark:bg-slate-700 px-2.5 py-0.5 text-[10px] font-bold text-slate-600 dark:text-slate-300">Pertemuan {{ $materi->pertemuan_ke }}</span>
                                 @if ($materi->tipe_file)
-                                    <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase text-blue-600">{{ $materi->tipe_file }}</span>
+                                    <span class="rounded-full bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 text-[10px] font-bold uppercase text-blue-600 dark:text-blue-300">{{ $materi->tipe_file }}</span>
                                 @endif
                             </div>
-                            <p class="text-sm font-bold text-slate-800">{{ $materi->judul }}</p>
-                            <p class="mt-0.5 text-xs leading-relaxed text-slate-500">
+                            <p class="text-sm font-bold text-slate-800 dark:text-white">{{ $materi->judul }}</p>
+                            <p class="mt-0.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
                                 {{ $materi->deskripsi ? Str::limit($materi->deskripsi, 110) : ($materi->files->isNotEmpty() ? 'File tersedia.' : 'File belum diunggah.') }}
                             </p>
                         </div>
@@ -193,20 +193,20 @@
                             $tugasBtnIcon  = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14';
                         }
                     @endphp
-                    <div x-show="tab === 'semua' || tab === 'tugas'" class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center transition duration-200 hover:shadow-md">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $isClosed && !$pengumpulanSaya ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-600' }}">
+                    <div x-show="tab === 'semua' || tab === 'tugas'" class="flex flex-col gap-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm sm:flex-row sm:items-center transition duration-200 hover:shadow-md">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $isClosed && !$pengumpulanSaya ? 'bg-red-50 dark:bg-red-950/60 text-red-500' : 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <p class="text-sm font-semibold text-gray-800 truncate">{{ $tugas->judul }}</p>
-                            <p class="mt-0.5 text-xs text-gray-400">
+                            <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">{{ $tugas->judul }}</p>
+                            <p class="mt-0.5 text-xs text-gray-400 dark:text-slate-400">
                                 Deadline: {{ $dl->format('d M Y, H:i') }}
                                 @if ($pengumpulanSaya)
-                                    <span class="ml-1 font-semibold text-emerald-600">· Sudah dikumpulkan</span>
+                                    <span class="ml-1 font-semibold text-emerald-600 dark:text-emerald-400">· Sudah dikumpulkan</span>
                                 @elseif ($isClosed)
-                                    <span class="ml-1 font-semibold text-red-500">· Ditutup</span>
+                                    <span class="ml-1 font-semibold text-red-500 dark:text-red-400">· Ditutup</span>
                                 @elseif ($daysLeft <= 2)
-                                    <span class="ml-1 font-semibold text-amber-600">· {{ $daysLeft === 0 ? 'Hari ini' : $daysLeft.' hari lagi' }}</span>
+                                    <span class="ml-1 font-semibold text-amber-600 dark:text-amber-400">· {{ $daysLeft === 0 ? 'Hari ini' : $daysLeft.' hari lagi' }}</span>
                                 @endif
                             </p>
                         </div>
@@ -322,24 +322,24 @@
     {{-- Sidebar Container --}}
     <div class="sticky top-24 space-y-4">
         {{-- Progress Kelas Card --}}
-        <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
-            <h3 class="mb-4 text-sm font-bold text-slate-800">Progress Kelas</h3>
+        <div class="rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm transition-colors duration-200">
+            <h3 class="mb-4 text-sm font-bold text-slate-800 dark:text-white">Progress Kelas</h3>
 
             {{-- Penyelesaian --}}
             <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
-                <span class="text-gray-500">Penyelesaian</span>
-                <span class="font-bold text-[#002B6B]">{{ $progress }}%</span>
+                <span class="text-gray-500 dark:text-slate-400">Penyelesaian</span>
+                <span class="font-bold text-[#002B6B] dark:text-blue-400">{{ $progress }}%</span>
             </div>
-            <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
-                <div class="h-full rounded-full bg-[#002B6B] transition-all" style="width: {{ $progress }}%"></div>
+            <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-slate-700">
+                <div class="h-full rounded-full bg-[#002B6B] dark:bg-blue-500 transition-all" style="width: {{ $progress }}%"></div>
             </div>
 
             {{-- Kehadiran --}}
             <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
-                <span class="text-gray-500">Kehadiran</span>
-                <span class="font-bold text-emerald-600">{{ $totalHadir }}/{{ $totalPertemuan }}</span>
+                <span class="text-gray-500 dark:text-slate-400">Kehadiran</span>
+                <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ $totalHadir }}/{{ $totalPertemuan }}</span>
             </div>
-            <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100">
+            <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-slate-700">
                 @php
                     $persenHadir = $totalPertemuan > 0 ? round(($totalHadir / $totalPertemuan) * 100) : 0;
                 @endphp
@@ -347,22 +347,22 @@
             </div>
 
             {{-- Detail Informasi --}}
-            <div class="space-y-2.5 border-t border-gray-100 pt-4">
+            <div class="space-y-2.5 border-t border-gray-100 dark:border-slate-700 pt-4">
                 @foreach ([
                     ['label' => 'Tugas Selesai', 'value' => $submitted.'/'.$totalTugas], 
                     ['label' => 'Total Materi', 'value' => $materiList->count().' modul'], 
                     ['label' => 'Total Pertemuan', 'value' => $totalPertemuan.' kali']
                 ] as $row)
                     <div class="flex items-center justify-between text-xs">
-                        <span class="text-gray-500">{{ $row['label'] }}</span>
-                        <span class="font-semibold text-gray-800">{{ $row['value'] }}</span>
+                        <span class="text-gray-500 dark:text-slate-400">{{ $row['label'] }}</span>
+                        <span class="font-semibold text-gray-800 dark:text-slate-200">{{ $row['value'] }}</span>
                     </div>
                 @endforeach
             </div>
         </div>
 
         {{-- Ringkasan Card --}}
-        <div class="bg-gradient-to-br from-[#002B6B]/5 to-blue-50 rounded-2xl border border-blue-100 p-5 shadow-sm">
+        <div class="bg-gradient-to-br from-[#002B6B]/5 to-blue-50 dark:from-blue-950/40 dark:to-slate-800 rounded-2xl border border-blue-100 dark:border-blue-900/40 p-5 shadow-sm transition-colors duration-200">
             <div class="flex items-center gap-2 mb-3">
                 <div class="w-7 h-7 rounded-lg bg-[#002B6B] flex items-center justify-center">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

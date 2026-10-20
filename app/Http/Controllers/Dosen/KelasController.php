@@ -93,7 +93,10 @@ class KelasController extends Controller
 
     public function storeTugas(Request $request, $id)
     {
-        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($id);
+        $kelas = KelasPerkuliahan::where(function ($q) use ($request) {
+            $q->where('dosen_id', $request->user()->id)
+                ->orWhereHas('dosenPengampuTambahan', fn ($sq) => $sq->where('users.id', $request->user()->id));
+        })->findOrFail($id);
 
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
@@ -203,6 +206,9 @@ class KelasController extends Controller
             }
         }
 
+        // Notifikasi ke mahasiswa kelas tentang pembaruan tugas
+        NotificationService::notifyTugasUpdated($tugas, auth()->user(), 'Batas waktu atau instruksi tugas telah diperbarui.');
+
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', 'Tugas berhasil diperbarui.');
     }
@@ -229,6 +235,9 @@ class KelasController extends Controller
         ]);
 
         $formattedDeadline = \Carbon\Carbon::parse($validated['deadline'])->translatedFormat('d M Y, H:i');
+
+        // Notifikasi ke mahasiswa kelas tentang pembukaan kembali tugas
+        NotificationService::notifyTugasUpdated($tugas, auth()->user(), "Tugas telah dibuka kembali sampai {$formattedDeadline}.");
 
         return redirect()->route('dosen.kelas-tugas', $kelas->id)
             ->with('success', "Tugas \"{$tugas->judul}\" berhasil dibuka kembali dengan batas waktu sampai {$formattedDeadline}.");
@@ -539,6 +548,9 @@ class KelasController extends Controller
                 'feedback_dosen' => $feedbackInput[$pengumpulan->id] ?? $pengumpulan->feedback_dosen,
                 'status' => \App\Models\PengumpulanTugas::STATUS_DINILAI,
             ]);
+
+            // Kirim notifikasi lonceng nilai ke mahasiswa
+            NotificationService::notifyNilaiBaru($pengumpulan, auth()->user());
 
             $updated++;
         }

@@ -1040,6 +1040,7 @@
             color: #ffffff !important;
         }
     </style>
+    @stack('styles')
 </head>
 
 <body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
@@ -1175,7 +1176,7 @@
 
                 <!-- Bottom Links Section (Matching Dosen layout) -->
                 <div class="pt-4 mt-4 space-y-1" style="border-top: 1px solid {{ $sidebarBorder }};">
-                    @php $isPrefActive = request()->routeIs('admin.setting*') || request()->routeIs('admin.notification-preferences.*') || request()->routeIs('profile.*'); @endphp
+                    @php $isPrefActive = request()->routeIs('admin.setting*') || request()->routeIs('profile.*'); @endphp
                     <a
                         href="{{ route('admin.setting') }}"
                         class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isPrefActive ? 'sidebar-link-active' : '' }}"
@@ -1217,40 +1218,197 @@
         <div class="flex-1 min-w-0 w-full transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
 
             <!-- Topbar Header -->
-            <header class="sticky top-0 z-30 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 px-4 py-3 sm:px-6 lg:px-8 lg:py-4 flex items-center justify-between gap-3 transition-colors duration-200">
+            <header class="sticky top-0 z-30 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 px-3 py-3 sm:px-6 lg:px-8 lg:py-4 flex items-center justify-between gap-2.5 sm:gap-3 transition-colors duration-200">
 
                 <button
                     type="button"
                     @click="sidebarOpen = !sidebarOpen"
-                    class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
+                    class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
                     aria-label="Toggle menu">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
 
-                <div class="min-w-0 flex-1 lg:hidden">
-                    <p class="truncate text-sm font-bold text-gray-800 dark:text-white m-0">@yield('title', 'Admin Dashboard')</p>
+                <div class="min-w-0 flex-1">
+                    <h1 class="text-sm sm:text-base font-bold text-gray-800 dark:text-white truncate m-0" title="@yield('title', 'Admin Dashboard')">
+                        @yield('title', 'Admin Dashboard')
+                    </h1>
                 </div>
 
-                <div class="hidden lg:block flex-1"></div>
-
-                <div class="flex items-center justify-end gap-2 sm:gap-3">
+                <div class="flex items-center justify-end gap-1.5 sm:gap-3 shrink-0">
                     {{-- Quick Language Switcher --}}
                     @php 
                         $currentLocale = app()->getLocale(); 
                         $targetLocale = $currentLocale === 'en' ? 'id' : 'en';
                     @endphp
                     <a href="{{ route('admin.switch-language', $targetLocale) }}"
-                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 transition text-decoration-none shadow-sm notranslate"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition text-decoration-none shadow-xs notranslate shrink-0"
                        translate="no"
                        onclick="if ('{{ $targetLocale }}' === 'id') { document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname + ';'; }"
                        title="{{ $currentLocale === 'en' ? 'Ubah ke Bahasa Indonesia' : 'Switch to English' }}">
-                        <span>{{ $currentLocale === 'en' ? '🇬🇧 EN' : '🇮🇩 ID' }}</span>
-                        <i class="bi bi-arrow-repeat text-gray-400 dark:text-gray-300"></i>
+                        <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                        <span>{{ strtoupper($currentLocale) }}</span>
                     </a>
 
-                    <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-2 sm:pr-4 py-1">
+                    {{-- Notification Bell --}}
+                    @php
+                        $recentNotifs = auth()->check() ? auth()->user()->notifikasi()->with(['kelasPerkuliahan.mataKuliah'])->orderBy('created_at', 'desc')->take(7)->get() : collect();
+                        $unreadCount = auth()->check() ? auth()->user()->notifikasi()->whereNull('dibaca_pada')->count() : 0;
+                    @endphp
+                    <div class="relative shrink-0" 
+                         x-data="{ 
+                            notifOpen: false, 
+                            unreadCount: {{ $unreadCount }},
+                            pollNotifications() {
+                                fetch('{{ route('notifikasi.poll') }}', { headers: { 'Accept': 'application/json' } })
+                                    .then(r => r.json())
+                                    .then(data => {
+                                        if (data && typeof data.unread_count !== 'undefined') {
+                                            this.unreadCount = data.unread_count;
+                                        }
+                                    })
+                                    .catch(() => {});
+                            },
+                            init() {
+                                setInterval(() => this.pollNotifications(), 25000);
+                            }
+                         }">
+                        {{-- Tombol Lonceng Admin Proporsional & Elegan --}}
+                        <button @click="notifOpen = !notifOpen" @click.away="notifOpen = false" 
+                                type="button"
+                                class="relative inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition focus:outline-none" 
+                                aria-label="Notifikasi">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-700 dark:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                            </svg>
+                            <span x-show="unreadCount > 0"
+                                  x-text="unreadCount > 99 ? '99+' : unreadCount"
+                                  class="bg-rose-600 text-white font-black rounded-full ring-2 ring-white dark:ring-slate-800 shadow-xs pointer-events-none"
+                                  style="position: absolute !important; top: -4px !important; right: -4px !important; min-width: 18px !important; height: 18px !important; padding: 0 4px !important; font-size: 10px !important; line-height: 18px !important; text-align: center !important; z-index: 10 !important; {{ $unreadCount > 0 ? 'display: inline-block !important;' : 'display: none !important;' }}">
+                                {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                            </span>
+                        </button>
+
+                        <div x-show="notifOpen"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95 translate-y-1"
+                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 scale-95 translate-y-1"
+                             class="absolute right-0 mt-2.5 w-84 sm:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden z-50 text-left"
+                             style="display: none;">
+                            
+                            {{-- Header --}}
+                            <div class="px-4 py-3 bg-slate-50/80 dark:bg-slate-800/80 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-sm font-black text-slate-800 dark:text-white m-0">Notifikasi</h3>
+                                    <template x-if="unreadCount > 0">
+                                        <span class="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-[11px] font-bold"
+                                              x-text="unreadCount + ' Baru'">
+                                            {{ $unreadCount }} Baru
+                                        </span>
+                                    </template>
+                                </div>
+                                @if($unreadCount > 0)
+                                    <form action="{{ route('notifikasi.baca-semua') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 hover:underline transition bg-transparent border-0 p-0 cursor-pointer">
+                                            Tandai semua dibaca
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+
+                            {{-- List --}}
+                            <div class="max-h-[380px] overflow-y-auto divide-y divide-gray-50 dark:divide-slate-800/60">
+                                @forelse($recentNotifs as $notif)
+                                    @php 
+                                        $isUnread = is_null($notif->dibaca_pada);
+                                        $meta = $notif->getTypeMeta();
+                                        $namaMk = $notif->kelasPerkuliahan->mataKuliah->nama_mk ?? null;
+                                    @endphp
+                                    <a href="{{ route('notifikasi.baca', $notif->id) }}" 
+                                       class="flex items-start gap-3 p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition group text-decoration-none {{ $isUnread ? 'bg-blue-50/40 dark:bg-slate-800/40' : '' }}">
+                                        
+                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-xs {{ $meta['icon_bg'] }}">
+                                            @if($notif->tipe === 'tugas')
+                                                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                                </svg>
+                                            @elseif($notif->tipe === 'materi')
+                                                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                                </svg>
+                                            @elseif($notif->tipe === 'presensi')
+                                                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            @elseif($notif->tipe === 'nilai')
+                                                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            @elseif($notif->tipe === 'pengumuman' || $notif->tipe === 'informasi')
+                                                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                                                </svg>
+                                            @else
+                                                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                                </svg>
+                                            @endif
+                                        </div>
+
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <h4 class="text-xs font-bold {{ $isUnread ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300' }} truncate leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition m-0">
+                                                    {{ $notif->judul }}
+                                                </h4>
+                                                <span class="text-[10px] text-gray-400 dark:text-slate-500 font-medium shrink-0">
+                                                    {{ $notif->created_at->diffForHumans(null, true) }}
+                                                </span>
+                                            </div>
+
+                                            <p class="text-[11px] {{ $isUnread ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500' }} truncate mt-1 m-0">
+                                                @if($namaMk)
+                                                    <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $namaMk }}</span>
+                                                    <span class="text-slate-300 dark:text-slate-600 mx-1">&bull;</span>
+                                                @endif
+                                                <span>{{ Str::limit($notif->pesan, 65) }}</span>
+                                            </p>
+                                        </div>
+
+                                        @if($isUnread)
+                                            <span class="w-2 h-2 mt-1.5 shrink-0 rounded-full bg-blue-600 ring-2 ring-blue-100 dark:ring-blue-900/50"></span>
+                                        @endif
+                                    </a>
+                                @empty
+                                    <div class="px-4 py-8 text-center">
+                                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 mb-2.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                            </svg>
+                                        </div>
+                                        <p class="text-xs font-bold text-slate-700 dark:text-slate-300 m-0">Belum Ada Notifikasi</p>
+                                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 m-0">Pembaruan sistem akan tampil di sini</p>
+                                    </div>
+                                @endforelse
+                            </div>
+
+                            <div class="p-2 bg-slate-50/80 dark:bg-slate-800/80 border-t border-gray-100 dark:border-slate-800">
+                                <a href="{{ route('notifikasi.index') }}" 
+                                   class="flex items-center justify-center gap-1.5 w-full py-2 text-center text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-700/60 rounded-xl transition shadow-2xs text-decoration-none">
+                                    <span>Lihat Semua Notifikasi</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-1.5 sm:pr-4 py-1 shrink-0">
                         <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold notranslate" translate="no">
                             {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
                         </div>
