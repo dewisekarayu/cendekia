@@ -46,7 +46,7 @@ class PengumumanController extends Controller
         $isOwner = $request->user()->kelasDiampu()->where('id', $validated['kelas_perkuliahan_id'])->exists();
         abort_unless($isOwner, 403, 'Anda tidak mengajar kelas ini.');
 
-        Pengumuman::create([
+        $pengumuman = Pengumuman::create([
             'kelas_perkuliahan_id' => $validated['kelas_perkuliahan_id'],
             'dibuat_oleh'          => $request->user()->id,
             'judul'                => $validated['judul'],
@@ -54,11 +54,8 @@ class PengumumanController extends Controller
             'untuk_semua'          => $request->boolean('untuk_semua'),
         ]);
 
-        // Send email notification to all enrolled students
-        $pengumuman = Pengumuman::latest()->first();
-        if ($pengumuman) {
-            NotificationService::notifyPengumumanBaru($pengumuman, auth()->user());
-        }
+        // Kirim notifikasi in-app dan email ke seluruh mahasiswa di kelas
+        NotificationService::notifyPengumumanBaru($pengumuman, auth()->user());
 
         // Dialihkan kembali ke halaman indeks utama pengumuman dosen
         return redirect()->route('dosen.kelas-pengumuman.index')
