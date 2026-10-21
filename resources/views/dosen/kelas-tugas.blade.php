@@ -49,13 +49,13 @@
             <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Kelola dan pantau tugas mahasiswa</p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2.5">
-            <label class="relative block">
+        <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            <label class="relative block w-full sm:w-auto flex-1 sm:flex-initial">
                 <span class="sr-only">Cari tugas</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <input id="searchTugas" type="text" placeholder="Cari tugas..." class="w-full sm:w-52 pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none">
+                <input id="searchTugas" type="text" placeholder="Cari tugas..." class="w-full sm:w-56 pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none">
             </label>
 
             {{-- Filter Status --}}
@@ -66,7 +66,7 @@
             </div>
 
             <button type="button" onclick="toggleModal('modalTugas')"
-                    class="inline-flex items-center gap-2 bg-[#321270] dark:bg-[#6c2bd9] hover:bg-[#230c50] dark:hover:bg-[#5b21b6] text-white text-sm font-semibold px-[18px] py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]">
+                    class="inline-flex items-center justify-center gap-2 w-full sm:w-auto bg-[#321270] dark:bg-[#6c2bd9] hover:bg-[#230c50] dark:hover:bg-[#5b21b6] text-white text-sm font-semibold px-[18px] py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -92,23 +92,24 @@
                 </button>
             </div>
         @else
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="text-left text-gray-400 dark:text-slate-400 text-xs border-b border-gray-100 dark:border-slate-700">
-                        <th class="px-5 py-3 font-medium">Tugas</th>
-                        <th class="px-5 py-3 font-medium">
-                            <button type="button" id="sortDeadlineBtn" class="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-slate-200 transition">
-                                Deadline
-                                <svg id="sortDeadlineIcon" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                        </th>
-                        <th class="px-5 py-3 font-medium">Pengumpulan</th>
-                        <th class="px-5 py-3 font-medium">Status</th>
-                        <th class="px-5 py-3 font-medium text-right">Aksi</th>
-                    </tr>
-                </thead>
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-sm min-w-[760px]">
+                    <thead>
+                        <tr class="text-left text-gray-400 dark:text-slate-400 text-xs border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-900/30">
+                            <th class="px-5 py-3 font-medium">Tugas</th>
+                            <th class="px-5 py-3 font-medium">
+                                <button type="button" id="sortDeadlineBtn" class="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-slate-200 transition">
+                                    Deadline
+                                    <svg id="sortDeadlineIcon" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </th>
+                            <th class="px-5 py-3 font-medium">Pengumpulan</th>
+                            <th class="px-5 py-3 font-medium">Status</th>
+                            <th class="px-5 py-3 font-medium text-right pr-6">Aksi</th>
+                        </tr>
+                    </thead>
                 <tbody id="tugasTableBody" class="divide-y divide-gray-100 dark:divide-slate-700/50">
                     @foreach ($tugasList as $tugas)
                         @php
@@ -150,7 +151,7 @@
                                     <span class="inline-block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-md">Terbuka</span>
                                 @endif
                             </td>
-                            <td class="px-5 py-3 text-right whitespace-nowrap">
+                            <td class="px-5 py-3 text-right whitespace-nowrap pr-6">
                                 <div class="inline-flex items-center gap-2">
                                     @if ($isClosed)
                                         <button type="button"
@@ -234,6 +235,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
 
             <div id="tugasNoResults" class="hidden px-5 py-10 text-center">
                 <p class="text-sm font-semibold text-gray-500 dark:text-slate-400">Tidak ada tugas dengan status ini.</p>
@@ -678,7 +680,19 @@
                 if (el.id !== id) el.classList.add('hidden');
             });
             const dropdown = document.getElementById(id);
-            if (dropdown) dropdown.classList.toggle('hidden');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+                if (!dropdown.classList.contains('hidden')) {
+                    const rect = dropdown.getBoundingClientRect();
+                    if (rect.bottom > window.innerHeight - 20) {
+                        dropdown.classList.remove('mt-2');
+                        dropdown.classList.add('bottom-full', 'mb-2');
+                    } else {
+                        dropdown.classList.remove('bottom-full', 'mb-2');
+                        dropdown.classList.add('mt-2');
+                    }
+                }
+            }
         }
 
         // ===== Fitur Filter Status (Semua / Terbuka / Ditutup) =====

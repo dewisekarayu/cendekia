@@ -130,6 +130,17 @@ class SettingController extends Controller
         ]);
 
         session(['locale' => $validated['language']]);
+        if ($validated['language'] === 'en') {
+            @setcookie('googtrans', '/id/en', time() + (86400 * 365), '/');
+            $_COOKIE['googtrans'] = '/id/en';
+        } else {
+            @setcookie('googtrans', '', time() - 3600, '/');
+            $host = $request->getHost();
+            if ($host && $host !== 'localhost') {
+                @setcookie('googtrans', '', time() - 3600, '/', '.' . $host);
+            }
+            unset($_COOKIE['googtrans']);
+        }
 
         return back()->with('success', $validated['language'] === 'en' ? 'General settings updated successfully.' : 'Pengaturan umum berhasil diperbarui.');
     }

@@ -19,8 +19,8 @@
                 <h3 class="font-bold text-slate-800 dark:text-white">Daftar Mata Kuliah Diambil</h3>
                 <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-gray-100 text-gray-600">Semester {{ $krs->semester }}</span>
             </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
+            <div class="overflow-x-auto w-full">
+                <table class="w-full min-w-[560px] text-sm">
                     <thead>
                         <tr class="bg-gray-50/70 dark:bg-slate-900/30 text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
                             <th class="px-5 py-3 text-left w-12">No</th>

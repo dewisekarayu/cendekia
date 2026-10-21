@@ -184,8 +184,8 @@
         </div>
 
         @if($absensiList->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full border-collapse">
+            <div class="overflow-x-auto w-full">
+                <table class="w-full min-w-[760px] border-collapse">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200/80 dark:border-slate-700">
                             <th class="px-5 py-3 text-center text-[11px] font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[6%]">No</th>

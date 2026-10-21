@@ -253,8 +253,8 @@
             </a>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
+        <div class="overflow-x-auto w-full">
+            <table class="w-full min-w-[720px] border-collapse">
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200/80">
                         <th class="px-4 py-2.5 text-center text-[11px] font-bold text-slate-500 uppercase tracking-wider w-14">No</th>

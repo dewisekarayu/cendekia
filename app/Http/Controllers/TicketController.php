@@ -113,7 +113,24 @@ class TicketController extends Controller
             'status' => 'responded'
         ]);
 
-        // 3. Kirim notifikasi email via Gmail SMTP
+        // 3. Kirim notifikasi in-app ke pengguna (Dosen / Mahasiswa) pembuat tiket
+        try {
+            $recipientId = $ticket->user_id ?? \App\Models\User::where('email', $ticket->email)->value('id');
+            if ($recipientId) {
+                \App\Models\Notifikasi::create([
+                    'user_id' => $recipientId,
+                    'kelas_perkuliahan_id' => null,
+                    'judul' => 'Balasan Tiket Bantuan #' . $ticket->id,
+                    'pesan' => 'Admin telah membalas tiket "' . \Illuminate\Support\Str::limit($ticket->subject, 30) . '": ' . \Illuminate\Support\Str::limit($request->message, 50),
+                    'tipe' => 'informasi',
+                    'url' => route('help-center.my-tickets.show', $ticket->id),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            logger()->error("Gagal membuat notifikasi in-app tiket dibalas: " . $e->getMessage());
+        }
+
+        // 4. Kirim notifikasi email via Gmail SMTP
         // Kita dukung baik user terdaftar maupun tamu lewat email langsung
         try {
             Notification::route('mail', $ticket->email)
@@ -122,11 +139,11 @@ class TicketController extends Controller
             // Log error jika pengiriman email gagal namun tetep biarkan flow jalan
             logger()->error("Gagal mengirim email ke {$ticket->email}: " . $e->getMessage());
             return redirect()->route('admin.help-center.ticket-detail', $ticket->id)
-                ->with('success', 'Balasan berhasil dikirim, namun pengiriman notifikasi email mengalami kendala.');
+                ->with('success', 'Balasan berhasil dikirim dan notifikasi in-app telah diteruskan ke pengguna.');
         }
 
         return redirect()->route('admin.help-center.ticket-detail', $ticket->id)
-            ->with('success', 'Balasan berhasil dikirim dan notifikasi email telah terkirim.');
+            ->with('success', 'Balasan berhasil dikirim dan notifikasi telah dikirim ke pengguna.');
     }
 
     /**
@@ -139,6 +156,23 @@ class TicketController extends Controller
         $ticket->update([
             'status' => 'closed'
         ]);
+
+        // Kirim notifikasi in-app ke pengguna bahwa tiket telah diselesaikan
+        try {
+            $recipientId = $ticket->user_id ?? \App\Models\User::where('email', $ticket->email)->value('id');
+            if ($recipientId) {
+                \App\Models\Notifikasi::create([
+                    'user_id' => $recipientId,
+                    'kelas_perkuliahan_id' => null,
+                    'judul' => 'Tiket Bantuan Ditutup: #' . $ticket->id,
+                    'pesan' => 'Tiket bantuan "' . \Illuminate\Support\Str::limit($ticket->subject, 30) . '" telah selesai ditangani dan ditutup oleh Admin.',
+                    'tipe' => 'informasi',
+                    'url' => route('help-center.my-tickets.show', $ticket->id),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            logger()->error("Gagal membuat notifikasi in-app tiket ditutup: " . $e->getMessage());
+        }
 
         return redirect()->route('admin.help-center.tickets')
             ->with('success', "Tiket #{$ticket->id} berhasil ditutup.");

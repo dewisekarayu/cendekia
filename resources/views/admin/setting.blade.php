@@ -263,12 +263,6 @@
                         <p class="text-xs text-slate-500 dark:text-slate-400 m-0">Tentukan pemberitahuan email yang ingin diterima oleh akun administrator Anda</p>
                     </div>
                 </div>
-                <a href="{{ route('admin.notification-preferences.index') }}"
-                   class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#002B6B] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 transition">
-                    <i class="bi bi-people"></i>
-                    <span>Manajemen Notifikasi Semua Civitas</span>
-                    <i class="bi bi-arrow-right"></i>
-                </a>
             </div>
 
             <form action="{{ route('admin.setting.notifikasi') }}" method="POST" class="space-y-5">

@@ -263,8 +263,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const muted = '#E8EEF8';
     const totalValue = document.getElementById('chartTotalValue');
 
+    function isEnglishActive() {
+        return {{ app()->getLocale() === 'en' ? 'true' : 'false' }} ||
+               document.cookie.includes('googtrans=/id/en') ||
+               document.documentElement.classList.contains('translated-ltr') ||
+               document.documentElement.lang === 'en';
+    }
+
+    const dayNameMap = {
+        'Senin': 'Monday',
+        'Selasa': 'Tuesday',
+        'Rabu': 'Wednesday',
+        'Kamis': 'Thursday',
+        'Jumat': 'Friday',
+        'Sabtu': 'Saturday',
+        'Minggu': 'Sunday',
+        'Mei': 'May',
+        'Agu': 'Aug',
+        'Okt': 'Oct',
+        'Des': 'Dec'
+    };
+
+    function translateChartLabel(label) {
+        if (!isEnglishActive()) return label;
+        return dayNameMap[label] || label;
+    }
+
     function formatNumber(value) {
-        return new Intl.NumberFormat('id-ID').format(value ?? 0);
+        return new Intl.NumberFormat(isEnglishActive() ? 'en-US' : 'id-ID').format(value ?? 0);
     }
 
     function makeGradient() {
@@ -286,11 +312,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const values = rows.map(row => Number(row.value || 0));
         const max = Math.max(...values, 0);
         const gradient = makeGradient();
+        const isEn = isEnglishActive();
 
         return {
-            labels: rows.map(r => r.label),
+            labels: rows.map(r => translateChartLabel(r.label)),
             datasets: [{
-                label: 'Aktivitas',
+                label: isEn ? 'Activity' : 'Aktivitas',
                 data: values,
                 backgroundColor: values.map((value, index) => value === max && value > 0 ? gradient : palette[index % palette.length]),
                 hoverBackgroundColor: values.map((value, index) => value === 0 ? muted : palette[index % palette.length]),
@@ -329,8 +356,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     padding: 12,
                     cornerRadius: 10,
                     callbacks: {
-                        title: items => 'Periode ' + items[0].label,
-                        label: item => formatNumber(item.parsed.y) + ' aktivitas',
+                        title: items => (isEnglishActive() ? 'Period ' : 'Periode ') + items[0].label,
+                        label: item => formatNumber(item.parsed.y) + (isEnglishActive() ? ' activities' : ' aktivitas'),
                     },
                 },
             },
@@ -362,6 +389,20 @@ document.addEventListener('DOMContentLoaded', function () {
             chart.update();
         });
     });
+
+    // Observer untuk mendeteksi perubahan bahasa secara langsung di halaman
+    let lastIsEn = isEnglishActive();
+    const htmlObserver = new MutationObserver(function () {
+        const currentIsEn = isEnglishActive();
+        if (currentIsEn !== lastIsEn) {
+            lastIsEn = currentIsEn;
+            const currentRows = (document.querySelector('#chartRangeToggle button.active')?.dataset.range === 'mingguan') ? dataMingguan : dataBulanan;
+            chart.data = buildDataset(currentRows);
+            updateSummary(currentRows);
+            chart.update();
+        }
+    });
+    htmlObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
 });
 </script>
 @endpush

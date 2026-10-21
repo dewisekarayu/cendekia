@@ -98,18 +98,22 @@
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                     <div class="d-flex flex-wrap gap-2 flex-grow-1">
                         <div class="position-relative flex-grow-1" style="min-width: 220px; max-width: 360px;">
-                            <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="form-control ps-4" placeholder="Cari Nama atau NIM..." style="height: 42px; padding-right: 2.5rem;" autocomplete="off">
-                            <i class="bi bi-search position-absolute top-50 end-0 translate-middle-y me-3 text-slate-400" style="font-size: 0.9rem;"></i>
+                            <input type="text" id="searchInput" name="search" value="{{ request('search') }}" class="form-control" placeholder="Cari Nama atau NIM..." style="height: 42px; border-radius: 0.75rem; padding-left: 40px !important; font-size: 0.875rem;" autocomplete="off">
+                            <span class="position-absolute top-50 translate-middle-y d-flex align-items-center justify-content-center text-muted" style="left: 13px; pointer-events: none;">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </span>
                         </div>
 
-                        <select id="prodiSelect" name="program_studi_id" class="form-select" style="width: auto; min-width: 180px; height: 42px;">
+                        <select id="prodiSelect" name="program_studi_id" class="form-select" style="width: auto; min-width: 180px; height: 42px; border-radius: 0.75rem; font-size: 0.875rem;">
                             <option value="">Semua Program Studi</option>
                             @foreach ($programStudiList as $prodi)
                                 <option value="{{ $prodi->id }}" {{ (string) request('program_studi_id') === (string) $prodi->id ? 'selected' : '' }}>{{ $prodi->nama_prodi }}</option>
                             @endforeach
                         </select>
 
-                        <select id="statusSelect" name="status" class="form-select" style="width: auto; min-width: 140px; height: 42px;">
+                        <select id="statusSelect" name="status" class="form-select" style="width: auto; min-width: 140px; height: 42px; border-radius: 0.75rem; font-size: 0.875rem;">
                             <option value="">Semua Status</option>
                             <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
                             <option value="cuti" {{ request('status') === 'cuti' ? 'selected' : '' }}>Cuti</option>
@@ -117,9 +121,11 @@
                         </select>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-light border d-flex align-items-center gap-2 px-3.5" style="border-radius: 0.75rem; height: 42px;" title="Reset Filter">
-                            <i class="bi bi-arrow-clockwise"></i>
-                            <span class="d-none d-sm-inline">Reset</span>
+                        <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-light border d-inline-flex align-items-center gap-1.5 px-3.5 text-slate-600 shadow-xs text-decoration-none" style="border-radius: 0.75rem; height: 42px; font-size: 0.875rem; font-weight: 600;" title="Reset Filter">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span>Reset</span>
                         </a>
                     </div>
                 </div>
