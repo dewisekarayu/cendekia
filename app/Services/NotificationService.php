@@ -332,6 +332,10 @@ class NotificationService
             }
         } catch (\Exception $e) {
             Log::error('Error syncing missing global pengumuman: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Broadcast pengumuman resmi dari Admin ke seluruh Civitas (Mahasiswa & Dosen)
      */
     public static function notifyPengumumanAdmin(Pengumuman $pengumuman, User $admin)
