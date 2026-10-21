@@ -30,10 +30,34 @@
 
         <div class="relative z-10">
             <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-                <span class="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-blue-50 backdrop-blur-md">
-                    <svg class="h-3.5 w-3.5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    {{ $isEn ? 'Help Center' : 'Pusat Bantuan' }}
-                </span>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-blue-50 backdrop-blur-md">
+                        <svg class="h-3.5 w-3.5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        {{ $isEn ? 'Help Center' : 'Pusat Bantuan' }}
+                    </span>
+
+                    @auth
+                        @php
+                            $user = auth()->user();
+                            $myTicketCount = \App\Models\Ticket::where(function($q) use ($user) { $q->where('user_id', $user->id)->orWhere('email', $user->email); })->count();
+                            $myAnsweredCount = \App\Models\Ticket::where(function($q) use ($user) { $q->where('user_id', $user->id)->orWhere('email', $user->email); })->where('status', 'responded')->count();
+                        @endphp
+                        <a href="{{ route('help-center.my-tickets') }}" 
+                           class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/20 hover:bg-white/30 px-3.5 py-1.5 text-xs font-bold text-white backdrop-blur-md transition text-decoration-none shadow-xs">
+                            <svg class="h-3.5 w-3.5 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>
+                            <span>{{ $isEn ? 'My Tickets' : 'Tiket Saya' }}</span>
+                            @if($myAnsweredCount > 0)
+                                <span class="px-1.5 py-0.2 rounded-full bg-emerald-400 text-slate-900 text-[10px] font-black animate-pulse">
+                                    {{ $myAnsweredCount }} {{ $isEn ? 'Replied' : 'Dibalas' }}
+                                </span>
+                            @elseif($myTicketCount > 0)
+                                <span class="px-1.5 py-0.2 rounded-full bg-white/30 text-white text-[10px] font-black">
+                                    {{ $myTicketCount }}
+                                </span>
+                            @endif
+                        </a>
+                    @endauth
+                </div>
 
                 <span id="admin-status-badge" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
                     <span class="relative flex h-2 w-2">
@@ -159,6 +183,13 @@
                     class="mt-4 w-full rounded-xl bg-[#002B6B] px-4 py-3 text-xs font-bold text-white shadow-md shadow-blue-700/15 transition hover:bg-blue-800 hover:shadow-lg dark:bg-blue-600 dark:hover:bg-blue-700">
                     {{ $isEn ? 'Create Support Ticket' : 'Buat Tiket Support' }}
                 </button>
+                @auth
+                    <a href="{{ route('help-center.my-tickets') }}"
+                       class="mt-2.5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 transition text-decoration-none">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                        <span>{{ $isEn ? 'View My Support Tickets' : 'Lihat Tiket Bantuan Saya' }}</span>
+                    </a>
+                @endauth
                 <p class="mt-3 text-center text-[11px] text-slate-400">{{ $isEn ? 'or email:' : 'atau email:' }} <span class="font-semibold text-slate-500 dark:text-slate-300">support@cendekia.ac.id</span></p>
             </div>
 

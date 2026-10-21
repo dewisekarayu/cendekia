@@ -56,6 +56,8 @@ class PengumumanController extends Controller
 
         // Kirim notifikasi in-app dan email ke seluruh mahasiswa di kelas
         NotificationService::notifyPengumumanBaru($pengumuman, auth()->user());
+        // Kirim notifikasi lonceng & email ke mahasiswa di kelas
+        NotificationService::notifyPengumumanBaru($pengumuman, $request->user());
 
         // Dialihkan kembali ke halaman indeks utama pengumuman dosen
         return redirect()->route('dosen.kelas-pengumuman.index')

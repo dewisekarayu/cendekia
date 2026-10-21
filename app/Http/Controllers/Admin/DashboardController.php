@@ -43,17 +43,23 @@ class DashboardController extends Controller
             ];
         });
 
+        $isEn = app()->getLocale() === 'en' || session('locale') === 'en';
+
         // Mahasiswa yang belum memiliki asosiasi prodi
         $unassignedMahasiswa = User::role('mahasiswa')->whereNull('program_studi_id')->count();
         if ($unassignedMahasiswa > 0) {
             $mahasiswaPerProdi->push([
-                'label' => 'Belum Ditentukan',
+                'label' => $isEn ? 'Unassigned' : 'Belum Ditentukan',
                 'value' => $unassignedMahasiswa,
             ]);
         }
 
         // Hitung aktivitas bulanan (Tahun Berjalan)
-        $bulanList = [
+        $bulanList = $isEn ? [
+            1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+            5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
+            9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec'
+        ] : [
             1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
             5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu',
             9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
@@ -91,7 +97,7 @@ class DashboardController extends Controller
         $aktivitasMingguan = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
-            $dayName = $hariIndo[$date->format('l')] ?? $date->format('D');
+            $dayName = $isEn ? $date->format('l') : ($hariIndo[$date->format('l')] ?? $date->format('D'));
             
             $c1 = class_exists(AktivitasPengguna::class) ? AktivitasPengguna::whereDate('terjadi_pada', $date->toDateString())->count() : 0;
             $c2 = class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::whereDate('waktu_absensi', $date->toDateString())->count() : 0;

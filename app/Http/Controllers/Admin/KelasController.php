@@ -208,14 +208,94 @@ class KelasController extends Controller
 
     public function mahasiswa(KelasPerkuliahan $kelas)
     {
-        // Get all mahasiswa in the same program studi as the class
-        $mahasiswas = User::role('mahasiswa')
-            ->where('program_studi_id', $kelas->program_studi_id)
-            ->get();
-            
-        $mahasiswaIds = $kelas->mahasiswa->pluck('id')->toArray();
+        $kelas->load(['mataKuliah.programStudi', 'dosen', 'semester', 'mahasiswa', 'jadwals']);
 
-        return view('admin.kelas.mahasiswa', compact('kelas', 'mahasiswas', 'mahasiswaIds'));
+        // Mahasiswa yang sudah terdaftar di kelas ini
+        $pesertaKelas = $kelas->mahasiswa()->orderBy('name')->get();
+        $mahasiswaIds = $pesertaKelas->pluck('id')->toArray();
+
+        // Mahasiswa di prodi yang sama yang belum terdaftar di kelas ini (untuk modal tambah manual)
+        $mahasiswaTersedia = User::role('mahasiswa')
+            ->where('program_studi_id', $kelas->program_studi_id)
+            ->whereNotIn('id', $mahasiswaIds)
+            ->orderBy('name')
+            ->get();
+
+        // Variabel mahasiswas tetap dikirim untuk kompatibilitas
+        $mahasiswas = $pesertaKelas;
+
+        return view('admin.kelas.mahasiswa', compact('kelas', 'pesertaKelas', 'mahasiswaTersedia', 'mahasiswas', 'mahasiswaIds'));
+    }
+
+    public function addMahasiswa(Request $request, KelasPerkuliahan $kelas)
+    {
+        $request->validate([
+            'mahasiswa_id' => 'required|exists:users,id',
+        ]);
+
+        if ($kelas->mahasiswa()->count() >= $kelas->kuota_mahasiswa) {
+            return back()->with('error', 'Gagal menambahkan: Kuota kapasitas kelas sudah penuh (' . $kelas->kuota_mahasiswa . ' mahasiswa).');
+        }
+
+        if ($kelas->mahasiswa()->where('users.id', $request->mahasiswa_id)->exists()) {
+            return back()->with('error', 'Mahasiswa tersebut sudah terdaftar di kelas ini.');
+        }
+
+        $kelas->mahasiswa()->attach($request->mahasiswa_id, [
+            'tanggal_daftar' => now()->toDateString(),
+            'created_at'     => now(),
+            'updated_at'     => now(),
+        ]);
+
+        return back()->with('success', 'Mahasiswa berhasil ditambahkan ke kelas perkuliahan.');
+    }
+
+    public function removeMahasiswa(KelasPerkuliahan $kelas, User $mahasiswa)
+    {
+        $kelas->mahasiswa()->detach($mahasiswa->id);
+
+        return back()->with('success', "Mahasiswa {$mahasiswa->name} berhasil dikeluarkan dari kelas.");
+    }
+
+    public function autoEnrollProdi(KelasPerkuliahan $kelas)
+    {
+        $currentCount = $kelas->mahasiswa()->count();
+        $sisaKuota = $kelas->kuota_mahasiswa - $currentCount;
+
+        if ($sisaKuota <= 0) {
+            return back()->with('error', 'Kuota kelas ini sudah penuh.');
+        }
+
+        // Cari mahasiswa prodi ini yang belum mengambil mata kuliah ini pada kelas manapun
+        $mataKuliahId = $kelas->mata_kuliah_id;
+        $alreadyEnrolledUserIds = \Illuminate\Support\Facades\DB::table('kelas_mahasiswa')
+            ->join('kelas_perkuliahan', 'kelas_mahasiswa.kelas_perkuliahan_id', '=', 'kelas_perkuliahan.id')
+            ->where('kelas_perkuliahan.mata_kuliah_id', $mataKuliahId)
+            ->pluck('kelas_mahasiswa.mahasiswa_id')
+            ->toArray();
+
+        $kandidat = User::role('mahasiswa')
+            ->where('program_studi_id', $kelas->program_studi_id)
+            ->where('status', 'aktif')
+            ->whereNotIn('id', $alreadyEnrolledUserIds)
+            ->limit($sisaKuota)
+            ->get();
+
+        if ($kandidat->isEmpty()) {
+            return back()->with('info', 'Tidak ada mahasiswa aktif prodi yang memenuhi syarat untuk ditarik otomatis (semua sudah terdaftar di kelas atau prodi berbeda).');
+        }
+
+        $enrolledCount = 0;
+        foreach ($kandidat as $mhs) {
+            $kelas->mahasiswa()->attach($mhs->id, [
+                'tanggal_daftar' => now()->toDateString(),
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+            $enrolledCount++;
+        }
+
+        return back()->with('success', "Berhasil mendaftarkan {$enrolledCount} mahasiswa prodi ke kelas ini secara otomatis.");
     }
 
     public function syncMahasiswa(Request $request, KelasPerkuliahan $kelas)

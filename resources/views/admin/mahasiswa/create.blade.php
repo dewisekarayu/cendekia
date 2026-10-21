@@ -100,6 +100,19 @@
                         @error('status') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                     </div>
 
+                    <!-- Opsi Otomatisasi Kelas Perkuliahan -->
+                    <div class="mb-4 p-3 rounded-3" style="background-color: #f8fafc; border: 1.5px solid #e2e8f0;">
+                        <div class="form-check form-switch mb-1 d-flex align-items-center gap-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="autoEnrollKelas" name="auto_enroll_kelas" value="1" {{ old('auto_enroll_kelas', '1') == '1' ? 'checked' : '' }} style="cursor: pointer; width: 2.4em; height: 1.25em;">
+                            <label class="form-check-label fw-bold text-dark mb-0" for="autoEnrollKelas" style="cursor: pointer; font-size: 0.95rem;">
+                                <i class="bi bi-magic text-primary me-1"></i> Daftarkan Otomatis ke Kelas Perkuliahan Sesuai Prodi
+                            </label>
+                        </div>
+                        <p class="text-muted small mb-0 mt-2" style="font-size: 0.825rem; line-height: 1.5;">
+                            Sistem akan otomatis mendistribusikan mahasiswa baru ke kelas-kelas perkuliahan aktif pada program studi yang dipilih (paket Semester 1) dengan pembagian kuota kelas paralel yang merata.
+                        </p>
+                    </div>
+
                     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle"></i> Simpan

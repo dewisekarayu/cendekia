@@ -37,53 +37,20 @@ class LocaleMiddleware
 
         $response = $next($request);
 
-        // Dynamic HTML content post-processing translations
-        if (method_exists($response, 'getContent') && str_contains($response->headers->get('Content-Type') ?? '', 'text/html')) {
-            if ($request->is('dosen*') || $request->is('mahasiswa*') || $request->is('admin*') || $request->is('help-center*') || $request->is('notifikasi*') || $request->is('profile*') || $request->is('settings*') || $request->is('kelas*') || $request->is('dashboard*')) {
-                $content = $response->getContent();
-                if ($locale === 'en') {
-                    $translations = include base_path('lang/en_translations.php');
-                } else {
-                    $translations = include base_path('lang/id_translations.php');
+        // Keep raw cookie in sync for Google Translate
+        if ($locale === 'en') {
+            if (!isset($_COOKIE['googtrans']) || $_COOKIE['googtrans'] !== '/id/en') {
+                @setcookie('googtrans', '/id/en', time() + (86400 * 365), '/');
+                $_COOKIE['googtrans'] = '/id/en';
+            }
+        } else {
+            if (isset($_COOKIE['googtrans'])) {
+                @setcookie('googtrans', '', time() - 3600, '/');
+                $host = $request->getHost();
+                if ($host && $host !== 'localhost') {
+                    @setcookie('googtrans', '', time() - 3600, '/', '.' . $host);
                 }
-                
-                // Translate text nodes and common visible attributes
-                $pattern = '~(<script\b[^>]*>.*?</script\s*>|<style\b[^>]*>.*?</style\s*>|<!--.*?-->|<[^>]+>)|([^<]+)~is';
-                $content = preg_replace_callback($pattern, function($matches) use ($translations) {
-                    if (isset($matches[1]) && $matches[1] !== '') {
-                        return preg_replace_callback('/\b(placeholder|title|aria-label|alt|data-confirm|data-bs-title)=([\'"])(.*?)\2/is', function ($attribute) use ($translations) {
-                            $attrName = $attribute[1];
-                            $quote = $attribute[2];
-                            $val = $attribute[3];
-                            $trimmedVal = trim($val);
-                            $translatedVal = $translations[$trimmedVal] ?? strtr($val, $translations);
-                            return $attrName . '=' . $quote . $translatedVal . $quote;
-                        }, $matches[1]);
-                    }
-                    if (isset($matches[2]) && $matches[2] !== '') {
-                        $text = $matches[2];
-                        
-                        // Handle whitespaces that break exact match
-                        $trimmed = trim($text);
-                        if ($trimmed === '') {
-                            return $text; // It's just whitespace
-                        }
-                        
-                        // Extract leading and trailing whitespaces
-                        preg_match('/^(\s*)/u', $text, $leadingMatches);
-                        preg_match('/(\s*)$/u', $text, $trailingMatches);
-                        $leading = $leadingMatches[1] ?? '';
-                        $trailing = $trailingMatches[1] ?? '';
-                        
-                        // Attempt translation on trimmed text, otherwise try strtr for partials
-                        $translated = $translations[$trimmed] ?? strtr($trimmed, $translations);
-                        
-                        return $leading . $translated . $trailing;
-                    }
-                    return '';
-                }, $content);
-                
-                $response->setContent($content);
+                unset($_COOKIE['googtrans']);
             }
         }
 

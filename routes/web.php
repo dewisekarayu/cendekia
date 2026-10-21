@@ -70,10 +70,22 @@ Route::middleware('auth')->group(function () {
         if (auth()->check()) {
             auth()->user()->update(['language' => $locale]);
         }
+        if ($locale === 'en') {
+            @setcookie('googtrans', '/id/en', time() + (86400 * 365), '/');
+            $_COOKIE['googtrans'] = '/id/en';
+        } else {
+            @setcookie('googtrans', '', time() - 3600, '/');
+            $host = request()->getHost();
+            if ($host && $host !== 'localhost') {
+                @setcookie('googtrans', '', time() - 3600, '/', '.' . $host);
+            }
+            unset($_COOKIE['googtrans']);
+        }
         return back();
     })->name('switch-language');
 
     Route::get('/notifikasi', [\App\Http\Controllers\NotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::get('/notifikasi/poll', [\App\Http\Controllers\NotifikasiController::class, 'poll'])->name('notifikasi.poll');
     Route::get('/notifikasi/{notifikasi}/baca', [\App\Http\Controllers\NotifikasiController::class, 'baca'])->name('notifikasi.baca');
     Route::post('/notifikasi/baca-semua', [\App\Http\Controllers\NotifikasiController::class, 'bacaSemua'])->name('notifikasi.baca-semua');
 });
@@ -145,6 +157,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('admin/kelas/{kelas}/mahasiswa', [KelasController::class, 'mahasiswa'])->name('admin.kelas.mahasiswa');
     Route::post('admin/kelas/{kelas}/mahasiswa', [KelasController::class, 'syncMahasiswa'])->name('admin.kelas.mahasiswa.sync');
+    Route::post('admin/kelas/{kelas}/mahasiswa/add', [KelasController::class, 'addMahasiswa'])->name('admin.kelas.mahasiswa.add');
+    Route::delete('admin/kelas/{kelas}/mahasiswa/{mahasiswa}', [KelasController::class, 'removeMahasiswa'])->name('admin.kelas.mahasiswa.remove');
+    Route::post('admin/kelas/{kelas}/mahasiswa/auto-enroll', [KelasController::class, 'autoEnrollProdi'])->name('admin.kelas.mahasiswa.auto-enroll');
     Route::resource('admin/kelas', KelasController::class)
         ->names('admin.kelas')
         ->parameters(['kelas' => 'kelas']);
@@ -161,16 +176,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/password', [App\Http\Controllers\Admin\SettingController::class, 'updatePassword'])->name('.password');
         Route::post('/umum', [App\Http\Controllers\Admin\SettingController::class, 'updateUmum'])->name('.umum');
         Route::post('/notifikasi', [App\Http\Controllers\Admin\SettingController::class, 'updateNotifikasi'])->name('.notifikasi');
-    });
-
-    // Notification Preferences
-    Route::prefix('admin/notification-preferences')->name('admin.notification-preferences.')->group(function () {
-        Route::get('/', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'index'])->name('index');
-        Route::get('/{user}', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'show'])->name('show');
-        Route::put('/{user}', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'update'])->name('update');
-        Route::put('/{user}/reset', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'reset'])->name('reset');
-        Route::put('/{user}/disable-all', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'disableAll'])->name('disableAll');
-        Route::put('/{user}/enable-all', [App\Http\Controllers\Admin\NotificationPreferenceController::class, 'enableAll'])->name('enableAll');
     });
 
     // Admin Absensi CRUD
@@ -417,6 +422,13 @@ Route::prefix('help-center')->name('help-center.')->group(function () {
     Route::get('/guides', [HelpCenterController::class, 'guides'])->name('guides');
     Route::get('/guides/{id}', [HelpCenterController::class, 'guideDetail'])->name('guide-detail');
     Route::post('/ticket', [HelpCenterController::class, 'storeTicket'])->name('store-ticket');
+
+    // Riwayat & Detail Tiket untuk Pengguna Login (Dosen & Mahasiswa)
+    Route::middleware('auth')->group(function () {
+        Route::get('/my-tickets', [HelpCenterController::class, 'myTickets'])->name('my-tickets');
+        Route::get('/my-tickets/{id}', [HelpCenterController::class, 'showMyTicket'])->name('my-tickets.show');
+        Route::post('/my-tickets/{id}/reply', [HelpCenterController::class, 'replyMyTicket'])->name('my-tickets.reply');
+    });
 });
 
 Route::get('/sitemap.xml', function () {
