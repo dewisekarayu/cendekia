@@ -43,8 +43,6 @@ class PengumumanController extends Controller
 
         // Kirim notifikasi ke Dosen & Mahasiswa agar muncul di notifikasi atas (navbar bell)
         NotificationService::notifyPengumumanBaru($pengumuman, $request->user());
-        // Kirim notifikasi lonceng ke seluruh civitas kampus (mahasiswa & dosen)
-        \App\Services\NotificationService::notifyPengumumanAdmin($pengumuman, $request->user());
 
         return redirect()->route('admin.pengumuman.index')
             ->with('success', 'Pengumuman berhasil diterbitkan.');
