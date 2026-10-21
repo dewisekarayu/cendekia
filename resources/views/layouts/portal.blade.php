@@ -329,8 +329,8 @@
             aria-hidden="true"></div>
 
         <aside
-            class="-translate-x-full lg:translate-x-0 fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:-translate-x-full'"
+            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
 
             <div class="px-6 py-4" style="border-bottom: 1px solid {{ $sidebarBorder }};">
