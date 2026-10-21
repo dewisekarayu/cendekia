@@ -67,10 +67,10 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-6">
 
         {{-- FORM WITH STEP RAIL --}}
-        <form action="{{ route('dosen.absensi.update', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST" class="space-y-2">
+        <form action="{{ route('dosen.absensi.update', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" method="POST" class="min-w-0 space-y-2">
             @csrf
             @method('PUT')
 
@@ -218,8 +218,8 @@
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#321270]/[0.04] border border-[#321270]/10 rounded-2xl p-4">
-                        <p class="text-xs text-slate-500">Pastikan data yang Anda perbarui telah sesuai dengan berita acara fisik.</p>
-                        <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                        <p class="flex-1 min-w-0 text-xs text-slate-500">Pastikan data yang Anda perbarui telah sesuai dengan berita acara fisik.</p>
+                        <div class="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
                             <button type="reset"
                                     class="flex-1 sm:flex-none px-5 py-2.5 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-xl font-bold text-xs shadow-sm transition-all duration-200">
                                 Reset
