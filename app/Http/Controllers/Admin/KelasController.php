@@ -122,6 +122,7 @@ class KelasController extends Controller
         unset($kelasData['jadwals']);
         
         $kelas = KelasPerkuliahan::create($kelasData);
+        $kelas->forumDiskusiDefault();
 
         foreach ($jadwalCek as $j) {
             $kelas->jadwals()->create($j);

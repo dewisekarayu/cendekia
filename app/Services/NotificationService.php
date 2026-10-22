@@ -194,7 +194,14 @@ class NotificationService
             $pesan = \Illuminate\Support\Str::limit(strip_tags($pengumuman->isi ?? ''), 100);
 
             // Notify all Dosens (so it appears in the top bell notification)
-            $dosens = User::role('dosen')->where('id', '!=', $sender->id)->get();
+            $recipientRoles = match ($pengumuman->penerima ?? 'semua') {
+                'dosen' => ['dosen'],
+                'mahasiswa' => ['mahasiswa'],
+                default => ['dosen', 'mahasiswa'],
+            };
+            $dosens = in_array('dosen', $recipientRoles, true)
+                ? User::role('dosen')->where('id', '!=', $sender->id)->get()
+                : collect();
             $dosenSentCount = 0;
             foreach ($dosens as $dosen) {
                 \App\Models\Notifikasi::create([
@@ -215,7 +222,9 @@ class NotificationService
             }
 
             // Notify all Mahasiswas (so it appears in the top bell notification)
-            $mahasiswas = User::role('mahasiswa')->where('id', '!=', $sender->id)->get();
+            $mahasiswas = in_array('mahasiswa', $recipientRoles, true)
+                ? User::role('mahasiswa')->where('id', '!=', $sender->id)->get()
+                : collect();
             $mhsSentCount = 0;
             foreach ($mahasiswas as $mhs) {
                 \App\Models\Notifikasi::create([
@@ -236,36 +245,6 @@ class NotificationService
             }
 
             Log::info("Notified {$dosenSentCount}/{$dosens->count()} dosen and {$mhsSentCount}/{$mahasiswas->count()} mahasiswa about admin pengumuman");
-        } catch (\Exception $e) {
-            $kelas = $pengumuman->kelasPerkuliahan;
-            $mahasiswaList = $kelas ? $kelas->mahasiswa()->get() : collect();
-            $namaMk = $kelas->mataKuliah->nama_mk ?? 'Pengumuman Kelas';
-
-            // Notifikasi in-app & email HANYA untuk mahasiswa di kelas (bukan untuk dosen pembuat)
-            foreach ($mahasiswaList as $mahasiswa) {
-                try {
-                    \App\Models\Notifikasi::create([
-                        'user_id' => $mahasiswa->id,
-                        'kelas_perkuliahan_id' => $pengumuman->kelas_perkuliahan_id,
-                        'judul' => 'Pengumuman Kelas: ' . Str::limit($pengumuman->judul, 40),
-                        'pesan' => $namaMk . ' • ' . Str::limit(strip_tags($pengumuman->isi ?? ''), 85),
-                        'tipe' => 'pengumuman',
-                        'url' => route('mahasiswa.pengumuman.index'),
-                    ]);
-                } catch (\Throwable $e) {
-                    Log::error("Failed to create pengumuman notif for user {$mahasiswa->id}: " . $e->getMessage());
-                }
-
-                try {
-                    if (NotificationPreference::forUser($mahasiswa->id)->isEnabled('pengumuman_baru')) {
-                        SendPengumumanBaru::dispatch($pengumuman, $mahasiswa, $dosen);
-                    }
-                } catch (\Throwable $e) {
-                    Log::warning("Skipped SendPengumumanBaru for user {$mahasiswa->id}: " . $e->getMessage());
-                }
-            }
-
-            Log::info("Notified {$mahasiswaList->count()} students about new class pengumuman");
         } catch (\Throwable $e) {
             Log::error('Error notifying pengumuman: ' . $e->getMessage());
         }
@@ -291,10 +270,9 @@ class NotificationService
             $targetUrl = $isDosen ? route('dosen.kelas-pengumuman.index') : route('mahasiswa.pengumuman.index');
 
             // Get recent global / admin announcements
-            $globalAnnouncements = Pengumuman::where(function ($q) {
-                    $q->whereNull('kelas_perkuliahan_id')
-                      ->orWhere('untuk_semua', true);
-                })
+            $role = $isDosen ? 'dosen' : 'mahasiswa';
+            $globalAnnouncements = Pengumuman::whereNull('kelas_perkuliahan_id')
+                ->whereIn('penerima', [$role, 'semua'])
                 ->latest()
                 ->take(10)
                 ->get();
@@ -342,7 +320,12 @@ class NotificationService
     {
         try {
             // Ambil semua mahasiswa & dosen aktif
-            $recipients = User::role(['mahasiswa', 'dosen'])
+            $roles = match ($pengumuman->penerima ?? 'semua') {
+                'dosen' => ['dosen'],
+                'mahasiswa' => ['mahasiswa'],
+                default => ['mahasiswa', 'dosen'],
+            };
+            $recipients = User::role($roles)
                 ->where('id', '!=', $admin->id)
                 ->get(['id', 'email', 'name']);
 
@@ -351,7 +334,7 @@ class NotificationService
             foreach ($recipients as $recipient) {
                 try {
                     $url = $recipient->hasRole('dosen')
-                        ? route('dosen.pengumuman.index')
+                        ? route('dosen.kelas-pengumuman.index')
                         : route('mahasiswa.pengumuman.index');
 
                     \App\Models\Notifikasi::create([

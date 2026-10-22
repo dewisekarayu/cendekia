@@ -54,15 +54,22 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
-        // Hapus foto lama kalau ada
-        if ($user->foto) {
-            Storage::disk('public')->delete($user->foto);
-        }
+        $fotoLama = $user->foto;
 
         $path = $request->file('foto')->store('foto-profil', 'public');
+        if ($path === false) {
+            return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.']);
+        }
 
-        $user->update(['foto' => $path]);
+        if (!$user->update(['foto' => $path])) {
+            Storage::disk('public')->delete($path);
+
+            return back()->withErrors(['foto' => 'Foto profil gagal diperbarui. Silakan coba lagi.']);
+        }
+
+        if ($fotoLama) {
+            Storage::disk('public')->delete($fotoLama);
+        }
 
         return redirect()->route('dosen.setting', ['tab' => 'profil'])
             ->with('success', 'Foto profil berhasil diperbarui.');

@@ -17,7 +17,8 @@ class PengumumanController extends Controller
         // SINKRONISASI: Mengubah kelasDiajar() menjadi kelasDiampu() sesuai isi model User
         $kelasIds = $request->user()->kelasDiampu()->pluck('id');
 
-        $pengumuman = Pengumuman::with(['pembuat', 'kelasPerkuliahan'])
+        $pengumuman = Pengumuman::visibleToRole('dosen')
+            ->with(['pembuat', 'kelasPerkuliahan'])
             ->where(function ($query) use ($kelasIds) {
                 $query->whereNull('kelas_perkuliahan_id')
                     ->orWhereIn('kelas_perkuliahan_id', $kelasIds);

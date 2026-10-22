@@ -21,8 +21,8 @@
             </p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2">
-            <form action="{{ route('notifikasi.index') }}" method="GET" class="flex items-center gap-2">
+        <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+            <form action="{{ route('notifikasi.index') }}" method="GET" class="flex flex-wrap items-center gap-2">
                 <input type="hidden" name="tipe" value="{{ $selectedTipe ?? 'semua' }}">
                 <input
                     id="tanggalNotifikasi"
@@ -43,15 +43,15 @@
                 @endif
             </form>
 
-            @if(($counts['semua'] ?? 0) > 0)
-                <form action="{{ route('notifikasi.baca-semua') }}" method="POST" class="m-0">
-                    @csrf
-                    <button type="submit" class="px-3.5 py-1.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-xs flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
-                        <span>Tandai Semua Dibaca</span>
-                    </button>
-                </form>
-            @endif
+            <form action="{{ route('notifikasi.baca-semua') }}" method="POST" class="m-0 shrink-0">
+                @csrf
+                <button type="submit"
+                    @disabled(($counts['semua'] ?? 0) === 0)
+                    class="px-3.5 py-1.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-xs flex items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50">
+                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    <span>Tandai Semua Dibaca</span>
+                </button>
+            </form>
         </div>
     </div>
 
