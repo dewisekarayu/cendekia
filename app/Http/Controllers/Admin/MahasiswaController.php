@@ -109,6 +109,9 @@ class MahasiswaController extends Controller
         $fotoPath = null;
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+            if ($fotoPath === false) {
+                return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.'])->withInput();
+            }
         }
 
         $mahasiswa = User::create([
@@ -178,23 +181,39 @@ class MahasiswaController extends Controller
             'email.unique' => 'Email sudah terdaftar di sistem.',
         ]);
 
-        $fotoPath = $mahasiswa->foto;
+        $fotoLama = $mahasiswa->foto;
+        $fotoPath = null;
         if ($request->hasFile('foto')) {
-            if ($fotoPath) {
-                Storage::disk('public')->delete($fotoPath);
-            }
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+            if ($fotoPath === false) {
+                return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.'])->withInput();
+            }
         }
 
-        $mahasiswa->update([
+        $dataMahasiswa = [
             'name'             => $validated['nama'],
             'nip_nim'          => $validated['nim'],
             'email'            => $validated['email'],
             'program_studi_id' => $validated['program_studi_id'] ?? null,
             'status'           => $validated['status'],
             'telepon'          => $validated['telepon'] ?? null,
-            'foto'             => $fotoPath,
-        ]);
+        ];
+
+        if ($fotoPath !== null) {
+            $dataMahasiswa['foto'] = $fotoPath;
+        }
+
+        if (!$mahasiswa->update($dataMahasiswa)) {
+            if ($fotoPath !== null) {
+                Storage::disk('public')->delete($fotoPath);
+            }
+
+            return back()->withErrors(['foto' => 'Data mahasiswa gagal diperbarui. Silakan coba lagi.'])->withInput();
+        }
+
+        if ($fotoPath !== null && $fotoLama) {
+            Storage::disk('public')->delete($fotoLama);
+        }
 
         return redirect()->route('admin.mahasiswa.index')
             ->with('success', "Data mahasiswa {$mahasiswa->name} berhasil diperbarui.");

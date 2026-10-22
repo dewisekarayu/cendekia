@@ -20,8 +20,8 @@
                     </td>
                     <td>
                         <div class="d-flex align-items-center gap-3">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode($item->name) }}" 
-                                 style="width: 38px; height: 38px; border-radius: 50%; background-color: #f1f5f9; border: 1.5px solid #e2e8f0; flex-shrink: 0;" alt="{{ $item->name }}">
+                            <img src="{{ $item->foto ? asset('storage/' . $item->foto) : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . urlencode($item->name) }}"
+                                 style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background-color: #f1f5f9; border: 1.5px solid #e2e8f0; flex-shrink: 0;" alt="{{ $item->name }}">
                             <div>
                                 <div class="fw-bold dosen-name" style="font-size: 0.9rem;">{{ $item->name }}</div>
                                 <small class="dosen-email" style="font-size: 0.775rem;">{{ $item->email }}</small>
