@@ -3,6 +3,11 @@
 @section('title', ($isEn ? 'Ticket #' : 'Tiket #') . $ticket->id . ' — ' . $ticket->subject)
 
 @section('content')
+@php
+    $categoryLabels = $isEn
+        ? ['akun' => 'Account', 'kelas' => 'Classes', 'tugas' => 'Assignments', 'absensi' => 'Attendance', 'nilai' => 'Grades', 'teknis' => 'Technical', 'lainnya' => 'Other']
+        : ['akun' => 'Akun', 'kelas' => 'Kelas', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'nilai' => 'Nilai', 'teknis' => 'Teknis', 'lainnya' => 'Lainnya'];
+@endphp
 <div class="max-w-4xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
 
     {{-- Breadcrumb & Back --}}
@@ -48,11 +53,11 @@
             <div class="space-y-1.5 flex-1 min-w-0">
                 <div class="flex flex-wrap items-center gap-2">
                     <span class="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
-                        Tiket #{{ $ticket->id }}
+                        {{ $isEn ? 'Ticket' : 'Tiket' }} #{{ $ticket->id }}
                     </span>
                     <span class="text-slate-300 dark:text-slate-600">&bull;</span>
                     <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
-                        {{ ucfirst($ticket->category) }}
+                        {{ $categoryLabels[strtolower($ticket->category)] ?? $ticket->category }}
                     </span>
 
                     {{-- Status Badge --}}
