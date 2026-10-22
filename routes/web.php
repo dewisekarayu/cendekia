@@ -261,6 +261,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     
     //Penilaian Tugas oleh Dosen
     Route::get('/dosen/kelas/{kelas}/tugas/{tugas}/submissions', [DosenKelasController::class, 'submissions'])->name('dosen.tugas.submissions');
+    Route::get('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/files/{file}', [DosenKelasController::class, 'submissionFile'])->name('dosen.tugas.submissions.file');
     Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/submissions/{pengumpulan}/nilai', [DosenKelasController::class, 'simpanNilai'])->name('dosen.tugas.nilai');
     Route::post('/dosen/kelas/{kelas}/tugas/{tugas}/nilai/bulk', [DosenKelasController::class, 'simpanNilaiBulk'])->name('dosen.tugas.nilai.bulk');
 
@@ -349,6 +350,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
     // Pengumpulan Tugas
     Route::get('/mahasiswa/tugas/{tugas}', [MahasiswaPengumpulantugasController::class, 'show'])->name('mahasiswa.pengumpulan-tugas.show');
+    Route::get('/mahasiswa/tugas/{tugas}/file/{file}', [MahasiswaPengumpulantugasController::class, 'file'])->name('mahasiswa.pengumpulan-tugas.file');
     Route::post('/mahasiswa/tugas/{tugas}/kumpulkan', [MahasiswaPengumpulantugasController::class, 'store'])->name('mahasiswa.pengumpulan-tugas.store');
     Route::delete('/mahasiswa/tugas/{tugas}/batalkan', [MahasiswaPengumpulantugasController::class, 'destroy'])->name('mahasiswa.pengumpulan-tugas.destroy');
 

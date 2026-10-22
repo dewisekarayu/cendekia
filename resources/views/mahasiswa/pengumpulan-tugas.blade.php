@@ -116,7 +116,7 @@
                         </div>
 
                         {{-- Klik nama file = buka di tab baru --}}
-                        <a href="{{ Storage::url($file->file_path) }}" target="_blank" class="flex-1 min-w-0 group">
+                        <a href="{{ route('mahasiswa.pengumpulan-tugas.file', [$tugas->id, $file->id]) }}" target="_blank" rel="noopener" class="flex-1 min-w-0 group">
                             <p class="text-sm font-medium text-slate-700 truncate group-hover:text-blue-600 group-hover:underline transition">
                                 {{ $file->nama_asli ?? basename($file->file_path) }}
                             </p>
@@ -124,7 +124,7 @@
                         </a>
 
                         {{-- Icon panah = unduh --}}
-                        <a href="{{ Storage::url($file->file_path) }}" download
+                        <a href="{{ route('mahasiswa.pengumpulan-tugas.file', [$tugas->id, $file->id, 'download' => 1]) }}"
                            title="Unduh file" aria-label="Unduh file"
                            class="w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 shrink-0">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -161,7 +161,7 @@
                             @endif
                         </div>
                         <p class="flex-1 min-w-0 text-sm text-slate-700 truncate">{{ $file->nama_asli ?? basename($file->file_path) }}</p>
-                        <a href="{{ Storage::url($file->file_path) }}" target="_blank"
+                        <a href="{{ route('mahasiswa.pengumpulan-tugas.file', [$tugas->id, $file->id]) }}" target="_blank" rel="noopener"
                            class="text-blue-600 text-xs font-semibold hover:underline shrink-0 px-2 py-2">Lihat</a>
                     </div>
                 @endforeach
@@ -186,6 +186,36 @@
                     Pengumpulan tugas ini telah ditutup. Berkas yang sudah Anda kumpulkan tersimpan dengan aman.
                 </div>
             @endif
+
+            <div class="mt-4 flex flex-col items-start gap-2 border-t border-slate-100 pt-4">
+                @if (! $isClosed && ! $pengumpulan->is_graded)
+                    <form id="cancelSubmissionForm" action="{{ route('mahasiswa.pengumpulan-tugas.destroy', $tugas->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-600 transition hover:bg-rose-50">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Batalkan Pengiriman
+                        </button>
+                    </form>
+                    <p class="text-xs text-slate-500">Pengiriman dapat dibatalkan sebelum batas waktu tugas.</p>
+                @else
+                    <button type="button" disabled
+                            title="{{ $pengumpulan->is_graded ? 'Tugas sudah dinilai.' : 'Batas waktu pengumpulan telah berakhir.' }}"
+                            class="inline-flex cursor-not-allowed items-center gap-2 rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-400"
+                            aria-disabled="true">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Batalkan Pengiriman
+                    </button>
+                    <p class="text-xs text-slate-500">
+                        {{ $pengumpulan->is_graded ? 'Pengiriman tidak dapat dibatalkan karena tugas sudah dinilai.' : 'Pengiriman tidak dapat dibatalkan karena batas waktu telah berakhir.' }}
+                    </p>
+                @endif
+            </div>
         @elseif ($isClosed)
             {{-- Belum mengumpulkan dan tugas sudah ditutup --}}
             <div class="rounded-2xl border border-rose-200 bg-rose-50/60 p-8 text-center">
@@ -207,10 +237,42 @@
             </div>
         @else
             {{-- Belum mengumpulkan dan tugas masih terbuka: form upload --}}
-            <form action="{{ route('mahasiswa.pengumpulan-tugas.store', $tugas->id) }}" method="POST" enctype="multipart/form-data" x-data="{ fileNames: [] }">
+            <form action="{{ route('mahasiswa.pengumpulan-tugas.store', $tugas->id) }}" method="POST" enctype="multipart/form-data" x-data="{
+                selectedFiles: [],
+                isDragging: false,
+                setFiles(files) {
+                    this.selectedFiles.forEach(file => URL.revokeObjectURL(file.url));
+                    const transfer = new DataTransfer();
+                    Array.from(files).slice(0, 20).forEach(file => transfer.items.add(file));
+                    this.$refs.fileInput.files = transfer.files;
+                    this.selectedFiles = Array.from(transfer.files).map(file => ({
+                        file,
+                        name: file.name,
+                        size: file.size < 1048576
+                            ? `${Math.max(1, Math.round(file.size / 1024))} KB`
+                            : `${(file.size / 1048576).toFixed(1)} MB`,
+                        url: URL.createObjectURL(file),
+                        previewable: file.type === 'application/pdf' || file.type.startsWith('image/'),
+                    }));
+                },
+                removeFile(index) {
+                    const removedFile = this.selectedFiles[index];
+                    URL.revokeObjectURL(removedFile.url);
+                    this.selectedFiles.splice(index, 1);
+
+                    const transfer = new DataTransfer();
+                    this.selectedFiles.forEach(file => transfer.items.add(file.file));
+                    this.$refs.fileInput.files = transfer.files;
+                }
+            }">
                 @csrf
 
                 <label for="file_jawaban"
+                    @dragenter.prevent="isDragging = true"
+                    @dragover.prevent="isDragging = true"
+                    @dragleave.prevent="isDragging = false"
+                    @drop.prevent="isDragging = false; const transfer = new DataTransfer(); Array.from($event.dataTransfer.files).slice(0, 20).forEach(file => transfer.items.add(file)); $refs.fileInput.files = transfer.files; setFiles(transfer.files)"
+                    :class="isDragging ? 'border-blue-500 bg-blue-50' : ''"
                     class="flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-2xl px-4 py-8 sm:py-10 cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition">
                     <div class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center mb-3">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -219,18 +281,57 @@
                     </div>
                     <p class="font-semibold text-slate-700 text-sm">Unggah Jawaban (bisa lebih dari 1 file)</p>
 
-                    <template x-if="fileNames.length === 0">
+                    <template x-if="selectedFiles.length === 0">
                         <p class="text-xs text-slate-400 mt-1">
                             <span class="sm:hidden">Ketuk untuk memilih berkas</span>
                             <span class="hidden sm:inline">Seret berkas di sini atau klik untuk memilih</span>
                         </p>
                     </template>
-                    <template x-if="fileNames.length > 0">
-                        <ul class="text-xs text-slate-600 mt-2 space-y-1 w-full max-w-sm">
-                            <template x-for="name in fileNames" :key="name">
-                                <li class="rounded-lg bg-slate-50 border border-slate-100 px-3 py-1.5 truncate" x-text="name"></li>
+                    <template x-if="selectedFiles.length > 0">
+                        <div class="mt-4 w-full max-w-2xl text-left" @click.stop>
+                            <div class="mb-2 flex items-center justify-between gap-3">
+                                <p class="text-xs font-semibold text-slate-600">File terpilih</p>
+                                <p class="text-[11px] text-slate-400" x-text="`${selectedFiles.length}/20 file`"></p>
+                            </div>
+                            <div class="space-y-2">
+                            <template x-for="(file, index) in selectedFiles" :key="`${file.name}-${index}`">
+                                <div class="flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 shadow-sm">
+                                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 3.75h7.5L19.25 8.5v11.75A1.75 1.75 0 0117.5 22h-10a1.75 1.75 0 01-1.75-1.75v-14A2.5 2.5 0 017 3.75zM14 4v5h5M8.5 13h7m-7 3.5h7" />
+                                        </svg>
+                                    </span>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="truncate text-sm font-medium text-slate-700" :title="file.name" x-text="file.name"></p>
+                                        <p class="mt-0.5 text-[11px] text-slate-400" x-text="file.size"></p>
+                                    </div>
+                                    <a :href="file.url" :target="file.previewable ? '_blank' : '_self'" rel="noopener"
+                                       :download="file.previewable ? null : file.name"
+                                       class="inline-flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-50"
+                                       :aria-label="file.previewable ? `Pratinjau ${file.name}` : `Unduh ${file.name}`">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.5-6.25 9.75-6.25S21.75 12 21.75 12 18.25 18.25 12 18.25 2.25 12 2.25 12z" />
+                                            <circle cx="12" cy="12" r="2.5" />
+                                        </svg>
+                                        <span class="hidden sm:inline" x-text="file.previewable ? 'Pratinjau' : 'Unduh'"></span>
+                                    </a>
+                                    <button type="button" @click.prevent.stop="removeFile(index)"
+                                            :aria-label="`Hapus ${file.name} dari daftar`" title="Hapus file"
+                                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </template>
-                        </ul>
+                            </div>
+                            <p class="mt-3 flex items-start gap-1.5 text-[11px] text-amber-700">
+                                <svg class="mt-0.5 h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 4h.01M10.3 3.86L1.82 18.54A1.7 1.7 0 003.29 21h17.42a1.7 1.7 0 001.47-2.46L13.7 3.86a1.96 1.96 0 00-3.4 0z" />
+                                </svg>
+                                <span>File belum dikirim. Tekan “Kumpulkan Tugas” agar dosen dapat memeriksanya.</span>
+                            </p>
+                        </div>
                     </template>
 
                     <div class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4">
@@ -239,12 +340,13 @@
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">PPT</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">JPG/PNG</span>
                         <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">ZIP</span>
-                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">MAKS 10MB/FILE</span>
+                        <span class="text-[11px] font-medium text-slate-500 border border-slate-200 rounded-md px-2 py-0.5">MAKS 50 MB/FILE</span>
                     </div>
 
                     <input id="file_jawaban" name="file_jawaban[]" type="file"
                         accept=".pdf,.zip,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png" multiple class="hidden"
-                        @change="fileNames = Array.from($event.target.files).map(f => f.name)">
+                        x-ref="fileInput"
+                        @change="setFiles($event.target.files)">
                 </label>
                 @error('file_jawaban')
                     <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
@@ -283,4 +385,52 @@
         @endif
     </div>
 </div>
+
+<div class="modal fade" id="cancelSubmissionConfirmModal" tabindex="-1" aria-labelledby="cancelSubmissionConfirmTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="cancelSubmissionConfirmTitle">Batalkan Pengiriman?</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                File jawaban yang sudah dikirim akan dihapus. Anda yakin ingin membatalkan pengiriman tugas ini?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kembali</button>
+                <button type="button" id="confirmCancelSubmission" class="btn btn-danger">Ya, Batalkan</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+@endpush
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('cancelSubmissionForm');
+            const modalElement = document.getElementById('cancelSubmissionConfirmModal');
+            const confirmButton = document.getElementById('confirmCancelSubmission');
+
+            if (!form || !modalElement || !confirmButton) {
+                return;
+            }
+
+            const modal = new bootstrap.Modal(modalElement);
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                modal.show();
+            });
+
+            confirmButton.addEventListener('click', function () {
+                form.submit();
+            });
+        });
+    </script>
+@endpush
