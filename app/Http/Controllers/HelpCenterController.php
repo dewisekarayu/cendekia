@@ -285,38 +285,40 @@ class HelpCenterController extends Controller
      */
     public function guides(Request $request)
     {
+        $isEn = $this->currentLocale() === 'en';
         $guides = [
             [
                 'id' => 1,
-                'title' => 'Panduan Cara Daftar dan Login',
+                'title' => $isEn ? 'How to Register and Log In' : 'Panduan Cara Daftar dan Login',
                 'slug' => 'panduan-daftar-login',
                 'category' => 'akun',
                 'image' => 'https://via.placeholder.com/400x250',
-                'excerpt' => 'Pelajari cara membuat akun dan login ke portal Cendekia LMS',
+                'excerpt' => $isEn ? 'Learn how to create an account and log in to the Cendekia LMS portal.' : 'Pelajari cara membuat akun dan login ke portal Cendekia LMS',
                 'readTime' => 5,
             ],
             [
                 'id' => 2,
-                'title' => 'Cara Mengisi Absensi Kelas',
+                'title' => $isEn ? 'How to Mark Class Attendance' : 'Cara Mengisi Absensi Kelas',
                 'slug' => 'panduan-absensi-kelas',
                 'category' => 'absensi',
                 'image' => 'https://via.placeholder.com/400x250',
-                'excerpt' => 'Tutorial cara mengisi kehadiran di setiap sesi kelas',
+                'excerpt' => $isEn ? 'Learn how to mark your attendance for each class session.' : 'Tutorial cara mengisi kehadiran di setiap sesi kelas',
                 'readTime' => 3,
             ],
             [
                 'id' => 3,
-                'title' => 'Cara Mengumpulkan Tugas Online',
+                'title' => $isEn ? 'How to Submit Assignments Online' : 'Cara Mengumpulkan Tugas Online',
                 'slug' => 'panduan-kumpul-tugas',
                 'category' => 'tugas',
                 'image' => 'https://via.placeholder.com/400x250',
-                'excerpt' => 'Panduan lengkap mengumpulkan tugas melalui portal',
+                'excerpt' => $isEn ? 'A complete guide to submitting assignments through the portal.' : 'Panduan lengkap mengumpulkan tugas melalui portal',
                 'readTime' => 4,
             ],
         ];
 
         return view('help-center.guides', [
             'guides' => $guides,
+            'isEn' => $isEn,
         ]);
     }
 
@@ -326,14 +328,30 @@ class HelpCenterController extends Controller
     public function guideDetail(Request $request, $id = null)
     {
         $id = $id ?? $request->route('id');
-        
-        // Dummy guide content
+        $isEn = $this->currentLocale() === 'en';
         $guides = [
             1 => [
                 'id' => 1,
-                'title' => 'Panduan Cara Daftar dan Login',
+                'title' => $isEn ? 'How to Register and Log In' : 'Panduan Cara Daftar dan Login',
                 'category' => 'akun',
-                'content' => '<h2>Langkah 1: Kunjungi Portal Cendekia</h2>
+                'content' => $isEn ? '<h2>Step 1: Visit the Cendekia Portal</h2>
+<p>Open your browser and go to the Cendekia portal at [portal URL]. Click the "Register" button on the home page.</p>
+
+<h2>Step 2: Complete the Registration Form</h2>
+<p>Fill in all the required information:</p>
+<ul>
+  <li>Student or staff ID (from the academic system)</li>
+  <li>Email address</li>
+  <li>Password (at least 8 characters)</li>
+  <li>Full name as shown on your ID</li>
+  <li>Phone number</li>
+</ul>
+
+<h2>Step 3: Verify Your Email</h2>
+<p>Check your registered email and open the verification link from Cendekia. Your account will be activated after it is verified by an administrator.</p>
+
+<h2>Step 4: Log In</h2>
+<p>Log in with the email address and password you registered. You will be taken to the dashboard for your role (student, lecturer, or administrator).</p>' : '<h2>Langkah 1: Kunjungi Portal Cendekia</h2>
 <p>Buka browser Anda dan akses portal Cendekia di [URL portal]. Klik tombol "Daftar" di halaman awal.</p>
 
 <h2>Langkah 2: Isi Formulir Pendaftaran</h2>
@@ -355,9 +373,22 @@ class HelpCenterController extends Controller
             ],
             2 => [
                 'id' => 2,
-                'title' => 'Cara Mengisi Absensi Kelas',
+                'title' => $isEn ? 'How to Mark Class Attendance' : 'Cara Mengisi Absensi Kelas',
                 'category' => 'absensi',
-                'content' => '<h2>Cara Mengisi Absensi</h2>
+                'content' => $isEn ? '<h2>How to Mark Attendance</h2>
+<p>Each Cendekia class session has its own attendance page, which the lecturer opens while the class is in progress.</p>
+
+<h2>Step 1: Open the Attendance Menu</h2>
+<p>Open the class you are enrolled in, then select the "Attendance" tab.</p>
+
+<h2>Step 2: Make Sure the Lecturer Has Opened the Session</h2>
+<p>The attendance button is available only after the lecturer opens the session. If it is not active yet, wait a moment or contact your lecturer.</p>
+
+<h2>Step 3: Select Your Attendance Status</h2>
+<p>Click the attendance button and select Present, Excused, or Sick. Add any relevant details in the notes field.</p>
+
+<h2>Step 4: Save</h2>
+<p>Click "Save" and wait for confirmation that your attendance has been recorded.</p>' : '<h2>Cara Mengisi Absensi</h2>
 <p>Setiap sesi kelas di Cendekia memiliki halaman absensi tersendiri yang dibuka oleh dosen saat kelas berlangsung.</p>
 
 <h2>Langkah 1: Buka Menu Absensi</h2>
@@ -375,9 +406,25 @@ class HelpCenterController extends Controller
             ],
             3 => [
                 'id' => 3,
-                'title' => 'Cara Mengumpulkan Tugas Online',
+                'title' => $isEn ? 'How to Submit Assignments Online' : 'Cara Mengumpulkan Tugas Online',
                 'category' => 'tugas',
-                'content' => '<h2>Panduan Mengumpulkan Tugas</h2>
+                'content' => $isEn ? '<h2>Assignment Submission Guide</h2>
+<p>Follow these steps to submit an assignment through the portal.</p>
+
+<h2>Step 1: Open the Class and Assignments Menu</h2>
+<p>Open the relevant class, then select the "Assignments" tab.</p>
+
+<h2>Step 2: Select the Assignment</h2>
+<p>Find an assignment you have not submitted yet and open the one you want to complete.</p>
+
+<h2>Step 3: Upload Your File</h2>
+<p>Click "Upload File" and select a file from your computer. Make sure its format and size meet the lecturer\'s requirements (usually PDF, DOC, or DOCX, up to 10–20 MB).</p>
+
+<h2>Step 4: Review and Submit</h2>
+<p>Review the file you are about to upload. If everything is correct, click "Submit" to turn in your assignment.</p>
+
+<h2>Step 5: Confirm Submission</h2>
+<p>Wait for the status to change to "Submitted." You can then see the submission date on the assignment page.</p>' : '<h2>Panduan Mengumpulkan Tugas</h2>
 <p>Follow langkah-langkah berikut untuk mengumpulkan tugas melalui portal.</p>
 
 <h2>Langkah 1: Buka Kelas dan Menu Tugas</h2>
@@ -401,11 +448,12 @@ class HelpCenterController extends Controller
         $guide = $guides[$id] ?? null;
 
         if (!$guide) {
-            abort(404, 'Panduan tidak ditemukan');
+            abort(404, $isEn ? 'Guide not found' : 'Panduan tidak ditemukan');
         }
 
         return view('help-center.guide-detail', [
             'guide' => $guide,
+            'isEn' => $isEn,
         ]);
     }
 
@@ -510,7 +558,7 @@ class HelpCenterController extends Controller
 
         // Otorisasi: hanya pemilik tiket atau admin yang boleh melihat
         if ($ticket->user_id != $user->id && strtolower($ticket->email) !== strtolower($user->email) && !$user->hasRole('admin')) {
-            abort(403, 'Anda tidak memiliki akses ke tiket bantuan ini.');
+            abort(403, $this->currentLocale() === 'en' ? 'You do not have access to this support ticket.' : 'Anda tidak memiliki akses ke tiket bantuan ini.');
         }
 
         // Tandai notifikasi terkait tiket ini sebagai dibaca
@@ -537,11 +585,11 @@ class HelpCenterController extends Controller
         $ticket = \App\Models\Ticket::findOrFail($id);
 
         if ($ticket->user_id != $user->id && strtolower($ticket->email) !== strtolower($user->email)) {
-            abort(403, 'Anda tidak memiliki akses ke tiket bantuan ini.');
+            abort(403, $this->currentLocale() === 'en' ? 'You do not have access to this support ticket.' : 'Anda tidak memiliki akses ke tiket bantuan ini.');
         }
 
         if ($ticket->status === 'closed') {
-            return back()->with('error', 'Tiket ini telah ditutup dan tidak dapat dibalas.');
+            return back()->with('error', $this->currentLocale() === 'en' ? 'This ticket is closed and cannot be replied to.' : 'Tiket ini telah ditutup dan tidak dapat dibalas.');
         }
 
         \App\Models\TicketReply::create([
@@ -570,6 +618,6 @@ class HelpCenterController extends Controller
             \Illuminate\Support\Facades\Log::error("Failed to notify admins about ticket reply: " . $e->getMessage());
         }
 
-        return back()->with('success', 'Balasan Anda berhasil dikirim ke Admin.');
+        return back()->with('success', $this->currentLocale() === 'en' ? 'Your reply was sent to the administrator.' : 'Balasan Anda berhasil dikirim ke Admin.');
     }
 }
