@@ -288,6 +288,26 @@ class KelasPerkuliahan extends Model
         return $this->hasMany(ForumDiskusi::class, 'kelas_perkuliahan_id');
     }
 
+    public function forumDiskusiDefault(): ForumDiskusi
+    {
+        $forumYangAda = $this->forum()->latest('updated_at')->first();
+        if ($forumYangAda) {
+            return $forumYangAda;
+        }
+
+        $this->loadMissing('mataKuliah');
+
+        $namaKelas = $this->mataKuliah?->nama_mk ?? 'kelas ini';
+
+        return $this->forum()->firstOrCreate(
+            ['judul' => 'Diskusi Kelas'],
+            [
+                'dibuat_oleh' => $this->dosen_id,
+                'isi' => "Forum diskusi bersama untuk kelas {$namaKelas}.",
+            ]
+        );
+    }
+
     public function pengumuman()
     {
         return $this->hasMany(Pengumuman::class, 'kelas_perkuliahan_id');
@@ -303,4 +323,3 @@ class KelasPerkuliahan extends Model
         return $this->hasMany(Tugas::class, 'kelas_perkuliahan_id');
     }
 }
-

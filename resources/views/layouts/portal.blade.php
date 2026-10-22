@@ -588,6 +588,7 @@
                          x-data="{ 
                             notifOpen: false, 
                             unreadCount: {{ $unreadCount }},
+                            markAllReadError: '',
                             pollNotifications() {
                                 fetch('{{ route('notifikasi.poll') }}', { headers: { 'Accept': 'application/json' } })
                                     .then(r => r.json())
@@ -615,7 +616,7 @@
                             <span x-show="unreadCount > 0"
                                   x-text="unreadCount > 99 ? '99+' : unreadCount"
                                   class="bg-rose-600 text-white font-black rounded-full ring-2 ring-white dark:ring-slate-800 shadow-xs pointer-events-none"
-                                  style="position: absolute !important; top: -4px !important; right: -4px !important; min-width: 18px !important; height: 18px !important; padding: 0 4px !important; font-size: 10px !important; line-height: 18px !important; text-align: center !important; z-index: 10 !important; {{ $unreadCount > 0 ? 'display: inline-block !important;' : 'display: none !important;' }}">
+                                  style="position: absolute !important; top: -4px !important; right: -4px !important; min-width: 18px !important; height: 18px !important; padding: 0 4px !important; font-size: 10px !important; line-height: 18px !important; text-align: center !important; z-index: 10 !important;">
                                 {{ $unreadCount > 99 ? '99+' : $unreadCount }}
                             </span>
                         </button>
@@ -642,15 +643,16 @@
                                         </span>
                                     </template>
                                 </div>
-                                @if($unreadCount > 0)
-                                    <form action="{{ route('notifikasi.baca-semua') }}" method="POST" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 hover:underline transition bg-transparent border-0 p-0 cursor-pointer">
-                                            Tandai semua dibaca
-                                        </button>
-                                    </form>
-                                @endif
+                                <form action="{{ route('notifikasi.baca-semua') }}" method="POST" class="m-0 shrink-0" x-on:submit.prevent="window.markAllPortalNotificationsRead($event, $data)">
+                                    @csrf
+                                    <button type="submit" :disabled="unreadCount === 0"
+                                        class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 hover:underline transition bg-transparent border-0 p-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
+                                        Tandai semua dibaca
+                                    </button>
+                                </form>
                             </div>
+                            <p x-show="markAllReadError" x-text="markAllReadError" role="alert"
+                               class="px-4 py-2 text-xs font-medium text-red-600 dark:text-red-400"></p>
 
                             {{-- List Notifikasi --}}
                             <div class="max-h-[380px] overflow-y-auto divide-y divide-gray-50 dark:divide-slate-800/60">
@@ -660,7 +662,8 @@
                                         $meta = $notif->getTypeMeta();
                                         $namaMk = $notif->kelasPerkuliahan->mataKuliah->nama_mk ?? null;
                                     @endphp
-                                    <a href="{{ route('notifikasi.baca', $notif->id) }}" 
+                                    <a href="{{ route('notifikasi.baca', $notif->id) }}"
+                                       data-unread-notification="{{ $isUnread ? 'true' : 'false' }}"
                                        class="flex items-start gap-3 p-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition group text-decoration-none {{ $isUnread ? 'bg-blue-50/40 dark:bg-slate-800/40' : '' }}">
                                         
                                         {{-- Icon Jenis Notifikasi --}}
@@ -695,7 +698,7 @@
                                         {{-- Konten Notifikasi Clean 2 Baris --}}
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center justify-between gap-2">
-                                                <h4 class="text-xs font-bold {{ $isUnread ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300' }} truncate leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition m-0">
+                                                <h4 @if($isUnread) data-unread-title @endif class="text-xs font-bold {{ $isUnread ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300' }} truncate leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition m-0">
                                                     {{ $notif->judul }}
                                                 </h4>
                                                 <span class="text-[10px] text-gray-400 dark:text-slate-500 font-medium shrink-0">
@@ -703,7 +706,7 @@
                                                 </span>
                                             </div>
 
-                                            <p class="text-[11px] {{ $isUnread ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500' }} truncate mt-1 m-0">
+                                            <p @if($isUnread) data-unread-message @endif class="text-[11px] {{ $isUnread ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500' }} truncate mt-1 m-0">
                                                 @if($namaMk)
                                                     <span class="font-semibold text-blue-600 dark:text-blue-400">{{ $namaMk }}</span>
                                                     <span class="text-slate-300 dark:text-slate-600 mx-1">&bull;</span>
@@ -714,7 +717,7 @@
 
                                         {{-- Indikator Belum Dibaca (Titik Biru) --}}
                                         @if($isUnread)
-                                            <span class="w-2 h-2 mt-1.5 shrink-0 rounded-full bg-blue-600 ring-2 ring-blue-100 dark:ring-blue-900/50"></span>
+                                            <span data-unread-indicator class="w-2 h-2 mt-1.5 shrink-0 rounded-full bg-blue-600 ring-2 ring-blue-100 dark:ring-blue-900/50"></span>
                                         @endif
                                     </a>
                                 @empty
@@ -743,8 +746,12 @@
 
                     {{-- User Profile Pill --}}
                     <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 rounded-xl p-1 sm:pr-3 shrink-0">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#002B6B] flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs">
-                            {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#002B6B] flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
+                            @if (auth()->user()->foto)
+                                <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
+                            @else
+                                {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
+                            @endif
                         </div>
                         <span class="hidden max-w-[9rem] md:max-w-[12rem] truncate text-xs font-bold text-slate-700 dark:text-slate-200 sm:inline">{{ auth()->user()->name }}</span>
                     </div>
@@ -917,6 +924,58 @@
         }
     </style>
 
+    <script>
+        window.markAllPortalNotificationsRead = async function (event, component) {
+            const form = event.currentTarget;
+            const button = form.querySelector('button');
+
+            if (component.unreadCount === 0) return;
+            component.markAllReadError = '';
+            button.disabled = true;
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Gagal memperbarui status notifikasi.');
+                }
+
+                await response.json();
+                component.unreadCount = 0;
+
+                document.querySelectorAll('[data-unread-notification=true]').forEach(notification => {
+                    notification.classList.remove('bg-blue-50/40', 'dark:bg-slate-800/40');
+
+                    const title = notification.querySelector('[data-unread-title]');
+                    if (title) {
+                        title.classList.replace('text-slate-900', 'text-slate-700');
+                        title.classList.replace('dark:text-white', 'dark:text-slate-300');
+                    }
+
+                    const message = notification.querySelector('[data-unread-message]');
+                    if (message) {
+                        message.classList.replace('text-slate-600', 'text-slate-400');
+                        message.classList.replace('dark:text-slate-300', 'dark:text-slate-500');
+                    }
+
+                    notification.querySelector('[data-unread-indicator]')?.remove();
+                    notification.dataset.unreadNotification = 'false';
+                });
+            } catch (error) {
+                console.error(error);
+                component.markAllReadError = 'Gagal menandai notifikasi. Silakan coba lagi.';
+                button.disabled = false;
+            }
+        };
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('scripts')
     @include('partials.translator')

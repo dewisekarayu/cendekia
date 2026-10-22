@@ -31,15 +31,10 @@
                             <span class="badge bg-light text-dark border font-monospace px-2 py-1" style="font-size: 0.75rem;">
                                 #{{ ($pengumuman->currentPage() - 1) * $pengumuman->perPage() + $index + 1 }}
                             </span>
-                            @if ($item->untuk_semua)
-                                <span class="badge fw-bold px-2 py-1 pg-target pg-target-all">
-                                    <i class="bi bi-people-fill me-1"></i> UNTUK SEMUA
-                                </span>
-                            @else
-                                <span class="badge fw-bold px-2 py-1 pg-target pg-target-group">
-                                    <i class="bi bi-person-lines-fill me-1"></i> KELOMPOK TERTENTU
-                                </span>
-                            @endif
+                            <span class="badge fw-bold px-2 py-1 pg-target pg-target-all">
+                                <i class="bi bi-people-fill me-1"></i>
+                                {{ ['dosen' => 'DOSEN', 'mahasiswa' => 'MAHASISWA', 'semua' => 'SEMUA PENGGUNA'][$item->penerima] ?? 'SEMUA PENGGUNA' }}
+                            </span>
                             <span class="text-muted small"><i class="bi bi-calendar4-event me-1"></i> {{ $item->created_at->translatedFormat('d M Y, H:i') }}</span>
                         </div>
                         <div class="d-flex gap-1">
@@ -89,9 +84,14 @@
                                         <textarea class="form-control" id="isi_edit_{{ $item->id }}" name="isi" rows="5" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">{{ old('isi', $item->isi) }}</textarea>
                                     </div>
 
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="untuk_semua_edit_{{ $item->id }}" name="untuk_semua" value="1" {{ $item->untuk_semua ? 'checked' : '' }}>
-                                        <label class="form-check-label small fw-semibold text-secondary" for="untuk_semua_edit_{{ $item->id }}">Tampilkan untuk semua pengguna</label>
+                                    <div class="mb-3">
+                                        <label for="penerima_edit_{{ $item->id }}" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Penerima Pengumuman <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="penerima_edit_{{ $item->id }}" name="penerima" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
+                                            <option value="dosen" @selected(old('penerima', $item->penerima) === 'dosen')>Dosen</option>
+                                            <option value="mahasiswa" @selected(old('penerima', $item->penerima) === 'mahasiswa')>Mahasiswa</option>
+                                            <option value="semua" @selected(old('penerima', $item->penerima) === 'semua')>Semua Pengguna</option>
+                                        </select>
+                                        @error('penerima') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                                     </div>
                                 </form>
                             </div>
@@ -192,9 +192,14 @@
                             <textarea class="form-control" id="isi" name="isi" rows="6" placeholder="Ketik isi pengumuman di sini..." required style="border-radius: 8px; padding: 0.65rem 0.75rem;">{{ old('isi') }}</textarea>
                         </div>
 
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="untuk_semua" name="untuk_semua" value="1" checked>
-                            <label class="form-check-label small fw-semibold text-secondary" for="untuk_semua">Tampilkan untuk semua pengguna</label>
+                        <div class="mb-3">
+                            <label for="penerima" class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.5px;">Penerima Pengumuman <span class="text-danger">*</span></label>
+                            <select class="form-select @error('penerima') is-invalid @enderror" id="penerima" name="penerima" required style="border-radius: 8px; padding: 0.65rem 0.75rem;">
+                                <option value="dosen" @selected(old('penerima', 'semua') === 'dosen')>Dosen</option>
+                                <option value="mahasiswa" @selected(old('penerima', 'semua') === 'mahasiswa')>Mahasiswa</option>
+                                <option value="semua" @selected(old('penerima', 'semua') === 'semua')>Semua Pengguna</option>
+                            </select>
+                            @error('penerima') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                         </div>
                     </form>
                 </div>

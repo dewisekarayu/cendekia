@@ -80,15 +80,22 @@ class SettingController extends Controller
         ]);
 
         $user = $request->user();
+        $fotoLama = $user->foto;
 
-        // Delete old photo if exists
-        if ($user->foto && Storage::disk('public')->exists($user->foto)) {
-            Storage::disk('public')->delete($user->foto);
+        $path = $request->file('foto')->store('foto-profil', 'public');
+        if ($path === false) {
+            return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.']);
         }
 
-        // Store new photo
-        $path = $request->file('foto')->store('avatars/mahasiswa', 'public');
-        $user->update(['foto' => $path]);
+        if (!$user->update(['foto' => $path])) {
+            Storage::disk('public')->delete($path);
+
+            return back()->withErrors(['foto' => 'Foto profil gagal diperbarui. Silakan coba lagi.']);
+        }
+
+        if ($fotoLama) {
+            Storage::disk('public')->delete($fotoLama);
+        }
 
         return redirect()->route('mahasiswa.setting', ['tab' => 'profil'])
             ->with('success', 'Foto profil berhasil diperbarui');

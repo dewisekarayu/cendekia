@@ -37,6 +37,8 @@ class ForumController extends Controller
             abort(403, 'Anda tidak terdaftar di kelas ini.');
         }
 
+        $kelas->forumDiskusiDefault();
+
         // Step 3: Fetch forums from this specific class
         $forumList = ForumDiskusi::where('kelas_perkuliahan_id', $id)
             ->with([

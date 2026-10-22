@@ -72,6 +72,9 @@ class DosenController extends Controller
         $fotoPath = null;
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+            if ($fotoPath === false) {
+                return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.'])->withInput();
+            }
         }
 
         $dosen = User::create([
@@ -114,22 +117,38 @@ class DosenController extends Controller
             'foto'             => ['nullable', 'image', 'max:2048'],
         ]);
 
-        $fotoPath = $dosenMember->foto;
+        $fotoLama = $dosenMember->foto;
+        $fotoPath = null;
         if ($request->hasFile('foto')) {
-            if ($fotoPath) {
-                Storage::disk('public')->delete($fotoPath);
-            }
             $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+            if ($fotoPath === false) {
+                return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.'])->withInput();
+            }
         }
 
-        $dosenMember->update([
+        $dataDosen = [
             'name'             => $validated['name'],
             'nip_nim'          => $validated['nip_nim'],
             'email'            => $validated['email'],
             'program_studi_id' => $validated['program_studi_id'] ?? null,
             'status'           => $validated['status'],
-            'foto'             => $fotoPath,
-        ]);
+        ];
+
+        if ($fotoPath !== null) {
+            $dataDosen['foto'] = $fotoPath;
+        }
+
+        if (!$dosenMember->update($dataDosen)) {
+            if ($fotoPath !== null) {
+                Storage::disk('public')->delete($fotoPath);
+            }
+
+            return back()->withErrors(['foto' => 'Data dosen gagal diperbarui. Silakan coba lagi.'])->withInput();
+        }
+
+        if ($fotoPath !== null && $fotoLama) {
+            Storage::disk('public')->delete($fotoLama);
+        }
 
         return redirect()->route('admin.dosen.index')
             ->with('success', 'Data dosen berhasil diperbarui.');

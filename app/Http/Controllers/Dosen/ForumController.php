@@ -49,6 +49,8 @@ class ForumController extends Controller
             abort(403, 'Anda tidak mengajar kelas ini.');
         }
 
+        $kelas->forumDiskusiDefault();
+
         // Step 3: Fetch forums from this specific class only
         $forumList = ForumDiskusi::where('kelas_perkuliahan_id', $id)
             ->with([
