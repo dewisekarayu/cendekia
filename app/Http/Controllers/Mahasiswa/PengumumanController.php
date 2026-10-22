@@ -21,7 +21,8 @@ class PengumumanController extends Controller
             ->toArray();
 
         // Ambil pengumuman (Global + Kelas yang diikuti)
-        $pengumuman = Pengumuman::with(['pembuat', 'kelasPerkuliahan'])
+        $pengumuman = Pengumuman::visibleToRole('mahasiswa')
+            ->with(['pembuat', 'kelasPerkuliahan'])
             ->where(function ($query) use ($kelasIds) {
                 $query->whereNull('kelas_perkuliahan_id')
                       ->orWhereIn('kelas_perkuliahan_id', $kelasIds);

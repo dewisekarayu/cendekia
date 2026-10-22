@@ -15,7 +15,6 @@ use App\Models\MataKuliah;
 use App\Models\NilaiAkhir;
 use App\Models\Notifikasi;
 use App\Models\PengumpulanTugas;
-use App\Models\Pengumuman;
 use App\Models\ProgramStudi;
 use App\Models\Tugas;
 use App\Models\User;
@@ -51,17 +50,6 @@ class ComprehensiveAcademicSeeder extends Seeder
         'Tanya Jawab Umum Mata Kuliah',
         'Kolaborasi dan Study Group',
         'Feedback dan Improvement Ideas',
-    ];
-
-    private array $pengumumanTemplates = [
-        'Pengumuman Penting Terkait {topik}',
-        'Update Jadwal dan Perubahan {topik}',
-        'Pengingat Deadline Tugas {topik}',
-        'Materi Baru Telah Diunggah untuk {topik}',
-        'Kesempatan Ujian Susulan {topik}',
-        'Hasil {topik} Telah Diterbitkan',
-        'Partisipasi Aktif Diperlukan dalam {topik}',
-        'Sumber Daya Tambahan untuk {topik}',
     ];
 
     private array $tugasTemplates = [
@@ -124,7 +112,6 @@ class ComprehensiveAcademicSeeder extends Seeder
             $this->seedPengumpulanTugas($kelas, $peserta, $tugasList);
             $this->seedNilaiAkhir($kelas, $peserta, $tugasList);
             $this->seedForum($kelas, $peserta);
-            $this->seedPengumuman($kelas);
             $this->seedJadwalUjian($kelas, $semesterStart, $semesterEnd);
             $this->seedNotifikasi($kelas, $peserta);
             $this->seedAktivitas($kelas, $peserta, $semesterStart);
@@ -404,30 +391,6 @@ class ComprehensiveAcademicSeeder extends Seeder
         }
     }
 
-    private function seedPengumuman(KelasPerkuliahan $kelas): void
-    {
-        $dosen = $kelas->dosen;
-        $topics = ['Materi', 'Deadline Tugas', 'Jadwal Ujian', 'Nilai', 'Pengingat Penting', 'Update Sistem'];
-
-        foreach ($topics as $idx => $topik) {
-            $template = $this->pengumumanTemplates[$idx % count($this->pengumumanTemplates)];
-            $judul = str_replace('{topik}', $topik, $template);
-
-            Pengumuman::updateOrCreate(
-                [
-                    'kelas_perkuliahan_id' => $kelas->id,
-                    'dibuat_oleh' => $dosen->id,
-                    'judul' => $judul,
-                ],
-                [
-                    'isi' => $this->generatePengumuman($topik, $kelas),
-                    'untuk_semua' => false,
-                    'created_at' => now()->subDays(rand(1, 45)),
-                ]
-            );
-        }
-    }
-
     private function seedJadwalUjian(KelasPerkuliahan $kelas, Carbon $start, Carbon $end): void
     {
         // UTS di minggu 8
@@ -525,20 +488,6 @@ class ComprehensiveAcademicSeeder extends Seeder
             'Terima kasih atas insight-nya. Sangat membantu dalam memahami konsep ini.',
         ];
         return $komentar[array_rand($komentar)];
-    }
-
-    private function generatePengumuman(string $topik, KelasPerkuliahan $kelas): string
-    {
-        $pengumuman = [
-            'Materi' => "Materi pembelajaran untuk minggu ini telah diunggah di sistem. Silakan pelajari dan siapkan pertanyaan untuk diskusi di kelas.",
-            'Deadline Tugas' => "Pengingat: Deadline untuk tugas belum diunggah adalah 23:59 hari ini. Pastikan upload tepat waktu.",
-            'Jadwal Ujian' => "Jadwal ujian telah ditentukan seperti yang ada di sistem. Silakan persiapkan diri dengan baik.",
-            'Nilai' => "Nilai untuk tugas/ujian telah diterbitkan. Silakan cek portal akademik dan hubungi dosen jika ada pertanyaan.",
-            'Pengingat Penting' => "Pengingat untuk aktif berpartisipasi di forum kelas. Partisipasi aktif akan mempengaruhi nilai.",
-            'Update Sistem' => "Ada update pada sistem pembelajaran. Pastikan refresh browser untuk fitur terbaru.",
-        ];
-        
-        return $pengumuman[$topik] ?? "Pengumuman terkait $topik di mata kuliah {$kelas->mataKuliah->nama_mk}.";
     }
 
     private function getActivityDescription(string $type, KelasPerkuliahan $kelas): string

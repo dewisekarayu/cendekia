@@ -38,7 +38,8 @@ class PengumumanController extends Controller
             'dibuat_oleh'  => $request->user()->id,
             'judul'        => $validated['judul'],
             'isi'          => $validated['isi'],
-            'untuk_semua'  => $request->boolean('untuk_semua', true),
+            'untuk_semua'  => true,
+            'penerima'     => $validated['penerima'],
         ]);
 
         // Kirim notifikasi ke Dosen & Mahasiswa agar muncul di notifikasi atas (navbar bell)
@@ -58,7 +59,8 @@ class PengumumanController extends Controller
         $pengumuman->update([
             'judul'       => $validated['judul'],
             'isi'         => $validated['isi'],
-            'untuk_semua' => $request->boolean('untuk_semua', true),
+            'untuk_semua' => true,
+            'penerima'    => $validated['penerima'],
         ]);
 
         return redirect()->route('admin.pengumuman.index')
@@ -84,7 +86,7 @@ class PengumumanController extends Controller
         return $request->validate([
             'judul'       => ['required', 'string', 'max:255'],
             'isi'         => ['required', 'string'],
-            'untuk_semua' => ['nullable', 'boolean'],
+            'penerima'    => ['required', 'in:dosen,mahasiswa,semua'],
         ]);
     }
 }
