@@ -3,6 +3,11 @@
 @section('title', $isEn ? 'My Support Tickets' : 'Tiket Bantuan Saya')
 
 @section('content')
+@php
+    $categoryLabels = $isEn
+        ? ['akun' => 'Account', 'kelas' => 'Classes', 'tugas' => 'Assignments', 'absensi' => 'Attendance', 'nilai' => 'Grades', 'teknis' => 'Technical', 'lainnya' => 'Other']
+        : ['akun' => 'Akun', 'kelas' => 'Kelas', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'nilai' => 'Nilai', 'teknis' => 'Teknis', 'lainnya' => 'Lainnya'];
+@endphp
 <div class="max-w-5xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
 
     {{-- Breadcrumb & Header --}}
@@ -107,7 +112,7 @@
                             </span>
                             <span class="text-slate-300 dark:text-slate-600">&bull;</span>
                             <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
-                                {{ ucfirst($ticket->category) }}
+                                {{ $categoryLabels[strtolower($ticket->category)] ?? $ticket->category }}
                             </span>
 
                             {{-- Status Badge --}}
@@ -140,7 +145,7 @@
                         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1 m-0">
                             @if($lastReply)
                                 <span class="font-semibold {{ $lastReply->user_id == auth()->id() ? 'text-slate-700 dark:text-slate-300' : 'text-blue-600 dark:text-blue-400' }}">
-                                    {{ $lastReply->user_id == auth()->id() ? 'Anda: ' : 'Admin: ' }}
+                                    {{ $lastReply->user_id == auth()->id() ? ($isEn ? 'You: ' : 'Anda: ') : 'Admin: ' }}
                                 </span>
                                 <span>{{ $lastReply->message }}</span>
                             @else
@@ -155,7 +160,7 @@
                     @if($repliesCount > 0)
                         <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>
-                            <span>{{ $repliesCount }} balasan</span>
+                            <span>{{ $repliesCount }} {{ $isEn ? ($repliesCount === 1 ? 'reply' : 'replies') : 'balasan' }}</span>
                         </span>
                     @endif
 
