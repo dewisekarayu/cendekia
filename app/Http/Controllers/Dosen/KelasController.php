@@ -477,6 +477,21 @@ class KelasController extends Controller
     
         return view('dosen.kelas-tugas-submissions', compact('kelas', 'tugas', 'submissions'));
     }
+
+    public function submissionFile(Request $request, $kelasId, $tugasId, $pengumpulanId, $fileId)
+    {
+        $kelas = KelasPerkuliahan::where('dosen_id', $request->user()->id)->findOrFail($kelasId);
+        $tugas = Tugas::where('kelas_perkuliahan_id', $kelas->id)->findOrFail($tugasId);
+        $pengumpulan = PengumpulanTugas::where('tugas_id', $tugas->id)->findOrFail($pengumpulanId);
+        $file = $pengumpulan->files()->findOrFail($fileId);
+
+        abort_unless(Storage::disk('public')->exists($file->file_path), 404);
+
+        return Storage::disk('public')->response(
+            $file->file_path,
+            $file->nama_asli ?? basename($file->file_path)
+        );
+    }
     
     public function simpanNilai(Request $request, $kelasId, $tugasId, $pengumpulanId)
     {
