@@ -176,10 +176,7 @@
         {{-- Logo/Header --}}
         <div class="cnd-logo-wrap">
             <div class="cnd-logo-icon">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9.5" stroke="#CDDCFF" stroke-width="1.6"/>
-                    <path d="M8 12.5l2.7 2.7L16.5 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo Cendekia" width="48" height="48" style="display: block; width: 48px; height: 48px; object-fit: contain;">
             </div>
             <h1 class="cnd-title">Cendekia</h1>
             <p class="cnd-subtitle">Platform Pembelajaran Digital</p>
