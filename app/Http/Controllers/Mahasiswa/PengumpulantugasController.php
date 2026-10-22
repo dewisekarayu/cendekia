@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\PengumpulanTugas;
+use App\Models\PengumpulanTugasFile;
 use App\Models\Tugas;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
@@ -41,13 +42,22 @@ class PengumpulantugasController extends Controller
         }
 
         $validated = $request->validate([
-            'file_jawaban'   => ['required', 'array', 'min:1', 'max:5'],
+            'file_jawaban'   => ['required', 'array', 'min:1', 'max:20'],
             'file_jawaban.*' => [
                 'file',
                 'mimes:pdf,zip,doc,docx,ppt,pptx,jpg,jpeg,png',
-                'max:10240',
+                'max:50240',
             ],
             'catatan'        => ['nullable', 'string', 'max:1000'],
+        ], [
+            'file_jawaban.required' => 'Pilih setidaknya satu file jawaban sebelum mengirim tugas.',
+            'file_jawaban.array' => 'File jawaban tidak terbaca. Silakan pilih kembali file Anda.',
+            'file_jawaban.min' => 'Pilih setidaknya satu file jawaban sebelum mengirim tugas.',
+            'file_jawaban.max' => 'Anda dapat mengirim maksimal 20 file sekaligus.',
+            'file_jawaban.*.file' => 'Salah satu file tidak dapat dibaca. Silakan pilih kembali file tersebut.',
+            'file_jawaban.*.mimes' => 'Jenis file belum didukung. Gunakan PDF, ZIP, Word, PowerPoint, JPG, atau PNG.',
+            'file_jawaban.*.max' => 'Ukuran setiap file maksimal 50 MB. Silakan pilih file yang lebih kecil.',
+            'catatan.max' => 'Catatan tambahan tidak boleh lebih dari 1.000 karakter.',
         ]);
         
         $mahasiswaId = Auth::id();
@@ -98,6 +108,24 @@ class PengumpulantugasController extends Controller
         return redirect()
             ->route('mahasiswa.pengumpulan-tugas.show', $tugas->id)
             ->with('success', 'Tugas berhasil dikumpulkan.');
+    }
+
+    public function file(Request $request, Tugas $tugas, PengumpulanTugasFile $file)
+    {
+        $file->pengumpulan()
+            ->where('tugas_id', $tugas->id)
+            ->where('mahasiswa_id', Auth::id())
+            ->where('status', '!=', PengumpulanTugas::STATUS_BELUM_DIKUMPUL)
+            ->firstOrFail();
+
+        abort_unless(Storage::disk('public')->exists($file->file_path), 404);
+
+        return Storage::disk('public')->response(
+            $file->file_path,
+            $file->nama_asli ?? basename($file->file_path),
+            [],
+            $request->boolean('download') ? 'attachment' : 'inline'
+        );
     }
 
     public function destroy(Tugas $tugas)
