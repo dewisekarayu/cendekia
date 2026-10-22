@@ -178,7 +178,7 @@
                                         </button>
 
                                         <div id="dropdownTugas{{ $tugas->id }}"
-                                            class="dropdown-tugas hidden absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg z-20 overflow-hidden divide-y divide-gray-100 dark:divide-slate-700/60">
+                                            class="dropdown-tugas hidden fixed w-48 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg z-50 overflow-hidden divide-y divide-gray-100 dark:divide-slate-700/60">
 
                                             <div class="py-1">
                                                 @if ($isClosed)
@@ -677,20 +677,35 @@
         // Buka/tutup dropdown titik tiga, tutup dropdown lain yang lagi terbuka
         function toggleDropdown(id) {
             document.querySelectorAll('.dropdown-tugas').forEach(el => {
-                if (el.id !== id) el.classList.add('hidden');
+                if (el.id !== id) {
+                    el.classList.add('hidden');
+                    el.style.top = '';
+                    el.style.bottom = '';
+                    el.style.left = '';
+                    el.style.right = '';
+                }
             });
             const dropdown = document.getElementById(id);
             if (dropdown) {
                 dropdown.classList.toggle('hidden');
                 if (!dropdown.classList.contains('hidden')) {
+                    const trigger = dropdown.parentElement.querySelector('button');
+                    const triggerRect = trigger.getBoundingClientRect();
                     const rect = dropdown.getBoundingClientRect();
-                    if (rect.bottom > window.innerHeight - 20) {
-                        dropdown.classList.remove('mt-2');
-                        dropdown.classList.add('bottom-full', 'mb-2');
-                    } else {
-                        dropdown.classList.remove('bottom-full', 'mb-2');
-                        dropdown.classList.add('mt-2');
-                    }
+                    const openAbove = triggerRect.bottom + rect.height + 8 > window.innerHeight;
+                    const left = Math.max(8, Math.min(
+                        triggerRect.right - rect.width,
+                        window.innerWidth - rect.width - 8
+                    ));
+
+                    dropdown.style.left = `${left}px`;
+                    dropdown.style.right = 'auto';
+                    dropdown.style.top = openAbove
+                        ? 'auto'
+                        : `${triggerRect.bottom + 8}px`;
+                    dropdown.style.bottom = openAbove
+                        ? `${window.innerHeight - triggerRect.top + 8}px`
+                        : 'auto';
                 }
             }
         }

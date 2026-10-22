@@ -26,6 +26,7 @@
         })();
     </script>
 
+    @stack('styles')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         /* Hide scrollbar on sidebar for clean modern look */
