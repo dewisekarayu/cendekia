@@ -1409,8 +1409,12 @@
                     </div>
 
                     <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-1.5 sm:pr-4 py-1 shrink-0">
-                        <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold notranslate" translate="no">
-                            {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
+                        <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold notranslate overflow-hidden shrink-0" translate="no">
+                            @if (auth()->user()->foto)
+                                <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
+                            @else
+                                {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
+                            @endif
                         </div>
                         <span class="hidden max-w-[11rem] truncate text-sm font-medium text-gray-700 dark:text-gray-200 sm:inline notranslate" translate="no">{{ auth()->user()->name ?? 'Admin' }}</span>
                     </div>

@@ -41,8 +41,9 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
-        $announcements = Pengumuman::where(function ($q) use ($kelasIds) {
-                $q->whereIn('kelas_perkuliahan_id', $kelasIds)->orWhere('untuk_semua', true);
+        $announcements = Pengumuman::visibleToRole('mahasiswa')
+            ->where(function ($q) use ($kelasIds) {
+                $q->whereIn('kelas_perkuliahan_id', $kelasIds)->orWhereNull('kelas_perkuliahan_id');
             })
             ->latest()
             ->take(2)

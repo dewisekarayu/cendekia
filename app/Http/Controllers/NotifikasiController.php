@@ -62,7 +62,8 @@ class NotifikasiController extends Controller
             $kelasIds = KelasMahasiswa::where('mahasiswa_id', $user->id)
                 ->pluck('kelas_perkuliahan_id');
 
-            $pengumuman = Pengumuman::with(['pembuat', 'kelasPerkuliahan'])
+            $pengumuman = Pengumuman::visibleToRole('mahasiswa')
+                ->with(['pembuat', 'kelasPerkuliahan'])
                 ->where(function ($announcementQuery) use ($kelasIds) {
                     $announcementQuery->whereNull('kelas_perkuliahan_id')
                         ->orWhereIn('kelas_perkuliahan_id', $kelasIds);
@@ -135,11 +136,18 @@ class NotifikasiController extends Controller
     /**
      * Tandai semua notifikasi pengguna saat ini sebagai dibaca.
      */
-    public function bacaSemua()
+    public function bacaSemua(Request $request)
     {
-        auth()->user()->notifikasi()
+        $updated = $request->user()->notifikasi()
             ->whereNull('dibaca_pada')
             ->update(['dibaca_pada' => now()]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'updated' => $updated,
+            ]);
+        }
 
         return back()->with('success', 'Semua notifikasi telah ditandai sebagai dibaca.');
     }
