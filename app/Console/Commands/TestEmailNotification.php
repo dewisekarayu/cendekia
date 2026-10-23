@@ -65,7 +65,7 @@ class TestEmailNotification extends Command
                     return;
             }
 
-            $this->info("✓ Email {$type} queued successfully!");
+            $this->info("Email {$type} queued successfully.");
             $this->info("Run 'php artisan queue:work' to process the queue.");
         } catch (\Exception $e) {
             $this->error("Error: " . $e->getMessage());

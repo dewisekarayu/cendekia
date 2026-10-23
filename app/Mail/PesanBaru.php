@@ -26,7 +26,7 @@ class PesanBaru implements ShouldQueue
     {
         return new Envelope(
             from: new Address($this->sender->email, $this->sender->name ?? 'User'),
-            subject: "💬 Pesan Baru dari {$this->sender->name}: {$this->forum->judul}",
+            subject: "Pesan Baru dari {$this->sender->name}: {$this->forum->judul}",
         );
     }
 

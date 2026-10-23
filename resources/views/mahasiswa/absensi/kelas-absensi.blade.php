@@ -329,10 +329,10 @@
                     <div class="min-w-0">
                         <h4 class="font-bold text-blue-900 text-sm mb-2">Tips Presensi</h4>
                         <ul class="text-xs text-blue-800/90 space-y-1.5">
-                            <li class="flex items-start gap-1.5"><span class="text-blue-500 font-bold">✓</span> Presensi hanya saat sesi terbuka</li>
-                            <li class="flex items-start gap-1.5"><span class="text-blue-500 font-bold">✓</span> Satu kali presensi per sesi</li>
-                            <li class="flex items-start gap-1.5"><span class="text-blue-500 font-bold">✓</span> Cantumkan alasan jika izin/sakit</li>
-                            <li class="flex items-start gap-1.5"><span class="text-blue-500 font-bold">✓</span> Cek riwayat secara berkala</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Presensi hanya saat sesi terbuka</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Satu kali presensi per sesi</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Cantumkan alasan jika izin/sakit</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Cek riwayat secara berkala</li>
                         </ul>
                     </div>
                 </div>

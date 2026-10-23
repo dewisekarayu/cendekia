@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Detail Fakultas')
 
@@ -9,11 +9,11 @@
             <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Cendekia</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('admin.fakultas.index') }}" class="text-decoration-none text-muted">Fakultas</a></li>
-                <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 500;">Detail Fakultas</li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 500;">Detail Fakultas</li>
             </ol>
         </nav>
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Detail Fakultas: {{ $fakulta->nama_fakultas }}</h1>
+            <h1 class="page-title h3 fw-bold mb-1" style="color: #012428;">Detail Fakultas: {{ $fakulta->nama_fakultas }}</h1>
             <a href="{{ route('admin.fakultas.index') }}" class="btn btn-light border"><i class="bi bi-arrow-left"></i> Kembali</a>
         </div>
     </div>

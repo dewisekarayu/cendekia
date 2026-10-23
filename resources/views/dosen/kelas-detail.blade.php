@@ -159,11 +159,11 @@
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5">Capaian Pembelajaran Mata Kuliah (CPMK)</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div class="flex items-start gap-3 rounded-xl border border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-900/40 p-3">
-                            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓</span>
+                            <i class="bi bi-check-circle-fill mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
                             <p class="text-xs font-medium text-slate-700 dark:text-slate-300 leading-snug">Mampu menguasai konsep teoritis dan fundamental keilmuan secara komprehensif.</p>
                         </div>
                         <div class="flex items-start gap-3 rounded-xl border border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-900/40 p-3">
-                            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓</span>
+                            <i class="bi bi-check-circle-fill mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
                             <p class="text-xs font-medium text-slate-700 dark:text-slate-300 leading-snug">Mampu mengimplementasikan studi kasus dan pemecahan masalah praktis.</p>
                         </div>
                     </div>

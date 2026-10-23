@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Edit Kurikulum')
 
@@ -9,10 +9,10 @@
             <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Cendekia</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('admin.kurikulum.index') }}" class="text-decoration-none text-muted">Kurikulum</a></li>
-                <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 500;">Edit Kurikulum</li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 500;">Edit Kurikulum</li>
             </ol>
         </nav>
-        <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Edit Kurikulum: {{ $kurikulum->nama_kurikulum }}</h1>
+        <h1 class="page-title h3 fw-bold mb-1" style="color: #012428;">Edit Kurikulum: {{ $kurikulum->nama_kurikulum }}</h1>
     </div>
 
     <form action="{{ route('admin.kurikulum.update', $kurikulum->id) }}" method="POST">

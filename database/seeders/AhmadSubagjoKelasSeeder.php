@@ -26,9 +26,9 @@ class AhmadSubagjoKelasSeeder extends Seeder
                 'status' => 'aktif',
             ]);
             $dosen->assignRole('dosen');
-            $this->command->info('✓ Dosen Ahmad Subagjo dibuat');
+            $this->command->info('Dosen Ahmad Subagjo dibuat');
         } else {
-            $this->command->info('✓ Dosen Ahmad Subagjo sudah ada');
+            $this->command->info('Dosen Ahmad Subagjo sudah ada');
         }
 
         // Cari atau buat mahasiswa Dewi Sekar
@@ -43,9 +43,9 @@ class AhmadSubagjoKelasSeeder extends Seeder
                 'status' => 'aktif',
             ]);
             $dewiSekar->assignRole('mahasiswa');
-            $this->command->info('✓ Mahasiswa Dewi Sekar dibuat');
+            $this->command->info('Mahasiswa Dewi Sekar dibuat');
         } else {
-            $this->command->info('✓ Mahasiswa Dewi Sekar sudah ada');
+            $this->command->info('Mahasiswa Dewi Sekar sudah ada');
         }
 
         // Cari atau buat mahasiswa May Lusi
@@ -60,9 +60,9 @@ class AhmadSubagjoKelasSeeder extends Seeder
                 'status' => 'aktif',
             ]);
             $mayLusi->assignRole('mahasiswa');
-            $this->command->info('✓ Mahasiswa May Lusi dibuat');
+            $this->command->info('Mahasiswa May Lusi dibuat');
         } else {
-            $this->command->info('✓ Mahasiswa May Lusi sudah ada');
+            $this->command->info('Mahasiswa May Lusi sudah ada');
         }
 
         // Cari Program Studi pertama
@@ -88,9 +88,9 @@ class AhmadSubagjoKelasSeeder extends Seeder
                 'semester_ke' => 1,
                 'deskripsi' => 'Kelas Cendekia untuk pembelajaran mendalam',
             ]);
-            $this->command->info('✓ Mata Kuliah Cendekia dibuat');
+            $this->command->info('Mata Kuliah Cendekia dibuat');
         } else {
-            $this->command->info('✓ Mata Kuliah Cendekia sudah ada');
+            $this->command->info('Mata Kuliah Cendekia sudah ada');
         }
 
         // Cari semester aktif
@@ -127,9 +127,9 @@ class AhmadSubagjoKelasSeeder extends Seeder
                 'status_kelas' => 'aktif',
                 'is_active' => true,
             ]);
-            $this->command->info('✓ Kelas Cendekia dibuat');
+            $this->command->info('Kelas Cendekia dibuat');
         } else {
-            $this->command->info('✓ Kelas Cendekia sudah ada');
+            $this->command->info('Kelas Cendekia sudah ada');
         }
 
         // Daftarkan Dewi Sekar ke kelas
@@ -142,7 +142,7 @@ class AhmadSubagjoKelasSeeder extends Seeder
                 'tanggal_daftar' => now(),
             ]
         );
-        $this->command->info('✓ Dewi Sekar terdaftar di kelas Cendekia');
+        $this->command->info('Dewi Sekar terdaftar di kelas Cendekia');
 
         // Daftarkan May Lusi ke kelas
         \App\Models\KelasMahasiswa::firstOrCreate(
@@ -154,9 +154,8 @@ class AhmadSubagjoKelasSeeder extends Seeder
                 'tanggal_daftar' => now(),
             ]
         );
-        $this->command->info('✓ May Lusi terdaftar di kelas Cendekia');
-
-        $this->command->info('✅ Seeder Ahmad Subagjo Kelas selesai!');
+        $this->command->info('May Lusi terdaftar di kelas Cendekia');
+        $this->command->info('Seeder Ahmad Subagjo Kelas selesai.');
         $this->command->line('');
         $this->command->table(
             ['Info', 'Detail'],

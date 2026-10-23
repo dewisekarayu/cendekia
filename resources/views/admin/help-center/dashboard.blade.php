@@ -1,11 +1,11 @@
-@extends('layouts.portal')
+﻿@extends('layouts.portal')
 
 @section('title', 'Help Center - Admin')
 
 @section('content')
 <div class="space-y-6">
     <!-- HEADER -->
-    <div class="bg-gradient-to-br from-[#002B6B] to-[#0044a8] text-white p-6 sm:p-8 rounded-2xl shadow-lg">
+    <div class="bg-gradient-to-br from-[#012428] to-[#0044a8] text-white p-6 sm:p-8 rounded-2xl shadow-lg">
         <h1 class="text-3xl font-extrabold mb-2">Help Center Management</h1>
         <p class="text-blue-100">Kelola support tickets dan bantuan mahasiswa</p>
     </div>
@@ -62,12 +62,12 @@
     <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <h2 class="text-lg font-bold text-gray-900">Tiket Terbaru</h2>
-            <a href="{{ route('admin.help-center.tickets') }}" class="text-sm font-semibold text-[#002B6B] hover:text-blue-800">
+            <a href="{{ route('admin.help-center.tickets') }}" class="text-sm font-semibold text-[#012428] hover:text-blue-800">
                 Lihat Semua →
             </a>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="admin-table-scroll">
+            <table class="w-full min-w-[760px]">
                 <thead>
                     <tr class="border-b border-gray-200 bg-gray-50">
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Nama</th>
@@ -108,7 +108,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <a href="{{ route('admin.help-center.ticket-detail', $ticket->id) }}" class="text-[#002B6B] hover:text-blue-800 font-semibold">
+                                <a href="{{ route('admin.help-center.ticket-detail', $ticket->id) }}" class="text-[#012428] hover:text-blue-800 font-semibold">
                                     Lihat
                                 </a>
                             </td>
@@ -138,7 +138,7 @@
                     <h3 class="font-bold text-gray-900">Kelola Semua Tiket</h3>
                     <p class="text-sm text-gray-600 mt-1">Lihat, filter, dan respons semua support tickets</p>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-[#002B6B] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-[#012428] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </div>
@@ -155,7 +155,7 @@
                     <h3 class="font-bold text-gray-900">Lihat Help Center</h3>
                     <p class="text-sm text-gray-600 mt-1">Lihat halaman FAQ dan panduan untuk mahasiswa</p>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-[#002B6B] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-[#012428] transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </div>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Tambah Agenda Kalender Akademik')
 @section('activeMenu', 'Kalender Akademik')
@@ -14,13 +14,13 @@
         transition: all .2s ease; flex-shrink: 0;
     }
     .dark .step-dot { background: #1e293b; border-color: #475569; color: #64748b; }
-    .step-dot.is-active { border-color: #002B6B; background: #002B6B; color: #fff; box-shadow: 0 0 0 4px rgba(0, 43, 107, .15); }
+    .step-dot.is-active { border-color: #012428; background: #012428; color: #fff; box-shadow: 0 0 0 4px rgba(1, 36, 40, .15); }
     .step-dot.is-done { border-color: #16a34a; background: #16a34a; color: #fff; }
     .step-line { flex: 1; height: 2px; background: #e2e8f0; margin: 0 .35rem; transition: background .2s ease; }
     .dark .step-line { background: #334155; }
     .step-line.is-done { background: #16a34a; }
     .step-label { font-size: .7rem; font-weight: 700; color: #94a3b8; margin-top: .35rem; text-align: center; }
-    .step-label.is-active { color: #002B6B; }
+    .step-label.is-active { color: #012428; }
     .dark .step-label.is-active { color: #93c5fd; }
 
     /* ---------- Wizard step ---------- */
@@ -35,12 +35,12 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#002B6B] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#012428] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
                     <i class="bi bi-calendar-plus text-xs"></i>
                     Manajemen Kalender
                 </span>
             </div>
-            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
+            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#012428] dark:text-white">
                 Tambah Agenda Akademik
             </h1>
             <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
@@ -106,7 +106,7 @@
             {{-- ---------- STEP 1: Informasi Dasar ---------- --}}
             <div class="wizard-step" data-step="1">
                 <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                         <i class="bi bi-card-text text-lg"></i>
                     </div>
                     <div>
@@ -164,7 +164,7 @@
             {{-- ---------- STEP 2: Waktu & Tanggal ---------- --}}
             <div class="wizard-step" data-step="2">
                 <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                         <i class="bi bi-calendar-event text-lg"></i>
                     </div>
                     <div>
@@ -245,7 +245,7 @@
             {{-- ---------- STEP 3: Kategori & Lokasi ---------- --}}
             <div class="wizard-step" data-step="3">
                 <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                         <i class="bi bi-tags text-lg"></i>
                     </div>
                     <div>
@@ -279,7 +279,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <input type="text" id="input_jenis_baru" class="form-control text-sm py-1.5 px-3 rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full" placeholder="Contoh: Seminar Nasional / Workshop" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); simpanJenisKegiatanBaru(); }">
-                                <button type="button" onclick="simpanJenisKegiatanBaru()" class="px-3.5 py-1.5 bg-[#002B6B] hover:bg-blue-900 text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer">
+                                <button type="button" onclick="simpanJenisKegiatanBaru()" class="px-3.5 py-1.5 bg-[#012428] hover:bg-[#033a40] text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer">
                                     <i class="bi bi-check-lg"></i>
                                     <span>Tambah</span>
                                 </button>
@@ -342,7 +342,7 @@
             {{-- ---------- STEP 4: Warna & Publikasi ---------- --}}
             <div class="wizard-step" data-step="4">
                 <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                         <i class="bi bi-palette text-lg"></i>
                     </div>
                     <div>
@@ -378,10 +378,10 @@
                             <input type="color" name="warna" id="warna"
                                    class="rounded-lg cursor-pointer border-0 p-0"
                                    style="width: 44px; height: 44px; background: none;"
-                                   value="{{ old('warna', '#002B6B') }}"
+                                   value="{{ old('warna', '#012428') }}"
                                    oninput="updateWarnaLabel(); updatePreview();" required>
                             <div class="pr-2">
-                                <div id="warnaLabel" class="font-bold font-mono text-sm" style="color: #002B6B;">#002B6B</div>
+                                <div id="warnaLabel" class="font-bold font-mono text-sm" style="color: #012428;">#012428</div>
                                 <small class="text-slate-400 text-xs block">Atau pilih warna sendiri</small>
                             </div>
                         </div>
@@ -449,9 +449,9 @@
                     </span>
                 </div>
 
-                <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 transition-all" id="previewCardBox" style="border-left-width: 6px; border-left-color: #002B6B; background-color: rgba(0, 43, 107, 0.03);">
+                <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 transition-all" id="previewCardBox" style="border-left-width: 6px; border-left-color: #012428; background-color: rgba(1, 36, 40, 0.03);">
                     <div class="flex items-center justify-between gap-2 mb-2">
-                        <span id="previewJenisBadge" class="text-[11px] font-bold px-2 py-0.5 rounded text-white" style="background-color: #002B6B;">
+                        <span id="previewJenisBadge" class="text-[11px] font-bold px-2 py-0.5 rounded text-white" style="background-color: #012428;">
                             Umum / Kegiatan
                         </span>
                         <span id="previewSemester" class="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate max-w-[140px]">
@@ -484,7 +484,7 @@
                 </div>
 
                 <div class="mt-4 p-3 bg-blue-50/50 dark:bg-blue-950/30 rounded-xl border border-blue-100/60 dark:border-blue-900/40 text-xs text-slate-600 dark:text-slate-300">
-                    <div class="font-bold text-[#002B6B] dark:text-blue-400 mb-1 flex items-center gap-1.5">
+                    <div class="font-bold text-[#012428] dark:text-blue-400 mb-1 flex items-center gap-1.5">
                         <i class="bi bi-lightbulb"></i> Tips Kalender Akademik:
                     </div>
                     <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-500 dark:text-slate-400">

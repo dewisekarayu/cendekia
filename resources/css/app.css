@@ -22,6 +22,20 @@
     }
 
     html.dark body {
+        background-color: #012428;
+    }
+
+    /* Keep page surfaces solid and clean instead of using gradient fills. */
+    [class*="bg-gradient"] {
+        background-image: none !important;
+        background-color: #f1f8f4 !important;
+    }
+
+    html.dark [class*="bg-gradient"] {
+        background-color: #102820 !important;
+    }
+
+    html.dark body {
         background-color: #0f172a;
         color: #cbd5e1;
     }
@@ -105,7 +119,7 @@
     
     /* Buttons */
     .btn-primary {
-        @apply bg-[#002B6B] hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200;
+        @apply bg-[#012428] hover:bg-[#033a40] text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200;
     }
     
     .btn-secondary {
@@ -114,7 +128,7 @@
     
     /* Input Fields */
     .input-field {
-        @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-2 focus:border-[#002B6B] focus:ring-2 focus:ring-[#002B6B]/20 transition-colors duration-200;
+        @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-600 rounded-lg px-4 py-2 focus:border-[#012428] focus:ring-2 focus:ring-[#012428]/20 transition-colors duration-200;
     }
     
     /* Tables */
@@ -187,7 +201,7 @@
     }
     
     .tab-active {
-        @apply text-[#002B6B] dark:text-blue-400 border-b-2 border-[#002B6B] dark:border-blue-400 font-semibold;
+        @apply text-[#012428] dark:text-emerald-400 border-b-2 border-[#012428] dark:border-emerald-400 font-semibold;
     }
     
     /* Alert boxes */
@@ -275,4 +289,289 @@ html.dark [class*="no-data"],
 html.dark [class*="empty"] {
     background-color: #0f172a !important;
     color: #cbd5e1 !important;
+}
+
+/* Shared green theme and resilient content sizing. */
+:root {
+    color-scheme: light;
+    --brand-green: #047857;
+    --brand-green-dark: #065f46;
+    --brand-green-soft: #ecfdf5;
+}
+
+html.dark {
+    color-scheme: dark;
+}
+
+.text-primary {
+    color: var(--brand-green) !important;
+}
+
+.bg-primary,
+.btn-primary {
+    background-color: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+}
+
+.btn-primary:hover,
+.bg-primary:hover {
+    background-color: var(--brand-green-dark) !important;
+    border-color: var(--brand-green-dark) !important;
+}
+
+.border-primary {
+    border-color: var(--brand-green) !important;
+}
+
+.btn-outline-primary {
+    color: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--brand-green) !important;
+    color: #fff !important;
+}
+
+input[type="checkbox"],
+input[type="radio"],
+progress {
+    accent-color: #059669;
+}
+
+main {
+    min-width: 0;
+}
+
+main :is(.flex, .grid) > * {
+    min-width: 0;
+}
+
+main :is(h1, h2, h3, h4, h5, h6, p, label, td, th) {
+    overflow-wrap: break-word;
+}
+
+main :is(input, select, textarea, button) {
+    min-width: 0;
+}
+
+.calendar-page .text-gray-400,
+.calendar-page .text-gray-500,
+.calendar-page .text-slate-400,
+.calendar-page .text-slate-500 {
+    color: #52665d !important;
+}
+
+.calendar-page .upcoming-event-title {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.calendar-page .upcoming-event-date {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.calendar-page .agenda-panel-heading {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.admin-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-table-scroll table {
+    min-width: 760px;
+    width: 100%;
+}
+
+.admin-table-scroll th {
+    white-space: nowrap;
+}
+
+.chart-card-header > div:last-child,
+.chart-toggle,
+.chart-toggle button,
+#chartTotalValue {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.chart-card-header > div:last-child {
+    flex-wrap: wrap;
+}
+
+.dashboard-chart-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+html.dark .calendar-page .text-gray-400,
+html.dark .calendar-page .text-gray-500,
+html.dark .calendar-page .text-slate-400,
+html.dark .calendar-page .text-slate-500 {
+    color: #c1d5ca !important;
+}
+
+.calendar-page .semester-pill {
+    background-color: #d1fae5 !important;
+    color: #065f46 !important;
+}
+
+html.dark .calendar-page .semester-pill {
+    background-color: #145943 !important;
+    color: #d1fae5 !important;
+}
+
+/* Recolor solid blue UI utilities without flattening translucent decorations. */
+:is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="bg-blue-300"]) {
+    background-color: #ecfdf5 !important;
+}
+
+:is([class~="bg-blue-400"], [class~="bg-blue-500"], [class~="bg-blue-600"]) {
+    background-color: #059669 !important;
+}
+
+:is([class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"]) {
+    background-color: #065f46 !important;
+}
+
+:is([class*="bg-blue-"][class*="/"]) {
+    background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+:is([class~="text-blue-50"], [class~="text-blue-100"]) {
+    color: #d1fae5 !important;
+}
+
+:is([class~="text-blue-200"], [class~="text-blue-300"]) {
+    color: #6ee7b7 !important;
+}
+
+:is([class~="text-blue-400"], [class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"]) {
+    color: #047857 !important;
+}
+
+:is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="border-blue-400"], [class~="border-blue-500"], [class~="border-blue-600"], [class~="border-blue-700"]) {
+    border-color: #a7f3d0 !important;
+}
+
+:is([class~="ring-blue-400"], [class~="ring-blue-500"], [class~="ring-blue-600"], [class~="focus:ring-blue-400"], [class~="focus:ring-blue-500"], [class~="focus:ring-blue-600"]) {
+    --tw-ring-color: #34d399 !important;
+}
+
+:is([class~="focus:border-blue-400"], [class~="focus:border-blue-500"], [class~="focus:border-blue-600"]):focus {
+    border-color: #10b981 !important;
+}
+
+html.dark :is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="bg-blue-300"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"]) {
+    background-color: rgba(16, 185, 129, 0.16) !important;
+}
+
+html.dark :is([class~="bg-blue-400"], [class~="bg-blue-500"], [class~="bg-blue-600"], [class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"], [class~="dark:bg-blue-300"], [class~="dark:bg-blue-400"], [class~="dark:bg-blue-500"], [class~="dark:bg-blue-600"], [class~="dark:bg-blue-700"], [class~="dark:bg-blue-800"], [class~="dark:bg-blue-900"]) {
+    background-color: #145943 !important;
+}
+
+:is([class*="from-blue-"]) {
+    --tw-gradient-from: #059669 var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgb(5 150 105 / 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+:is([class*="to-blue-"]) {
+    --tw-gradient-to: #047857 var(--tw-gradient-to-position) !important;
+}
+
+:is([class*="via-blue-"]) {
+    --tw-gradient-via: #10b981 var(--tw-gradient-via-position) !important;
+}
+
+:is([class*="text-blue-"][class*="/"]) {
+    color: #a7f3d0 !important;
+}
+
+:is([class*="border-blue-"][class*="/"]) {
+    border-color: rgba(52, 211, 153, 0.3) !important;
+}
+
+html.dark :is([class*="bg-blue-"][class*="/"]) {
+    background-color: rgba(16, 185, 129, 0.16) !important;
+}
+
+html.dark :is([class~="text-blue-400"], [class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"], [class~="dark:text-blue-300"], [class~="dark:text-blue-400"]) {
+    color: #6ee7b7 !important;
+}
+
+html.dark :is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="border-blue-400"], [class~="border-blue-500"], [class~="border-blue-600"], [class~="border-blue-700"], [class~="dark:border-blue-500"], [class~="dark:border-blue-600"], [class~="dark:border-blue-700"]) {
+    border-color: rgba(52, 211, 153, 0.3) !important;
+}
+
+html.dark [class*="from-blue-"] {
+    --tw-gradient-from: #047857 var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgb(4 120 87 / 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+html.dark [class*="to-blue-"] {
+    --tw-gradient-to: #065f46 var(--tw-gradient-to-position) !important;
+}
+
+html.dark [class*="via-blue-"] {
+    --tw-gradient-via: #059669 var(--tw-gradient-via-position) !important;
+}
+
+:is([class~="hover:bg-blue-50"], [class~="hover:bg-blue-100"], [class~="hover:bg-blue-200"]):hover {
+    background-color: #ecfdf5 !important;
+}
+
+:is([class~="hover:bg-blue-500"], [class~="hover:bg-blue-600"], [class~="hover:bg-blue-700"]):hover {
+    background-color: #047857 !important;
+}
+
+:is([class~="hover:text-blue-500"], [class~="hover:text-blue-600"], [class~="hover:text-blue-700"]):hover {
+    color: #047857 !important;
+}
+
+:is([class~="bg-[#321270]"], [class~="bg-[#002B6B]"], [class~="bg-[#1E3A8A]"], [class~="hover:bg-[#321270]/90"]:hover, [class~="hover:bg-[#002B6B]/90"]:hover) {
+    background-color: #047857 !important;
+}
+
+:is([class~="text-[#321270]"], [class~="text-[#002B6B]"], [class~="text-[#1E3A8A]"]) {
+    color: #047857 !important;
+}
+
+:is([class~="border-[#321270]"], [class~="border-[#002B6B]"], [class~="border-[#1E3A8A]"]) {
+    border-color: #047857 !important;
+}
+
+:is([class~="focus:ring-[#321270]"], [class~="focus:ring-[#002B6B]"]):focus {
+    --tw-ring-color: #34d399 !important;
+}
+
+:is([class~="focus:border-[#321270]"], [class~="focus:border-[#002B6B]"]):focus {
+    border-color: #10b981 !important;
+}
+
+html.dark :is([class~="dark:bg-[#6c2bd9]"], [class~="dark:bg-[#5b21b6]"]) {
+    background-color: #145943 !important;
+}
+
+html.dark :is([class~="dark:text-[#6c2bd9]"], [class~="dark:text-purple-600"]) {
+    color: #6ee7b7 !important;
+}
+
+html.dark :is([class~="dark:border-[#9061f9]"]) {
+    border-color: #34d399 !important;
 }
