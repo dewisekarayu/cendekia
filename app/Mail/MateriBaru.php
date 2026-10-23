@@ -25,7 +25,7 @@ class MateriBaru extends Mailable
     {
         return new Envelope(
             from: new Address($this->dosen->email, $this->dosen->name ?? 'Dosen'),
-            subject: "📚 Materi Baru: {$this->materi->judul}",
+            subject: "Materi Baru: {$this->materi->judul}",
         );
     }
 

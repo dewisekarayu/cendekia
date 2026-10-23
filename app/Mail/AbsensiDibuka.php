@@ -21,7 +21,7 @@ class AbsensiDibuka extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@cendekia.local', 'Sistem Cendekia'),
-            subject: "⏰ Sesi Presensi Dibuka - Pertemuan {$this->absensi->pertemuan_ke}",
+            subject: "Sesi Presensi Dibuka - Pertemuan {$this->absensi->pertemuan_ke}",
         );
     }
 

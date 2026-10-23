@@ -21,7 +21,7 @@ class TugasBaru extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@cendekia.local', 'Sistem Cendekia'),
-            subject: "📝 Tugas Baru: {$this->tugas->judul}",
+            subject: "Tugas Baru: {$this->tugas->judul}",
         );
     }
 

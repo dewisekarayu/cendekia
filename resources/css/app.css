@@ -347,8 +347,8 @@ main :is(.flex, .grid) > * {
     min-width: 0;
 }
 
-main :is(h1, h2, h3, h4, h5, h6, p, label, td, th, .text-sm, .text-xs) {
-    overflow-wrap: anywhere;
+main :is(h1, h2, h3, h4, h5, h6, p, label, td, th) {
+    overflow-wrap: break-word;
 }
 
 main :is(input, select, textarea, button) {
@@ -369,18 +369,53 @@ main :is(input, select, textarea, button) {
     -webkit-line-clamp: 2;
     line-height: 1.35;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .calendar-page .upcoming-event-date {
     min-width: 0;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .calendar-page .agenda-panel-heading {
     min-width: 0;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+}
+
+.admin-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-table-scroll table {
+    min-width: 760px;
+    width: 100%;
+}
+
+.admin-table-scroll th {
+    white-space: nowrap;
+}
+
+.chart-card-header > div:last-child,
+.chart-toggle,
+.chart-toggle button,
+#chartTotalValue {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.chart-card-header > div:last-child {
+    flex-wrap: wrap;
+}
+
+.dashboard-chart-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
 }
 
 html.dark .calendar-page .text-gray-400,

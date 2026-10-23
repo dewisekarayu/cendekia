@@ -23,7 +23,7 @@ class PengumpulanTugas extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@cendekia.local', 'Sistem Cendekia'),
-            subject: "📬 Ada Tugas Baru yang Dikumpulkan: {$this->submission->tugas->judul}",
+            subject: "Ada Tugas Baru yang Dikumpulkan: {$this->submission->tugas->judul}",
         );
     }
 

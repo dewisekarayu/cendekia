@@ -330,12 +330,12 @@ class JadwalController extends Controller
             $pengumuman = Pengumuman::create([
                 'kelas_perkuliahan_id' => $kelas->id,
                 'dibuat_oleh'          => $user->id,
-                'judul'                => '🔄 Kelas Pengganti: ' . $kelas->mataKuliah->nama_mk,
+                'judul'                => 'Kelas Pengganti: ' . $kelas->mataKuliah->nama_mk,
                 'isi'                  => "Diberitahukan kepada seluruh mahasiswa bahwa perkuliahan **{$kelas->mataKuliah->nama_mk}** ({$kelas->kode_kelas}) akan diadakan kelas pengganti dengan jadwal sebagai berikut:\n\n"
-                                        . "📅 **Tanggal:** {$tanggalFormatted}\n"
-                                        . "🕐 **Jam:** {$jamRange}\n"
-                                        . "🏫 **Ruangan:** {$validated['ruangan_pengganti']}\n\n"
-                                        . "📝 **Alasan:** " . ($validated['alasan_pengganti'] ?: '-') . "\n\n"
+                                        . "**Tanggal:** {$tanggalFormatted}\n"
+                                        . "**Jam:** {$jamRange}\n"
+                                        . "**Ruangan:** {$validated['ruangan_pengganti']}\n\n"
+                                        . "**Alasan:** " . ($validated['alasan_pengganti'] ?: '-') . "\n\n"
                                         . "Mohon untuk hadir tepat waktu. Terima kasih.",
                 'untuk_semua'          => false,
             ]);

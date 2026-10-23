@@ -15,7 +15,7 @@
 
     <div class="info-box">
         <p><strong>Tugas:</strong><br>{{ $tugas->judul_tugas }}</p>
-        <p style="margin-top: 12px;"><strong>⭐ Nilai Anda:</strong><br>
+        <p style="margin-top: 12px;"><strong>Nilai Anda:</strong><br>
             <span style="font-size: 28px; font-weight: 800; color: #002B6B;">{{ $nilai ?? 'Belum Dinilai' }}</span>
         </p>
         <p style="margin-top: 12px;"><strong>Dinilai pada:</strong><br>

@@ -36,7 +36,7 @@ class AbsensiTestSeeder extends Seeder
             ]
         );
 
-        $this->command->info('✓ Absensi untuk hari ini sudah dibuat');
+        $this->command->info('Absensi untuk hari ini sudah dibuat');
         $this->command->info('  Kelas: ' . $kelas->mataKuliah->nama_mk);
         $this->command->info('  Tanggal: ' . $absensi->tanggal->format('d-m-Y'));
         $this->command->info('  Pertemuan: ' . $absensi->pertemuan_ke);
