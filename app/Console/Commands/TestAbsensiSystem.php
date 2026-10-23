@@ -67,10 +67,10 @@ class TestAbsensiSystem extends Command
                 'session_status' => 'draft',
                 'rangkuman' => 'Test rangkuman materi',
             ]);
-            $this->line("✓ Session created: ID {$absensi->id}");
+            $this->line("Session created: ID {$absensi->id}");
             $this->line("  Status: {$absensi->session_status}");
         } catch (\Exception $e) {
-            $this->error("✗ Failed to create session: " . $e->getMessage());
+            $this->error("Failed to create session: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -79,11 +79,11 @@ class TestAbsensiSystem extends Command
         $this->comment('2. Testing Open Session');
         try {
             $absensi->bukaSession();
-            $this->line("✓ Session opened");
+            $this->line("Session opened");
             $this->line("  Status: {$absensi->session_status}");
             $this->line("  Waktu buka: {$absensi->waktu_buka}");
         } catch (\Exception $e) {
-            $this->error("✗ Failed to open session: " . $e->getMessage());
+            $this->error("Failed to open session: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -97,11 +97,11 @@ class TestAbsensiSystem extends Command
                 'status' => 'hadir',
                 'waktu_absensi' => now(),
             ]);
-            $this->line("✓ Student check-in recorded");
+            $this->line("Student check-in recorded");
             $this->line("  Status: {$attendance->status}");
             $this->line("  Waktu absensi: {$attendance->waktu_absensi}");
         } catch (\Exception $e) {
-            $this->error("✗ Failed to record check-in: " . $e->getMessage());
+            $this->error("Failed to record check-in: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -110,7 +110,7 @@ class TestAbsensiSystem extends Command
         $this->comment('4. Testing Attendance Statistics');
         try {
             $stats = $absensi->getAttendanceStats();
-            $this->line("✓ Attendance stats:");
+            $this->line("Attendance stats:");
             $this->table(
                 ['Metric', 'Value'],
                 [
@@ -123,7 +123,7 @@ class TestAbsensiSystem extends Command
                 ]
             );
         } catch (\Exception $e) {
-            $this->error("✗ Failed to get stats: " . $e->getMessage());
+            $this->error("Failed to get stats: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -141,9 +141,9 @@ class TestAbsensiSystem extends Command
                 'session_status' => 'buka',
                 'rangkuman' => 'Test rangkuman kedua',
             ]);
-            $this->line("✓ Second session created: ID {$absensi2->id}");
+            $this->line("Second session created: ID {$absensi2->id}");
         } catch (\Exception $e) {
-            $this->error("✗ Failed to create second session: " . $e->getMessage());
+            $this->error("Failed to create second session: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -158,11 +158,11 @@ class TestAbsensiSystem extends Command
                 'keterangan' => 'Ada keperluan keluarga',
                 'waktu_absensi' => now(),
             ]);
-            $this->line("✓ Student izin recorded");
+            $this->line("Student izin recorded");
             $this->line("  Status: {$attendance2->status}");
             $this->line("  Keterangan: {$attendance2->keterangan}");
         } catch (\Exception $e) {
-            $this->error("✗ Failed to record izin: " . $e->getMessage());
+            $this->error("Failed to record izin: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -171,11 +171,11 @@ class TestAbsensiSystem extends Command
         $this->comment('7. Testing Close Session');
         try {
             $absensi2->tutupSession();
-            $this->line("✓ Session closed");
+            $this->line("Session closed");
             $this->line("  Status: {$absensi2->session_status}");
             $this->line("  Waktu tutup: {$absensi2->waktu_tutup}");
         } catch (\Exception $e) {
-            $this->error("✗ Failed to close session: " . $e->getMessage());
+            $this->error("Failed to close session: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -191,7 +191,7 @@ class TestAbsensiSystem extends Command
                 ->groupBy('status')
                 ->map->count();
 
-            $this->line("✓ Student attendance summary:");
+            $this->line("Student attendance summary:");
             $this->table(
                 ['Status', 'Count'],
                 [
@@ -201,7 +201,7 @@ class TestAbsensiSystem extends Command
                 ]
             );
         } catch (\Exception $e) {
-            $this->error("✗ Failed to get summary: " . $e->getMessage());
+            $this->error("Failed to get summary: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -209,7 +209,7 @@ class TestAbsensiSystem extends Command
         // Test 9: Authorization check
         $this->comment('9. Testing Authorization');
         try {
-            $this->line("✓ Policy checks (Authorization):");
+            $this->line("Policy checks (Authorization):");
             $this->line("  - Dosen dapat view session: " . ($dosen->can('view', $absensi) ? 'YES' : 'NO'));
             $this->line("  - Dosen dapat manage session: " . ($dosen->can('manage', $absensi) ? 'YES' : 'NO'));
             $this->line("  - Mahasiswa dapat view session: " . ($mahasiswa->can('view', $absensi) ? 'YES' : 'NO'));
@@ -217,7 +217,7 @@ class TestAbsensiSystem extends Command
             $absensi->tutupSession();
             $this->line("  - Mahasiswa dapat checkIn (closed): " . ($mahasiswa->can('checkIn', $absensi) ? 'YES' : 'NO'));
         } catch (\Exception $e) {
-            $this->error("✗ Failed authorization test: " . $e->getMessage());
+            $this->error("Failed authorization test: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -237,19 +237,19 @@ class TestAbsensiSystem extends Command
                 'rangkuman' => 'Test notifikasi email',
             ]);
 
-            $this->line("✓ Test session created: ID {$absensi3->id}");
+            $this->line("Test session created: ID {$absensi3->id}");
             
             // Dispatch notification using NotificationService
             \App\Services\NotificationService::notifyAbsensiDibuka($absensi3, $dosen);
             
-            $this->line("✓ Notification dispatched to queue");
+            $this->line("Notification dispatched to queue");
             $this->line("  Check logs at: storage/logs/laravel.log");
             
             // Get the queued jobs count
             $queuedJobs = \DB::table('jobs')->count();
             $this->line("  Queued jobs: {$queuedJobs}");
         } catch (\Exception $e) {
-            $this->error("✗ Failed notification test: " . $e->getMessage());
+            $this->error("Failed notification test: " . $e->getMessage());
             return 1;
         }
         $this->line('');
@@ -277,7 +277,7 @@ class TestAbsensiSystem extends Command
         // Keep it simple - delete recent sessions
         Absensi::whereDate('created_at', today())->delete();
         
-        $this->info('✓ Test data cleaned');
+        $this->info('Test data cleaned');
         $this->line('');
     }
 }

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="email-header">
-    <h1>💬 Pesan Baru di Forum</h1>
+    <h1>Pesan Baru di Forum</h1>
     <p>{{ $kelas->mataKuliah->nama_mk ?? 'Forum Diskusi' }}</p>
 </div>
 
@@ -14,9 +14,9 @@
     <p><strong>{{ $sender->name }}</strong> telah memposting pesan baru di forum diskusi kelas Anda:</p>
 
     <div class="info-box">
-        <p><strong>💬 Judul Topik:</strong><br>{{ $forum->judul }}</p>
-        <p style="margin-top: 12px;"><strong>👤 Dari:</strong><br>{{ $sender->name }}</p>
-        <p style="margin-top: 12px;"><strong>🏫 Kelas:</strong><br>{{ $kelas->mataKuliah->nama_mk }}</p>
+        <p><strong>Judul Topik:</strong><br>{{ $forum->judul }}</p>
+        <p style="margin-top: 12px;"><strong>Dari:</strong><br>{{ $sender->name }}</p>
+        <p style="margin-top: 12px;"><strong>Kelas:</strong><br>{{ $kelas->mataKuliah->nama_mk }}</p>
     </div>
 
     <div class="content-section">

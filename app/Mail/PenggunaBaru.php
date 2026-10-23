@@ -24,7 +24,7 @@ class PenggunaBaru implements ShouldQueue
     {
         return new Envelope(
             from: new Address('noreply@cendekia.local', 'Admin Cendekia'),
-            subject: "👤 Pengguna Baru Terdaftar: {$this->user->name}",
+            subject: "Pengguna Baru Terdaftar: {$this->user->name}",
         );
     }
 

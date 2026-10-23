@@ -1,4 +1,4 @@
-@extends('layouts.portal')
+﻿@extends('layouts.portal')
 
 @section('title', 'Support Tickets - Admin')
 
@@ -10,7 +10,7 @@
             <h1 class="text-3xl font-extrabold text-gray-900">Support Tickets</h1>
             <p class="text-gray-600 mt-1">Kelola semua support tickets dari mahasiswa</p>
         </div>
-        <a href="{{ route('admin.help-center.dashboard') }}" class="text-sm font-semibold text-[#002B6B] hover:text-blue-800">
+        <a href="{{ route('admin.help-center.dashboard') }}" class="text-sm font-semibold text-[#012428] hover:text-blue-800">
             ← Kembali
         </a>
     </div>
@@ -27,14 +27,14 @@
                         name="search"
                         placeholder="Nama, email, subject..."
                         value="{{ request('search') }}"
-                        class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#002B6B] focus:border-transparent outline-none"
+                        class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#012428] focus:border-transparent outline-none"
                     />
                 </div>
 
                 <!-- Status Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select name="status" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#002B6B] focus:border-transparent outline-none">
+                    <select name="status" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#012428] focus:border-transparent outline-none">
                         <option value="">Semua Status</option>
                         @foreach($statuses as $status)
                             <option value="{{ $status }}" {{ request('status') === $status ? 'selected' : '' }}>
@@ -54,7 +54,7 @@
                 <!-- Category Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                    <select name="category" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#002B6B] focus:border-transparent outline-none">
+                    <select name="category" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#012428] focus:border-transparent outline-none">
                         <option value="">Semua Kategori</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>
@@ -66,7 +66,7 @@
 
                 <!-- Submit Button -->
                 <div class="flex items-end gap-2">
-                    <button type="submit" class="flex-1 px-4 py-2 bg-[#002B6B] hover:bg-blue-800 text-white rounded-lg font-medium text-sm transition">
+                    <button type="submit" class="flex-1 px-4 py-2 bg-[#012428] hover:bg-[#033a40] text-white rounded-lg font-medium text-sm transition">
                         Filter
                     </button>
                     @if(request()->filled('search') || request()->filled('status') || request()->filled('category'))
@@ -81,8 +81,8 @@
 
     <!-- TICKETS TABLE -->
     <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="admin-table-scroll">
+            <table class="w-full min-w-[760px]">
                 <thead>
                     <tr class="border-b border-gray-200 bg-gray-50">
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Nama & Email</th>
@@ -129,7 +129,7 @@
                                 {{ $ticket->created_at->format('d M Y') }}
                             </td>
                             <td class="px-6 py-4 text-sm space-x-2">
-                                <a href="{{ route('admin.help-center.ticket-detail', $ticket->id) }}" class="text-[#002B6B] hover:text-blue-800 font-semibold">
+                                <a href="{{ route('admin.help-center.ticket-detail', $ticket->id) }}" class="text-[#012428] hover:text-blue-800 font-semibold">
                                     Lihat
                                 </a>
                             </td>

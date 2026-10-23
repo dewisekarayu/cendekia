@@ -26,7 +26,7 @@ class NilaiBaru extends Mailable
     {
         return new Envelope(
             from: new Address($this->dosen->email, $this->dosen->name ?? 'Dosen'),
-            subject: "✅ Nilai Tugas Anda: {$this->submission->tugas->judul_tugas}",
+            subject: "Nilai Tugas Anda: {$this->submission->tugas->judul_tugas}",
         );
     }
 

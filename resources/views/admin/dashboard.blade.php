@@ -8,9 +8,7 @@
 <div class="space-y-4">
 
     {{-- HERO WELCOME BANNER --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] via-[#09357a] to-[#144896] dark:from-slate-900 dark:via-indigo-950 dark:to-blue-950 px-6 py-5 sm:px-8 shadow-md text-white">
-        <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
-        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-blue-400/10 blur-xl"></div>
+    <div class="admin-dashboard-hero relative overflow-hidden rounded-2xl bg-[#064e3b] px-6 py-5 sm:px-8 shadow-md text-white">
         
         <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div class="min-w-0 flex-1">
@@ -21,7 +19,7 @@
                         </svg>
                         {{ now()->translatedFormat('l, d F Y') }}
                     </span>
-                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-blue-100 backdrop-blur-sm">
+                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-emerald-100 backdrop-blur-sm">
                         Live Administration
                     </span>
                     <span class="inline-flex items-center gap-1 rounded-lg border border-emerald-400/30 bg-emerald-500/20 px-2.5 py-1 text-xs font-bold text-emerald-200">
@@ -34,7 +32,7 @@
                     Selamat Datang, {{ auth()->user()->name ?? 'Admin Cendekia' }}
                 </h1>
 
-                <p class="mt-2 text-xs sm:text-sm text-blue-100/90 leading-relaxed max-w-2xl font-medium">
+                <p class="mt-2 text-xs sm:text-sm text-emerald-100/90 leading-relaxed max-w-2xl font-medium">
                     Platform Cendekia memantau <strong class="text-white">{{ number_format($totalAktivitas ?? 0) }} aktivitas</strong> perkuliahan hari ini. Seluruh operasional akademik berjalan normal dan terpantau dengan optimal.
                 </p>
             </div>
@@ -42,15 +40,15 @@
             {{-- Quick Action Buttons in Hero --}}
             <div class="flex flex-row flex-wrap lg:flex-nowrap gap-2.5 shrink-0">
                 <a href="{{ route('admin.dosen.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition text-decoration-none">
-                    <i class="bi bi-person-badge text-blue-200"></i>
+                    <i class="bi bi-person-badge text-emerald-200"></i>
                     Data Dosen
                 </a>
                 <a href="{{ route('admin.mahasiswa.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition text-decoration-none">
-                    <i class="bi bi-people-fill text-blue-200"></i>
+                    <i class="bi bi-people-fill text-emerald-200"></i>
                     Data Mahasiswa
                 </a>
                 <a href="{{ route('admin.program-studi.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-sm transition text-decoration-none">
-                    <i class="bi bi-diagram-3 text-blue-200"></i>
+                    <i class="bi bi-diagram-3 text-emerald-200"></i>
                     Program Studi
                 </a>
             </div>
@@ -60,12 +58,12 @@
     {{-- STATS SUMMARY KPI CARDS --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {{-- Total Mahasiswa --}}
-        <a href="{{ route('admin.mahasiswa.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all duration-200 text-decoration-none">
+        <a href="{{ route('admin.mahasiswa.index') }}" class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-[#012428] dark:hover:border-emerald-500 hover:shadow-md transition-all duration-200 text-decoration-none">
             <div class="flex items-center justify-between mb-2">
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#002B6B] dark:text-blue-300 border border-blue-100 dark:border-blue-900/50 group-hover:scale-105 transition-transform">
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-[#012428] dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50 group-hover:scale-105 transition-transform">
                     <i class="bi bi-people-fill text-lg"></i>
                 </div>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
                     Aktif
                 </span>
             </div>
@@ -73,8 +71,8 @@
                 <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-0.5">Total Mahasiswa</p>
                 <p class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-1.5">{{ number_format($totalMahasiswa ?? 0) }}</p>
                 <div class="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-slate-700/60">
-                    <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Kelola Mahasiswa</span>
-                    <i class="bi bi-arrow-right text-xs text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform"></i>
+                    <span class="text-xs font-semibold text-[#012428] dark:text-emerald-400">Kelola Mahasiswa</span>
+                    <i class="bi bi-arrow-right text-xs text-[#012428] dark:text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
                 </div>
             </div>
         </a>
@@ -145,7 +143,7 @@
 
         {{-- Aktivitas Pengguna (Chart Card - 2 Cols) --}}
         <div class="lg:col-span-2 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm transition-colors duration-200">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100 dark:border-slate-700/60">
+            <div class="dashboard-chart-header flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100 dark:border-slate-700/60">
                 <div>
                     <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-blue-600"></span>
@@ -154,10 +152,10 @@
                     <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Grafik interaksi mahasiswa dan dosen berdasarkan data aktivitas portal LMS</p>
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
+                <div class="dashboard-chart-controls">
+                    <div class="flex shrink-0 items-center gap-2 whitespace-nowrap bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total:</span>
-                        <strong id="chartTotalValue" class="text-xs font-black text-[#002B6B] dark:text-blue-400">0</strong>
+                        <strong id="chartTotalValue" class="text-xs font-black text-[#012428] dark:text-emerald-400">0</strong>
                     </div>
 
                     <div class="chart-toggle" id="chartRangeToggle">
@@ -182,7 +180,7 @@
                     </h2>
                     <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Jumlah mahasiswa per prodi</p>
                 </div>
-                <span class="rounded-xl bg-blue-50 dark:bg-blue-950/50 px-3 py-1 text-xs font-bold text-[#002B6B] dark:text-blue-300">
+                <span class="rounded-xl bg-emerald-50 dark:bg-emerald-950/50 px-3 py-1 text-xs font-bold text-[#012428] dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
                     {{ number_format($totalMahasiswa ?? 0) }} Total
                 </span>
             </div>
@@ -196,10 +194,10 @@
                     <div data-prodi-item class="p-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40">
                         <div class="flex items-center justify-between text-xs font-bold mb-1.5">
                             <span class="text-slate-700 dark:text-slate-300 truncate pr-2">{{ $prodi['label'] }}</span>
-                            <span class="text-[#002B6B] dark:text-blue-400 shrink-0">{{ number_format($value) }} ({{ $percentage }}%)</span>
+                            <span class="text-[#012428] dark:text-emerald-400 shrink-0">{{ number_format($value) }} ({{ $percentage }}%)</span>
                         </div>
                         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-                            <div class="bg-gradient-to-r from-[#002B6B] to-[#38BDF8] h-2 rounded-full" style="width: {{ $percentage }}%"></div>
+                            <div class="bg-gradient-to-r from-[#012428] to-[#10B981] h-2 rounded-full" style="width: {{ $percentage }}%"></div>
                         </div>
                     </div>
                 @empty
@@ -236,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
             button.type = 'button';
             button.textContent = page;
             button.setAttribute('aria-label', 'Halaman ' + page);
-            button.className = 'h-8 min-w-8 rounded-lg border border-slate-200 dark:border-slate-700 px-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:border-[#002B6B] hover:text-[#002B6B] dark:hover:text-blue-300 transition';
+            button.className = 'h-8 min-w-8 rounded-lg border border-slate-200 dark:border-slate-700 px-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:border-[#012428] hover:text-[#012428] dark:hover:text-emerald-300 transition';
             button.addEventListener('click', function () {
                 const start = (page - 1) * prodiPageSize;
 
@@ -246,9 +244,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 prodiPagination.querySelectorAll('button').forEach((pageButton, index) => {
                     const isActive = index + 1 === page;
-                    pageButton.classList.toggle('bg-[#002B6B]', isActive);
+                    pageButton.classList.toggle('bg-[#012428]', isActive);
                     pageButton.classList.toggle('text-white', isActive);
-                    pageButton.classList.toggle('border-[#002B6B]', isActive);
+                    pageButton.classList.toggle('border-[#012428]', isActive);
                     pageButton.setAttribute('aria-current', isActive ? 'page' : 'false');
                 });
             });
@@ -259,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const ctx = document.getElementById('aktivitasChart').getContext('2d');
-    const palette = ['#002B6B', '#0EA5E9', '#10B981', '#F59E0B', '#EF4444', '#7C3AED', '#14B8A6'];
+    const palette = ['#012428', '#0D9488', '#10B981', '#F59E0B', '#EF4444', '#065F46', '#14B8A6'];
     const muted = '#E8EEF8';
     const totalValue = document.getElementById('chartTotalValue');
 
@@ -295,9 +293,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function makeGradient() {
         const gradient = ctx.createLinearGradient(0, 0, 0, 320);
-        gradient.addColorStop(0, '#38BDF8');
-        gradient.addColorStop(0.55, '#002B6B');
-        gradient.addColorStop(1, '#0F172A');
+        gradient.addColorStop(0, '#10B981');
+        gradient.addColorStop(0.55, '#012428');
+        gradient.addColorStop(1, '#001416');
         return gradient;
     }
 
@@ -321,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: values,
                 backgroundColor: values.map((value, index) => value === max && value > 0 ? gradient : palette[index % palette.length]),
                 hoverBackgroundColor: values.map((value, index) => value === 0 ? muted : palette[index % palette.length]),
-                borderColor: 'rgba(15, 23, 42, 0.06)',
+                borderColor: 'rgba(1, 36, 40, 0.08)',
                 borderWidth: 1,
                 borderRadius: { topLeft: 10, topRight: 10, bottomLeft: 4, bottomRight: 4 },
                 borderSkipped: false,
@@ -347,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#0F172A',
+                    backgroundColor: '#012428',
                     titleColor: '#FFFFFF',
                     bodyColor: '#E2E8F0',
                     borderColor: 'rgba(255,255,255,0.12)',
@@ -370,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 y: {
                     beginAtZero: true,
                     grace: '12%',
-                    grid: { color: 'rgba(0, 43, 107, 0.06)', drawTicks: false },
+                    grid: { color: 'rgba(1, 36, 40, 0.06)', drawTicks: false },
                     ticks: { color: '#94A3B8', padding: 10, font: { family: 'Figtree' }, callback: value => formatNumber(value) },
                     border: { display: false },
                 },

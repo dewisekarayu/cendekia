@@ -103,7 +103,7 @@
 
 <div class="settings-container">
     <div class="settings-header">
-        <h3>⚙️ Pengaturan Global Sistem</h3>
+        <h3><i class="bi bi-gear me-2" aria-hidden="true"></i>Pengaturan Global Sistem</h3>
         <p>Kelola konfigurasi inti aplikasi Cendekia LMS. Perubahan akan berdampak pada seluruh pengguna.</p>
     </div>
 

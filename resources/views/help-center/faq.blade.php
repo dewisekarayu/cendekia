@@ -15,7 +15,8 @@
 
         <div class="relative z-10 text-center sm:text-left">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-blue-100 mb-4 backdrop-blur-sm border border-white/10">
-                {{ $isEn ? '🚀 LMS Cendekia Information Center' : '🚀 Pusat Informasi LMS Cendekia' }}
+                <i class="bi bi-info-circle" aria-hidden="true"></i>
+                {{ $isEn ? 'LMS Cendekia Information Center' : 'Pusat Informasi LMS Cendekia' }}
             </span>
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4 leading-tight">
                 {{ $isEn ? 'FAQ & Help Center' : 'FAQ & Pusat Bantuan' }}
@@ -86,7 +87,7 @@
     {{-- ============ SUPPORT SECTION ============ --}}
     <div class="mb-6">
         <div class="mb-6 sm:mb-8">
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{{ $isEn ? '💬 Still Have Questions?' : '💬 Masih Punya Pertanyaan?' }}</h2>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight"><i class="bi bi-chat-dots me-1" aria-hidden="true"></i>{{ $isEn ? 'Still Have Questions?' : 'Masih Punya Pertanyaan?' }}</h2>
             <p class="text-sm text-slate-500 mt-1">{{ $isEn ? 'Our support team is ready to assist with your technical inquiries.' : 'Tim support kami siap membantu kendala teknis Anda.' }}</p>
         </div>
 
@@ -146,7 +147,7 @@
                     <h4 class="font-bold text-slate-900 text-lg mb-2">{{ $isEn ? 'Live Chat with Support' : 'Chat Live dengan Support' }}</h4>
                     <p class="text-sm text-slate-600 leading-relaxed mb-8">{{ $isEn ? 'Real-time conversation with our support team for urgent matters. Instant response during office hours 08:00 - 17:00.' : 'Obrolan real-time dengan tim support untuk pertanyaan mendesak. Respons instan pada jam kerja 08:00 - 17:00.' }}</p>
                 </div>
-                <button type="button" onclick="alert('{{ $isEn ? '💬 Live Chat feature is currently being prepared. Please use other options to contact us.' : '💬 Fitur Live Chat sedang dipersiapkan. Gunakan opsi lain untuk menghubungi kami.' }}')" class="group/btn relative w-full text-xs font-bold tracking-wider uppercase px-5 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-200 flex items-center justify-center gap-2">
+                <button type="button" onclick="alert('{{ $isEn ? 'Live Chat feature is currently being prepared. Please use other options to contact us.' : 'Fitur Live Chat sedang dipersiapkan. Gunakan opsi lain untuk menghubungi kami.' }}')" class="group/btn relative w-full text-xs font-bold tracking-wider uppercase px-5 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-200 flex items-center justify-center gap-2">
                     {{ $isEn ? 'Start Chat' : 'Mulai Chat' }}
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -323,7 +324,7 @@
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        setStatus(isEn ? '⏳ Submitting your question...' : '⏳ Sedang mengirimkan pertanyaan Anda...', 'info');
+        setStatus(isEn ? 'Submitting your question...' : 'Sedang mengirimkan pertanyaan Anda...', 'info');
 
         try {
             const res = await fetch("{{ route('help-center.store-ticket') }}", {
@@ -337,14 +338,14 @@
             const data = await res.json();
 
             if (res.ok) {
-                setStatus(isEn ? '✓ Success! Your question has been submitted. Please check your email periodically.' : '✓ Sukses! Pertanyaan Anda berhasil terkirim. Silakan cek email secara berkala.', 'success');
+                setStatus(isEn ? 'Success! Your question has been submitted. Please check your email periodically.' : 'Sukses! Pertanyaan Anda berhasil terkirim. Silakan cek email secara berkala.', 'success');
                 form.reset();
                 setTimeout(hideModal, 2200);
             } else {
-                setStatus(isEn ? '❌ Validation failed. Please make sure all fields are filled correctly.' : '❌ Validasi gagal. Pastikan semua data sudah diisi dengan benar.', 'error');
+                setStatus(isEn ? 'Validation failed. Please make sure all fields are filled correctly.' : 'Validasi gagal. Pastikan semua data sudah diisi dengan benar.', 'error');
             }
         } catch (err) {
-            setStatus(isEn ? '❌ Network error occurred. Please try again.' : '❌ Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
+            setStatus(isEn ? 'Network error occurred. Please try again.' : 'Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
         }
     });
 })();

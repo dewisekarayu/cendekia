@@ -127,7 +127,7 @@
                                 class="w-full px-4 py-3 rounded-lg border border-gray-250 dark:border-slate-700 bg-transparent dark:bg-slate-900/60 text-gray-800 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 text-sm focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none resize-none transition-all"
                             ></textarea>
                             <p class="text-[11px] text-gray-400 dark:text-slate-400 mt-2">
-                                💡 Mengirim tanggapan ini akan mengubah status tiket menjadi **Responded** dan otomatis mengirimkan email salinan ke pengguna.
+                                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>Mengirim tanggapan ini akan mengubah status tiket menjadi <strong>Responded</strong> dan otomatis mengirimkan email salinan ke pengguna.
                             </p>
                         </div>
                         <div class="flex items-center justify-end gap-3 pt-2">

@@ -149,8 +149,8 @@
                                 <select id="session_status" name="session_status" required
                                     class="w-full pl-3.5 pr-10 py-2.5 text-sm font-bold text-[#1E1B2E] bg-slate-50 rounded-xl border-2 @error('session_status') border-rose-300 focus:border-rose-500 @else border-slate-200 focus:border-[#720c16] @enderror focus:bg-white outline-none transition duration-200 appearance-none cursor-pointer">
                                     <option value="draft" class="text-amber-600 font-bold" {{ old('session_status', $absensi->session_status) === 'draft' ? 'selected' : '' }}>◴ Draft (Sesi Belum Diaktifkan / Mahasiswa Dikunci)</option>
-                                    <option value="buka" class="text-emerald-600 font-bold" {{ old('session_status', $absensi->session_status) === 'buka' ? 'selected' : '' }}>✓ Dibuka (Mahasiswa Dapat Melakukan Presensi)</option>
-                                    <option value="tutup" class="text-rose-600 font-bold" {{ old('session_status', $absensi->session_status) === 'tutup' ? 'selected' : '' }}>✗ Ditutup (Sistem Presensi Dikunci Semuanya)</option>
+                                    <option value="buka" class="text-emerald-600 font-bold" {{ old('session_status', $absensi->session_status) === 'buka' ? 'selected' : '' }}>Dibuka (Mahasiswa Dapat Melakukan Presensi)</option>
+                                    <option value="tutup" class="text-rose-600 font-bold" {{ old('session_status', $absensi->session_status) === 'tutup' ? 'selected' : '' }}>Ditutup (Sistem Presensi Dikunci Semuanya)</option>
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

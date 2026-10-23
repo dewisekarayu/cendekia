@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Detail Tahun Akademik')
 
@@ -9,16 +9,16 @@
             <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('admin.tahun-akademik.index') }}" class="text-decoration-none text-muted">Tahun Akademik</a></li>
-                <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 500;">Detail Semester</li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 500;">Detail Semester</li>
             </ol>
         </nav>
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <div>
-                <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Detail Tahun Akademik</h1>
+                <h1 class="page-title h3 fw-bold mb-1" style="color: #012428;">Detail Tahun Akademik</h1>
                 <p class="text-muted mb-0" style="font-size: 0.9rem;">Informasi lengkap terkait periode akademik.</p>
             </div>
             <div>
-                <a href="{{ route('admin.tahun-akademik.edit', $tahun_akademik->id) }}" class="btn btn-primary d-flex align-items-center gap-2 fw-semibold px-4 py-2" style="background-color: #002B6B; border: none; border-radius: 8px;">
+                <a href="{{ route('admin.tahun-akademik.edit', $tahun_akademik->id) }}" class="btn btn-primary d-flex align-items-center gap-2 fw-semibold px-4 py-2" style="background-color: #012428; border: none; border-radius: 8px;">
                     <i class="bi bi-pencil-square"></i>
                     Edit Data
                 </a>

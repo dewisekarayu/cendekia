@@ -1,5 +1,5 @@
 <!-- Menggunakan w-80 untuk ruang sidebar yang jauh lebih luas -->
-<aside class="admin-sidebar w-80 bg-[#002B6B] text-white/75 h-screen flex flex-col p-4 border-r border-white/10 select-none" id="adminSidebar">
+<aside class="admin-sidebar w-80 bg-[#012428] text-white/75 h-screen flex flex-col p-4 border-r border-white/10 select-none" id="adminSidebar">
     {{-- Trik rahasia buat ngilangin scrollbar bawaan browser tapi menu tetep bisa di-scroll --}}
     <style>
         .no-scrollbar::-webkit-scrollbar {

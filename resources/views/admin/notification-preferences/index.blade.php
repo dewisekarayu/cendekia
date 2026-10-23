@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Pengaturan Preferensi Notifikasi')
 @section('activeMenu', 'Pengaturan')
@@ -10,12 +10,12 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#002B6B] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#012428] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
                     <i class="bi bi-sliders text-xs"></i>
                     Konfigurasi Sistem
                 </span>
             </div>
-            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
+            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#012428] dark:text-white">
                 Pengaturan Notifikasi Pengguna
             </h1>
             <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
@@ -131,7 +131,7 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-[#002B6B] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-800/60">
+                                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-[#012428] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-800/60">
                                             {{ strtoupper(substr($user->name, 0, 1)) }}
                                         </div>
                                         <div>

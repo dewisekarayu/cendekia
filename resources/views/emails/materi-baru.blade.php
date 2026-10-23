@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="email-header">
-    <h1>📚 Materi Baru Tersedia</h1>
+    <h1>Materi Baru Tersedia</h1>
     <p>{{ $kelas->mataKuliah->nama_mk ?? 'Materi Pembelajaran' }}</p>
 </div>
 
@@ -14,9 +14,9 @@
     <p>Dosen Anda telah mengunggah materi pembelajaran baru. Silakan buka dan pelajari materi berikut:</p>
 
     <div class="info-box">
-        <p><strong>📖 Judul Materi:</strong><br>{{ $materi->judul }}</p>
-        <p style="margin-top: 12px;"><strong>🏫 Kelas:</strong><br>{{ $kelas->mataKuliah->nama_mk }} ({{ $kelas->kode_kelas }})</p>
-        <p style="margin-top: 12px;"><strong>👨‍🏫 Dosen:</strong><br>{{ $dosen->name }}</p>
+        <p><strong>Judul Materi:</strong><br>{{ $materi->judul }}</p>
+        <p style="margin-top: 12px;"><strong>Kelas:</strong><br>{{ $kelas->mataKuliah->nama_mk }} ({{ $kelas->kode_kelas }})</p>
+        <p style="margin-top: 12px;"><strong>Dosen:</strong><br>{{ $dosen->name }}</p>
     </div>
 
     @if($materi->deskripsi)

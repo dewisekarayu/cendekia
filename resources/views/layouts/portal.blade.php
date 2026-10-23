@@ -80,11 +80,12 @@
         }
 
         /* Stats numbers and dynamic background boxes in dark mode */
+        html.dark .text-\[\#012428\],
         html.dark .text-\[\#002B6B\],
         html.dark .text-indigo-900,
         html.dark .text-blue-900,
         html.dark .text-violet-900 {
-            color: #60a5fa !important;
+            color: #6ee7b7 !important;
         }
 
         html.dark .text-\[\#720c16\] {
@@ -158,8 +159,9 @@
 
         /* Contextual Help Box Overrides */
         html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 {
-            background-image: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
-            border-color: #312e81 !important;
+            background-image: none !important;
+            background-color: #102820 !important;
+            border-color: #315747 !important;
         }
         html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 p,
         html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 span,
@@ -172,11 +174,13 @@
 
         /* Alert Box Gradients in Dark Mode */
         html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 {
-            background-image: linear-gradient(to right, #064e3b, #022c22) !important;
+            background-image: none !important;
+            background-color: #102820 !important;
             border-color: #047857 !important;
         }
         html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 {
-            background-image: linear-gradient(to right, #78350f, #451a03) !important;
+            background-image: none !important;
+            background-color: #3b3020 !important;
             border-color: #b45309 !important;
         }
         html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 p,
@@ -301,22 +305,22 @@
             $activeBg = 'rgba(255,255,255,0.14)';
             $activeText = '#FFFFFF';
         } elseif ($hasAdmin) {
-            $sidebarBg = '#002B6B';
-            $sidebarText = 'rgba(255,255,255,0.75)';
+            $sidebarBg = '#012428';
+            $sidebarText = 'rgba(255,255,255,0.85)';
             $sidebarTitle = '#FFFFFF';
-            $sidebarMuted = 'rgba(255,255,255,0.5)';
-            $sidebarBorder = 'rgba(255,255,255,0.12)';
+            $sidebarMuted = 'rgba(255,255,255,0.55)';
+            $sidebarBorder = 'rgba(255,255,255,0.08)';
             $sidebarHover = 'rgba(255,255,255,0.08)';
-            $activeBg = 'rgba(255,255,255,0.14)';
+            $activeBg = 'rgba(255,255,255,0.15)';
             $activeText = '#FFFFFF';
         } else {
-            $sidebarBg = '#F7F9FB';
-            $sidebarText = '#4B5563';
-            $sidebarTitle = '#1E3A8A';
-            $sidebarMuted = '#9CA3AF';
-            $sidebarBorder = '#F3F4F6';
-            $sidebarHover = '#EEF2F7';
-            $activeBg = '#1E3A8A';
+            $sidebarBg = '#f1f8f4';
+            $sidebarText = '#365b4b';
+            $sidebarTitle = '#064e3b';
+            $sidebarMuted = '#6b8b7a';
+            $sidebarBorder = '#dcebe2';
+            $sidebarHover = '#e1f2e8';
+            $activeBg = '#047857';
             $activeText = '#FFFFFF';
         }
     @endphp
@@ -361,7 +365,7 @@
                 </div>
             </div>
 
-            <nav class="flex-1 px-3 py-4 space-y-1">
+            <nav class="min-h-0 flex-1 overflow-y-auto px-3 py-4 space-y-1">
                 @php
                     if (auth()->user()->hasRole('dosen')) {
                         $menu = [
@@ -749,7 +753,7 @@
 
                     {{-- User Profile Pill --}}
                     <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 rounded-xl p-1 sm:pr-3 shrink-0">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#002B6B] flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg {{ $hasDosen ? 'bg-[#720c16]' : 'bg-[#047857]' }} flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
                             @if (auth()->user()->foto)
                                 <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
                             @else

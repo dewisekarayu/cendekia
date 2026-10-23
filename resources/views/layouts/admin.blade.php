@@ -30,18 +30,60 @@
 
     <style>
         :root {
-            --primary-blue: #002B6B;
-            --secondary-blue: #002B6B;
-            --navy-blue: #002B6B;
-            --light-blue: #CDDCFF;
-            --border-light: rgba(0, 43, 107, 0.08);
+            --primary-blue: #012428;
+            --secondary-blue: #012428;
+            --navy-blue: #012428;
+            --light-blue: #e6f4f1;
+            --border-light: rgba(1, 36, 40, 0.08);
+            --primary-green: #012428;
+            --primary-green-hover: #033f46;
+            --light-green: #e6f4f1;
+        }
+
+        .text-primary {
+            color: #012428 !important;
+        }
+        .bg-primary {
+            background-color: #012428 !important;
+        }
+        .border-primary {
+            border-color: #012428 !important;
+        }
+        .btn-outline-primary {
+            color: #012428 !important;
+            border-color: #012428 !important;
+            background-color: transparent !important;
+            border-radius: 0.75rem !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+        }
+        .btn-outline-primary:hover {
+            background-color: #012428 !important;
+            border-color: #012428 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(1, 36, 40, 0.2) !important;
+        }
+        .btn-outline-secondary {
+            color: #334155 !important;
+            border-color: #e2e8f0 !important;
+            background-color: #ffffff !important;
+            border-radius: 0.75rem !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+            box-shadow: 0 4px 12px rgba(1, 36, 40, 0.06) !important;
         }
 
         body {
             font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
             background-color: #f8fafc;
             color: #1e293b;
-            overflow-x: hidden;
+            overflow-x: clip;
         }
 
         /* Hide scrollbar on sidebar for clean modern look */
@@ -64,6 +106,93 @@
         html.dark body {
             background-color: #0b1120 !important;
             color: #cbd5e1 !important;
+        }
+
+        html.dark body {
+            background-color: #012428 !important;
+            color: #d1e7dc !important;
+        }
+        html.dark .bg-white,
+        html.dark .bg-slate-800,
+        html.dark .bg-gray-800,
+        html.dark .bg-light {
+            background-color: #102820 !important;
+            color: #e5f5ed !important;
+        }
+        html.dark .bg-slate-900,
+        html.dark .bg-gray-900,
+        html.dark .bg-slate-50,
+        html.dark .bg-gray-50,
+        html.dark .bg-gray-100,
+        html.dark .bg-slate-100 {
+            background-color: #012428 !important;
+        }
+        html.dark :is([class*="dark:bg-slate-"], [class*="dark:bg-gray-"]) {
+            background-color: #102820 !important;
+        }
+        html.dark :is([class*="dark:bg-slate-900"], [class*="dark:bg-slate-950"], [class*="dark:bg-gray-900"], [class*="dark:bg-gray-950"]) {
+            background-color: #012428 !important;
+        }
+        html.dark [class*="dark:bg-blue-"] {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+        }
+        html.dark [class*="bg-blue-"] {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+        }
+        html.dark [class*="dark:hover:bg-slate-"]:hover,
+        html.dark [class*="dark:hover:bg-gray-"]:hover {
+            background-color: #17382b !important;
+        }
+        html.dark [class*="border-slate-"],
+        html.dark [class*="border-gray-"] {
+            border-color: #25463a !important;
+        }
+        html.dark aside {
+            background-color: #012428 !important;
+        }
+        html.dark aside .sidebar-link-active {
+            background-color: #145943 !important;
+            color: #f0fdf4 !important;
+        }
+        html.dark .settings-container,
+        html.dark .admin-confirm-popup,
+        html.dark .modal-content,
+        html.dark .swal2-popup {
+            background-color: #102820 !important;
+            border-color: #25463a !important;
+            color: #e5f5ed !important;
+        }
+        html.dark .settings-header h3,
+        html.dark .form-label {
+            color: #e5f5ed !important;
+        }
+        html.dark :is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"]) {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+        }
+        html.dark :is([class~="bg-blue-500"], [class~="bg-blue-600"], [class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"], [class~="dark:bg-blue-500"], [class~="dark:bg-blue-600"], [class~="dark:bg-blue-700"], [class~="dark:bg-blue-800"], [class~="dark:bg-blue-900"]) {
+            background-color: #145943 !important;
+        }
+        html.dark :is([class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"], [class~="dark:text-blue-300"], [class~="dark:text-blue-400"], [class~="text-primary"]) {
+            color: #6ee7b7 !important;
+        }
+        html.dark :is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="dark:border-blue-700"]) {
+            border-color: rgba(52, 211, 153, 0.3) !important;
+        }
+        html.dark [class*="text-blue-"] {
+            color: #6ee7b7 !important;
+        }
+        html.dark input,
+        html.dark select,
+        html.dark textarea,
+        html.dark .form-control,
+        html.dark .form-select {
+            background-color: #091f19 !important;
+            border-color: #315747 !important;
+            color: #e5f5ed !important;
+        }
+        aside nav {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(167, 243, 208, 0.35) transparent;
         }
 
         html.dark .bg-white {
@@ -290,10 +419,12 @@
             color: #94a3b8 !important;
         }
 
-        /* Fix judul warna #002B6B (hardcoded inline style) */
+        /* Fix judul warna #012428 & #002B6B (hardcoded inline style) */
+        html.dark [style*="color: #012428"],
+        html.dark [style*="color:#012428"],
         html.dark [style*="color: #002B6B"],
         html.dark [style*="color:#002B6B"] {
-            color: #93c5fd !important;
+            color: #6ee7b7 !important;
         }
 
         /* Fix btn-light & btn-outline-primary di dark mode */
@@ -384,7 +515,7 @@
         .page-title {
             font-size: 1.65rem;
             font-weight: 800;
-            color: #002B6B;
+            color: #012428;
             letter-spacing: -0.02em;
         }
         html.dark .page-title {
@@ -401,17 +532,17 @@
             transition: color 0.15s;
         }
         .breadcrumb-item a:hover {
-            color: #002B6B;
+            color: #012428;
         }
         .breadcrumb-item.active {
-            color: #002B6B;
+            color: #012428;
             font-weight: 700;
         }
         html.dark .breadcrumb-item a {
             color: #94a3b8;
         }
         html.dark .breadcrumb-item.active {
-            color: #93c5fd;
+            color: #6ee7b7;
         }
 
         /* Stat Cards */
@@ -420,13 +551,13 @@
             border: 1px solid #e2e8f0;
             border-radius: 1rem;
             padding: 1.25rem 1.5rem;
-            box-shadow: 0 4px 16px -2px rgba(0, 43, 107, 0.04);
+            box-shadow: 0 4px 16px -2px rgba(1, 36, 40, 0.04);
             transition: all 0.2s ease;
             overflow: hidden;
         }
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px -4px rgba(0, 43, 107, 0.08);
+            box-shadow: 0 8px 24px -4px rgba(1, 36, 40, 0.08);
             border-color: #cbd5e1;
         }
         html.dark .stat-card {
@@ -448,9 +579,9 @@
             min-width: 0;
         }
         .stat-card-icon.blue {
-            background-color: #eff6ff;
-            color: #002B6B;
-            border: 1px solid #dbeafe;
+            background-color: #e6f4f1;
+            color: #012428;
+            border: 1px solid #c2e5de;
         }
         .stat-card-icon.green {
             background-color: #ecfdf5;
@@ -467,7 +598,7 @@
             color: #d97706;
             border: 1px solid #fde68a;
         }
-        html.dark .stat-card-icon.blue { background-color: rgba(30, 58, 138, 0.3); color: #93c5fd; border-color: rgba(59, 130, 246, 0.3); }
+        html.dark .stat-card-icon.blue { background-color: rgba(6, 78, 59, 0.3); color: #6ee7b7; border-color: rgba(5, 150, 105, 0.4); }
         html.dark .stat-card-icon.green { background-color: rgba(6, 78, 59, 0.3); color: #6ee7b7; border-color: rgba(5, 150, 105, 0.3); }
         html.dark .stat-card-icon.red { background-color: rgba(153, 27, 27, 0.3); color: #fca5a5; border-color: rgba(220, 38, 38, 0.3); }
 
@@ -515,7 +646,7 @@
             background: #ffffff;
             border-radius: 1.25rem;
             border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 4px 20px -2px rgba(0, 43, 107, 0.04);
+            box-shadow: 0 4px 20px -2px rgba(1, 36, 40, 0.04);
             overflow: hidden;
             transition: all 0.2s ease;
         }
@@ -748,16 +879,16 @@
             align-items: center;
             padding: 0.25rem 0.6rem;
             border-radius: 0.5rem;
-            background-color: #eff6ff;
-            color: #002B6B;
+            background-color: #e6f4f1;
+            color: #012428;
             font-weight: 700;
             font-size: 0.8rem;
-            border: 1px solid #dbeafe;
+            border: 1px solid #c2e5de;
         }
         html.dark .badge-code {
-            background-color: rgba(30, 58, 138, 0.3);
-            color: #93c5fd;
-            border-color: rgba(59, 130, 246, 0.3);
+            background-color: rgba(6, 78, 59, 0.3);
+            color: #6ee7b7;
+            border-color: rgba(5, 150, 105, 0.4);
         }
 
         .badge-akreditasi {
@@ -788,8 +919,8 @@
             transition: all 0.2s ease;
         }
         .form-control:focus, .form-select:focus {
-            border-color: #002B6B;
-            box-shadow: 0 0 0 3.5px rgba(0, 43, 107, 0.1);
+            border-color: #012428;
+            box-shadow: 0 0 0 3.5px rgba(1, 36, 40, 0.12);
             outline: none;
         }
         html.dark .form-control, html.dark .form-select {
@@ -801,15 +932,15 @@
             color: #94a3b8 !important;
         }
         html.dark .form-control:focus, html.dark .form-select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3.5px rgba(59, 130, 246, 0.2);
+            border-color: #10b981;
+            box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.2);
         }
 
         /* ===== Dark mode: Bootstrap utility harmonization ===== */
-        [data-pg-card] { border-left: 4px solid #3b82f6 !important; transition: transform .2s, box-shadow .2s; }
-        [data-pg-card]:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(0,43,107,.18) !important; }
+        [data-pg-card] { border-left: 4px solid #10b981 !important; transition: transform .2s, box-shadow .2s; }
+        [data-pg-card]:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -8px rgba(1,36,40,.18) !important; }
         [data-pg-footer] { border-color: #f1f5f9 !important; }
-        .pg-title { color: #002B6B; }
+        .pg-title { color: #012428; }
         .pg-target { font-size: .7rem; border-radius: 6px; letter-spacing: .5px; }
         .pg-target-all { background-color: #ECFDF5; color: #059669 !important; }
         .pg-target-group { background-color: #F1F5F9; color: #64748b !important; }
@@ -891,18 +1022,18 @@
         html.dark .select2-results__option--highlighted { background-color: #1d4ed8 !important; color: #fff !important; }
 
         .btn-primary {
-            background: linear-gradient(135deg, #002B6B 0%, #001f4d 100%) !important;
+            background: #012428 !important;
             border: none !important;
             font-weight: 700 !important;
             border-radius: 0.75rem !important;
             padding: 0.65rem 1.25rem !important;
-            box-shadow: 0 4px 14px rgba(0, 43, 107, 0.2) !important;
+            box-shadow: 0 4px 14px rgba(1, 36, 40, 0.25) !important;
             transition: all 0.2s ease !important;
         }
         .btn-primary:hover {
             filter: brightness(1.1);
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(0, 43, 107, 0.28) !important;
+            box-shadow: 0 6px 18px rgba(1, 36, 40, 0.35) !important;
         }
 
         /* Modern Pagination */
@@ -923,14 +1054,14 @@
         }
         .page-item .page-link:hover {
             background-color: #f1f5f9;
-            color: #002B6B;
+            color: #012428;
             border-color: #cbd5e1;
         }
         .page-item.active .page-link {
-            background-color: #002B6B !important;
-            border-color: #002B6B !important;
+            background-color: #012428 !important;
+            border-color: #012428 !important;
             color: #ffffff !important;
-            box-shadow: 0 4px 10px rgba(0, 43, 107, 0.2);
+            box-shadow: 0 4px 10px rgba(1, 36, 40, 0.25);
         }
         .page-item.disabled .page-link {
             color: #94a3b8;
@@ -947,8 +1078,8 @@
             color: #f8fafc;
         }
         html.dark .page-item.active .page-link {
-            background-color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
+            background-color: #10b981 !important;
+            border-color: #10b981 !important;
             color: #ffffff !important;
         }
 
@@ -958,7 +1089,7 @@
             border-radius: 1.25rem;
             padding: 1.5rem;
             border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 4px 20px -2px rgba(0, 43, 107, 0.04);
+            box-shadow: 0 4px 20px -2px rgba(1, 36, 40, 0.04);
         }
 
         html.dark .chart-card, html.dark .insight-card {
@@ -1006,13 +1137,13 @@
         }
 
         .chart-toggle button.active {
-            background-color: #002B6B;
+            background-color: #012428;
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);
+            box-shadow: 0 4px 12px rgba(1, 36, 40, 0.2);
         }
 
         html.dark .chart-toggle button.active {
-            background-color: #3b82f6;
+            background-color: #10b981;
         }
 
         /* Sidebar link active & hover */
@@ -1025,18 +1156,18 @@
         }
 
         html.dark aside {
-            background-color: #0f172a !important;
-            border-right: 1px solid #1e293b !important;
+            background-color: #011d20 !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
         html.dark aside .sidebar-link {
-            color: #94a3b8 !important;
+            color: rgba(255, 255, 255, 0.75) !important;
         }
         html.dark aside .sidebar-link:hover {
-            background-color: #1e293b !important;
-            color: #f8fafc !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #ffffff !important;
         }
         html.dark aside .sidebar-link-active {
-            background-color: rgba(255, 255, 255, 0.14) !important;
+            background-color: rgba(255, 255, 255, 0.15) !important;
             color: #ffffff !important;
         }
     </style>
@@ -1045,17 +1176,17 @@
 
 <body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
     @php
-        $sidebarBg = '#002B6B';
-        $sidebarText = 'rgba(255,255,255,0.75)';
+        $sidebarBg = '#012428';
+        $sidebarText = 'rgba(255,255,255,0.85)';
         $sidebarTitle = '#FFFFFF';
-        $sidebarMuted = 'rgba(255,255,255,0.5)';
-        $sidebarBorder = 'rgba(255,255,255,0.12)';
+        $sidebarMuted = 'rgba(255,255,255,0.55)';
+        $sidebarBorder = 'rgba(255,255,255,0.08)';
         $sidebarHover = 'rgba(255,255,255,0.08)';
-        $activeBg = 'rgba(255,255,255,0.14)';
+        $activeBg = 'rgba(255,255,255,0.15)';
         $activeText = '#FFFFFF';
     @endphp
 
-    <div x-data="{ sidebarOpen: window.innerWidth >= 1024 }" class="min-h-screen flex overflow-x-hidden">
+    <div x-data="{ sidebarOpen: false }" class="min-h-screen flex overflow-x-hidden">
 
         <!-- Mobile Backdrop Overlay -->
         <div
@@ -1068,8 +1199,8 @@
 
         <!-- Sidebar -->
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:-translate-x-full'"
+            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] -translate-x-full flex-col overflow-hidden transition-transform duration-200 lg:fixed lg:top-0 lg:left-0 lg:z-50 lg:h-screen lg:w-64 lg:max-w-none lg:translate-x-0"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
 
             <!-- Logo Header -->
@@ -1099,7 +1230,7 @@
             </div>
 
             <!-- Navigation Menu -->
-            <nav class="flex-1 px-3 py-4 space-y-1">
+            <nav class="min-h-0 flex-1 overflow-y-auto px-3 py-4 space-y-1">
                 @php $isActive = request()->routeIs('admin.dashboard'); @endphp
                 <a href="{{ route('admin.dashboard') }}"
                     class="sidebar-link flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition text-decoration-none {{ $isActive ? 'sidebar-link-active' : '' }}"
@@ -1215,7 +1346,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex-1 min-w-0 w-full transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
+        <div class="flex-1 min-w-0 w-full lg:ml-64">
 
             <!-- Topbar Header -->
             <header class="sticky top-0 z-30 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 px-3 py-3 sm:px-6 lg:px-8 lg:py-4 flex items-center justify-between gap-2.5 sm:gap-3 transition-colors duration-200">
@@ -1223,7 +1354,7 @@
                 <button
                     type="button"
                     @click="sidebarOpen = !sidebarOpen"
-                    class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition"
+                    class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition lg:hidden"
                     aria-label="Toggle menu">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -1409,7 +1540,7 @@
                     </div>
 
                     <div class="min-w-0 flex items-center gap-2 bg-gray-50 dark:bg-slate-700 rounded-full pl-1 pr-1.5 sm:pr-4 py-1 shrink-0">
-                        <div class="w-7 h-7 rounded-full bg-[#002B6B] flex items-center justify-center text-white text-xs font-semibold notranslate overflow-hidden shrink-0" translate="no">
+                        <div class="w-7 h-7 rounded-full bg-[#012428] flex items-center justify-center text-white text-xs font-semibold notranslate overflow-hidden shrink-0" translate="no">
                             @if (auth()->user()->foto)
                                 <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
                             @else
@@ -1575,7 +1706,7 @@
             font-weight: 600;
         }
         .admin-confirm-accept {
-            background: #002b6b;
+            background: #012428;
             color: #fff;
         }
         .admin-confirm-cancel {
@@ -1594,6 +1725,123 @@
         html.dark .admin-confirm-cancel {
             background: #334155;
             color: #f8fafc;
+        }
+
+        /* Keep the entire admin dark theme in the same green family as its sidebar. */
+        html.dark body,
+        html.dark main,
+        html.dark .bg-gray-50,
+        html.dark .bg-slate-50,
+        html.dark .bg-gray-100,
+        html.dark .bg-slate-100,
+        html.dark .bg-gray-900,
+        html.dark .bg-slate-900,
+        html.dark [class*="dark:bg-gray-900"],
+        html.dark [class*="dark:bg-slate-900"],
+        html.dark [class*="dark:bg-gray-950"],
+        html.dark [class*="dark:bg-slate-950"] {
+            background-color: #012428 !important;
+        }
+
+        html.dark .bg-white,
+        html.dark .bg-gray-800,
+        html.dark .bg-slate-800,
+        html.dark .bg-gray-700,
+        html.dark .bg-slate-700,
+        html.dark [class*="dark:bg-gray-800"],
+        html.dark [class*="dark:bg-slate-800"],
+        html.dark [class*="dark:bg-gray-700"],
+        html.dark [class*="dark:bg-slate-700"],
+        html.dark .card,
+        html.dark .chart-card,
+        html.dark .insight-card,
+        html.dark .admin-confirm-popup,
+        html.dark .modal-content,
+        html.dark .swal2-popup {
+            background-color: #103b32 !important;
+            color: #e5f5ed !important;
+        }
+
+        html.dark [class*="dark:bg-slate-"],
+        html.dark [class*="dark:bg-gray-"] {
+            background-color: #103b32 !important;
+        }
+
+        html.dark [class*="dark:bg-slate-900"],
+        html.dark [class*="dark:bg-gray-900"],
+        html.dark [class*="dark:bg-slate-950"],
+        html.dark [class*="dark:bg-gray-950"] {
+            background-color: #012428 !important;
+        }
+
+        html.dark [class*="dark:bg-emerald-"],
+        html.dark [class*="dark:bg-green-"] {
+            background-color: #145943 !important;
+        }
+
+        html.dark [class*="bg-gradient"] {
+            background-image: none !important;
+            background-color: #103b32 !important;
+        }
+
+        html.dark .admin-dashboard-hero {
+            background: #064e3b !important;
+        }
+
+        html.dark [class*="border-slate-"],
+        html.dark [class*="border-gray-"] {
+            border-color: #315747 !important;
+        }
+
+        html.dark [class*="text-slate-400"],
+        html.dark [class*="text-slate-500"],
+        html.dark [class*="text-gray-400"],
+        html.dark [class*="text-gray-500"],
+        html.dark [class*="text-gray-600"],
+        html.dark [class*="dark:text-slate-400"],
+        html.dark [class*="dark:text-slate-500"],
+        html.dark [class*="dark:text-gray-400"],
+        html.dark [class*="dark:text-gray-500"] {
+            color: #c1d5ca !important;
+        }
+
+        html.dark [class*="text-slate-700"],
+        html.dark [class*="text-slate-800"],
+        html.dark [class*="text-gray-700"],
+        html.dark [class*="text-gray-800"],
+        html.dark [class*="text-gray-900"],
+        html.dark [class*="dark:text-slate-700"],
+        html.dark [class*="dark:text-slate-800"],
+        html.dark [class*="dark:text-gray-700"],
+        html.dark [class*="dark:text-gray-800"] {
+            color: #e5f5ed !important;
+        }
+
+        html.dark input,
+        html.dark select,
+        html.dark textarea,
+        html.dark .form-control,
+        html.dark .form-select {
+            background-color: #082e28 !important;
+            border-color: #315747 !important;
+            color: #e5f5ed !important;
+        }
+
+        html.dark .table,
+        html.dark .table tbody tr,
+        html.dark .table tbody td {
+            --bs-table-bg: #103b32;
+            --bs-table-color: #e5f5ed;
+            color: #e5f5ed;
+            border-color: #315747;
+        }
+
+        html.dark .table thead th,
+        html.dark .table-light {
+            --bs-table-bg: #012428;
+            --bs-table-color: #d1e7dc;
+            background-color: #012428 !important;
+            color: #d1e7dc !important;
         }
     </style>
 

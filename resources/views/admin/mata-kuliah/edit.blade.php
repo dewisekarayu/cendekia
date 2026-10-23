@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Edit Mata Kuliah')
 
@@ -8,10 +8,10 @@
             <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Master Data</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('admin.mata-kuliah.index') }}" class="text-decoration-none text-muted">Mata Kuliah</a></li>
-                <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 500;">Edit Mata Kuliah</li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 500;">Edit Mata Kuliah</li>
             </ol>
         </nav>
-        <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Edit Mata Kuliah</h1>
+        <h1 class="page-title h3 fw-bold mb-1" style="color: #012428;">Edit Mata Kuliah</h1>
         <p class="text-muted mb-0" style="font-size: 0.9rem;">Perbarui detail informasi untuk mata kuliah {{ $mk->nama_mk }}.</p>
     </div>
 
@@ -23,7 +23,7 @@
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
-                        <i class="bi bi-info-circle-fill text-primary" style="color: #002B6B !important;"></i>
+                        <i class="bi bi-info-circle-fill text-primary" style="color: #012428 !important;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Informasi Dasar</h6>
                     </div>
 
@@ -80,7 +80,7 @@
 
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
-                        <i class="bi bi-diagram-3-fill text-primary" style="color: #002B6B !important;"></i>
+                        <i class="bi bi-diagram-3-fill text-primary" style="color: #012428 !important;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Kurikulum</h6>
                     </div>
 
@@ -127,7 +127,7 @@
                 </div>
 
                 <div class="d-flex flex-column gap-2 mt-4">
-                    <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold d-flex align-items-center justify-content-center gap-2" style="background-color: #002B6B; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
+                    <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold d-flex align-items-center justify-content-center gap-2" style="background-color: #012428; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(1, 36, 40, 0.15);">
                         <i class="bi bi-save"></i> Simpan Perubahan
                     </button>
                     <a href="{{ route('admin.mata-kuliah.index') }}" class="btn btn-light border w-100 py-2.5 fw-semibold text-secondary" style="border-radius: 8px;">

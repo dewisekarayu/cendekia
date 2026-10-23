@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Tambah Kelas Perkuliahan')
 
@@ -9,10 +9,10 @@
             <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('admin.kelas.index') }}" class="text-decoration-none text-muted">Kelas Perkuliahan</a></li>
-                <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 500;">Tambah Baru</li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 500;">Tambah Baru</li>
             </ol>
         </nav>
-        <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Tambah Kelas Perkuliahan</h1>
+        <h1 class="page-title h3 fw-bold mb-1" style="color: #012428;">Tambah Kelas Perkuliahan</h1>
         <p class="text-muted mb-0" style="font-size: 0.9rem;">Daftarkan kelas baru, alokasikan dosen, ruang, dan jadwal.</p>
     </div>
 
@@ -41,7 +41,7 @@
                 <!-- Data Akademik -->
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
-                        <i class="bi bi-journal-bookmark-fill" style="color: #002B6B;"></i>
+                        <i class="bi bi-journal-bookmark-fill" style="color: #012428;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Data Akademik & Kurikulum</h6>
                     </div>
 
@@ -92,7 +92,7 @@
                 <!-- Pengampu -->
                 <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
                     <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
-                        <i class="bi bi-people-fill" style="color: #002B6B;"></i>
+                        <i class="bi bi-people-fill" style="color: #012428;"></i>
                         <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Dosen Pengampu</h6>
                     </div>
 
@@ -128,7 +128,7 @@
                 }">
                     <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
                         <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-calendar-range-fill" style="color: #002B6B;"></i>
+                            <i class="bi bi-calendar-range-fill" style="color: #012428;"></i>
                             <h6 class="m-0 fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.5px;">Waktu & Ruang</h6>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                 </div>
 
                 <div class="d-flex flex-column gap-2 mt-4">
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="background-color: #002B6B; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="background-color: #012428; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(1, 36, 40, 0.15);">
                         <i class="bi bi-save"></i> Buat Kelas
                     </button>
                     <a href="{{ route('admin.kelas.index') }}" class="btn btn-light border w-100 py-2 fw-semibold text-secondary" style="border-radius: 8px;">
@@ -217,8 +217,8 @@
     }
     .select2-container--bootstrap-5.select2-container--focus .select2-selection,
     .select2-container--bootstrap-5.select2-container--open .select2-selection {
-        border-color: #002B6B;
-        box-shadow: 0 0 0 0.2rem rgba(0, 43, 107, 0.12);
+        border-color: #012428;
+        box-shadow: 0 0 0 0.2rem rgba(1, 36, 40, 0.12);
     }
 
     /* Tag dosen terpilih (team teaching) */
@@ -234,14 +234,14 @@
     }
     .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice .select2-selection__choice__display,
     .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice .select2-selection__choice__display * {
-        color: #002B6B !important;
+        color: #012428 !important;
         padding-left: 0.35rem;
     }
     .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
         position: static;
         order: -1;
         margin: 0;
-        color: #002B6B !important;
+        color: #012428 !important;
         opacity: .7;
     }
     .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
@@ -251,12 +251,12 @@
 
     /* Dropdown hasil */
     .select2-container--bootstrap-5 .select2-results__option--highlighted {
-        background-color: #002B6B !important;
+        background-color: #012428 !important;
         color: #fff !important;
     }
     .select2-container--bootstrap-5 .select2-results__option--selected {
         background-color: #E8EEF9;
-        color: #002B6B;
+        color: #012428;
     }
     .select2-container--bootstrap-5 .select2-results__option[aria-disabled="true"] {
         color: #adb5bd;
