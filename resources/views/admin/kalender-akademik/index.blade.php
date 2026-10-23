@@ -355,21 +355,17 @@
             </div>
 
             {{-- Panduan Singkat --}}
-            <div class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/30 dark:to-blue-950/30 rounded-2xl border border-indigo-100/50 dark:border-indigo-900/50 p-4">
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-4 h-4 text-indigo-700 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                    </div>
-                    <div>
-                        <p class="font-bold text-indigo-900 dark:text-indigo-300 text-xs mb-1.5">Tips Navigasi</p>
-                        <ul class="text-[11px] text-indigo-700 dark:text-indigo-400 space-y-1 list-disc list-inside">
-                            <li>Klik kotak tanggal untuk filter sidebar.</li>
-                            <li>Klik dua kali kotak tanggal untuk menambah agenda.</li>
-                            <li>Klik badge kegiatan untuk memunculkan detail info modal.</li>
-                            <li>Gunakan filter di atas untuk menyembunyikan jenis agenda.</li>
-                        </ul>
-                    </div>
+            <div class="rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-white dark:bg-slate-800 p-4">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="bi bi-info-circle text-emerald-700 dark:text-emerald-300" aria-hidden="true"></i>
+                    <h3 class="font-bold text-gray-900 dark:text-white text-sm m-0">Cara menggunakan kalender</h3>
                 </div>
+                <ul class="space-y-2 text-xs text-gray-600 dark:text-gray-300 list-none m-0 p-0">
+                    <li class="flex items-start gap-2"><i class="bi bi-check2 shrink-0 text-emerald-600 mt-0.5" aria-hidden="true"></i><span class="min-w-0">Pilih tanggal untuk melihat agenda.</span></li>
+                    <li class="flex items-start gap-2"><i class="bi bi-check2 shrink-0 text-emerald-600 mt-0.5" aria-hidden="true"></i><span class="min-w-0">Klik dua kali tanggal untuk menambah.</span></li>
+                    <li class="flex items-start gap-2"><i class="bi bi-check2 shrink-0 text-emerald-600 mt-0.5" aria-hidden="true"></i><span class="min-w-0">Pilih agenda untuk melihat detail.</span></li>
+                    <li class="flex items-start gap-2"><i class="bi bi-check2 shrink-0 text-emerald-600 mt-0.5" aria-hidden="true"></i><span class="min-w-0">Gunakan filter untuk menyaring agenda.</span></li>
+                </ul>
             </div>
         </div>{{-- /sidebar --}}
     </div>{{-- /Main Grid --}}

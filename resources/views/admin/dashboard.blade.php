@@ -143,7 +143,7 @@
 
         {{-- Aktivitas Pengguna (Chart Card - 2 Cols) --}}
         <div class="lg:col-span-2 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm transition-colors duration-200">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100 dark:border-slate-700/60">
+            <div class="dashboard-chart-header flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-100 dark:border-slate-700/60">
                 <div>
                     <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full bg-blue-600"></span>
@@ -152,8 +152,8 @@
                     <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Grafik interaksi mahasiswa dan dosen berdasarkan data aktivitas portal LMS</p>
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
+                <div class="dashboard-chart-controls">
+                    <div class="flex shrink-0 items-center gap-2 whitespace-nowrap bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total:</span>
                         <strong id="chartTotalValue" class="text-xs font-black text-[#012428] dark:text-emerald-400">0</strong>
                     </div>

@@ -66,8 +66,8 @@
                 Lihat Semua →
             </a>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="admin-table-scroll">
+            <table class="w-full min-w-[760px]">
                 <thead>
                     <tr class="border-b border-gray-200 bg-gray-50">
                         <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Nama</th>

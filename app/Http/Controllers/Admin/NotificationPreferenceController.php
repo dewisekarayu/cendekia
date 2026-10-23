@@ -39,14 +39,14 @@ class NotificationPreferenceController extends Controller
             ->withQueryString();
 
         $notificationTypes = [
-            'materi_baru' => '📚 Materi Baru',
-            'tugas_baru' => '📝 Tugas Baru',
-            'pengumuman_baru' => '📢 Pengumuman Baru',
-            'nilai_baru' => '✅ Nilai Baru',
-            'absensi_dibuka' => '⏰ Presensi Dibuka',
-            'pengumpulan_tugas' => '📬 Pengumpulan Tugas',
-            'pesan_baru' => '💬 Pesan Baru',
-            'pengguna_baru' => '👤 Pengguna Baru',
+            'materi_baru' => 'Materi Baru',
+            'tugas_baru' => 'Tugas Baru',
+            'pengumuman_baru' => 'Pengumuman Baru',
+            'nilai_baru' => 'Nilai Baru',
+            'absensi_dibuka' => 'Presensi Dibuka',
+            'pengumpulan_tugas' => 'Pengumpulan Tugas',
+            'pesan_baru' => 'Pesan Baru',
+            'pengguna_baru' => 'Pengguna Baru',
         ];
 
         return view('admin.notification-preferences.index', compact(
@@ -67,42 +67,42 @@ class NotificationPreferenceController extends Controller
 
         $notificationTypes = [
             'materi_baru' => [
-                'name' => '📚 Materi Baru',
+                'name' => 'Materi Baru',
                 'description' => 'Notifikasi saat dosen mengunggah materi pembelajaran baru',
                 'audience' => 'Mahasiswa'
             ],
             'tugas_baru' => [
-                'name' => '📝 Tugas Baru',
+                'name' => 'Tugas Baru',
                 'description' => 'Notifikasi saat dosen membuat tugas baru',
                 'audience' => 'Mahasiswa'
             ],
             'pengumuman_baru' => [
-                'name' => '📢 Pengumuman Baru',
+                'name' => 'Pengumuman Baru',
                 'description' => 'Notifikasi saat dosen membuat pengumuman kelas',
                 'audience' => 'Mahasiswa'
             ],
             'nilai_baru' => [
-                'name' => '✅ Nilai Baru',
+                'name' => 'Nilai Baru',
                 'description' => 'Notifikasi saat dosen memberikan nilai tugas',
                 'audience' => 'Mahasiswa'
             ],
             'absensi_dibuka' => [
-                'name' => '⏰ Presensi Dibuka',
+                'name' => 'Presensi Dibuka',
                 'description' => 'Notifikasi saat sesi presensi dibuka',
                 'audience' => 'Mahasiswa'
             ],
             'pengumpulan_tugas' => [
-                'name' => '📬 Pengumpulan Tugas',
+                'name' => 'Pengumpulan Tugas',
                 'description' => 'Notifikasi saat mahasiswa mengumpulkan tugas (untuk dosen)',
                 'audience' => 'Dosen'
             ],
             'pesan_baru' => [
-                'name' => '💬 Pesan Baru',
+                'name' => 'Pesan Baru',
                 'description' => 'Notifikasi saat ada pesan baru di forum diskusi',
                 'audience' => 'Mahasiswa & Dosen'
             ],
             'pengguna_baru' => [
-                'name' => '👤 Pengguna Baru',
+                'name' => 'Pengguna Baru',
                 'description' => 'Notifikasi saat pengguna baru mendaftar',
                 'audience' => 'Admin'
             ],

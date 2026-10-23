@@ -324,7 +324,7 @@
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        setStatus(isEn ? '⏳ Submitting your question...' : '⏳ Sedang mengirimkan pertanyaan Anda...', 'info');
+        setStatus(isEn ? 'Submitting your question...' : 'Sedang mengirimkan pertanyaan Anda...', 'info');
 
         try {
             const res = await fetch("{{ route('help-center.store-ticket') }}", {

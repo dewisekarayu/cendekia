@@ -27,7 +27,7 @@ class PengumumanBaru extends Mailable
         $senderEmail = $this->dosen->email ?? config('mail.from.address');
         return new Envelope(
             from: new Address($senderEmail, $senderName),
-            subject: "📢 Pengumuman Baru: {$this->pengumuman->judul}",
+            subject: "Pengumuman Baru: {$this->pengumuman->judul}",
         );
     }
 
