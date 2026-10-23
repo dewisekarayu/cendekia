@@ -106,19 +106,19 @@
                         <label class="theme-card flex items-center gap-3 cursor-pointer p-4 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150">
                             <input type="radio" name="theme" value="light" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'light' ? 'checked' : '' }} class="w-4 h-4 text-[#321270] focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                {{ $isEn ? '☀️ Light' : '☀️ Terang' }}
+                                <i class="bi bi-sun me-1" aria-hidden="true"></i>{{ $isEn ? 'Light' : 'Terang' }}
                             </span>
                         </label>
                         <label class="theme-card flex items-center gap-3 cursor-pointer p-4 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150">
                             <input type="radio" name="theme" value="dark" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'dark' ? 'checked' : '' }} class="w-4 h-4 text-[#321270] focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                {{ $isEn ? '🌙 Dark' : '🌙 Gelap' }}
+                                <i class="bi bi-moon-stars me-1" aria-hidden="true"></i>{{ $isEn ? 'Dark' : 'Gelap' }}
                             </span>
                         </label>
                         <label class="theme-card flex items-center gap-3 cursor-pointer p-4 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150">
                             <input type="radio" name="theme" value="auto" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'auto' ? 'checked' : '' }} class="w-4 h-4 text-[#321270] focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                {{ $isEn ? '🔄 Auto' : '🔄 Otomatis' }}
+                                <i class="bi bi-display me-1" aria-hidden="true"></i>{{ $isEn ? 'Auto' : 'Otomatis' }}
                             </span>
                         </label>
                     </div>
@@ -244,7 +244,7 @@
             icon: 'success',
             title: "{{ app()->getLocale() === 'en' ? 'Success' : 'Berhasil' }}",
             text: "{{ session('success') }}",
-            confirmButtonColor: '#321270',
+            confirmButtonColor: '#047857',
         });
     });
 </script>

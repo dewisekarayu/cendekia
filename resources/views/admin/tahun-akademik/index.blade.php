@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Manajemen Tahun Akademik')
 
@@ -8,16 +8,16 @@
         <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Master Data</a></li>
-            <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 500;">Tahun Akademik</li>
+            <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 500;">Tahun Akademik</li>
         </ol>
     </nav>
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
         <div>
-            <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Manajemen Tahun Akademik</h1>
+            <h1 class="page-title h3 fw-bold mb-1" style="color: #012428;">Manajemen Tahun Akademik</h1>
             <p class="text-muted mb-0" style="font-size: 0.9rem;">Kelola data semester dan periode akademik aktif.</p>
         </div>
         <div>
-            <a href="{{ route('admin.tahun-akademik.create') }}" class="btn btn-primary d-flex align-items-center gap-2 fw-semibold px-4 py-2" style="background-color: #002B6B; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 43, 107, 0.15);">
+            <a href="{{ route('admin.tahun-akademik.create') }}" class="btn btn-primary d-flex align-items-center gap-2 fw-semibold px-4 py-2" style="background-color: #012428; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(1, 36, 40, 0.15);">
                 <i class="bi bi-plus-lg"></i>
                 Tambah Tahun Akademik
             </a>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Preferensi Notifikasi: ' . $user->name)
 @section('activeMenu', 'Pengaturan')
@@ -10,12 +10,12 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#002B6B] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#012428] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
                     <i class="bi bi-bell-fill text-xs"></i>
                     Konfigurasi Notifikasi Pengguna
                 </span>
             </div>
-            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
+            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#012428] dark:text-white">
                 Preferensi Notifikasi Email
             </h1>
             <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
@@ -73,7 +73,7 @@
     {{-- User Profile Summary Card --}}
     <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm p-5 sm:p-6">
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/40 text-[#002B6B] dark:text-blue-400 font-black text-xl flex items-center justify-center border border-blue-100 dark:border-blue-800/60 flex-shrink-0">
+            <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/40 text-[#012428] dark:text-blue-400 font-black text-xl flex items-center justify-center border border-blue-100 dark:border-blue-800/60 flex-shrink-0">
                 {{ strtoupper(substr($user->name, 0, 1)) }}
             </div>
             <div class="flex-1 min-w-0">
@@ -172,7 +172,7 @@
 
     {{-- Tips Card --}}
     <div class="p-4 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 text-xs text-slate-600 dark:text-slate-300">
-        <div class="font-bold text-[#002B6B] dark:text-blue-400 mb-1 flex items-center gap-1.5">
+        <div class="font-bold text-[#012428] dark:text-blue-400 mb-1 flex items-center gap-1.5">
             <i class="bi bi-info-circle-fill"></i> Catatan Sistem Notifikasi:
         </div>
         <ul class="list-disc list-inside space-y-0.5 text-slate-500 dark:text-slate-400">

@@ -85,7 +85,7 @@
 
             <div class="w-full flex flex-col items-center text-center animate-fade-in-up">
                 <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0f2c59] tracking-tight leading-tight">
-                    Selamat Datang di <span class="text-blue-600">Cendekia</span> 👋
+                    Selamat Datang di <span class="text-blue-600">Cendekia</span>
                 </h1>
                 <p class="mt-2 sm:mt-1 text-gray-500 text-sm sm:text-base md:text-lg max-w-xl">
                     Tempat belajar yang terstruktur dan menyenangkan, dirancang untuk membantumu berkembang setiap hari.

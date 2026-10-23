@@ -1,14 +1,14 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="container-fluid py-3">
         <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="color: #6b7280; text-decoration: none;">Cendekia</a></li>
-                        <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 500;">Pengumuman</li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 500;">Pengumuman</li>
                     </ol>
                 </nav>
-                <h1 class="page-title mb-1" style="font-size: 1.75rem; font-weight: 700; color: #002B6B;">Manajemen Pengumuman</h1>
+                <h1 class="page-title mb-1" style="font-size: 1.75rem; font-weight: 700; color: #012428;">Manajemen Pengumuman</h1>
                 <p class="text-muted mb-0" style="font-size: 0.9rem;">Buat dan kelola informasi penting untuk seluruh civitas akademika.</p>
             </div>
 
@@ -64,7 +64,7 @@
                         <div class="modal-content" style="border-radius: 14px; border: none;">
                             <div class="modal-header px-4 pt-4 pb-2 border-0">
                                 <div>
-                                    <h5 class="modal-title fw-bold" style="color: #002B6B; font-size: 1.3rem;">Edit Pengumuman</h5>
+                                    <h5 class="modal-title fw-bold" style="color: #012428; font-size: 1.3rem;">Edit Pengumuman</h5>
                                     <p class="text-muted small mb-0">Perbarui informasi pengumuman ini.</p>
                                 </div>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="modal-footer px-4 pb-4 pt-2 border-0 d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-light border px-4 py-2 fw-semibold text-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Batal</button>
-                                <button type="submit" form="editForm{{ $item->id }}" class="btn btn-primary px-4 py-2 fw-semibold" style="background-color: #002B6B; border: none; border-radius: 8px;">Simpan Perubahan</button>
+                                <button type="submit" form="editForm{{ $item->id }}" class="btn btn-primary px-4 py-2 fw-semibold" style="background-color: #012428; border: none; border-radius: 8px;">Simpan Perubahan</button>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                                 <div class="d-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle mx-auto mb-3" style="width: 56px; height: 56px;">
                                     <i class="bi bi-exclamation-triangle-fill fs-4"></i>
                                 </div>
-                                <h5 class="fw-bold mb-2" style="color: #002B6B;">Hapus Pengumuman?</h5>
+                                <h5 class="fw-bold mb-2" style="color: #012428;">Hapus Pengumuman?</h5>
                                 <p class="text-muted small mb-4">Tindakan ini tidak dapat dibatalkan. "<strong>{{ $item->judul }}</strong>" akan dihapus secara permanen.</p>
                                 <div class="d-flex justify-content-center gap-2">
                                     <button type="button" class="btn btn-light border px-4 py-2 fw-semibold text-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Batal</button>
@@ -130,7 +130,7 @@
                     <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3" style="width: 56px; height: 56px;">
                         <i class="bi bi-megaphone fs-4"></i>
                     </div>
-                    <h5 class="fw-bold mb-1" style="color: #002B6B;">Belum Ada Pengumuman</h5>
+                    <h5 class="fw-bold mb-1" style="color: #012428;">Belum Ada Pengumuman</h5>
                     <p class="text-muted small mb-0">Klik "Buat Pengumuman" untuk menerbitkan informasi pertama.</p>
                 </div>
             @endforelse
@@ -172,7 +172,7 @@
             <div class="modal-content" style="border-radius: 14px; border: none;">
                 <div class="modal-header px-4 pt-4 pb-2 border-0">
                     <div>
-                        <h5 class="modal-title fw-bold" id="createPengumumanModalLabel" style="color: #002B6B; font-size: 1.3rem;">Buat Pengumuman Baru</h5>
+                        <h5 class="modal-title fw-bold" id="createPengumumanModalLabel" style="color: #012428; font-size: 1.3rem;">Buat Pengumuman Baru</h5>
                         <p class="text-muted small mb-0">Buat dan terbitkan pengumuman untuk seluruh civitas akademika.</p>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -206,7 +206,7 @@
 
                 <div class="modal-footer px-4 pb-4 pt-2 border-0 d-flex justify-content-end gap-2">
                     <button type="button" class="btn btn-light border px-4 py-2 fw-semibold text-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Batal</button>
-                    <button type="submit" form="createPengumumanForm" class="btn btn-primary px-4 py-2 fw-semibold" style="background-color: #002B6B; border: none; border-radius: 8px;">Terbitkan Sekarang</button>
+                    <button type="submit" form="createPengumumanForm" class="btn btn-primary px-4 py-2 fw-semibold" style="background-color: #012428; border: none; border-radius: 8px;">Terbitkan Sekarang</button>
                 </div>
             </div>
         </div>

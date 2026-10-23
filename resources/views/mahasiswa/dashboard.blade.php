@@ -20,7 +20,7 @@
     <div class="relative z-10 flex flex-col gap-5 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1">
             <p class="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-blue-200/90">{{ $greeting }}, Mahasiswa</p>
-            <h1 class="mt-1.5 sm:mt-2 text-2xl font-extrabold leading-tight text-white break-words sm:text-3xl">{{ $firstName }} 👋</h1>
+            <h1 class="mt-1.5 sm:mt-2 text-2xl font-extrabold leading-tight text-white break-words sm:text-3xl">{{ $firstName }}</h1>
             <p class="mt-2 max-w-lg text-xs sm:text-sm leading-relaxed text-blue-100/90">
                 @if ($deadlines->count() > 0)
                     Kamu punya <span class="font-bold text-white underline decoration-blue-300/50 underline-offset-2">{{ $deadlines->count() }} tugas mendatang</span>. Jangan sampai terlewat ya!

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Peserta Kelas Perkuliahan')
 
@@ -53,16 +53,16 @@
     }
 
     .btn-action-add {
-        background: linear-gradient(135deg, #002B6B 0%, #001f4d 100%) !important;
+        background: linear-gradient(135deg, #012428 0%, #001f4d 100%) !important;
         color: #ffffff !important;
         border: none !important;
-        box-shadow: 0 4px 14px rgba(0, 43, 107, 0.22) !important;
+        box-shadow: 0 4px 14px rgba(1, 36, 40, 0.22) !important;
     }
     .btn-action-add:hover {
         filter: brightness(1.1);
         color: #ffffff !important;
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(0, 43, 107, 0.3) !important;
+        box-shadow: 0 6px 18px rgba(1, 36, 40, 0.3) !important;
     }
 
     /* Desktop & Tablet (>= 768px): Always 1 Neat Horizontal Row */
@@ -144,14 +144,14 @@
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ route('admin.kelas.index') }}" class="text-decoration-none text-muted">Akademik</a></li>
             <li class="breadcrumb-item"><a href="{{ route('admin.kelas.index') }}" class="text-decoration-none text-muted">Kelas Perkuliahan</a></li>
-            <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 600;">Peserta Kelas</li>
+            <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 600;">Peserta Kelas</li>
         </ol>
     </nav>
 
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
         <div>
-            <h1 class="page-title fs-3 fw-bold mb-1" style="color: #002B6B;">Peserta Kelas Perkuliahan</h1>
+            <h1 class="page-title fs-3 fw-bold mb-1" style="color: #012428;">Peserta Kelas Perkuliahan</h1>
             <p class="text-muted mb-0" style="font-size: 0.9rem;">
                 Daftar mahasiswa yang terdaftar di kelas <strong class="text-dark">{{ $kelas->mataKuliah?->nama_mk ?? '-' }} - Kelas {{ $kelas->kode_kelas }}</strong>
             </p>
@@ -230,7 +230,7 @@
                     </span>
                 </div>
 
-                <h4 class="fw-bold mb-3" style="color: #002B6B;">{{ $kelas->mataKuliah?->nama_mk ?? '-' }}</h4>
+                <h4 class="fw-bold mb-3" style="color: #012428;">{{ $kelas->mataKuliah?->nama_mk ?? '-' }}</h4>
 
                 <div class="row g-2 pt-1">
                     <div class="col-sm-6">
@@ -325,7 +325,7 @@
                     <div class="progress" style="height: 10px; border-radius: 999px; background-color: #f1f5f9;">
                         <div class="progress-bar {{ $isPenuh ? 'bg-danger' : ($persentase > 80 ? 'bg-warning' : 'bg-primary') }}" 
                              role="progressbar" 
-                             style="width: {{ $persentase }}%; border-radius: 999px; transition: width 0.6s ease; background-color: #002B6B !important;" 
+                             style="width: {{ $persentase }}%; border-radius: 999px; transition: width 0.6s ease; background-color: #012428 !important;" 
                              aria-valuenow="{{ $persentase }}" 
                              aria-valuemin="0" 
                              aria-valuemax="100">
@@ -340,12 +340,12 @@
     <div class="card border-0 shadow-sm p-3 p-sm-4 mb-4" style="border-radius: 1rem; background: #ffffff;">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4 pb-3 border-bottom">
             <div class="d-flex align-items-center gap-3">
-                <div class="rounded-3 d-flex align-items-center justify-content-center shadow-xs shrink-0" style="width: 44px; height: 44px; background: #eff6ff; color: #002B6B;">
+                <div class="rounded-3 d-flex align-items-center justify-content-center shadow-xs shrink-0" style="width: 44px; height: 44px; background: #eff6ff; color: #012428;">
                     <i class="bi bi-people-fill fs-5"></i>
                 </div>
                 <div>
                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <h5 class="fw-bold mb-0 text-slate-900" style="color: #002B6B;">Daftar Peserta Terdaftar</h5>
+                        <h5 class="fw-bold mb-0 text-slate-900" style="color: #012428;">Daftar Peserta Terdaftar</h5>
                         <span class="badge bg-light text-primary border px-2.5 py-1 rounded-pill" style="font-size: 0.75rem;">
                             {{ $pesertaKelas->count() }} Mahasiswa
                         </span>
@@ -451,7 +451,7 @@
                                             class="btn btn-sm btn-primary px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#modalTambahMahasiswa" 
-                                            style="background-color: #002B6B; border: none; border-radius: 0.65rem;">
+                                            style="background-color: #012428; border: none; border-radius: 0.65rem;">
                                         <i class="bi bi-person-plus-fill"></i> Tambah Mahasiswa Sekarang
                                     </button>
                                 @endif
@@ -539,7 +539,7 @@
                 <div class="modal-footer border-top px-3 px-sm-4 py-3 bg-light d-flex flex-column-reverse flex-sm-row justify-content-sm-end gap-2" style="border-radius: 0 0 1rem 1rem;">
                     <button type="button" class="btn btn-light border px-3 py-2 fw-semibold text-secondary modal-footer-btn m-0" data-bs-dismiss="modal" style="border-radius: 0.65rem; font-size: 0.85rem;">Batal</button>
                     @if($mahasiswaTersedia->isNotEmpty())
-                        <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-1.5 modal-footer-btn m-0" style="background-color: #002B6B; border: none; border-radius: 0.65rem; font-size: 0.85rem;">
+                        <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-1.5 modal-footer-btn m-0" style="background-color: #012428; border: none; border-radius: 0.65rem; font-size: 0.85rem;">
                             <i class="bi bi-check-lg"></i>
                             <span>Tambahkan ke Kelas</span>
                         </button>

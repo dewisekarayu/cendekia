@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +15,7 @@
         }
 
         .header {
-            background-color: #002B6B;
+            background-color: #012428;
             color: white;
             padding: 16px 20px;
             margin-bottom: 20px;
@@ -59,7 +59,7 @@
             margin-bottom: 3px;
         }
         .stat-box .value { font-size: 16px; font-weight: 800; color: #0f172a; }
-        .stat-blue { border-left: 4px solid #002B6B; }
+        .stat-blue { border-left: 4px solid #012428; }
         .stat-green { border-left: 4px solid #059669; }
         .stat-amber { border-left: 4px solid #d97706; }
         .stat-red { border-left: 4px solid #dc2626; }
@@ -76,7 +76,7 @@
 
         .data-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
         .data-table thead th {
-            background: #002B6B;
+            background: #012428;
             color: white;
             padding: 8px 10px;
             text-align: left;
@@ -126,7 +126,7 @@
         <table class="header-table">
             <tr>
                 <td style="text-align: left;">
-                    <h1>📋 Laporan Data Mahasiswa</h1>
+                    <h1>Laporan Data Mahasiswa</h1>
                     <p>Sistem Informasi Akademik — Cendekia</p>
                 </td>
                 <td class="header-meta">

@@ -1,11 +1,11 @@
 @component('mail::message')
-# ⏰ Sesi Presensi Dibuka
+# Sesi Presensi Dibuka
 
 Halo **{{ $mahasiswa->name }}**,
 
 Dosen Anda **{{ $dosen->name }}** telah membuka sesi presensi untuk kelas.
 
-## 📋 Detail Sesi Presensi
+## Detail Sesi Presensi
 
 - **Mata Kuliah**: {{ $kelas->mataKuliah->nama_mk }}
 - **Kelas**: {{ $kelas->kode_kelas }}
@@ -14,12 +14,12 @@ Dosen Anda **{{ $dosen->name }}** telah membuka sesi presensi untuk kelas.
 - **Waktu**: {{ $absensi->jam_mulai }} - {{ $absensi->jam_selesai }}
 
 @if($absensi->rangkuman)
-## 📝 Ringkasan Materi
+## Ringkasan Materi
 
 {{ $absensi->rangkuman }}
 @endif
 
-## 🎯 Apa yang Harus Anda Lakukan
+## Apa yang Harus Anda Lakukan
 
 Silakan lakukan presensi melalui portal Cendekia:
 1. Masuk ke dashboard Cendekia
@@ -28,7 +28,7 @@ Silakan lakukan presensi melalui portal Cendekia:
 4. Pilih status kehadiran Anda (Hadir/Izin/Sakit)
 5. Klik tombol **Presensi**
 
-## ⚠️ Penting
+## Penting
 
 - Sesi presensi hanya dapat diisi saat **dibuka oleh dosen**
 - Anda hanya dapat presensi **sekali per sesi**

@@ -411,7 +411,7 @@
                                         Deskripsi AI
                                     </button>
                                     <button type="button" onclick="generatePdfFromText(this, 'materi')" class="text-xs flex items-center gap-1 bg-red-100 text-red-700 hover:bg-red-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
-                                        📄 Jadikan PDF
+                                        <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Jadikan PDF
                                     </button>
                                 </div>
                             </div>

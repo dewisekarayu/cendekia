@@ -1,16 +1,16 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Kalender Akademik')
 @section('activeMenu', 'Kalender Akademik')
 @section('content')
 
 <style>[x-cloak]{ display:none !important; }</style>
 
-<div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4" x-data="kalenderData()">
+<div class="calendar-page space-y-6 max-w-7xl mx-auto p-3 sm:p-4" x-data="kalenderData()">
 
     {{-- ═══════════════════════════════ HEADER SECTION ═══════════════════════════════ --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div class="min-w-0">
-            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
+            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#012428] dark:text-white">
                 Kalender Akademik
             </h1>
             <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
@@ -24,7 +24,7 @@
             @endphp
             @if($activeSem)
             <div class="mt-2 flex items-center gap-2 flex-wrap">
-                <span class="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold">
+                <span class="semester-pill inline-block px-3 py-1 rounded-full text-xs font-semibold">
                     {{ $activeSem->tahun_ajaran }} – {{ $activeSem->nama_semester }}
                 </span>
                 @if($activeSem->is_active)
@@ -291,12 +291,12 @@
 
             {{-- Agenda Mendatang --}}
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
-                <div class="px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-3 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10">
+                <div class="px-4 sm:px-5 py-4 border-b border-gray-100 dark:border-slate-700 flex items-center gap-2 sm:gap-3 bg-emerald-50 dark:bg-emerald-900/20">
                     <div class="w-9 h-9 shrink-0 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
                         <svg class="w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                     </div>
-                    <h3 class="font-bold text-gray-900 dark:text-white text-sm whitespace-nowrap">Agenda Mendatang</h3>
-                    <span class="ml-auto text-xs px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-bold" x-text="upcomingEvents.length"></span>
+                    <h3 class="agenda-panel-heading flex-1 font-bold text-gray-900 dark:text-white text-sm">Agenda Mendatang</h3>
+                    <span class="shrink-0 text-xs px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-bold" x-text="upcomingEvents.length"></span>
                 </div>
                 <div class="divide-y divide-gray-50 dark:divide-slate-700/50 max-h-[380px] overflow-y-auto">
                     <template x-if="upcomingEvents.length === 0">
@@ -308,8 +308,8 @@
                         <div class="p-3.5 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer group"
                              :style="'border-left: 4px solid ' + event.warna"
                              @click="openModal(event)">
-                            <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" x-text="event.judul"></p>
-                            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1">
+                            <p class="upcoming-event-title text-xs font-semibold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" x-text="event.judul"></p>
+                            <p class="upcoming-event-date text-[10px] text-gray-500 dark:text-gray-300 mt-1 flex items-center gap-1">
                                 <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 <span x-text="event.tanggal_mulai_formatted"></span>
                             </p>
@@ -784,7 +784,7 @@ function kalenderData() {
                 waktu_selesai: '',
                 lokasi: '',
                 deskripsi: '',
-                warna: '#002B6B',
+                warna: '#012428',
                 is_published: true,
                 jenis_kegiatan_label: 'Agenda Baru'
             };

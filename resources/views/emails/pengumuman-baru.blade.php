@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="email-header">
-    <h1>📢 Pengumuman Penting</h1>
+    <h1>Pengumuman Penting</h1>
     <p>{{ $kelas->mataKuliah->nama_mk ?? 'Pengumuman Kampus' }}</p>
 </div>
 
@@ -14,9 +14,9 @@
     <p>Ada pengumuman penting {{ $kelas ? 'dari dosen pengampu Anda:' : 'dari Admin Kampus:' }}</p>
 
     <div class="info-box">
-        <p><strong>📣 Judul:</strong><br>{{ $pengumuman->judul }}</p>
-        <p style="margin-top: 12px;"><strong>👨‍🏫 Dari:</strong><br>{{ $dosen->name ?? 'Administrator' }}</p>
-        <p style="margin-top: 12px;"><strong>📅 Tanggal:</strong><br>{{ $createdAt }}</p>
+        <p><strong>Judul:</strong><br>{{ $pengumuman->judul }}</p>
+        <p style="margin-top: 12px;"><strong>Dari:</strong><br>{{ $dosen->name ?? 'Administrator' }}</p>
+        <p style="margin-top: 12px;"><strong>Tanggal:</strong><br>{{ $createdAt }}</p>
     </div>
 
     <div class="content-section">

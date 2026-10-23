@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Detail Agenda: ' . $kalenderAkademik->judul)
 @section('activeMenu', 'Kalender Akademik')
@@ -10,12 +10,12 @@
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 mb-1">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#002B6B] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/40 text-[#012428] dark:text-blue-400 border border-blue-100 dark:border-blue-800/60">
                     <i class="bi bi-calendar-event text-xs"></i>
                     Informasi Detail Agenda
                 </span>
             </div>
-            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
+            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#012428] dark:text-white">
                 {{ $kalenderAkademik->judul }}
             </h1>
             <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
@@ -162,12 +162,12 @@
                     @forelse($kalenderAkademik->aktivitasLogs as $log)
                         <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors flex items-start gap-3">
                             <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-xs"
-                                 style="background-color: {{ $log->event_color ?? '#002B6B' }};">
+                                 style="background-color: {{ $log->event_color ?? '#012428' }};">
                                 <i class="bi bi-activity"></i>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    <span class="text-xs font-bold uppercase tracking-wider" style="color: {{ $log->event_color ?? '#002B6B' }};">
+                                    <span class="text-xs font-bold uppercase tracking-wider" style="color: {{ $log->event_color ?? '#012428' }};">
                                         {{ $log->event_label }}
                                     </span>
                                     <span class="text-xs text-slate-400">·</span>

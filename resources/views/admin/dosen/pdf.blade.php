@@ -124,7 +124,7 @@
         <table class="header-table">
             <tr>
                 <td style="text-align: left;">
-                    <h1>📋 Laporan Data Dosen</h1>
+                    <h1>Laporan Data Dosen</h1>
                     <p>Sistem Informasi Akademik — Cendekia</p>
                 </td>
                 <td class="header-meta">

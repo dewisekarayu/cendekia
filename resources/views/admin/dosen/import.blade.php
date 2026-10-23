@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Impor Masal Dosen')
 
@@ -26,7 +26,7 @@
         letter-spacing: -0.02em;
     }
     .page-header h4 span {
-        color: #002B6B; /* Cendekia Deep Blue */
+        color: #012428; /* Cendekia Deep Blue */
         font-weight: 800;
     }
     .step-card {
@@ -40,7 +40,7 @@
     }
     .step-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 28px rgba(0, 43, 107, 0.07);
+        box-shadow: 0 10px 28px rgba(1, 36, 40, 0.07);
         border-color: #cbd5e1;
     }
     .step-header {
@@ -49,7 +49,7 @@
         gap: 20px;
     }
     .step-number {
-        background: linear-gradient(135deg, #2563eb, #002B6B);
+        background: linear-gradient(135deg, #2563eb, #012428);
         color: white;
         width: 38px;
         height: 38px;
@@ -79,7 +79,7 @@
     /* Buttons */
     .btn-blue-outline {
         background: #eff6ff;
-        color: #002B6B;
+        color: #012428;
         border: 1.5px solid #bfdbfe;
         padding: 10px 22px;
         border-radius: 10px;
@@ -92,13 +92,13 @@
         transition: all 0.25s ease;
     }
     .btn-blue-outline:hover {
-        background: #002B6B;
+        background: #012428;
         color: white;
-        border-color: #002B6B;
-        box-shadow: 0 4px 14px rgba(0, 43, 107, 0.25);
+        border-color: #012428;
+        box-shadow: 0 4px 14px rgba(1, 36, 40, 0.25);
     }
     .btn-blue-solid {
-        background: linear-gradient(135deg, #2563eb, #002B6B);
+        background: linear-gradient(135deg, #2563eb, #012428);
         color: white;
         border: none;
         padding: 14px 36px;
@@ -109,13 +109,13 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        box-shadow: 0 6px 20px rgba(0, 43, 107, 0.3);
+        box-shadow: 0 6px 20px rgba(1, 36, 40, 0.3);
         cursor: pointer;
     }
     .btn-blue-solid:hover {
         background: linear-gradient(135deg, #1d4ed8, #001d4a);
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 43, 107, 0.4);
+        box-shadow: 0 8px 25px rgba(1, 36, 40, 0.4);
         color: white;
     }
     
@@ -252,14 +252,14 @@
 
     /* Pro Tip Alert */
     .alert-protip {
-        background: linear-gradient(135deg, #002B6B 0%, #1e3a8a 100%);
+        background: linear-gradient(135deg, #012428 0%, #1e3a8a 100%);
         color: white;
         padding: 22px 24px;
         border-radius: 14px;
         margin-top: 24px;
         display: flex;
         gap: 18px;
-        box-shadow: 0 8px 24px rgba(0, 43, 107, 0.25);
+        box-shadow: 0 8px 24px rgba(1, 36, 40, 0.25);
     }
     .alert-protip i {
         color: #fbbf24;
@@ -320,7 +320,7 @@
     }
     .upload-area:hover i.upload-icon {
         transform: translateY(-4px);
-        color: #002B6B;
+        color: #012428;
     }
     .upload-area h5 {
         color: #0f172a;
@@ -345,7 +345,7 @@
     <div class="import-wrapper">
         <div class="page-header">
             <div class="d-flex align-items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#002B6B] dark:text-blue-400 d-flex align-items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#012428] dark:text-blue-400 d-flex align-items-center justify-center border border-blue-100 dark:border-blue-900/50">
                     <i class="bi bi-file-earmark-arrow-up text-lg"></i>
                 </div>
                 <div>
