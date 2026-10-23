@@ -39,6 +39,15 @@
             width: 0 !important;
             height: 0 !important;
         }
+        aside nav {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
+        }
+        aside nav::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
 
         /* Dark Mode overrides for Student/Dosen portal */
         html.dark body {

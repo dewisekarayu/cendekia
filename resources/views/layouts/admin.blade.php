@@ -191,8 +191,13 @@
             color: #e5f5ed !important;
         }
         aside nav {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(167, 243, 208, 0.35) transparent;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        aside nav::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         html.dark .bg-white {
