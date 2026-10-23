@@ -20,7 +20,7 @@
     <nav class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2">
-                <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="w-8 h-8">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Cendekia" class="w-8 h-8 rounded-full object-cover">
                 <span class="font-bold text-lg text-gray-800">Cendekia</span>
             </a>
             <div class="flex items-center gap-4">

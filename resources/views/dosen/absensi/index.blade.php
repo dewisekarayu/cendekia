@@ -5,9 +5,9 @@
 @section('content')
 
 {{-- HERO HEADER BANNER --}}
-<div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-7 sm:px-8 shadow-md relative text-white">
+<div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#4c0810] via-[#720c16] to-[#9a1622] dark:from-slate-900 dark:via-[#1b0305] dark:to-[#1b0305] px-6 py-7 sm:px-8 shadow-md relative text-white">
     <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
-    <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-purple-400/10 blur-xl"></div>
+    <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-[#f87171]/10 blur-xl"></div>
     
     <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1">
@@ -18,10 +18,10 @@
                     </svg>
                     {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
                 </span>
-                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-purple-100 backdrop-blur-sm">
+                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-[#fee2e2] backdrop-blur-sm">
                     {{ $kelas->semester?->nama_semester ?? 'Semester Aktif' }}
                 </span>
-                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-purple-100 backdrop-blur-sm">
+                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-[#fee2e2] backdrop-blur-sm">
                     {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Program Studi' }}
                 </span>
             </div>
@@ -30,21 +30,21 @@
                 {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
             </h1>
 
-            <div class="mt-3 flex flex-wrap items-center gap-y-2 gap-x-5 text-xs sm:text-sm text-purple-100/90 font-medium">
+            <div class="mt-3 flex flex-wrap items-center gap-y-2 gap-x-5 text-xs sm:text-sm text-[#fee2e2]/90 font-medium">
                 <span class="inline-flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     {{ $kelas->hari }}, {{ substr($kelas->jam_mulai,0,5) }} – {{ substr($kelas->jam_selesai,0,5) }} WIB
                 </span>
                 <span class="inline-flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
                     Ruang: {{ $kelas->ruangan ?? '-' }}
                 </span>
                 <span class="inline-flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                     {{ $kelas->mataKuliah?->sks ?? 0 }} SKS
@@ -55,7 +55,7 @@
         {{-- Right Side / Actions --}}
         <div class="flex flex-col sm:flex-row gap-3 shrink-0">
             <div class="flex flex-col items-center justify-center rounded-xl bg-white/10 px-5 py-3 border border-white/20 backdrop-blur-sm">
-                <span class="text-[10px] font-bold text-purple-200 uppercase tracking-wider mb-0.5">Mahasiswa</span>
+                <span class="text-[10px] font-bold text-[#fecaca] uppercase tracking-wider mb-0.5">Mahasiswa</span>
                 <span class="text-xl font-black text-white leading-none">{{ $kelas->mahasiswa->count() }}</span>
             </div>
         </div>
@@ -69,7 +69,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-slate-700/60">
         <div>
             <h1 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2.5">
-                <div class="p-1.5 bg-[#321270]/5 dark:bg-purple-500/10 text-[#321270] dark:text-purple-400 rounded-lg border border-[#321270]/10 dark:border-purple-500/20 shadow-sm">
+                <div class="p-1.5 bg-[#720c16]/5 dark:bg-[#a92a35]/10 text-[#720c16] dark:text-[#f87171] rounded-lg border border-[#720c16]/10 dark:border-[#a92a35]/20 shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
@@ -77,7 +77,7 @@
                 <span>Presensi Manajemen Kelas</span>
             </h1>
             <p class="mt-1.5 text-xs text-slate-500 flex items-center flex-wrap gap-2">
-                <span class="font-semibold text-[#321270] bg-[#321270]/5 px-2 py-0.5 rounded-md border border-[#321270]/10 text-xs">{{ $kelas->mataKuliah->nama_mk }}</span>
+                <span class="font-semibold text-[#720c16] bg-[#720c16]/5 px-2 py-0.5 rounded-md border border-[#720c16]/10 text-xs">{{ $kelas->mataKuliah->nama_mk }}</span>
                 <span class="text-slate-400">•</span>
                 <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-mono text-[11px] font-bold border border-slate-200">{{ $kelas->kode_kelas }}</span>
             </p>
@@ -93,7 +93,7 @@
             </a>
             @endif
             <a href="{{ route('dosen.absensi.create', $kelas->id) }}"
-               class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-[#321270] to-[#4a1fa8] hover:brightness-110 text-white rounded-lg font-bold text-xs shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
+               class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-[#720c16] to-[#9a1622] hover:brightness-110 text-white rounded-lg font-bold text-xs shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -128,12 +128,12 @@
     @endif
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200/70 dark:border-slate-700 shadow-sm p-3 flex items-center justify-between hover:border-[#321270]/40 transition-all duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200/70 dark:border-slate-700 shadow-sm p-3 flex items-center justify-between hover:border-[#720c16]/40 transition-all duration-300">
             <div>
                 <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Seluruh Sesi</p>
                 <p class="text-xl font-black text-slate-700 dark:text-white mt-0.5">{{ $statistics['total_sesi'] }}</p>
             </div>
-            <div class="p-2 bg-[#321270]/5 dark:bg-purple-900/30 text-[#321270] dark:text-purple-400 rounded-lg border border-[#321270]/10 dark:border-purple-500/20 shadow-inner">
+            <div class="p-2 bg-[#720c16]/5 dark:bg-[#2f0509]/30 text-[#720c16] dark:text-[#f87171] rounded-lg border border-[#720c16]/10 dark:border-[#a92a35]/20 shadow-inner">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
@@ -178,8 +178,8 @@
     </div>
 
     <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200/80 dark:border-slate-700 overflow-hidden transition-colors duration-200">
-        <div class="bg-gradient-to-r from-slate-50 to-[#321270]/5 dark:from-slate-800 dark:to-purple-900/20 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
-            <span class="w-1.5 h-3 bg-[#321270] dark:bg-purple-500 rounded-full"></span>
+        <div class="bg-gradient-to-r from-slate-50 to-[#720c16]/5 dark:from-slate-800 dark:to-[#2f0509]/20 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+            <span class="w-1.5 h-3 bg-[#720c16] dark:bg-[#a92a35] rounded-full"></span>
             <h2 class="text-sm font-bold text-slate-800 dark:text-white">Daftar Log Rekapitulasi Presensi</h2>
         </div>
 
@@ -204,14 +204,14 @@
                                     {{ ($absensiList->currentPage() - 1) * $absensiList->perPage() + $loop->iteration }}
                                 </td>
                                 <td class="px-5 py-3 whitespace-nowrap">
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#321270]/5 border border-[#321270]/10 text-[#321270] font-bold text-[11px] group-hover:bg-[#321270] group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#720c16]/5 border border-[#720c16]/10 text-[#720c16] font-bold text-[11px] group-hover:bg-[#720c16] group-hover:text-white group-hover:border-transparent transition-all duration-300">
                                         Pertemuan {{ $absensi->pertemuan_ke }}
                                     </span>
                                 </td>
 
                                 <td class="px-5 py-3 whitespace-nowrap">
                                     <div class="flex items-center gap-1.5 text-slate-700 font-semibold text-xs">
-                                        <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#321270] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#720c16] transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                         {{ $absensi->tanggal->format('d M Y') }}
@@ -266,8 +266,8 @@
                                 </td>
 
                                 <td class="px-5 py-3 whitespace-nowrap text-center">
-                                    <div class="flex justify-center relative" x-data="{ open: false }" :class="open ? 'z-50' : 'z-0'">
-                                        <button @click="open = !open" @click.away="open = false" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-lg text-[11px] font-bold shadow-sm transition-all focus:outline-none" :class="{ 'ring-2 ring-[#321270]/20 bg-slate-50': open }">
+                                    <div class="flex justify-center relative" x-data="{ open: false, menuStyle: '', toggleMenu() { if (this.open) { this.open = false; return; } const rect = this.$refs.actionButton.getBoundingClientRect(); const openUp = window.innerHeight - rect.bottom < 240 && rect.top > 240; const left = Math.max(8, Math.min(rect.right - 176, window.innerWidth - 184)); this.menuStyle = 'position: fixed; z-index: 1000; left: ' + left + 'px; ' + (openUp ? 'bottom: ' + (window.innerHeight - rect.top + 6) + 'px;' : 'top: ' + (rect.bottom + 6) + 'px;'); this.open = true; } }" @scroll.window="open = false" @resize.window="open = false" :class="open ? 'z-50' : 'z-0'">
+                                        <button x-ref="actionButton" @click="toggleMenu()" @click.away="open = false" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-lg text-[11px] font-bold shadow-sm transition-all focus:outline-none" :class="{ 'ring-2 ring-[#720c16]/20 bg-slate-50': open }">
                                             <span>Aksi</span>
                                             <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -281,12 +281,12 @@
                                              x-transition:leave="transition ease-in duration-75" 
                                              x-transition:leave-start="transform opacity-100 scale-100" 
                                              x-transition:leave-end="transform opacity-0 scale-95" 
-                                             class="absolute right-0 top-full mt-1.5 w-44 origin-top-right rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5 focus:outline-none overflow-hidden text-left" 
-                                             style="display: none;">
+                                             class="fixed w-44 origin-top-right rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5 focus:outline-none overflow-hidden text-left z-[1000]"
+                                             :style="menuStyle" style="display: none;">
                                             
                                             <div class="py-1.5">
-                                                <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" class="group flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-[#321270]/5 hover:text-[#321270] transition-colors">
-                                                    <svg class="w-4 h-4 text-slate-400 group-hover:text-[#321270]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" class="group flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-[#720c16]/5 hover:text-[#720c16] transition-colors">
+                                                    <svg class="w-4 h-4 text-slate-400 group-hover:text-[#720c16]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                     </svg>
@@ -367,7 +367,7 @@
                         @endforeach
                         <span class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Show:</span>
                         <select name="per_page" onchange="this.form.submit()"
-                            class="w-[70px] h-8 px-2 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#321270]/20 dark:focus:ring-purple-500/30">
+                            class="w-[70px] h-8 px-2 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#720c16]/20 dark:focus:ring-[#a92a35]/30">
                             <option value="10" @selected(($perPage ?? 10) == 10)>10</option>
                             <option value="25" @selected(($perPage ?? 10) == 25)>25</option>
                             <option value="50" @selected(($perPage ?? 10) == 50)>50</option>
@@ -389,7 +389,7 @@
 
         @else
             <div class="text-center py-10 px-4 bg-white dark:bg-slate-800 rounded-b-xl">
-                <div class="w-12 h-12 bg-[#321270]/5 dark:bg-purple-900/20 text-[#321270] dark:text-purple-400 rounded-xl border border-[#321270]/10 dark:border-purple-500/20 shadow-sm flex items-center justify-center mx-auto mb-3">
+                <div class="w-12 h-12 bg-[#720c16]/5 dark:bg-[#2f0509]/20 text-[#720c16] dark:text-[#f87171] rounded-xl border border-[#720c16]/10 dark:border-[#a92a35]/20 shadow-sm flex items-center justify-center mx-auto mb-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m9-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -398,7 +398,7 @@
                 <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Seluruh modul log absensi pertemuan mata kuliah ini masih bernilai kosong.</p>
                 <div class="mt-4">
                     <a href="{{ route('dosen.absensi.create', $kelas->id) }}"
-                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#321270] to-[#4a1fa8] hover:brightness-110 text-white rounded-lg font-bold text-xs shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
+                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#720c16] to-[#9a1622] hover:brightness-110 text-white rounded-lg font-bold text-xs shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4" />
                         </svg>

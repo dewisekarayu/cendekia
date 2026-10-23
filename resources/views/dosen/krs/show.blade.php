@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="mb-4 flex items-center justify-between">
-    <a href="{{ route('dosen.krs.index') }}" class="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-[#321270] transition-colors">
+    <a href="{{ route('dosen.krs.index') }}" class="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-[#720c16] transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
@@ -66,7 +66,7 @@
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/80 p-5">
             <h3 class="font-bold text-sm text-slate-800 mb-4">Informasi Mahasiswa</h3>
             <div class="flex items-center gap-3 mb-4">
-                <div class="w-12 h-12 rounded-full bg-[#321270] flex items-center justify-center text-white text-lg font-bold">
+                <div class="w-12 h-12 rounded-full bg-[#720c16] flex items-center justify-center text-white text-lg font-bold">
                     {{ strtoupper(substr($mahasiswa->name, 0, 1)) }}
                 </div>
                 <div>
@@ -85,7 +85,7 @@
                         @csrf
                         <div class="mb-3">
                             <label class="block text-xs font-semibold text-gray-600 mb-1">Catatan Pembimbing (Opsional)</label>
-                            <textarea name="catatan" rows="2" class="w-full text-xs rounded-lg border border-gray-200 p-2 focus:ring-[#321270]/20"></textarea>
+                            <textarea name="catatan" rows="2" class="w-full text-xs rounded-lg border border-gray-200 p-2 focus:ring-[#720c16]/20"></textarea>
                         </div>
                         <button type="submit" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors">
                             Setujui KRS

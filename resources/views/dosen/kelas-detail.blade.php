@@ -7,9 +7,9 @@
 <x-flash-message />
 
 {{-- HERO HEADER BANNER --}}
-<div class="mb-4 sm:mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-4 py-5 sm:px-8 sm:py-7 shadow-md relative text-white">
+<div class="mb-4 sm:mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#4c0810] via-[#720c16] to-[#9a1622] dark:from-slate-900 dark:via-[#1b0305] dark:to-[#1b0305] px-4 py-5 sm:px-8 sm:py-7 shadow-md relative text-white">
     <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
-    <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-purple-400/10 blur-xl"></div>
+    <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-[#f87171]/10 blur-xl"></div>
 
     <div class="relative z-10 flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div class="min-w-0 flex-1">
@@ -20,10 +20,10 @@
                     </svg>
                     {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
                 </span>
-                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-purple-100 backdrop-blur-sm">
+                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-[#fee2e2] backdrop-blur-sm">
                     {{ $kelas->semester?->nama_semester ?? 'Semester Aktif' }}
                 </span>
-                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-purple-100 backdrop-blur-sm">
+                <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-[#fee2e2] backdrop-blur-sm">
                     {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Program Studi' }}
                 </span>
                 @if($absensiAktif)
@@ -38,22 +38,22 @@
                 {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
             </h1>
 
-            <div class="mt-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-y-1.5 gap-x-5 text-xs sm:text-sm text-purple-100/90 font-medium">
+            <div class="mt-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-y-1.5 gap-x-5 text-xs sm:text-sm text-[#fee2e2]/90 font-medium">
                 <span class="inline-flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     {{ $kelas->hari }}, {{ substr($kelas->jam_mulai,0,5) }} – {{ substr($kelas->jam_selesai,0,5) }} WIB
                 </span>
                 <span class="inline-flex items-center gap-1.5 min-w-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span class="break-words">Ruang: {{ $kelas->ruangan ?? 'Online / Menyesuaikan' }}</span>
                 </span>
                 <span class="inline-flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                     {{ $kelas->mataKuliah?->sks ?? 0 }} SKS
@@ -64,11 +64,11 @@
         {{-- Top Right Metrics --}}
         <div class="grid grid-cols-2 gap-2.5 sm:gap-3 w-full lg:w-auto lg:shrink-0">
             <div class="rounded-2xl border border-white/15 bg-white/10 px-3 sm:px-4 py-2.5 sm:py-3 text-center backdrop-blur-md lg:min-w-[100px]">
-                <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-purple-200">Mahasiswa</p>
+                <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#fecaca]">Mahasiswa</p>
                 <p class="text-xl sm:text-2xl font-black text-white mt-0.5">{{ $kelas->mahasiswa->count() }}</p>
             </div>
             <div class="rounded-2xl border border-white/15 bg-white/10 px-3 sm:px-4 py-2.5 sm:py-3 text-center backdrop-blur-md lg:min-w-[90px]">
-                <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-purple-200">SKS</p>
+                <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#fecaca]">SKS</p>
                 <p class="text-xl sm:text-2xl font-black text-white mt-0.5">{{ $kelas->mataKuliah?->sks ?? 0 }}</p>
             </div>
         </div>
@@ -86,15 +86,15 @@
 
         {{-- 4 KEY METRICS ROW --}}
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
-            <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="group min-w-0 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-3.5 sm:p-4 shadow-sm hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md transition">
+            <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="group min-w-0 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-3.5 sm:p-4 shadow-sm hover:border-[#fca5a5] dark:hover:border-[#720c16] hover:shadow-md transition">
                 <div class="flex items-center justify-between gap-2">
                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Materi</span>
-                    <div class="h-8 w-8 shrink-0 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-[#321270] dark:text-purple-300 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div class="h-8 w-8 shrink-0 rounded-xl bg-[#fdf2f2] dark:bg-[#1b0305]/50 text-[#720c16] dark:text-[#fca5a5] flex items-center justify-center group-hover:scale-110 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     </div>
                 </div>
                 <p class="text-2xl font-black text-slate-800 dark:text-white mt-2">{{ $totalMateri }}</p>
-                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 group-hover:text-[#321270] dark:group-hover:text-purple-400 font-medium">Buka materi &rarr;</p>
+                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 group-hover:text-[#720c16] dark:group-hover:text-[#f87171] font-medium">Buka materi &rarr;</p>
             </a>
 
             <a href="{{ route('dosen.kelas-tugas', $kelas->id) }}" class="group min-w-0 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-3.5 sm:p-4 shadow-sm hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-md transition">
@@ -135,7 +135,7 @@
         <div class="rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 sm:p-6 shadow-sm transition-colors duration-200">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-700/60">
                 <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="h-8 w-8 shrink-0 rounded-xl bg-purple-100 dark:bg-purple-950/50 text-[#321270] dark:text-purple-300 flex items-center justify-center font-bold">
+                    <div class="h-8 w-8 shrink-0 rounded-xl bg-[#fee2e2] dark:bg-[#1b0305]/50 text-[#720c16] dark:text-[#fca5a5] flex items-center justify-center font-bold">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -177,21 +177,21 @@
             <div class="min-w-0 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 sm:p-5 shadow-sm">
                 <div class="flex items-center justify-between mb-3.5">
                     <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-purple-600"></span>
+                        <span class="h-2 w-2 rounded-full bg-[#720c16]"></span>
                         Materi Terbaru
                     </h3>
-                    <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="text-xs font-semibold text-[#321270] dark:text-purple-400 hover:underline py-1">Semua</a>
+                    <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="text-xs font-semibold text-[#720c16] dark:text-[#f87171] hover:underline py-1">Semua</a>
                 </div>
 
                 @if($recentMateri->isNotEmpty())
                     <div class="space-y-2.5">
                         @foreach($recentMateri as $mat)
-                            <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/60 dark:bg-slate-900/40 p-3 hover:border-purple-200 transition">
+                            <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/60 dark:bg-slate-900/40 p-3 hover:border-[#fecaca] transition">
                                 <div class="min-w-0 flex-1">
                                     <p class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{{ $mat->judul }}</p>
                                     <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Pertemuan {{ $mat->pertemuan ?? '-' }} · {{ $mat->created_at?->diffForHumans() }}</p>
                                 </div>
-                                <span class="rounded-lg bg-purple-50 dark:bg-purple-950/40 px-2 py-1 text-[10px] font-bold text-purple-700 dark:text-purple-300 shrink-0 max-w-[40%] truncate">
+                                <span class="rounded-lg bg-[#fdf2f2] dark:bg-[#1b0305]/40 px-2 py-1 text-[10px] font-bold text-[#5c0912] dark:text-[#fca5a5] shrink-0 max-w-[40%] truncate">
                                     {{ $mat->kategori ?? 'Dokumen' }}
                                 </span>
                             </div>
@@ -200,7 +200,7 @@
                 @else
                     <div class="rounded-xl border border-dashed border-slate-200 dark:border-slate-700 p-6 text-center">
                         <p class="text-xs text-slate-400 dark:text-slate-500 mb-2">Belum ada materi diunggah</p>
-                        <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-purple-50 dark:bg-purple-950/50 px-3 py-2 text-xs font-bold text-[#321270] dark:text-purple-300 hover:bg-purple-100 transition">
+                        <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-[#fdf2f2] dark:bg-[#1b0305]/50 px-3 py-2 text-xs font-bold text-[#720c16] dark:text-[#fca5a5] hover:bg-[#fee2e2] transition">
                             + Unggah Materi
                         </a>
                     </div>
@@ -249,7 +249,7 @@
                     <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">Mahasiswa Terdaftar</h3>
                     <p class="text-xs text-slate-400 dark:text-slate-500">Total {{ $kelas->mahasiswa->count() }} mahasiswa terdaftar dalam kelas ini</p>
                 </div>
-                <a href="{{ route('dosen.absensi.index', $kelas->id) }}" class="inline-flex items-center gap-1 text-xs font-bold text-[#321270] dark:text-purple-400 hover:underline whitespace-nowrap">
+                <a href="{{ route('dosen.absensi.index', $kelas->id) }}" class="inline-flex items-center gap-1 text-xs font-bold text-[#720c16] dark:text-[#f87171] hover:underline whitespace-nowrap">
                     Lihat Presensi
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                 </a>
@@ -259,7 +259,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-3">
                     @foreach($kelas->mahasiswa->take(6) as $mhs)
                         <div class="flex items-center gap-3 min-w-0 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 p-2.5">
-                            <div class="h-8 w-8 shrink-0 rounded-full bg-[#321270]/10 dark:bg-purple-950 text-[#321270] dark:text-purple-300 flex items-center justify-center font-bold text-xs">
+                            <div class="h-8 w-8 shrink-0 rounded-full bg-[#720c16]/10 dark:bg-[#1b0305] text-[#720c16] dark:text-[#fca5a5] flex items-center justify-center font-bold text-xs">
                                 {{ strtoupper(substr($mhs->name, 0, 1)) }}
                             </div>
                             <div class="min-w-0">
@@ -287,14 +287,14 @@
         {{-- QUICK ACTIONS CARD --}}
         <div class="min-w-0 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 sm:p-5 shadow-sm">
             <h3 class="mb-3 text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#321270] dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#720c16] dark:text-[#f87171]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 Aksi Cepat Dosen
             </h3>
             <div class="space-y-2.5">
-                <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="flex items-center gap-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 p-3 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 transition group">
-                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-950/60 text-[#321270] dark:text-purple-300 group-hover:scale-105 transition-transform">
+                <a href="{{ route('dosen.kelas-materi', $kelas->id) }}" class="flex items-center gap-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 p-3 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-[#f87171] dark:hover:border-[#a92a35] hover:bg-[#fdf2f2]/50 dark:hover:bg-[#1b0305]/30 transition group">
+                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#fee2e2] dark:bg-[#1b0305]/60 text-[#720c16] dark:text-[#fca5a5] group-hover:scale-105 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     </div>
                     <div class="min-w-0">
@@ -333,8 +333,8 @@
                     </div>
                 </a>
 
-                <a href="{{ route('dosen.kelas-forum', $kelas->id) }}" class="flex items-center gap-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 p-3 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/30 transition group">
-                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 group-hover:scale-105 transition-transform">
+                <a href="{{ route('dosen.kelas-forum', $kelas->id) }}" class="flex items-center gap-3 rounded-xl border border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-900/40 p-3 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-[#f87171] dark:hover:border-[#a92a35] hover:bg-[#fdf2f2]/50 dark:hover:bg-[#1b0305]/30 transition group">
+                    <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#fee2e2] dark:bg-[#1b0305]/60 text-[#5c0912] dark:text-[#fca5a5] group-hover:scale-105 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                     </div>
                     <div class="min-w-0">
@@ -348,7 +348,7 @@
         {{-- INFO KELAS CARD --}}
         <div class="min-w-0 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 sm:p-5 shadow-sm">
             <h3 class="mb-4 text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#321270] dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#720c16] dark:text-[#f87171]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Informasi Kelas
@@ -363,7 +363,7 @@
                     ['label' => 'Kapasitas Kuota', 'value' => ($kelas->kuota_mahasiswa ?? 40) . ' Kursi (' . $kelas->mahasiswa->count() . ' Terisi)', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4a4 4 0 10-8 0 4 4 0 008 0zm6 0a4 4 0 10-8 0 4 4 0 008 0z'],
                 ] as $info)
                     <div class="flex items-center gap-3">
-                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-950/50 text-[#321270] dark:text-purple-300">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#fdf2f2] dark:bg-[#1b0305]/50 text-[#720c16] dark:text-[#fca5a5]">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $info['icon'] }}"/></svg>
                         </div>
                         <div class="min-w-0">
@@ -376,9 +376,9 @@
         </div>
 
         {{-- AI ASSISTANT PROMPT WIDGET --}}
-        <div class="min-w-0 md:col-span-2 lg:col-span-1 rounded-2xl border border-purple-200/60 dark:border-purple-800/40 bg-gradient-to-br from-purple-50/60 to-indigo-50/40 dark:from-purple-950/30 dark:to-slate-900 p-4 sm:p-5 shadow-sm">
+        <div class="min-w-0 md:col-span-2 lg:col-span-1 rounded-2xl border border-[#fecaca]/60 dark:border-[#45070d]/40 bg-gradient-to-br from-[#fdf2f2]/60 to-[#fdf2f2]/40 dark:from-[#1b0305]/30 dark:to-slate-900 p-4 sm:p-5 shadow-sm">
             <div class="flex items-center gap-2.5 mb-2">
-                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#321270] text-white">
+                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#720c16] text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </span>
                 <p class="text-xs font-bold text-slate-800 dark:text-white">Cendekia AI Copilot</p>
@@ -386,7 +386,7 @@
             <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
                 Butuh bantuan menyusun silabus, kisi-kisi soal, atau rangkuman materi untuk kelas ini?
             </p>
-            <a href="{{ route('dosen.ai-assistant') }}" class="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#321270] dark:bg-purple-700 px-3 py-2.5 text-xs font-bold text-white hover:bg-[#250d54] dark:hover:bg-purple-600 transition shadow-sm">
+            <a href="{{ route('dosen.ai-assistant') }}" class="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#720c16] dark:bg-[#5c0912] px-3 py-2.5 text-xs font-bold text-white hover:bg-[#4c0810] dark:hover:bg-[#720c16] transition shadow-sm">
                 Tanya AI Assistant &rarr;
             </a>
         </div>

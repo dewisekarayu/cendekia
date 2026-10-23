@@ -18,7 +18,7 @@
 {{-- ===== TOP BAR: Kembali + Aksi ===== --}}
     <div class="mb-4 flex items-center justify-between gap-3">
         <a href="{{ route('dosen.kelas-materi', $kelas->id) }}"
-           class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-500 dark:text-slate-400 hover:text-[#321270] dark:hover:text-purple-400 transition">
+           class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-500 dark:text-slate-400 hover:text-[#720c16] dark:hover:text-[#f87171] transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             Kembali ke Kelas
         </a>
@@ -48,7 +48,7 @@
     </div>
 
     {{-- ===== HERO HEADER (selaras dengan halaman Materi) ===== --}}
-    <div class="bg-gradient-to-r from-[#321270] to-[#4c19a0] dark:from-indigo-950 dark:to-purple-900 rounded-xl px-8 py-6 mb-6 shadow-sm">
+    <div class="bg-gradient-to-r from-[#720c16] to-[#9a1622] dark:from-[#1b0305] dark:to-[#2f0509] rounded-xl px-8 py-6 mb-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
             <span class="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/15 text-white px-2.5 py-1 rounded">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0121 12c0 2.21-.895 4.21-2.343 5.657L12 21l-6.657-3.343A8.001 8.001 0 013 12a12.083 12.083 0 012.84-3.422L12 14z"/></svg>
@@ -75,7 +75,7 @@
 
         {{-- Deskripsi --}}
         <div class="flex items-center gap-2 mb-3">
-            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-50 dark:bg-purple-950/60 text-[#321270] dark:text-purple-300">
+            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#fdf2f2] dark:bg-[#1b0305]/60 text-[#720c16] dark:text-[#fca5a5]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             </div>
             <h2 class="text-sm font-bold text-slate-800 dark:text-white">Deskripsi Materi</h2>
@@ -93,7 +93,7 @@
 
         {{-- File --}}
         <div class="flex items-center gap-2 mb-4">
-            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-50 dark:bg-purple-950/60 text-[#321270] dark:text-purple-300">
+            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#fdf2f2] dark:bg-[#1b0305]/60 text-[#720c16] dark:text-[#fca5a5]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
             </div>
             <h2 class="text-sm font-bold text-slate-800 dark:text-white">Lampiran File</h2>
@@ -118,7 +118,7 @@
                         'pdf'  => ['bg' => 'bg-rose-50 dark:bg-rose-950/40', 'text' => 'text-rose-600 dark:text-rose-300'],
                         'ppt'  => ['bg' => 'bg-orange-50 dark:bg-orange-950/40', 'text' => 'text-orange-600 dark:text-orange-300'],
                         'pptx' => ['bg' => 'bg-orange-50 dark:bg-orange-950/40', 'text' => 'text-orange-600 dark:text-orange-300'],
-                        'mp4'  => ['bg' => 'bg-purple-50 dark:bg-purple-950/60', 'text' => 'text-[#321270] dark:text-purple-300'],
+                        'mp4'  => ['bg' => 'bg-[#fdf2f2] dark:bg-[#1b0305]/60', 'text' => 'text-[#720c16] dark:text-[#fca5a5]'],
                         'doc'  => ['bg' => 'bg-blue-50 dark:bg-blue-950/40', 'text' => 'text-blue-600 dark:text-blue-300'],
                         'docx' => ['bg' => 'bg-blue-50 dark:bg-blue-950/40', 'text' => 'text-blue-600 dark:text-blue-300'],
                         'xls'  => ['bg' => 'bg-emerald-50 dark:bg-emerald-950/40', 'text' => 'text-emerald-600 dark:text-emerald-300'],
@@ -129,7 +129,7 @@
                     @php
                         $tipe = $file->tipe_file ?? '';
                         $iconPath = $icons[$tipe] ?? 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
-                        $accent = $accents[$tipe] ?? ['bg' => 'bg-purple-50 dark:bg-purple-950/60', 'text' => 'text-[#321270] dark:text-purple-300'];
+                        $accent = $accents[$tipe] ?? ['bg' => 'bg-[#fdf2f2] dark:bg-[#1b0305]/60', 'text' => 'text-[#720c16] dark:text-[#fca5a5]'];
 
                         $fileSize = null;
                         $fileDate = null;
@@ -147,14 +147,14 @@
                         $previewUrl = route('dosen.materi.preview', [$kelas->id, $materi->id, $file->id]);
                         $downloadUrl = route('dosen.materi.unduh', [$kelas->id, $materi->id, $file->id]);
                     @endphp
-                    <div class="group rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40 hover:border-purple-200 dark:hover:border-purple-900/50 hover:shadow-md transition-all duration-200 overflow-hidden">
+                    <div class="group rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/40 hover:border-[#fecaca] dark:hover:border-[#2f0509]/50 hover:shadow-md transition-all duration-200 overflow-hidden">
                         <div class="flex items-center gap-4 p-4">
                             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg {{ $accent['bg'] }} {{ $accent['text'] }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPath }}"/></svg>
                             </div>
 
                             <a href="{{ $previewUrl }}" target="_blank" class="min-w-0 flex-1">
-                                <p class="truncate text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-[#321270] dark:group-hover:text-purple-300 group-hover:underline transition">
+                                <p class="truncate text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-[#720c16] dark:group-hover:text-[#fca5a5] group-hover:underline transition">
                                     {{ $file->nama_asli ?? basename($file->file_path) }}
                                 </p>
                                 <p class="flex flex-wrap items-center gap-x-1.5 text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
@@ -180,7 +180,7 @@
 
                             <a href="{{ $downloadUrl }}"
                             title="Unduh file"
-                            class="shrink-0 inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-[#321270] dark:text-purple-300 bg-purple-50 dark:bg-purple-950/40 hover:bg-[#321270] hover:text-white dark:hover:bg-[#6c2bd9] dark:hover:text-white transition">
+                            class="shrink-0 inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-[#720c16] dark:text-[#fca5a5] bg-[#fdf2f2] dark:bg-[#1b0305]/40 hover:bg-[#720c16] hover:text-white dark:hover:bg-[#9a1622] dark:hover:text-white transition">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                 </svg>
@@ -206,7 +206,7 @@
                     </svg>
                     <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3">File belum diunggah untuk materi ini.</p>
                     <button type="button" onclick="toggleMateriModal('modalEditMateriDetail')"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold bg-[#321270] dark:bg-[#6c2bd9] text-white px-4 py-2 rounded-lg hover:bg-[#321270]/90 dark:hover:bg-[#5b21b6] transition">
+                        class="inline-flex items-center gap-1.5 text-xs font-bold bg-[#720c16] dark:bg-[#9a1622] text-white px-4 py-2 rounded-lg hover:bg-[#720c16]/90 dark:hover:bg-[#5c0912] transition">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
@@ -225,7 +225,7 @@
             <div class="relative bg-white dark:bg-slate-800 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
 
                 <div class="px-8 py-5 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
-                    <div class="bg-[#1e293b] dark:bg-purple-650 p-2 rounded-lg text-white">
+                    <div class="bg-[#1e293b] dark:bg-[#720c16] p-2 rounded-lg text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
@@ -240,13 +240,13 @@
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Judul Materi</label>
                             <input type="text" name="judul" value="{{ $materi->judul }}" required maxlength="255"
-                                class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100 font-medium">
+                                class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100 font-medium">
                         </div>
 
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Pertemuan Ke-</label>
                             <div class="relative">
-                                <select name="pertemuan_ke" required class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
+                                <select name="pertemuan_ke" required class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
                                     @for ($i = 1; $i <= 16; $i++)
                                         <option value="{{ $i }}" @selected($materi->pertemuan_ke === $i) class="dark:bg-slate-900">Minggu Ke-{{ $i }}</option>
                                     @endfor
@@ -260,7 +260,7 @@
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
                             <textarea name="deskripsi" rows="4" maxlength="5000"
-                                class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none resize-none transition text-gray-800 dark:text-gray-100">{{ $materi->deskripsi }}</textarea>
+                                class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none resize-none transition text-gray-800 dark:text-gray-100">{{ $materi->deskripsi }}</textarea>
                         </div>
 
                         <div class="space-y-1.5">
@@ -290,7 +290,7 @@
                         <button type="button" onclick="toggleMateriModal('modalEditMateriDetail')" class="px-5 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition">
                             Batal
                         </button>
-                        <button type="submit" class="px-5 py-2 rounded-lg bg-[#0f172a] dark:bg-[#6c2bd9] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
+                        <button type="submit" class="px-5 py-2 rounded-lg bg-[#0f172a] dark:bg-[#9a1622] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5c0912] transition">
                             Simpan Perubahan
                         </button>
                     </div>

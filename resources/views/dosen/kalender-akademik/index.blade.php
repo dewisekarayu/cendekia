@@ -3,28 +3,26 @@
 @section('activeMenu', 'Kalender Akademik')
 @section('content')
 
-<div x-data="calendar()" class="min-h-screen overflow-x-hidden bg-[#faf9ff] dark:bg-slate-950 py-4 sm:py-5 px-3 sm:px-6 lg:px-8 mb-8">
+<div x-data="calendar()" class="calendar-page calendar-dark-surfaces min-h-screen overflow-x-hidden bg-gray-50 dark:bg-slate-950 py-4 sm:py-5 px-3 sm:px-6 lg:px-8 mb-8">
     <div class="max-w-7xl mx-auto space-y-4">
 
         {{-- Breadcrumb & Header --}}
         <div class="space-y-3">
             <nav class="flex items-center gap-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">
-                <a href="{{ route('dosen.dashboard') }}" class="hover:text-[#321270] dark:hover:text-violet-400 transition-colors">Dashboard</a>
+                <a href="{{ route('dosen.dashboard') }}" class="hover:text-[#720c16] dark:hover:text-[#f87171] transition-colors">Dashboard</a>
                 <svg class="w-3 h-3 flex-shrink-0 text-gray-300 dark:text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 <span class="text-gray-600 dark:text-slate-300">Kalender Akademik</span>
             </nav>
 
-            <div class="relative bg-gradient-to-r from-[#321270] via-[#4a1fa8] to-[#21104f] rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-xl shadow-purple-950/15 overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-gray-900 dark:text-white shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
 
                 <div class="flex items-center gap-3 sm:gap-4 relative z-10">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center flex-shrink-0 shadow-inner">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-violet-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gray-100 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-[#720c16] dark:text-[#f87171]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
                     </div>
                     <div class="min-w-0">
-                        <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight text-white">Kalender Akademik</h1>
-                        <p class="text-[11px] sm:text-xs text-violet-100/85 mt-0.5 leading-snug">
+                        <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">Kalender Akademik</h1>
+                        <p class="text-[11px] sm:text-xs text-gray-600 dark:text-slate-300 mt-0.5 leading-snug">
                             <span class="sm:hidden">Ketuk tanggal untuk melihat agenda.</span>
                             <span class="hidden sm:inline">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini. Klik tanggal untuk melihat detail agenda.</span>
                         </p>
@@ -38,7 +36,7 @@
 
             {{-- Calendar Main Block --}}
             <div class="lg:col-span-3 min-w-0 space-y-4">
-                <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700/80 overflow-hidden">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-200 dark:border-slate-700/80 overflow-hidden">
 
                     {{-- Controls Bar --}}
                     <div class="p-3 sm:p-5 border-b border-gray-100 dark:border-slate-700/60 space-y-3">
@@ -55,12 +53,12 @@
                             </div>
 
                             <div class="flex items-center gap-2 sm:gap-3">
-                                <button @click="goToToday()" class="flex-shrink-0 px-4 py-2.5 sm:py-2 text-xs font-bold uppercase tracking-wider rounded-xl bg-purple-50 dark:bg-slate-900 text-[#321270] dark:text-violet-400 hover:bg-purple-100 dark:hover:bg-slate-800 transition active:scale-95 border border-purple-100 dark:border-0">
+                                <button @click="goToToday()" class="flex-shrink-0 px-4 py-2.5 sm:py-2 text-xs font-bold uppercase tracking-wider rounded-xl bg-white dark:bg-slate-900 text-[#720c16] dark:text-[#f87171] hover:bg-gray-50 dark:hover:bg-slate-800 transition active:scale-95 border border-gray-200 dark:border-0">
                                     Hari Ini
                                 </button>
                                 {{-- Semester Selector --}}
                                 <div class="relative flex items-center flex-1 min-w-0 sm:flex-none">
-                                    <select x-model="selectedSemesterId" @change="updateURL()" class="w-full min-w-0 truncate pl-3 sm:pl-4 pr-9 py-2.5 sm:py-2 text-xs font-bold tracking-wider rounded-xl border border-purple-100 dark:border-slate-700 bg-purple-50/40 dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#321270] focus:ring-4 focus:ring-[#321270]/10 outline-none transition appearance-none cursor-pointer">
+                                    <select x-model="selectedSemesterId" @change="updateURL()" class="w-full min-w-0 truncate pl-3 sm:pl-4 pr-9 py-2.5 sm:py-2 text-xs font-bold tracking-wider rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#720c16] focus:ring-4 focus:ring-[#720c16]/10 outline-none transition appearance-none cursor-pointer">
                                         <option value="">Semua Semester</option>
                                         @foreach($semesters as $sem)
                                             <option value="{{ $sem->id }}">{{ $sem->tahun_ajaran }} - {{ $sem->nama_semester }} @if($sem->is_active) (Aktif) @endif</option>
@@ -90,16 +88,16 @@
                                          role="button" tabindex="0"
                                          @keydown.enter="$dispatch('select-day', { day: day })"
                                          :class="{
-                                             'bg-purple-50/80 dark:bg-slate-900 border-[#321270] dark:border-violet-500/80 ring-1 ring-[#321270]/20': day.isToday,
-                                             'bg-rose-50/40 dark:bg-rose-950/10 border-rose-100 dark:border-rose-950/30': day.isWeekend && !day.isToday && day.isCurrentMonth,
+                                             'bg-white dark:bg-slate-900 border-[#720c16] dark:border-[#a92a35]/80 ring-1 ring-[#720c16]/20': day.isToday,
+                                             'bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-700': day.isWeekend && !day.isToday && day.isCurrentMonth,
                                              'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700/60': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                              'bg-slate-50/50 dark:bg-slate-900/40 border-gray-100 dark:border-slate-800/40 opacity-40': !day.isCurrentMonth,
                                          }"
-                                         class="min-h-[52px] sm:min-h-[105px] p-1 sm:p-2.5 rounded-lg sm:rounded-2xl border transition-all duration-200 sm:hover:shadow-md hover:border-[#321270]/40 cursor-pointer flex flex-col items-center sm:items-stretch relative min-w-0 active:scale-95 sm:active:scale-100">
+                                         class="min-h-[52px] sm:min-h-[105px] p-1 sm:p-2.5 rounded-lg sm:rounded-2xl border transition-all duration-200 sm:hover:shadow-md hover:border-[#720c16]/40 cursor-pointer flex flex-col items-center sm:items-stretch relative min-w-0 active:scale-95 sm:active:scale-100">
 
                                         <div class="flex items-start justify-center sm:justify-between gap-1 sm:mb-2 w-full">
                                             <span :class="{
-                                                      'bg-[#321270] text-white font-extrabold': day.isToday,
+                                                      'text-[#720c16] dark:text-[#f87171] font-extrabold': day.isToday,
                                                       'text-rose-600 dark:text-rose-500 font-bold': day.isWeekend && !day.isToday && day.isCurrentMonth,
                                                       'text-gray-800 dark:text-slate-200 font-bold': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                                       'text-gray-400 dark:text-slate-600 font-medium': !day.isCurrentMonth,
@@ -125,7 +123,7 @@
                                         </div>
 
                                         {{-- Layar lebar: preview judul agenda --}}
-                                        <div class="hidden sm:block flex-1 space-y-1 min-w-0 overflow-hidden w-full">
+                                        <div class="calendar-day-events hidden sm:block space-y-1 min-w-0 overflow-hidden w-full">
                                             <template x-for="event in uniqEvents(day.events).slice(0, 1)" :key="event.id">
                                                 <div :style="'background-color: ' + event.warna + '10; border-left: 3px solid ' + event.warna"
                                                      class="px-2 py-1 rounded-lg text-[11px] font-bold truncate flex flex-col gap-0.5 min-w-0">
@@ -149,10 +147,10 @@
 
                 {{-- Riwayat Agenda --}}
                 @if($historyEvents->count() > 0)
-                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700 overflow-hidden">
-                    <div class="px-4 sm:px-5 py-4 border-b border-purple-100/80 dark:border-slate-700 flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-lg bg-purple-50 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-4 h-4 text-[#321270] dark:text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+                    <div class="px-4 sm:px-5 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-[#720c16] dark:text-[#f87171]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         <h3 class="font-bold text-gray-900 dark:text-white">Riwayat Agenda</h3>
                         <span class="ml-auto px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-xs font-bold whitespace-nowrap">
@@ -183,10 +181,10 @@
             {{-- Sidebar --}}
             <div class="lg:col-span-1 min-w-0 space-y-4">
                 {{-- Upcoming Events --}}
-                <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700/80 overflow-hidden">
-                    <div class="bg-purple-50/60 dark:bg-slate-900/40 px-4 py-3 sm:py-3.5 border-b border-purple-100/80 dark:border-slate-700/60">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-200 dark:border-slate-700/80 overflow-hidden">
+                    <div class="bg-gray-50 dark:bg-slate-900/40 px-4 py-3 sm:py-3.5 border-b border-gray-200 dark:border-slate-700/60">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-purple-100 dark:bg-slate-900 flex items-center justify-center text-[#321270] dark:text-violet-400">
+                            <div class="w-9 h-9 rounded-xl bg-gray-100 dark:bg-slate-900 flex items-center justify-center text-[#720c16] dark:text-[#f87171]">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                             </div>
                             <h3 class="font-bold text-gray-900 dark:text-white text-base">Agenda Mendatang</h3>
@@ -196,7 +194,7 @@
                         <template x-if="uniqEvents(upcomingEvents).length > 0">
                             <div class="space-y-2.5">
                                 <template x-for="event in uniqEvents(upcomingEvents)" :key="event.id">
-                                    <div @click="showEventDetail(event)" class="p-3 rounded-xl border border-gray-100 dark:border-slate-700/50 active:bg-purple-50/50 hover:shadow-sm cursor-pointer transition-all" :style="'border-left: 3px solid ' + event.warna">
+                                    <div @click="showEventDetail(event)" class="p-3 rounded-xl border border-gray-100 dark:border-slate-700/50 active:bg-gray-50 dark:active:bg-slate-700 hover:shadow-sm cursor-pointer transition-all" :style="'border-left: 3px solid ' + event.warna">
                                         <div class="flex items-start justify-between gap-2 mb-1.5">
                                             <p class="font-bold text-xs text-gray-900 dark:text-white flex-1 min-w-0 truncate" x-text="event.judul"></p>
                                             <span class="px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wide flex-shrink-0" :style="'background-color: ' + event.warna + '15; color: ' + event.warna" x-text="event.jenis_kegiatan_label"></span>
@@ -216,14 +214,14 @@
                 </div>
 
                 {{-- Semester Statistics --}}
-                <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-sm shadow-purple-950/5 border border-purple-100/80 dark:border-slate-700/80 overflow-hidden">
-                    <div class="bg-purple-50/60 dark:bg-slate-900/40 px-4 py-3 sm:py-3.5 border-b border-purple-100/80 dark:border-slate-700/60">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-200 dark:border-slate-700/80 overflow-hidden">
+                    <div class="bg-gray-50 dark:bg-slate-900/40 px-4 py-3 sm:py-3.5 border-b border-gray-200 dark:border-slate-700/60">
                         <h3 class="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Ringkasan Smt</h3>
                     </div>
                     <div class="p-3 sm:p-3.5 grid grid-cols-2 lg:grid-cols-1 gap-2">
                         <template x-for="(stat, idx) in [
                             { label: 'Total Agenda', key: 'total', bg: 'bg-slate-50 dark:bg-slate-900', text: 'text-gray-800 dark:text-white' },
-                            { label: 'UTS & UAS', key: 'exams', bg: 'bg-rose-50/60 dark:bg-rose-950/20', text: 'text-rose-600 dark:text-rose-400' },
+                            { label: 'UTS & UAS', key: 'exams', bg: 'bg-gray-50 dark:bg-slate-900', text: 'text-rose-600 dark:text-rose-400' },
                             { label: 'Libur & Cuti', key: 'holidays', bg: 'bg-emerald-50/60 dark:bg-emerald-950/20', text: 'text-emerald-600 dark:text-emerald-400' },
                             { label: 'Batas Tugas', key: 'deadlines', bg: 'bg-amber-50/60 dark:bg-amber-950/20', text: 'text-amber-600 dark:text-amber-400' }
                         ]" :key="idx">
@@ -255,6 +253,7 @@
                     return isNaN(d) ? raw : d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                 }
              }"
+             class="calendar-dark-surfaces"
              @select-day.window="openDay($event.detail.day)"
              @keydown.escape.window="closeDay()"
              x-effect="document.body.classList.toggle('overflow-hidden', dayOpen)">
@@ -274,8 +273,8 @@
                     {{-- Header --}}
                     <div class="px-4 sm:px-5 py-3 sm:py-5 border-b border-gray-100 dark:border-slate-700/60 flex items-start justify-between gap-3 flex-shrink-0">
                         <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 rounded-xl bg-[#321270] flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#720c16] dark:text-[#f87171]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             </div>
                             <div class="min-w-0">
                                 <h3 id="dayModalTitle" class="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base leading-snug" x-text="dayLabel"></h3>
@@ -291,12 +290,12 @@
                     <div class="p-4 sm:p-5 overflow-y-auto overscroll-contain space-y-3" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
                         <template x-for="event in dayEvents" :key="event.id">
                             <div class="rounded-2xl border border-gray-100 dark:border-slate-700/60 p-4 space-y-3"
-                                 :style="'border-left: 4px solid ' + (event.warna || '#321270') + '; background-color: ' + (event.warna || '#321270') + '08'">
+                                 :style="'border-left: 4px solid ' + (event.warna || '#720c16') + '; background-color: ' + (event.warna || '#720c16') + '08'">
 
                                 <div class="flex flex-wrap items-start justify-between gap-2">
                                     <h4 class="font-bold text-sm text-gray-900 dark:text-white leading-snug min-w-0 flex-1" x-text="event.judul"></h4>
                                     <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wide flex-shrink-0"
-                                          :style="'background-color: ' + (event.warna || '#321270') + '20; color: ' + (event.warna || '#321270')"
+                                          :style="'background-color: ' + (event.warna || '#720c16') + '20; color: ' + (event.warna || '#720c16')"
                                           x-text="event.jenis_kegiatan_label || 'Kegiatan'"></span>
                                 </div>
 
@@ -362,7 +361,7 @@
              x-effect="document.body.classList.toggle('overflow-hidden', !!selectedEvent)"
              @keydown.escape.window="selectedEvent && closeEventModal()"
              @click.self="closeEventModal()"
-             class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm touch-none overscroll-none">
+             class="calendar-dark-surfaces fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm touch-none overscroll-none">
 
             <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md max-h-[85dvh] overflow-y-auto overscroll-contain shadow-2xl border border-gray-100 dark:border-slate-700"
                  role="dialog" aria-modal="true">
@@ -371,7 +370,7 @@
                     <div>
                         <div class="px-4 sm:px-5 py-3 sm:py-5 border-b border-gray-100 dark:border-slate-700/60 flex items-center justify-between gap-3 sticky top-0 bg-white dark:bg-slate-800 z-10">
                             <div class="flex items-center gap-3 min-w-0">
-                                <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" :style="'background-color: ' + (selectedEvent.warna || '#321270')">
+                                <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" :style="'background-color: ' + (selectedEvent.warna || '#720c16')">
                                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
                                 </div>
                                 <h3 class="font-extrabold text-gray-900 dark:text-white text-sm leading-snug" x-text="selectedEvent.judul"></h3>
@@ -384,14 +383,14 @@
                         <div class="p-4 sm:p-6 space-y-4 text-sm" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
                             <div class="flex flex-wrap gap-2">
                                 <span class="px-2.5 py-1 rounded-lg text-xs font-bold"
-                                      :style="'background-color: ' + (selectedEvent.warna || '#321270') + '15; color: ' + (selectedEvent.warna || '#321270')"
+                                      :style="'background-color: ' + (selectedEvent.warna || '#720c16') + '15; color: ' + (selectedEvent.warna || '#720c16')"
                                       x-text="selectedEvent.jenis_kegiatan_label || 'Kegiatan'"></span>
                                 <span x-show="selectedEvent.is_all_day" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>
                             </div>
 
                             <div class="bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-none rounded-2xl p-4 text-xs space-y-1">
                                 <div class="flex items-start gap-2 text-gray-800 dark:text-slate-200 font-bold">
-                                    <svg class="w-4 h-4 text-[#321270] dark:text-violet-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                                    <svg class="w-4 h-4 text-[#720c16] dark:text-[#f87171] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                                     <span>
                                         <span x-text="window.fmtTanggal(selectedEvent.tanggal_mulai)"></span>
                                         <template x-if="selectedEvent.tanggal_selesai && window.fmtTanggal(selectedEvent.tanggal_selesai) !== window.fmtTanggal(selectedEvent.tanggal_mulai)">
@@ -424,6 +423,57 @@
         </div>
     </template>
 </div>
+
+<style>
+    html.dark main.calendar-page-container {
+        background-color: #1b1115 !important;
+    }
+
+    html.dark .calendar-page {
+        background-color: #1b1115 !important;
+    }
+
+    html.dark .calendar-page .grid-cols-7 > div[role="button"] {
+        background-color: #2b1b21 !important;
+    }
+
+    html.dark .calendar-page .calendar-day-events {
+        background-color: transparent !important;
+    }
+
+    html.dark .calendar-dark-surfaces .bg-white,
+    html.dark .calendar-dark-surfaces [class*="dark:bg-slate-800"] {
+        background-color: #2b1b21 !important;
+    }
+
+    html.dark .calendar-dark-surfaces [class*="dark:bg-slate-900"],
+    html.dark .calendar-dark-surfaces .bg-slate-50,
+    html.dark .calendar-dark-surfaces .bg-gray-50 {
+        background-color: #211419 !important;
+    }
+
+    html.dark .calendar-dark-surfaces [class*="dark:bg-slate-700"] {
+        background-color: #38232a !important;
+    }
+
+    html.dark .calendar-dark-surfaces .border-gray-100,
+    html.dark .calendar-dark-surfaces .border-gray-200,
+    html.dark .calendar-dark-surfaces [class*="dark:border-slate-"] {
+        border-color: #49313a !important;
+    }
+
+    html.dark .calendar-dark-surfaces select,
+    html.dark .calendar-dark-surfaces select:focus {
+        background-color: #211419 !important;
+        border-color: #49313a !important;
+        box-shadow: none !important;
+    }
+
+    html.dark .calendar-dark-surfaces select:focus {
+        border-color: #a92a35 !important;
+        box-shadow: 0 0 0 2px rgb(169 42 53 / 20%) !important;
+    }
+</style>
 
 @push('scripts')
 <script>
