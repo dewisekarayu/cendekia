@@ -9,14 +9,14 @@
      x-data="jadwalMengajarData()">
 
     {{-- HERO BANNER --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-6 sm:px-8 sm:py-7 shadow-md text-white">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#4c0810] via-[#720c16] to-[#9a1622] dark:from-slate-900 dark:via-[#1b0305] dark:to-[#1b0305] px-6 py-6 sm:px-8 sm:py-7 shadow-md text-white">
         <div class="pointer-events-none absolute -right-12 -top-12 h-52 w-52 rounded-full bg-white/10 blur-2xl"></div>
-        <div class="pointer-events-none absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-purple-400/10 blur-xl"></div>
+        <div class="pointer-events-none absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-[#f87171]/10 blur-xl"></div>
         
         <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
             <div class="max-w-2xl">
-                <div class="inline-flex items-center gap-2 rounded-lg bg-white/10 px-3 py-1 text-xs font-semibold text-purple-200 backdrop-blur-sm mb-2 border border-white/10">
-                    <svg class="w-3.5 h-3.5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="inline-flex items-center gap-2 rounded-lg bg-white/10 px-3 py-1 text-xs font-semibold text-[#fecaca] backdrop-blur-sm mb-2 border border-white/10">
+                    <svg class="w-3.5 h-3.5 text-[#fca5a5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                     <span>Portal Akademik Dosen &middot; Semester Aktif</span>
@@ -24,7 +24,7 @@
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
                     Jadwal & Log Mengajar
                 </h1>
-                <p class="mt-2 text-xs sm:text-sm text-purple-100/80 leading-relaxed">
+                <p class="mt-2 text-xs sm:text-sm text-[#fee2e2]/80 leading-relaxed">
                     Kelola jadwal perkuliahan mingguan, agenda mengajar harian, serta rekapitulasi sesi log presensi mahasiswa dalam satu halaman terpadu.
                 </p>
             </div>
@@ -34,7 +34,7 @@
     {{-- STATISTIK OVERVIEW --}}
     <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
         {{-- Total Kelas --}}
-        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm hover:border-[#321270]/30 transition">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm hover:border-[#720c16]/30 transition">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">Total Kelas</p>
@@ -50,14 +50,14 @@
         </div>
 
         {{-- Beban SKS --}}
-        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm hover:border-[#321270]/30 transition">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm hover:border-[#720c16]/30 transition">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">Beban Mengajar</p>
                     <p class="mt-1 text-2xl font-black text-slate-800 dark:text-white">{{ $totalSKS }} <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">SKS</span></p>
                     <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Akumulasi Kredit Mata Kuliah</p>
                 </div>
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400">
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#fdf2f2] text-[#720c16] dark:bg-[#1b0305]/50 dark:text-[#f87171]">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -66,7 +66,7 @@
         </div>
 
         {{-- Total Mahasiswa --}}
-        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm hover:border-[#321270]/30 transition">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm hover:border-[#720c16]/30 transition">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">Total Mahasiswa</p>
@@ -84,18 +84,18 @@
 
     {{-- HIGHLIGHT AGENDA HARI INI (IF ANY) --}}
     @if($kelasHariIni->isNotEmpty())
-        <div class="rounded-2xl border border-purple-200/80 dark:border-purple-800/40 bg-gradient-to-r from-purple-50/90 via-indigo-50/70 to-white dark:from-purple-950/40 dark:via-slate-800 dark:to-slate-800 p-4 sm:p-5 shadow-sm">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-purple-100 dark:border-slate-700">
+        <div class="rounded-2xl border border-[#fecaca]/80 dark:border-[#45070d]/40 bg-gradient-to-r from-[#fdf2f2]/90 via-[#fdf2f2]/70 to-white dark:from-[#1b0305]/40 dark:via-slate-800 dark:to-slate-800 p-4 sm:p-5 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-[#fee2e2] dark:border-slate-700">
                 <div class="flex items-center gap-2.5">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#321270] text-white shadow-sm">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#720c16] text-white shadow-sm">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </span>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="rounded bg-[#321270] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">Hari Ini</span>
-                            <span class="text-xs font-bold text-[#321270] dark:text-purple-300">{{ $todayName }}, {{ now()->translatedFormat('d F Y') }}</span>
+                            <span class="rounded bg-[#720c16] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">Hari Ini</span>
+                            <span class="text-xs font-bold text-[#720c16] dark:text-[#fca5a5]">{{ $todayName }}, {{ now()->translatedFormat('d F Y') }}</span>
                         </div>
                         <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
                             Anda memiliki <strong>{{ $kelasHariIni->count() }} sesi kelas tatap muka</strong> yang terjadwal hari ini.
@@ -106,14 +106,14 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 @foreach($kelasHariIni as $kelas)
-                    <div class="rounded-xl border border-purple-100 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 p-3.5 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div class="rounded-xl border border-[#fee2e2] dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 p-3.5 shadow-sm flex flex-col justify-between hover:shadow-md transition">
                         <div>
                             <div class="flex items-center justify-between gap-2 mb-1.5">
-                                <span class="rounded-md bg-purple-100 dark:bg-purple-950/80 px-2 py-0.5 text-[11px] font-bold text-[#321270] dark:text-purple-300">
+                                <span class="rounded-md bg-[#fee2e2] dark:bg-[#1b0305]/80 px-2 py-0.5 text-[11px] font-bold text-[#720c16] dark:text-[#fca5a5]">
                                     {{ $kelas->kode_kelas }}
                                 </span>
                                 <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                                    <svg class="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <svg class="w-3.5 h-3.5 text-[#720c16] dark:text-[#f87171]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     {{ substr($kelas->jam_mulai, 0, 5) }} - {{ substr($kelas->jam_selesai, 0, 5) }}
                                 </span>
                             </div>
@@ -125,12 +125,12 @@
                         </div>
                         <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
                             <a href="{{ route('dosen.kelas-detail', $kelas->id) }}"
-                               class="text-xs font-bold text-[#321270] dark:text-purple-300 hover:underline">
+                               class="text-xs font-bold text-[#720c16] dark:text-[#fca5a5] hover:underline">
                                 Detail Kelas &rarr;
                             </a>
                             <button type="button"
                                     @click="openLogForClass('{{ md5($kelas->kode_kelas) }}')"
-                                    class="inline-flex items-center gap-1 rounded-lg bg-[#321270] hover:bg-[#260c5a] px-2.5 py-1 text-[11px] font-bold text-white transition shadow-sm">
+                                    class="inline-flex items-center gap-1 rounded-lg bg-[#720c16] hover:bg-[#4c0810] px-2.5 py-1 text-[11px] font-bold text-white transition shadow-sm">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                                 <span>Buka Log</span>
                             </button>
@@ -149,7 +149,7 @@
                 <button type="button"
                         @click="switchTab('jadwal')"
                         class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition whitespace-nowrap"
-                        :class="activeTab === 'jadwal' ? 'bg-[#321270] text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'">
+                        :class="activeTab === 'jadwal' ? 'bg-[#720c16] text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
@@ -163,7 +163,7 @@
                 <button type="button"
                         @click="switchTab('log')"
                         class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition whitespace-nowrap"
-                        :class="activeTab === 'log' ? 'bg-[#321270] text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'">
+                        :class="activeTab === 'log' ? 'bg-[#720c16] text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
@@ -177,7 +177,7 @@
                 <button type="button"
                         @click="switchTab('semua')"
                         class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition whitespace-nowrap hidden sm:inline-flex"
-                        :class="activeTab === 'semua' ? 'bg-[#321270] text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'">
+                        :class="activeTab === 'semua' ? 'bg-[#720c16] text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -190,7 +190,7 @@
                 <input type="text"
                        x-model="searchQuery"
                        placeholder="Cari mata kuliah, kode, kelas..."
-                       class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 pl-9 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:border-[#321270] focus:ring-1 focus:ring-[#321270] transition" />
+                       class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 pl-9 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:border-[#720c16] focus:ring-1 focus:ring-[#720c16] transition" />
                 <svg class="absolute left-3 top-2.5 h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
@@ -225,7 +225,7 @@
                 <button type="button"
                         @click="selectedDay = 'Semua'"
                         class="px-3 py-1 rounded-lg text-xs font-bold transition whitespace-nowrap"
-                        :class="selectedDay === 'Semua' ? 'bg-[#321270] text-white shadow-sm' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'">
+                        :class="selectedDay === 'Semua' ? 'bg-[#720c16] text-white shadow-sm' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'">
                     Semua Hari ({{ $totalKelas }})
                 </button>
                 @foreach($days as $day)
@@ -234,7 +234,7 @@
                         <button type="button"
                                 @click="selectedDay = '{{ $day }}'"
                                 class="px-2.5 py-1 rounded-lg text-xs font-bold transition whitespace-nowrap flex items-center gap-1.5"
-                                :class="selectedDay === '{{ $day }}' ? 'bg-[#321270] text-white shadow-sm' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'">
+                                :class="selectedDay === '{{ $day }}' ? 'bg-[#720c16] text-white shadow-sm' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'">
                             <span>{{ $day }}</span>
                             <span class="rounded-full px-1.5 py-0.2 text-[10px]"
                                   :class="selectedDay === '{{ $day }}' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'">
@@ -279,14 +279,14 @@
                             @endphp
                             <div class="relative rounded-xl border border-blue-200 dark:border-blue-800 bg-white dark:bg-slate-900 p-4 shadow-sm hover:shadow-md transition group overflow-hidden">
                                 <div class="absolute top-0 right-0 p-3">
-                                    <span class="animate-pulse inline-flex items-center gap-1 rounded-md bg-indigo-100 dark:bg-indigo-900 px-2 py-0.5 text-[10px] font-bold text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                    <span class="animate-pulse inline-flex items-center gap-1 rounded-md bg-[#fee2e2] dark:bg-[#2f0509] px-2 py-0.5 text-[10px] font-bold text-[#5c0912] dark:text-[#fca5a5] border border-[#fecaca] dark:border-[#45070d]">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-[#a92a35]"></span>
                                         Kelas Pengganti
                                     </span>
                                 </div>
 
                                 <div class="flex items-center gap-2 mb-2">
-                                    <span class="rounded bg-indigo-100 dark:bg-indigo-900/50 px-2 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                                    <span class="rounded bg-[#fee2e2] dark:bg-[#2f0509]/50 px-2 py-1 text-xs font-bold text-[#5c0912] dark:text-[#fca5a5]">
                                         {{ \Carbon\Carbon::parse($reschedule->tanggal)->translatedFormat('l, d F Y') }}
                                     </span>
                                 </div>
@@ -332,7 +332,7 @@
                             {{-- Day Header --}}
                             <div class="bg-slate-50 dark:bg-slate-900/60 px-5 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-[#321270] dark:bg-purple-400"></span>
+                                    <span class="w-2 h-2 rounded-full bg-[#720c16] dark:bg-[#f87171]"></span>
                                     <h3 class="font-extrabold text-sm sm:text-base text-slate-800 dark:text-white">{{ $day }}</h3>
                                     @if(strtolower(trim($day)) === strtolower(trim($todayName)))
                                         <span class="rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5">Hari Ini</span>
@@ -354,11 +354,11 @@
                                         <div class="flex-1 min-w-0">
                                             {{-- Top metadata badges --}}
                                             <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                                <span class="rounded-md bg-[#321270]/10 text-[#321270] dark:bg-purple-950/80 dark:text-purple-300 text-xs font-bold px-2.5 py-0.5 border border-[#321270]/20">
+                                                <span class="rounded-md bg-[#720c16]/10 text-[#720c16] dark:bg-[#1b0305]/80 dark:text-[#fca5a5] text-xs font-bold px-2.5 py-0.5 border border-[#720c16]/20">
                                                     Kelas {{ $kelas->kode_kelas }}
                                                 </span>
                                                 @if($kelas->mataKuliah->sks)
-                                                    <span class="rounded-md bg-purple-50 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 text-xs font-bold px-2 py-0.5">
+                                                    <span class="rounded-md bg-[#fdf2f2] text-[#5c0912] dark:bg-[#2f0509]/40 dark:text-[#fca5a5] text-xs font-bold px-2 py-0.5">
                                                         {{ $kelas->mataKuliah->sks }} SKS
                                                     </span>
                                                 @endif
@@ -382,7 +382,7 @@
                                             <div class="mt-2 flex flex-wrap items-center gap-4 text-xs text-slate-600 dark:text-slate-300">
                                                 {{-- Time --}}
                                                 <div class="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-200">
-                                                    <svg class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                    <svg class="w-4 h-4 text-[#720c16] dark:text-[#f87171]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                                     <span>{{ substr($kelas->jam_mulai, 0, 5) }} &ndash; {{ substr($kelas->jam_selesai, 0, 5) }} WIB</span>
                                                 </div>
 
@@ -461,7 +461,7 @@
         @if(isset($availableMonths) && count($availableMonths) > 0)
             <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 shrink-0">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-purple-100 dark:bg-purple-950 text-[#321270] dark:text-purple-300">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-md bg-[#fee2e2] dark:bg-[#1b0305] text-[#720c16] dark:text-[#fca5a5]">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
@@ -471,7 +471,7 @@
 
                 <div class="flex items-center gap-2 w-full sm:w-64">
                     <select x-model="selectedMonth"
-                            class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:border-[#321270] focus:ring-1 focus:ring-[#321270] transition">
+                            class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:border-[#720c16] focus:ring-1 focus:ring-[#720c16] transition">
                         <option value="Semua">Semua Bulan ({{ $totalSesi }})</option>
                         @foreach($availableMonths as $m)
                             <option value="{{ $m['key'] }}">{{ $m['label'] }} ({{ $m['count'] }})</option>
@@ -509,7 +509,7 @@
                             
                             <div class="flex items-center gap-3 min-w-0">
                                 <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition"
-                                      :class="openKelasId === '{{ $kelasGrup->id }}' ? 'bg-[#321270] text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300'">
+                                      :class="openKelasId === '{{ $kelasGrup->id }}' ? 'bg-[#720c16] text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300'">
                                     <svg class="h-4 w-4 transition-transform duration-200"
                                          :class="openKelasId === '{{ $kelasGrup->id }}' ? 'rotate-90' : ''"
                                          fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -521,7 +521,7 @@
                                         <h3 class="font-extrabold text-base text-slate-800 dark:text-white">
                                             Kelas {{ $kelasGrup->kode }}
                                         </h3>
-                                        <span class="rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold px-2 py-0.5 border border-indigo-200/50">
+                                        <span class="rounded-full bg-[#fdf2f2] dark:bg-[#1b0305] text-[#5c0912] dark:text-[#fca5a5] text-[10px] font-bold px-2 py-0.5 border border-[#fecaca]/50">
                                             {{ $kelasGrup->jumlah_mata_kuliah }} Mata Kuliah
                                         </span>
                                     </div>
@@ -550,13 +550,13 @@
                                 <div x-show="classMatchesMonth('{{ $itemMonths }}')"
                                      class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm overflow-hidden">
                                     {{-- Course Header within Class --}}
-                                    <div class="bg-indigo-50/70 dark:bg-slate-800/80 px-4 py-3 border-b border-indigo-100/60 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <div class="bg-[#fdf2f2]/70 dark:bg-slate-800/80 px-4 py-3 border-b border-[#fee2e2]/60 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                         <div>
                                             <div class="flex items-center gap-2">
-                                                <h4 class="text-sm font-extrabold text-indigo-900 dark:text-white">
+                                                <h4 class="text-sm font-extrabold text-[#2f0509] dark:text-white">
                                                     {{ $kelasItem->mataKuliah->nama_mk }}
                                                 </h4>
-                                                <span class="rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 text-[10px] font-bold px-1.5 py-0.5">
+                                                <span class="rounded bg-[#fee2e2] dark:bg-[#1b0305] text-[#45070d] dark:text-[#fca5a5] text-[10px] font-bold px-1.5 py-0.5">
                                                     {{ $kelasItem->mataKuliah->kode_mk }}
                                                 </span>
                                             </div>
@@ -591,7 +591,7 @@
                                                             class="hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition">
                                                             {{-- Pertemuan Ke --}}
                                                             <td class="px-4 py-3 text-center">
-                                                                <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-950 font-extrabold text-[#321270] dark:text-purple-300 text-xs border border-indigo-200/50">
+                                                                <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[#fdf2f2] dark:bg-[#1b0305] font-extrabold text-[#720c16] dark:text-[#fca5a5] text-xs border border-[#fecaca]/50">
                                                                     {{ $absensi->pertemuan_ke }}
                                                                 </span>
                                                             </td>
@@ -643,7 +643,7 @@
                                                             <td class="px-4 py-3 text-right">
                                                                 <div class="flex items-center justify-end">
                                                                     <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelasItem->id, 'absensiId' => $absensi->id]) }}"
-                                                                       class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-white hover:bg-[#321270] hover:text-white hover:border-[#321270] dark:hover:bg-purple-900 transition shadow-sm group">
+                                                                       class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-white hover:bg-[#720c16] hover:text-white hover:border-[#720c16] dark:hover:bg-[#2f0509] transition shadow-sm group">
                                                                         <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                                                         <span>Lihat</span>
                                                                     </a>
@@ -658,7 +658,7 @@
                                         <div class="px-5 py-8 text-center text-slate-400 dark:text-slate-500">
                                             <svg class="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                                             <p class="text-xs font-semibold">Belum ada sesi pertemuan tercatat untuk mata kuliah ini.</p>
-                                            <a href="{{ route('dosen.absensi.create', $kelasItem->id) }}" class="inline-block mt-2 text-xs font-bold text-[#321270] dark:text-purple-300 hover:underline">
+                                            <a href="{{ route('dosen.absensi.create', $kelasItem->id) }}" class="inline-block mt-2 text-xs font-bold text-[#720c16] dark:text-[#fca5a5] hover:underline">
                                                 + Buat Sesi Presensi Pertama
                                             </a>
                                         </div>

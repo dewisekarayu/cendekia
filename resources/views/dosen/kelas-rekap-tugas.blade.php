@@ -47,12 +47,12 @@
         }
     </style>
 
-    <div class="rekap-header bg-[#321270] dark:bg-gradient-to-r dark:from-indigo-950 dark:to-purple-900 rounded-xl px-8 py-6 mb-6 shadow-sm">
+    <div class="rekap-header bg-[#720c16] dark:bg-gradient-to-r dark:from-[#1b0305] dark:to-[#2f0509] rounded-xl px-8 py-6 mb-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
             <span class="badge-kode text-xs font-semibold bg-white/15 text-white px-2.5 py-1 rounded">{{ $kelas->mataKuliah->kode_mk ?? '-' }}</span>
         </div>
         <h1 class="text-xl font-bold text-white">Rekap Nilai Tugas — {{ $kelas->kode_kelas }}</h1>
-        <p class="text-sm text-blue-200 dark:text-purple-250 mt-1">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</p>
+        <p class="text-sm text-blue-200 dark:text-[#fecaca] mt-1">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</p>
     </div>
 
     <x-flash-message />
@@ -143,7 +143,7 @@
                         type="text"
                         id="searchMahasiswa"
                         placeholder="Cari nama / NIM mahasiswa..."
-                        class="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 placeholder-gray-350 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#321270]/30 dark:focus:ring-purple-500/30 transition"
+                        class="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 placeholder-gray-350 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#720c16]/30 dark:focus:ring-[#a92a35]/30 transition"
                     >
                 </div>
 
@@ -151,7 +151,7 @@
                 <div class="w-48">
                     <select 
                         id="filterStatus" 
-                        class="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#321270]/30 dark:focus:ring-purple-500/30 transition"
+                        class="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#720c16]/30 dark:focus:ring-[#a92a35]/30 transition"
                     >
                         <option value="all">Semua Mahasiswa</option>
                         <option value="lulus">Lulus (Rata-rata &ge; {{ $passingGrade }})</option>
@@ -173,7 +173,7 @@
                 <button
                     type="button"
                     onclick="exportRekapExcel()"
-                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#321270] hover:bg-[#291060] dark:bg-purple-650 px-3.5 py-2 rounded-xl transition shrink-0"
+                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#720c16] hover:bg-[#4c0810] dark:bg-[#720c16] px-3.5 py-2 rounded-xl transition shrink-0"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -191,7 +191,7 @@
                             <th class="px-5 py-3 font-medium sticky left-0 bg-gray-50/70 dark:bg-slate-900/90 backdrop-blur-sm z-10 min-w-[180px]">Nama Mahasiswa</th>
                             @foreach ($tugasList as $t)
                                 <th class="px-4 py-3 font-medium text-center min-w-[110px]">
-                                    <a href="{{ route('dosen.tugas.submissions', [$kelas->id, $t->id]) }}" class="no-print hover:text-[#321270] dark:hover:text-purple-400 hover:underline">
+                                    <a href="{{ route('dosen.tugas.submissions', [$kelas->id, $t->id]) }}" class="no-print hover:text-[#720c16] dark:hover:text-[#f87171] hover:underline">
                                         {{ Str::limit($t->judul, 18) }}
                                     </a>
                                     {{-- Judul Plain Text khusus saat cetak PDF agar link tidak rusak --}}
@@ -201,7 +201,7 @@
                                     @endif
                                 </th>
                             @endforeach
-                            <th class="px-4 py-3 font-medium text-center min-w-[90px] bg-purple-50/50 dark:bg-purple-950/40">Rata-rata</th>
+                            <th class="px-4 py-3 font-medium text-center min-w-[90px] bg-[#fdf2f2]/50 dark:bg-[#1b0305]/40">Rata-rata</th>
                         </tr>
                     </thead>
                     <tbody id="mahasiswaTableBody" class="divide-y divide-gray-50 dark:divide-slate-700/50">
@@ -244,9 +244,9 @@
                                         @endif
                                     </td>
                                 @endforeach
-                                <td class="px-4 py-3 text-center bg-purple-50/30 dark:bg-purple-950/20">
+                                <td class="px-4 py-3 text-center bg-[#fdf2f2]/30 dark:bg-[#1b0305]/20">
                                     @if ($rataRata[$mhs->id] !== null)
-                                        <span class="font-black {{ $rataRata[$mhs->id] < $passingGrade ? 'text-red-500 dark:text-red-400' : 'text-[#321270] dark:text-purple-300' }}">
+                                        <span class="font-black {{ $rataRata[$mhs->id] < $passingGrade ? 'text-red-500 dark:text-red-400' : 'text-[#720c16] dark:text-[#fca5a5]' }}">
                                             {{ $rataRata[$mhs->id] }}
                                         </span>
                                     @else
@@ -412,7 +412,7 @@
                         
                         /* Styling Header Tempel */
                         .header-print { 
-                            background-color: #321270; 
+                            background-color: #720c16;
                             color: white; 
                             padding: 20px; 
                             border-radius: 8px; 

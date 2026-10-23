@@ -3,7 +3,7 @@
 <style>
     :root{
         --cnd-primary: #002B6B;
-        --cnd-primary-dark: #001A40;
+        --cnd-primary-dark: #002B6B;
         --cnd-light: #CDDCFF;
         --cnd-bg-1: #F4F7FF;
         --cnd-bg-2: #E9EFFF;
@@ -59,7 +59,7 @@
         border: 1px solid rgba(255, 255, 255, 0.7);
         border-radius: 24px;
         padding: 32px 28px;
-        box-shadow: 0 20px 40px rgba(0,43,107,.06);
+        box-shadow: 0 20px 40px rgba(0,43,107,.08);
         box-sizing: border-box;
     }
 
@@ -176,7 +176,7 @@
         {{-- Logo/Header --}}
         <div class="cnd-logo-wrap">
             <div class="cnd-logo-icon">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo Cendekia" width="48" height="48" style="display: block; width: 48px; height: 48px; object-fit: contain;">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo Cendekia" width="48" height="48" style="display: block; width: 48px; height: 48px; object-fit: contain; border-radius: 50%;">
             </div>
             <h1 class="cnd-title">Cendekia</h1>
             <p class="cnd-subtitle">Platform Pembelajaran Digital</p>

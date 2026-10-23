@@ -71,9 +71,18 @@
                                         </span>
                                     </td>
                                     <td class="px-4 py-4 text-center">
-                                        <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light border text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-blue-400" title="Edit Fakultas">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
+                                        <div class="d-inline-flex align-items-center gap-2">
+                                            <a href="{{ route('admin.fakultas.edit', $fakultas->id) }}" class="btn btn-sm btn-light border text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-blue-400" title="Edit Fakultas">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="{{ route('admin.fakultas.destroy', $fakultas->id) }}" method="POST" class="d-inline" data-confirm="Hapus fakultas {{ $fakultas->nama_fakultas }}? Seluruh program studi di bawahnya juga akan terhapus.">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-light border text-danger dark:bg-slate-800 dark:border-slate-700" title="Hapus Fakultas" aria-label="Hapus Fakultas {{ $fakultas->nama_fakultas }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 
@@ -108,7 +117,18 @@
                                                                 <td class="px-4 py-2 fw-semibold text-dark dark:text-slate-100">{{ $prodi->nama_prodi }}</td>
                                                                 <td class="px-4 py-2"><span class="badge bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border dark:border-indigo-800/50">{{ $prodi->jenjang }}</span></td>
                                                                 <td class="px-4 py-2">
-                                                                    <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="btn btn-sm btn-light border text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-blue-400 py-0"><i class="bi bi-pencil" style="font-size: 0.75rem;"></i></a>
+                                                                    <div class="d-inline-flex align-items-center gap-2">
+                                                                        <a href="{{ route('admin.program-studi.edit', $prodi->id) }}" class="btn btn-sm btn-light border text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-blue-400 py-0" title="Edit Program Studi">
+                                                                            <i class="bi bi-pencil" style="font-size: 0.75rem;"></i>
+                                                                        </a>
+                                                                        <form action="{{ route('admin.program-studi.destroy', $prodi->id) }}" method="POST" class="d-inline" data-confirm="Hapus program studi {{ $prodi->nama_prodi }}? Mata kuliah, kurikulum, dan kelas yang terkait juga dapat terhapus.">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" class="btn btn-sm btn-light border text-danger dark:bg-slate-800 dark:border-slate-700 py-0" title="Hapus Program Studi" aria-label="Hapus Program Studi {{ $prodi->nama_prodi }}">
+                                                                                <i class="bi bi-trash" style="font-size: 0.75rem;"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                             @empty

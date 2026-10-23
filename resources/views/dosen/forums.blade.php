@@ -3,7 +3,7 @@
 @section('content')
 @php
     $user     = auth()->user();
-    $palette  = ['#321270','#0C4A6E','#1E3A8A','#164E63','#1C3144','#0F172A','#1F2937'];
+    $palette  = ['#720c16','#0C4A6E','#1E3A8A','#164E63','#1C3144','#0F172A','#1F2937'];
 
     function forumAvatarColor(string $name, array $pal): string {
         return $pal[abs(crc32($name)) % count($pal)];
@@ -12,8 +12,8 @@
 
 <style>
     :root{
-        --forum-primary: #321270;
-        --forum-primary-dark: #321270;
+        --forum-primary: #720c16;
+        --forum-primary-dark: #720c16;
         --forum-light: #CDDCFF;
         --forum-bg-1: #F4F7FF;
         --forum-bg-2: #E9EFFF;
@@ -295,16 +295,16 @@
         background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
     }
     html.dark .forum-bubble.mine {
-        background: #312e81 !important;
-        border: 1px solid #4338ca !important;
+        background: #4c0810 !important;
+        border: 1px solid #720c16 !important;
     }
     html.dark .forum-bubble.theirs {
         background: #334155 !important;
         border: 1px solid #475569 !important;
     }
     html.dark .forum-bubble.theirs.dosen {
-        background: #3c3a6e !important;
-        border: 1px solid #5850ec !important;
+        background: #5c0912 !important;
+        border: 1px solid #720c16 !important;
     }
     html.dark .forum-bubble-text {
         color: #f8fafc !important;
@@ -314,13 +314,13 @@
     }
     html.dark .forum-date-chip {
         background: #1e293b !important;
-        border: 1.5px solid #6366f1 !important;
-        color: #818cf8 !important;
+        border: 1.5px solid #720c16 !important;
+        color: #f87171 !important;
     }
     html.dark .forum-chip {
         background: #1e293b !important;
-        border: 1.5px solid #6366f1 !important;
-        color: #818cf8 !important;
+        border: 1.5px solid #720c16 !important;
+        color: #f87171 !important;
     }
     html.dark .forum-empty-icon {
         background: #1e293b !important;
@@ -340,41 +340,41 @@
         color: #f8fafc !important;
     }
     html.dark .forum-textarea:focus {
-        border-color: #818cf8 !important;
+        border-color: #f87171 !important;
         background: #0f172a !important;
     }
     html.dark .forum-icon-btn {
         background: #1e293b !important;
         border: 1.5px solid #334155 !important;
-        color: #a78bfa !important;
+        color: #fca5a5 !important;
     }
     html.dark .forum-icon-btn:hover {
         background: #334155 !important;
-        border-color: #8b5cf6 !important;
+        border-color: #a92a35 !important;
     }
     html.dark .forum-sender-name {
         color: #38bdf8 !important;
     }
     html.dark .forum-sender-name.dosen {
-        color: #a78bfa !important;
+        color: #fca5a5 !important;
     }
     html.dark .forum-placeholder {
         background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
     }
     html.dark .forum-placeholder-icon {
         background: #1e293b !important;
-        border: 2px solid #6366f1 !important;
+        border: 2px solid #720c16 !important;
     }
     html.dark .forum-placeholder-icon svg {
-        stroke: #818cf8 !important;
+        stroke: #f87171 !important;
     }
     html.dark .forum-placeholder-title {
-        color: #818cf8 !important;
+        color: #f87171 !important;
     }
 </style>
 
 {{-- HEADER --}}
-<div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#321270] to-[#4a1fa8] dark:from-indigo-950 dark:to-purple-900 px-6 py-6 sm:px-8 shadow-lg relative">
+<div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#720c16] to-[#9a1622] dark:from-[#1b0305] dark:to-[#2f0509] px-6 py-6 sm:px-8 shadow-lg relative">
     <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
     <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div class="min-w-0">
@@ -382,10 +382,10 @@
                 <span class="rounded-lg border border-white/20 bg-white/15 px-2.5 py-1 text-xs font-bold text-white">
                     {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
                 </span>
-                <span class="text-xs text-purple-200/80">{{ $kelas->semester?->nama_semester ?? 'Semester Aktif' }}</span>
+                <span class="text-xs text-[#fecaca]/80">{{ $kelas->semester?->nama_semester ?? 'Semester Aktif' }}</span>
             </div>
             <h1 class="text-xl font-extrabold text-white sm:text-2xl">{{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}</h1>
-            <p class="mt-1 text-sm text-purple-100/80">
+            <p class="mt-1 text-sm text-[#fee2e2]/80">
                 {{ $kelas->hari }}, {{ substr($kelas->jam_mulai,0,5) }}–{{ substr($kelas->jam_selesai,0,5) }} · {{ $kelas->ruangan ?? '-' }}
             </p>
         </div>

@@ -8,8 +8,8 @@
 
     <title>@yield('title', 'Dashboard') - Cendekia</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.jpg') }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -42,7 +42,7 @@
 
         /* Dark Mode overrides for Student/Dosen portal */
         html.dark body {
-            background-color: #0f172a !important; /* slate-900 */
+            background-color: #1b1115 !important;
             color: #cbd5e1 !important;
         }
 
@@ -87,7 +87,9 @@
             color: #60a5fa !important;
         }
 
-        html.dark .text-\[\#321270\],
+        html.dark .text-\[\#720c16\] {
+            color: #fca5a5 !important;
+        }
         html.dark .text-purple-900 {
             color: #a78bfa !important;
         }
@@ -282,7 +284,7 @@
     </style>
 </head>
 
-<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
+<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200 {{ request()->routeIs('dosen.kalender-akademik.*') ? 'calendar-dark-background' : '' }}">
     @php
         $user = auth()->user();
         $currentLocale = session('locale', $user->language ?? 'id');
@@ -290,7 +292,7 @@
         $hasAdmin = $user && $user->hasRole('admin');
 
         if ($hasDosen) {
-            $sidebarBg = '#321270';
+            $sidebarBg = '#720c16';
             $sidebarText = 'rgba(255,255,255,0.75)';
             $sidebarTitle = '#FFFFFF';
             $sidebarMuted = 'rgba(255,255,255,0.5)';
@@ -330,7 +332,7 @@
             aria-hidden="true"></div>
 
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
+            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64 {{ $hasDosen ? 'dosen-sidebar' : '' }}"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
 
@@ -338,7 +340,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <a href="/" class="flex min-w-0 items-center gap-2" style="gap: 0.5rem;">
                         <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
-                            <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="" />
+                            <img src="{{ asset('images/logo.jpg') }}" alt="Cendekia" class="rounded-full object-cover" />
                         </div>
                         <div class="min-w-0">
                             <div class="text-base font-bold leading-tight truncate notranslate" translate="no" style="color: {{ $sidebarTitle }};">Cendekia</div>
@@ -539,7 +541,7 @@
             </nav>
         </aside>
 
-        <div class="flex-1 min-w-0 w-full transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
+        <div class="flex-1 min-w-0 w-full dark:bg-[#1b1115] transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
 
             <header class="sticky top-0 z-30 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-700/80 px-3 py-2.5 sm:px-6 sm:py-3.5 flex items-center justify-between gap-3 transition-colors duration-200">
 
@@ -759,7 +761,7 @@
                 </div>
             </header>
 
-            <main class="w-full min-w-0 overflow-x-hidden p-4 sm:p-6 lg:p-8">
+            <main class="w-full min-w-0 overflow-x-hidden p-4 sm:p-6 lg:p-8 {{ request()->routeIs('dosen.kalender-akademik.*') ? 'calendar-page-container' : '' }}">
                 @yield('content')
             </main>
         </div>
@@ -787,17 +789,30 @@
             background-color: #0f172a !important;
             border-right: 1px solid #1e293b !important;
         }
+        html.dark aside.dosen-sidebar {
+            background-color: #350a12 !important;
+            border-right-color: #57121d !important;
+        }
         html.dark aside .sidebar-link {
             color: #94a3b8 !important;
+        }
+        html.dark aside.dosen-sidebar .sidebar-link:hover {
+            background-color: #4a1019 !important;
+            color: #fff1f2 !important;
         }
         html.dark aside .sidebar-link:hover {
             background-color: #1e293b !important;
             color: #f8fafc !important;
         }
+        html.dark aside.dosen-sidebar .sidebar-link-active {
+            background-color: #681521 !important;
+            color: #ffe4e6 !important;
+            border-left-color: #f87171 !important;
+        }
         html.dark aside .sidebar-link-active {
-            background-color: #1e1b4b !important;
-            color: #c084fc !important;
-            border-left: 3px solid #a855f7 !important;
+            background-color: #45070d !important;
+            color: #fca5a5 !important;
+            border-left: 3px solid #a92a35 !important;
             padding-left: calc(0.75rem - 3px) !important;
         }
         html.dark aside .pt-4.mt-4 {
@@ -877,7 +892,7 @@
         }
         html.dark input::placeholder,
         html.dark textarea::placeholder {
-            color: #475569 !important;
+            color: #94a3b8 !important;
         }
         html.dark .bg-white.text-slate-700,
         html.dark .bg-white.text-gray-700,
@@ -922,6 +937,11 @@
             background-color: #4c0519 !important;
             color: #fda4af !important;
             border-color: #9f1239 !important;
+        }
+        html.dark body.calendar-dark-background main,
+        html.dark body.calendar-dark-background main > .calendar-page,
+        html.dark body.calendar-dark-background div.flex-1.min-w-0.w-full {
+            background-color: #1b1115 !important;
         }
     </style>
 

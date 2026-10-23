@@ -4,21 +4,21 @@
 @section('activeMenu', 'Early Warning System')
 
 @section('content')
-<div class="mb-6 rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+<div class="mb-6 rounded-2xl bg-gradient-to-br from-[#4c0810] via-[#720c16] to-[#9a1622] dark:from-slate-900 dark:via-[#1b0305] dark:to-[#1b0305] px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-purple-200/70">Dashboard Analytics & Prediksi AI</p>
+            <p class="text-xs font-bold uppercase tracking-wide text-[#fecaca]/70">Dashboard Analytics & Prediksi AI</p>
             <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
                 Early Warning System
             </h1>
-            <p class="mt-2 text-sm text-purple-100/70">Mendeteksi mahasiswa yang berisiko tidak lulus atau tertinggal berdasarkan absensi dan nilai tugas.</p>
+            <p class="mt-2 text-sm text-[#fee2e2]/70">Mendeteksi mahasiswa yang berisiko tidak lulus atau tertinggal berdasarkan absensi dan nilai tugas.</p>
         </div>
         <div class="flex items-center gap-3">
             <div class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-xl text-center border border-white/20">
-                <p class="text-[10px] uppercase font-bold text-purple-200">Total Mahasiswa</p>
+                <p class="text-[10px] uppercase font-bold text-[#fecaca]">Total Mahasiswa</p>
                 <p class="text-xl font-black text-white">{{ $totalStudents }}</p>
             </div>
             <div class="px-4 py-2 bg-rose-500/30 backdrop-blur-md rounded-xl text-center border border-rose-400/30">
@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
-    <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-purple-400/10 blur-xl pointer-events-none"></div>
+    <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-[#f87171]/10 blur-xl pointer-events-none"></div>
 </div>
 
 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-700 overflow-hidden"
@@ -65,7 +65,7 @@
     <div class="p-5 border-b border-gray-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 space-y-4">
         <div class="flex justify-between items-center">
             <h3 class="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#a92a35]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 Hasil Prediksi Performa Mahasiswa
@@ -79,7 +79,7 @@
             <div class="relative flex-1">
                 <input type="text" x-model="search"
                        placeholder="Cari nama atau NIM mahasiswa..."
-                       class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2 pl-9 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:border-[#321270] focus:ring-1 focus:ring-[#321270] transition">
+                       class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2 pl-9 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:border-[#720c16] focus:ring-1 focus:ring-[#720c16] transition">
                 <svg class="absolute left-3 top-2.5 h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
@@ -87,7 +87,7 @@
                         class="absolute right-3 top-2 text-slate-400 hover:text-slate-600 text-sm">&times;</button>
             </div>
             <div class="w-full sm:w-48">
-                <select x-model="filterKelas" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:border-[#321270] focus:ring-1 focus:ring-[#321270] transition">
+                <select x-model="filterKelas" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:border-[#720c16] focus:ring-1 focus:ring-[#720c16] transition">
                     <option value="">Semua Kelas</option>
                     @foreach($availableClasses as $kelasName)
                         <option value="{{ $kelasName }}">{{ $kelasName }}</option>
@@ -95,7 +95,7 @@
                 </select>
             </div>
             <div class="w-full sm:w-48">
-                <select x-model="filterRisiko" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:border-[#321270] focus:ring-1 focus:ring-[#321270] transition">
+                <select x-model="filterRisiko" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:border-[#720c16] focus:ring-1 focus:ring-[#720c16] transition">
                     <option value="">Semua Risiko</option>
                     <option value="Low">Rendah (Low)</option>
                     <option value="Medium">Menengah (Medium)</option>
@@ -193,7 +193,7 @@
                             <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">Tidak ada mahasiswa yang cocok</p>
                             <p class="text-xs text-gray-500 mt-1">Coba ubah kata kunci pencarian.</p>
                             <button type="button" @click="search = ''"
-                                    class="mt-3 text-xs font-bold text-[#321270] dark:text-purple-300 hover:underline">Reset pencarian</button>
+                                    class="mt-3 text-xs font-bold text-[#720c16] dark:text-[#fca5a5] hover:underline">Reset pencarian</button>
                         </td>
                     </tr>
                 @endif

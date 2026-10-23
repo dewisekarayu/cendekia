@@ -8,15 +8,15 @@
 @php
     $hour = now()->hour;
     $greeting = $hour < 11 ? 'Selamat Pagi' : ($hour < 15 ? 'Selamat Siang' : ($hour < 18 ? 'Selamat Sore' : 'Selamat Malam'));
-    $topColors = ['bg-blue-600', 'bg-purple-600', 'bg-emerald-600', 'bg-amber-500', 'bg-indigo-600', 'bg-rose-500'];
+    $topColors = ['bg-blue-600', 'bg-[#720c16]', 'bg-emerald-600', 'bg-amber-500', 'bg-[#720c16]', 'bg-rose-500'];
 @endphp
 
 <div class="space-y-6">
 
     {{-- HERO SECTION --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-7 sm:px-8 shadow-md text-white">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#4c0810] via-[#720c16] to-[#9a1622] dark:from-slate-900 dark:via-[#1b0305] dark:to-[#1b0305] px-6 py-7 sm:px-8 shadow-md text-white">
         <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
-        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-purple-400/10 blur-xl"></div>
+        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-[#f87171]/10 blur-xl"></div>
         
         <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div class="min-w-0 flex-1">
@@ -27,7 +27,7 @@
                         </svg>
                         {{ now()->translatedFormat('l, d F Y') }}
                     </span>
-                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-purple-100 backdrop-blur-sm">
+                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-[#fee2e2] backdrop-blur-sm">
                         Semester Ganjil 2025/2026
                     </span>
                 </div>
@@ -38,14 +38,14 @@
 
                 {{-- Smart Overview Box --}}
                 <div id="ai_insight_container" class="mt-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 flex items-start gap-3.5 max-w-2xl shadow-sm">
-                    <div class="bg-purple-300/20 p-2 rounded-lg shrink-0 mt-0.5 text-purple-200">
+                    <div class="bg-[#fca5a5]/20 p-2 rounded-lg shrink-0 mt-0.5 text-[#fecaca]">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="text-[11px] font-bold text-purple-200 uppercase tracking-widest mb-1">Cendekia Insight</p>
-                        <p id="ai_insight_text" class="text-xs sm:text-sm font-medium leading-relaxed text-purple-50">
+                        <p class="text-[11px] font-bold text-[#fecaca] uppercase tracking-widest mb-1">Cendekia Insight</p>
+                        <p id="ai_insight_text" class="text-xs sm:text-sm font-medium leading-relaxed text-[#fdf2f2]">
                             @if(app()->getLocale() === 'en')
                                 Welcome to the academic portal. You are currently teaching <strong class="text-white">{{ $kelasList->count() }} active classes</strong> with a total of <strong class="text-white">{{ $totalMahasiswa }} enrolled students</strong>. 
                                 @if($tugasPerluDinilai > 0)
@@ -69,19 +69,19 @@
             {{-- Right Quick Actions in Hero --}}
             <div class="flex flex-row lg:flex-col gap-2.5 shrink-0">
                 <a href="{{ route('dosen.schedule') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2.5 text-xs font-bold text-white backdrop-blur-sm transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Jadwal Mengajar
                 </a>
                 <a href="{{ route('dosen.ai-assistant') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2.5 text-xs font-bold text-white backdrop-blur-sm transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                     Asisten AI Dosen
                 </a>
                 <a href="{{ route('dosen.kelas-pengumuman.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-4 py-2.5 text-xs font-bold text-white backdrop-blur-sm transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
                     </svg>
                     Buat Pengumuman
@@ -92,16 +92,16 @@
 
     {{-- JADWAL HARI INI ALERT (IF ANY) --}}
     @if(isset($kelasHariIni) && $kelasHariIni->isNotEmpty())
-        <div class="rounded-2xl border border-purple-200/80 dark:border-purple-800/40 bg-gradient-to-r from-purple-50/90 to-indigo-50/70 dark:from-purple-950/40 dark:to-slate-800 p-4 sm:p-5 shadow-sm">
+        <div class="rounded-2xl border border-[#fecaca]/80 dark:border-[#45070d]/40 bg-gradient-to-r from-[#fdf2f2]/90 to-[#fdf2f2]/70 dark:from-[#1b0305]/40 dark:to-slate-800 p-4 sm:p-5 shadow-sm">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#321270] text-white shadow-sm">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#720c16] text-white shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs font-bold uppercase tracking-wider text-[#321270] dark:text-purple-300">Agenda Hari Ini ({{ $todayName }})</p>
+                        <p class="text-xs font-bold uppercase tracking-wider text-[#720c16] dark:text-[#fca5a5]">Agenda Hari Ini ({{ $todayName }})</p>
                         <p class="text-sm font-bold text-slate-800 dark:text-white">
                             Anda memiliki {{ $kelasHariIni->count() }} sesi kelas perkuliahan terjadwal hari ini.
                         </p>
@@ -109,9 +109,9 @@
                 </div>
                 <div class="flex flex-wrap gap-2">
                     @foreach($kelasHariIni as $kh)
-                        <a href="{{ route('dosen.kelas-detail', $kh->id) }}" class="inline-flex items-center gap-1.5 rounded-xl bg-white dark:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-white border border-slate-200/80 dark:border-slate-600 hover:border-purple-400 shadow-sm transition">
+                        <a href="{{ route('dosen.kelas-detail', $kh->id) }}" class="inline-flex items-center gap-1.5 rounded-xl bg-white dark:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-white border border-slate-200/80 dark:border-slate-600 hover:border-[#f87171] shadow-sm transition">
                             <span>{{ $kh->mataKuliah?->nama_mk ?? 'Kelas' }}</span>
-                            <span class="text-purple-600 dark:text-purple-400">({{ substr($kh->jam_mulai, 0, 5) }})</span>
+                            <span class="text-[#720c16] dark:text-[#f87171]">({{ substr($kh->jam_mulai, 0, 5) }})</span>
                         </a>
                     @endforeach
                 </div>
@@ -122,9 +122,9 @@
     {{-- STATS SUMMARY GRID CARDS --}}
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {{-- Total Kelas Diampu --}}
-        <a href="{{ route('dosen.kelas-saya') }}" class="group flex items-center justify-between rounded-2xl border border-slate-200/70 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md transition">
+        <a href="{{ route('dosen.kelas-saya') }}" class="group flex items-center justify-between rounded-2xl border border-slate-200/70 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm hover:border-[#fca5a5] dark:hover:border-[#720c16] hover:shadow-md transition">
             <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-950/60 text-[#321270] dark:text-purple-300 group-hover:scale-105 transition-transform">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#fee2e2] dark:bg-[#1b0305]/60 text-[#720c16] dark:text-[#fca5a5] group-hover:scale-105 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
@@ -132,7 +132,7 @@
                 <div>
                     <p class="text-xs font-semibold text-slate-400 dark:text-slate-500">Total Kelas Diampu</p>
                     <p class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">{{ $kelasList->count() }}</p>
-                    <p class="text-[11px] font-medium text-purple-600 dark:text-purple-400 mt-0.5">Kelola semua kelas &rarr;</p>
+                    <p class="text-[11px] font-medium text-[#720c16] dark:text-[#f87171] mt-0.5">Kelola semua kelas &rarr;</p>
                 </div>
             </div>
         </a>
@@ -182,7 +182,7 @@
                 <p class="text-xs text-slate-400 dark:text-slate-500">Berkas tugas yang baru saja dikirimkan oleh mahasiswa</p>
             </div>
             @if ($submissions->isNotEmpty())
-                <a href="{{ route('dosen.kelas-tugas.rekap', ['id' => $submissions->first()->tugas?->kelas_perkuliahan_id]) }}" class="inline-flex items-center gap-1 text-xs font-bold text-[#321270] dark:text-purple-400 hover:underline">Buka Rekap Nilai &rarr;</a>
+                <a href="{{ route('dosen.kelas-tugas.rekap', ['id' => $submissions->first()->tugas?->kelas_perkuliahan_id]) }}" class="inline-flex items-center gap-1 text-xs font-bold text-[#720c16] dark:text-[#f87171] hover:underline">Buka Rekap Nilai &rarr;</a>
             @endif
         </div>
 
@@ -201,17 +201,17 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-700/60">
                         @foreach ($submissions as $item)
-                            <tr class="hover:bg-purple-50/20 dark:hover:bg-purple-950/20 transition duration-150">
+                            <tr class="hover:bg-[#fdf2f2]/20 dark:hover:bg-[#1b0305]/20 transition duration-150">
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center gap-3">
-                                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#321270] dark:bg-purple-950 text-xs font-bold text-white dark:text-purple-300 shadow-sm">
+                                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#720c16] dark:bg-[#1b0305] text-xs font-bold text-white dark:text-[#fca5a5] shadow-sm">
                                             {{ strtoupper(substr($item->mahasiswa?->name ?? '?', 0, 1)) }}
                                         </div>
                                         <span class="font-semibold text-slate-700 dark:text-slate-200 max-w-[160px] truncate block">{{ $item->mahasiswa?->name ?? '-' }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-3.5">
-                                    <p class="font-bold text-[#321270] dark:text-purple-300 max-w-[220px] truncate">{{ $item->tugas?->judul ?? '-' }}</p>
+                                    <p class="font-bold text-[#720c16] dark:text-[#fca5a5] max-w-[220px] truncate">{{ $item->tugas?->judul ?? '-' }}</p>
                                     <p class="text-[11px] font-medium text-slate-400 dark:text-slate-500 max-w-[220px] truncate mt-0.5">{{ $item->tugas?->kelasPerkuliahan?->mataKuliah?->nama_mk ?? '-' }}</p>
                                 </td>
                                 <td class="px-6 py-3.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -224,7 +224,7 @@
                                 </td>
                                 <td class="px-6 py-3.5 text-center">
                                     <a href="{{ route('dosen.kelas-tugas.rekap', ['id' => $item->tugas?->kelas_perkuliahan_id]) }}"
-                                        class="inline-flex items-center rounded-xl bg-[#321270]/10 dark:bg-purple-950/40 px-3.5 py-1.5 text-xs font-bold text-[#321270] dark:text-purple-300 hover:bg-[#321270] dark:hover:bg-purple-700 hover:text-white dark:hover:text-white transition duration-150">
+                                        class="inline-flex items-center rounded-xl bg-[#720c16]/10 dark:bg-[#1b0305]/40 px-3.5 py-1.5 text-xs font-bold text-[#720c16] dark:text-[#fca5a5] hover:bg-[#720c16] dark:hover:bg-[#5c0912] hover:text-white dark:hover:text-white transition duration-150">
                                         Buka Evaluasi
                                     </a>
                                 </td>

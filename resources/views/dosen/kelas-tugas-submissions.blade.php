@@ -4,13 +4,13 @@
 @section('activeMenu', 'Kelas Saya')
 
 @section('content')
-    <div class="bg-[#321270] dark:bg-gradient-to-r dark:from-indigo-950 dark:to-purple-900 rounded-xl px-8 py-6 mb-6 shadow-sm">
+    <div class="bg-[#720c16] dark:bg-gradient-to-r dark:from-[#1b0305] dark:to-[#2f0509] rounded-xl px-8 py-6 mb-6 shadow-sm">
         <div class="flex items-center gap-2 mb-2">
             <span class="text-xs font-semibold bg-white/15 text-white px-2.5 py-1 rounded">{{ $kelas->mataKuliah->kode_mk ?? '-' }}</span>
             <span class="text-xs text-white/80">Bobot Nilai: {{ $tugas->bobot_nilai }}%</span>
         </div>
         <h1 class="text-xl font-bold text-white">{{ $tugas->judul }}</h1>
-        <p class="text-sm text-blue-200 dark:text-purple-200 mt-1">
+        <p class="text-sm text-blue-200 dark:text-[#fecaca] mt-1">
             Deadline: {{ $tugas->deadline->format('d M Y, H:i') }}
         </p>
     </div>
@@ -28,7 +28,7 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm px-5 py-4 mb-4 flex flex-wrap items-center gap-3 transition-colors duration-200">
         <span class="text-sm font-semibold text-gray-700 dark:text-slate-200">Isi nilai sama untuk semua:</span>
         <input type="number" id="nilaiSemuaInput" min="0" max="100" placeholder="0-100"
-            class="w-24 px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none">
+            class="w-24 px-3 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none">
         <button type="button" onclick="isiNilaiSemua()"
                 class="text-xs font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-3 py-2 rounded-lg transition duration-150">
             Isi ke Semua
@@ -41,7 +41,7 @@
 
         <div class="ml-auto">
             <button type="submit" form="formNilaiSemua"
-                    class="text-sm font-semibold text-white bg-[#321270] dark:bg-[#6c2bd9] hover:bg-opacity-90 dark:hover:bg-[#5b21b6] px-5 py-2.5 rounded-lg transition duration-150 shadow-sm">
+                    class="text-sm font-semibold text-white bg-[#720c16] dark:bg-[#9a1622] hover:bg-opacity-90 dark:hover:bg-[#5c0912] px-5 py-2.5 rounded-lg transition duration-150 shadow-sm">
                 Simpan Nilai
             </button>
         </div>
@@ -118,7 +118,7 @@
                                     data-nama="{{ $p->mahasiswa->name ?? 'mahasiswa ini' }}"
                                     value="{{ $p->nilai }}"
                                     placeholder="{{ $sudahKumpul ? '-' : 'blm kumpul' }}"
-                                    class="nilai-input w-20 px-2 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none text-gray-800 dark:text-white placeholder:text-gray-300 dark:placeholder:text-slate-650 placeholder:italic placeholder:text-[11px]">
+                                    class="nilai-input w-20 px-2 py-1.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none text-gray-800 dark:text-white placeholder:text-gray-300 dark:placeholder:text-slate-650 placeholder:italic placeholder:text-[11px]">
                                 <input type="hidden" name="feedback_dosen[{{ $p->id }}]" id="feedback-{{ $p->id }}" value="{{ $p->feedback_dosen }}">
                             </td>
                             <td class="px-5 py-3 text-right whitespace-nowrap">
@@ -155,12 +155,12 @@
                                                         <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Feedback untuk mahasiswa</label>
                                                         <textarea id="catatanTextarea{{ $p->id }}" rows="4" maxlength="2000"
                                                             placeholder="Catatan / masukan untuk mahasiswa..."
-                                                            class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none resize-none">{{ $p->feedback_dosen }}</textarea>
+                                                            class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none resize-none">{{ $p->feedback_dosen }}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="bg-gray-50/50 dark:bg-slate-900 px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
                                                     <button type="button" onclick="toggleModal('modalCatatan{{ $p->id }}')" class="px-5 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition">Batal</button>
-                                                    <button type="button" onclick="terapkanCatatan('{{ $p->id }}')" class="px-5 py-2 rounded-lg bg-[#321270] dark:bg-[#6c2bd9] text-white font-semibold hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">Terapkan</button>
+                                                    <button type="button" onclick="terapkanCatatan('{{ $p->id }}')" class="px-5 py-2 rounded-lg bg-[#720c16] dark:bg-[#9a1622] text-white font-semibold hover:bg-opacity-90 dark:hover:bg-[#5c0912] transition">Terapkan</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -195,7 +195,7 @@
                                                                 </svg>
                                                             </div>
                                                             <p class="flex-1 min-w-0 text-sm text-slate-700 dark:text-slate-200 truncate">{{ $file->nama_asli ?? basename($file->file_path) }}</p>
-                                                            <span class="text-blue-600 dark:text-purple-400 text-xs font-semibold shrink-0">Lihat</span>
+                                                            <span class="text-blue-600 dark:text-[#f87171] text-xs font-semibold shrink-0">Lihat</span>
                                                         </a>
                                                     @endforeach
                                                 </div>

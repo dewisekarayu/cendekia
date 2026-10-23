@@ -242,6 +242,7 @@
             icon: 'success',
             title: "{{ app()->getLocale() === 'en' ? 'Success' : 'Berhasil' }}",
             text: "{{ session('success') }}",
+            confirmButtonText: "{{ app()->getLocale() === 'en' ? 'Close' : 'Tutup' }}",
             confirmButtonColor: '#002B6B',
         });
     });
