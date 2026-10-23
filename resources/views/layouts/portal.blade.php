@@ -80,11 +80,12 @@
         }
 
         /* Stats numbers and dynamic background boxes in dark mode */
+        html.dark .text-\[\#012428\],
         html.dark .text-\[\#002B6B\],
         html.dark .text-indigo-900,
         html.dark .text-blue-900,
         html.dark .text-violet-900 {
-            color: #60a5fa !important;
+            color: #6ee7b7 !important;
         }
 
         html.dark .text-\[\#321270\],
@@ -156,8 +157,9 @@
 
         /* Contextual Help Box Overrides */
         html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 {
-            background-image: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%) !important;
-            border-color: #312e81 !important;
+            background-image: none !important;
+            background-color: #102820 !important;
+            border-color: #315747 !important;
         }
         html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 p,
         html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 span,
@@ -170,11 +172,13 @@
 
         /* Alert Box Gradients in Dark Mode */
         html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 {
-            background-image: linear-gradient(to right, #064e3b, #022c22) !important;
+            background-image: none !important;
+            background-color: #102820 !important;
             border-color: #047857 !important;
         }
         html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50 {
-            background-image: linear-gradient(to right, #78350f, #451a03) !important;
+            background-image: none !important;
+            background-color: #3b3020 !important;
             border-color: #b45309 !important;
         }
         html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 p,
@@ -290,7 +294,7 @@
         $hasAdmin = $user && $user->hasRole('admin');
 
         if ($hasDosen) {
-            $sidebarBg = '#321270';
+            $sidebarBg = '#064e3b';
             $sidebarText = 'rgba(255,255,255,0.75)';
             $sidebarTitle = '#FFFFFF';
             $sidebarMuted = 'rgba(255,255,255,0.5)';
@@ -299,22 +303,22 @@
             $activeBg = 'rgba(255,255,255,0.14)';
             $activeText = '#FFFFFF';
         } elseif ($hasAdmin) {
-            $sidebarBg = '#002B6B';
-            $sidebarText = 'rgba(255,255,255,0.75)';
+            $sidebarBg = '#012428';
+            $sidebarText = 'rgba(255,255,255,0.85)';
             $sidebarTitle = '#FFFFFF';
-            $sidebarMuted = 'rgba(255,255,255,0.5)';
-            $sidebarBorder = 'rgba(255,255,255,0.12)';
+            $sidebarMuted = 'rgba(255,255,255,0.55)';
+            $sidebarBorder = 'rgba(255,255,255,0.08)';
             $sidebarHover = 'rgba(255,255,255,0.08)';
-            $activeBg = 'rgba(255,255,255,0.14)';
+            $activeBg = 'rgba(255,255,255,0.15)';
             $activeText = '#FFFFFF';
         } else {
-            $sidebarBg = '#F7F9FB';
-            $sidebarText = '#4B5563';
-            $sidebarTitle = '#1E3A8A';
-            $sidebarMuted = '#9CA3AF';
-            $sidebarBorder = '#F3F4F6';
-            $sidebarHover = '#EEF2F7';
-            $activeBg = '#1E3A8A';
+            $sidebarBg = '#f1f8f4';
+            $sidebarText = '#365b4b';
+            $sidebarTitle = '#064e3b';
+            $sidebarMuted = '#6b8b7a';
+            $sidebarBorder = '#dcebe2';
+            $sidebarHover = '#e1f2e8';
+            $activeBg = '#047857';
             $activeText = '#FFFFFF';
         }
     @endphp
@@ -330,7 +334,7 @@
             aria-hidden="true"></div>
 
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64"
+            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-hidden transition-transform duration-200 lg:w-64"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
 
@@ -359,7 +363,7 @@
                 </div>
             </div>
 
-            <nav class="flex-1 px-3 py-4 space-y-1">
+            <nav class="min-h-0 flex-1 overflow-y-auto px-3 py-4 space-y-1">
                 @php
                     if (auth()->user()->hasRole('dosen')) {
                         $menu = [
@@ -747,7 +751,7 @@
 
                     {{-- User Profile Pill --}}
                     <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 rounded-xl p-1 sm:pr-3 shrink-0">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#002B6B] flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#047857] flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
                             @if (auth()->user()->foto)
                                 <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
                             @else
@@ -922,6 +926,93 @@
             background-color: #4c0519 !important;
             color: #fda4af !important;
             border-color: #9f1239 !important;
+        }
+        html.dark body {
+            background-color: #012428 !important;
+            color: #d1e7dc !important;
+        }
+        html.dark .bg-white,
+        html.dark .bg-slate-800,
+        html.dark .bg-gray-800,
+        html.dark .bg-light {
+            background-color: #102820 !important;
+            color: #e5f5ed !important;
+        }
+        html.dark .bg-slate-900,
+        html.dark .bg-gray-900,
+        html.dark .bg-slate-50,
+        html.dark .bg-gray-50,
+        html.dark .bg-gray-100,
+        html.dark .bg-slate-100 {
+            background-color: #012428 !important;
+        }
+        html.dark :is([class*="dark:bg-slate-"], [class*="dark:bg-gray-"]) {
+            background-color: #102820 !important;
+        }
+        html.dark :is([class*="dark:bg-slate-900"], [class*="dark:bg-slate-950"], [class*="dark:bg-gray-900"], [class*="dark:bg-gray-950"]) {
+            background-color: #012428 !important;
+        }
+        html.dark [class*="dark:bg-blue-"] {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+        }
+        html.dark [class*="bg-blue-"] {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+        }
+        html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 {
+            background-image: none !important;
+            background-color: #102820 !important;
+            border-color: #315747 !important;
+        }
+        html.dark .forum-chip {
+            background-color: #145943 !important;
+            color: #6ee7b7 !important;
+        }
+        html.dark .forum-date-chip {
+            background-color: #102820 !important;
+            color: #d1e7dc !important;
+        }
+        html.dark [class*="dark:hover:bg-slate-"]:hover,
+        html.dark [class*="dark:hover:bg-gray-"]:hover {
+            background-color: #17382b !important;
+        }
+        html.dark [class*="border-slate-"],
+        html.dark [class*="border-gray-"] {
+            border-color: #25463a !important;
+        }
+        html.dark [class*="text-blue-"] {
+            color: #6ee7b7 !important;
+        }
+        html.dark aside {
+            background-color: #012428 !important;
+        }
+        html.dark aside .sidebar-link-active {
+            background-color: #145943 !important;
+            color: #f0fdf4 !important;
+        }
+        html.dark :is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"]) {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+        }
+        html.dark :is([class~="bg-blue-500"], [class~="bg-blue-600"], [class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"], [class~="dark:bg-blue-500"], [class~="dark:bg-blue-600"], [class~="dark:bg-blue-700"], [class~="dark:bg-blue-800"], [class~="dark:bg-blue-900"]) {
+            background-color: #145943 !important;
+        }
+        html.dark :is([class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"], [class~="dark:text-blue-300"], [class~="dark:text-blue-400"], [class~="text-primary"]) {
+            color: #6ee7b7 !important;
+        }
+        html.dark :is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="dark:border-blue-700"]) {
+            border-color: rgba(52, 211, 153, 0.3) !important;
+        }
+        html.dark input,
+        html.dark select,
+        html.dark textarea,
+        html.dark .form-control,
+        html.dark .form-select {
+            background-color: #091f19 !important;
+            border-color: #315747 !important;
+            color: #e5f5ed !important;
+        }
+        aside nav {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(167, 243, 208, 0.35) transparent;
         }
     </style>
 

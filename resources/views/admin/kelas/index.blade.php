@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Manajemen Kelas Perkuliahan')
 
@@ -11,7 +11,7 @@
     .btn-buat-kelas {
         height: 42px !important;
         padding: 0 1.25rem !important;
-        background-color: #002B6B !important;
+        background-color: #012428 !important;
         color: #ffffff !important;
         border-radius: 0.75rem !important;
         font-weight: 600 !important;
@@ -25,14 +25,14 @@
         white-space: nowrap !important;
         width: auto !important;
         min-width: 160px !important;
-        box-shadow: 0 4px 12px rgba(0, 43, 107, 0.2) !important;
+        box-shadow: 0 4px 12px rgba(1, 36, 40, 0.2) !important;
         transition: all 0.2s ease !important;
     }
     .btn-buat-kelas:hover {
         background-color: #001f4d !important;
         color: #ffffff !important;
         transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(0, 43, 107, 0.3) !important;
+        box-shadow: 0 6px 16px rgba(1, 36, 40, 0.3) !important;
     }
     @media (max-width: 575.98px) {
         .btn-action-wrapper {
@@ -85,14 +85,14 @@
         <ol class="breadcrumb mb-1" style="font-size: 0.85rem;">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-muted">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Akademik</a></li>
-            <li class="breadcrumb-item active" aria-current="page" style="color: #002B6B; font-weight: 600;">Kelas Perkuliahan</li>
+            <li class="breadcrumb-item active" aria-current="page" style="color: #012428; font-weight: 600;">Kelas Perkuliahan</li>
         </ol>
     </nav>
 
     <!-- Header & Action Button (Sleek & Fully Responsive) -->
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
         <div>
-            <h1 class="page-title h3 fw-bold mb-1" style="color: #002B6B;">Kelas Perkuliahan & Team Teaching</h1>
+            <h1 class="page-title h3 fw-bold mb-1" style="color: #012428;">Kelas Perkuliahan & Team Teaching</h1>
             <p class="text-muted mb-0" style="font-size: 0.9rem;">Kelola alokasi rombongan belajar, dosen pengampu, ruang, dan jadwal.</p>
         </div>
 
@@ -162,7 +162,7 @@
                     <button type="button" 
                             class="btn btn-primary d-inline-flex align-items-center justify-content-center gap-1.5 flex-grow-1 text-nowrap shadow-xs" 
                             id="applyFilterBtn" 
-                            style="height: 42px; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 600; background-color: #002B6B; border: none;">
+                            style="height: 42px; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 600; background-color: #012428; border: none;">
                         <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                         </svg>

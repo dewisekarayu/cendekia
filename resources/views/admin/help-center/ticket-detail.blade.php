@@ -1,4 +1,4 @@
-@extends('layouts.portal')
+﻿@extends('layouts.portal')
 
 @section('title', 'Ticket Detail - Admin')
 
@@ -10,7 +10,7 @@
             <h1 class="text-3xl font-extrabold text-gray-900">Ticket #{{ $ticket->id }}</h1>
             <p class="text-gray-600 mt-1">{{ $ticket->subject }}</p>
         </div>
-        <a href="{{ route('admin.help-center.tickets') }}" class="text-sm font-semibold text-[#002B6B] hover:text-blue-800">
+        <a href="{{ route('admin.help-center.tickets') }}" class="text-sm font-semibold text-[#012428] hover:text-blue-800">
             ← Kembali
         </a>
     </div>
@@ -24,8 +24,8 @@
                 <div>
                     <p class="text-sm font-semibold text-gray-700 mb-2">Dari</p>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-[#002B6B]/10 flex items-center justify-center">
-                            <span class="font-bold text-[#002B6B]">{{ substr($ticket->name, 0, 1) }}</span>
+                        <div class="w-12 h-12 rounded-full bg-[#012428]/10 flex items-center justify-center">
+                            <span class="font-bold text-[#012428]">{{ substr($ticket->name, 0, 1) }}</span>
                         </div>
                         <div>
                             <p class="font-medium text-gray-900">{{ $ticket->name }}</p>
@@ -46,7 +46,7 @@
                 @if($ticket->attachment_path)
                     <div>
                         <p class="text-sm font-semibold text-gray-700 mb-2">Lampiran</p>
-                        <a href="{{ asset('storage/' . $ticket->attachment_path) }}" class="inline-flex items-center gap-2 text-[#002B6B] hover:text-blue-800 font-medium">
+                        <a href="{{ asset('storage/' . $ticket->attachment_path) }}" class="inline-flex items-center gap-2 text-[#012428] hover:text-blue-800 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
@@ -126,7 +126,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select name="status" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#002B6B] focus:border-transparent outline-none">
+                    <select name="status" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#012428] focus:border-transparent outline-none">
                         <option value="open" {{ $ticket->status === 'open' ? 'selected' : '' }}>Terbuka</option>
                         <option value="in_progress" {{ $ticket->status === 'in_progress' ? 'selected' : '' }}>Diproses</option>
                         <option value="closed">Tertutup</option>
@@ -135,12 +135,12 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Respons untuk Mahasiswa</label>
-                    <textarea name="response" rows="6" placeholder="Tulis respons Anda di sini..." class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#002B6B] focus:border-transparent outline-none resize-none">{{ $ticket->admin_response }}</textarea>
+                    <textarea name="response" rows="6" placeholder="Tulis respons Anda di sini..." class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#012428] focus:border-transparent outline-none resize-none">{{ $ticket->admin_response }}</textarea>
                     <p class="text-xs text-gray-500 mt-2">Respons ini akan dikirim via email ke mahasiswa</p>
                 </div>
 
                 <div class="flex gap-3">
-                    <button type="submit" class="px-6 py-2 bg-[#002B6B] hover:bg-blue-800 text-white rounded-lg font-medium text-sm transition">
+                    <button type="submit" class="px-6 py-2 bg-[#012428] hover:bg-[#033a40] text-white rounded-lg font-medium text-sm transition">
                         Simpan Perubahan
                     </button>
                     @if($ticket->status !== 'closed')

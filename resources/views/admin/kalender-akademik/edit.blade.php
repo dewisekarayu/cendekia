@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Edit Agenda: ' . $kalenderAkademik->judul)
 @section('activeMenu', 'Kalender Akademik')
@@ -15,7 +15,7 @@
                     Mode Edit Agenda
                 </span>
             </div>
-            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#002B6B] dark:text-white">
+            <h1 class="page-title mb-1 text-2xl sm:text-3xl font-extrabold text-[#012428] dark:text-white">
                 Edit Agenda Akademik
             </h1>
             <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
@@ -66,7 +66,7 @@
                 {{-- SECTION 1: Informasi Kegiatan --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm overflow-hidden p-5 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                             1
                         </div>
                         <div>
@@ -128,7 +128,7 @@
                 {{-- SECTION 2: Jadwal & Waktu Pelaksanaan --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm overflow-hidden p-5 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                             2
                         </div>
                         <div>
@@ -220,7 +220,7 @@
                 {{-- SECTION 3: Kategori & Lokasi --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm overflow-hidden p-5 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                             3
                         </div>
                         <div>
@@ -256,7 +256,7 @@
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <input type="text" id="input_jenis_baru" class="form-control text-sm py-1.5 px-3 rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full" placeholder="Contoh: Seminar Nasional / Workshop" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); simpanJenisKegiatanBaru(); }">
-                                        <button type="button" onclick="simpanJenisKegiatanBaru()" class="px-3.5 py-1.5 bg-[#002B6B] hover:bg-blue-900 text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer">
+                                        <button type="button" onclick="simpanJenisKegiatanBaru()" class="px-3.5 py-1.5 bg-[#012428] hover:bg-[#033a40] text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer">
                                             <i class="bi bi-check-lg"></i>
                                             <span>Tambah</span>
                                         </button>
@@ -323,7 +323,7 @@
                 {{-- SECTION 4: Warna & Publikasi --}}
                 <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm overflow-hidden p-5 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 mb-5 border-b border-slate-100 dark:border-slate-700/60">
-                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#002B6B] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-[#012428] dark:text-blue-400 font-extrabold text-sm flex items-center justify-center border border-blue-100 dark:border-blue-900/50">
                             4
                         </div>
                         <div>
@@ -345,11 +345,11 @@
                                     <input type="color" name="warna" id="warna" 
                                            class="rounded-lg cursor-pointer border-0 p-0" 
                                            style="width: 44px; height: 44px; background: none;"
-                                           value="{{ old('warna', $kalenderAkademik->warna ?? '#002B6B') }}" 
+                                           value="{{ old('warna', $kalenderAkademik->warna ?? '#012428') }}" 
                                            oninput="updateWarnaLabel(); updatePreview();" required>
                                     <div class="pr-2">
-                                        <div id="warnaLabel" class="font-bold font-mono text-sm" style="color: {{ $kalenderAkademik->warna ?? '#002B6B' }};">
-                                            {{ strtoupper($kalenderAkademik->warna ?? '#002B6B') }}
+                                        <div id="warnaLabel" class="font-bold font-mono text-sm" style="color: {{ $kalenderAkademik->warna ?? '#012428' }};">
+                                            {{ strtoupper($kalenderAkademik->warna ?? '#012428') }}
                                         </div>
                                         <small class="text-slate-400 text-xs block">Warna Utama</small>
                                     </div>
@@ -428,11 +428,11 @@
                         </div>
 
                         {{-- Preview Event Card UI --}}
-                        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 transition-all" id="previewCardBox" style="border-left-width: 6px; border-left-color: {{ $kalenderAkademik->warna ?? '#002B6B' }}; background-color: rgba(0, 43, 107, 0.03);">
+                        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 transition-all" id="previewCardBox" style="border-left-width: 6px; border-left-color: {{ $kalenderAkademik->warna ?? '#012428' }}; background-color: rgba(1, 36, 40, 0.03);">
                             
                             {{-- Category Badge & Semester --}}
                             <div class="flex items-center justify-between gap-2 mb-2">
-                                <span id="previewJenisBadge" class="text-[11px] font-bold px-2 py-0.5 rounded text-white" style="background-color: {{ $kalenderAkademik->warna ?? '#002B6B' }};">
+                                <span id="previewJenisBadge" class="text-[11px] font-bold px-2 py-0.5 rounded text-white" style="background-color: {{ $kalenderAkademik->warna ?? '#012428' }};">
                                     {{ $jenisKegiatanOptions[$kalenderAkademik->jenis_kegiatan] ?? 'Umum / Kegiatan' }}
                                 </span>
                                 <span id="previewSemester" class="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate max-w-[140px]">

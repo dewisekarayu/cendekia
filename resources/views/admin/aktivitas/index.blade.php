@@ -38,7 +38,7 @@
     <div class="log-container">
         <div class="log-header">
             <div>
-                <h3>🕵️‍♂️ Log Aktivitas Pengguna</h3>
+                <h3><i class="bi bi-activity me-2" aria-hidden="true"></i>Log Aktivitas Pengguna</h3>
                 <p class="text-muted mb-0 mt-1">Pantau semua tindakan (Audit Trail) yang terjadi di dalam Cendekia LMS.</p>
             </div>
             
