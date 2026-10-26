@@ -66,7 +66,7 @@ class DosenController extends Controller
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', 'in:aktif,non_aktif'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ]);
 
         $fotoPath = null;
@@ -114,7 +114,7 @@ class DosenController extends Controller
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($dosenMember->id)],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', 'in:aktif,non_aktif'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ]);
 
         $fotoLama = $dosenMember->foto;
