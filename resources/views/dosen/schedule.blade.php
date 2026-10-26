@@ -29,7 +29,7 @@
                             $schedules = [
                                 ['time' => '08:00 - 09:30', 'class' => 'Pemrograman Web', 'room' => 'Lab 1', 'students' => 32, 'color' => 'bg-blue-50 dark:bg-blue-950/40 border-l-4 border-blue-500 dark:border-blue-700'],
                                 ['time' => '10:00 - 11:30', 'class' => 'Basis Data', 'room' => 'Lab 2', 'students' => 28, 'color' => 'bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 dark:border-emerald-700'],
-                                ['time' => '13:00 - 14:30', 'class' => 'Algoritma & Struktur Data', 'room' => 'Ruang 305', 'students' => 35, 'color' => 'bg-purple-50 dark:bg-purple-950/40 border-l-4 border-purple-500 dark:border-purple-700'],
+                                ['time' => '13:00 - 14:30', 'class' => 'Algoritma & Struktur Data', 'room' => 'Ruang 305', 'students' => 35, 'color' => 'bg-[#fdf2f2] dark:bg-[#1b0305]/40 border-l-4 border-[#a92a35] dark:border-[#5c0912]'],
                             ];
                         @endphp
                         @foreach ($schedules as $item)

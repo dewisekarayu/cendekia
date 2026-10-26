@@ -7,15 +7,15 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/60">
         <div class="min-w-0">
             <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                <a href="{{ route('dosen.kelas-saya') }}" class="hover:text-[#321270] transition duration-200">Kelas Saya</a>
+                <a href="{{ route('dosen.kelas-saya') }}" class="hover:text-[#720c16] transition duration-200">Kelas Saya</a>
                 <svg class="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
-                <a href="{{ route('dosen.absensi.index', $kelas->id) }}" class="hover:text-[#321270] transition duration-200">Presensi</a>
+                <a href="{{ route('dosen.absensi.index', $kelas->id) }}" class="hover:text-[#720c16] transition duration-200">Presensi</a>
                 <svg class="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 <span class="text-slate-800 font-bold">Pertemuan {{ $absensi->pertemuan_ke }}</span>
             </div>
 
             <h1 class="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2.5 mt-1.5">
-                <div class="w-9 h-9 rounded-lg bg-[#321270]/5 text-[#321270] border border-[#321270]/10 shadow-sm flex items-center justify-center flex-shrink-0">
+                <div class="w-9 h-9 rounded-lg bg-[#720c16]/5 text-[#720c16] border border-[#720c16]/10 shadow-sm flex items-center justify-center flex-shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
@@ -25,7 +25,7 @@
         </div>
         <div class="hidden sm:block shrink-0">
             <a href="{{ route('dosen.absensi.index', $kelas->id) }}"
-            class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#321270] hover:bg-[#3d1690] text-white rounded-xl font-bold text-xs shadow-md hover:shadow-lg transition-all duration-200">
+            class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#720c16] hover:bg-[#5c0912] text-white rounded-xl font-bold text-xs shadow-md hover:shadow-lg transition-all duration-200">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -169,7 +169,7 @@
                 </button>
             </form>
 
-            <button type="button" onclick="document.getElementById('qrModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white border border-indigo-200 rounded-lg text-[11px] font-bold shadow-sm transition-all">
+            <button type="button" onclick="document.getElementById('qrModal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#fdf2f2] hover:bg-[#720c16] text-[#5c0912] hover:text-white border border-[#fecaca] rounded-lg text-[11px] font-bold shadow-sm transition-all">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                 </svg>
@@ -208,7 +208,7 @@
         </a>
 
         <a href="{{ route('dosen.absensi.attendance', [$kelas->id, $absensi->id]) }}"
-           class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#321270]/5 hover:bg-[#321270] text-[#321270] hover:text-white border border-[#321270]/20 rounded-lg text-[11px] font-bold shadow-sm transition-all">
+           class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#720c16]/5 hover:bg-[#720c16] text-[#720c16] hover:text-white border border-[#720c16]/20 rounded-lg text-[11px] font-bold shadow-sm transition-all">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m7 4v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9" />
             </svg>
@@ -220,7 +220,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
             </svg>
             <input type="text" id="cariMahasiswa" placeholder="Cari nama / NIM..."
-                   class="w-full pl-9 pr-3 py-2 text-xs text-slate-700 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#321270] focus:ring-2 focus:ring-[#321270]/20 outline-none transition duration-200">
+                   class="w-full pl-9 pr-3 py-2 text-xs text-slate-700 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#720c16] focus:ring-2 focus:ring-[#720c16]/20 outline-none transition duration-200">
         </div>
 
         <div class="flex-1 text-right">
@@ -239,9 +239,9 @@
     </div>
 
     <div class="bg-white rounded-lg shadow-sm border border-slate-200/80 overflow-hidden">
-        <div class="bg-gradient-to-r from-slate-50 to-[#321270]/5 px-4 py-2.5 border-b border-slate-100 flex items-center justify-between">
+        <div class="bg-gradient-to-r from-slate-50 to-[#720c16]/5 px-4 py-2.5 border-b border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <span class="w-1.5 h-3 bg-[#321270] rounded-full"></span>
+                <span class="w-1.5 h-3 bg-[#720c16] rounded-full"></span>
                 <h2 class="text-sm font-bold text-slate-800">Daftar Rekap Absensi Mahasiswa</h2>
                 <span id="jumlahHasil" class="ml-2 text-[11px] font-semibold text-slate-400"></span>
             </div>
@@ -291,10 +291,10 @@
                             </td>
                             <td class="px-4 py-2.5 whitespace-nowrap">
                                 <div class="flex items-center gap-2.5">
-                                    <div class="w-7 h-7 rounded-full bg-[#321270]/5 border border-[#321270]/10 flex items-center justify-center text-[11px] font-bold text-[#321270] group-hover:bg-[#321270] group-hover:text-white transition-all duration-300">
+                                    <div class="w-7 h-7 rounded-full bg-[#720c16]/5 border border-[#720c16]/10 flex items-center justify-center text-[11px] font-bold text-[#720c16] group-hover:bg-[#720c16] group-hover:text-white transition-all duration-300">
                                         {{ strtoupper(substr($mahasiswa->name, 0, 2)) }}
                                     </div>
-                                    <div class="font-bold text-slate-700 group-hover:text-[#321270] transition text-sm">
+                                    <div class="font-bold text-slate-700 group-hover:text-[#720c16] transition text-sm">
                                         {{ $mahasiswa->name }}
                                     </div>
                                 </div>

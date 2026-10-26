@@ -7,11 +7,11 @@
 <div class="max-w-7xl mx-auto space-y-6 py-4 sm:py-6" x-data="{ openId: null }">
     <section class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm">
         <div class="flex items-start gap-3">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#321270]/10 text-[#321270]">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#720c16]/10 text-[#720c16]">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
             </div>
             <div>
-                <p class="text-xs font-bold uppercase tracking-wider text-[#321270]">Log Mengajar</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-[#720c16]">Log Mengajar</p>
                 <h1 class="mt-1 text-xl font-extrabold text-slate-800 sm:text-2xl">Daftar Kelas</h1>
                 <p class="mt-1 text-sm text-slate-500">Klik kelas untuk membuka daftar mata pelajaran dan rincian pertemuannya.</p>
             </div>
@@ -32,35 +32,35 @@
                     <tbody class="divide-y divide-slate-100">
                         @foreach($kelasList as $kelasGrup)
                             {{-- Baris utama: KELAS --}}
-                            <tr class="group cursor-pointer transition hover:bg-[#321270]/[0.03]"
+                            <tr class="group cursor-pointer transition hover:bg-[#720c16]/[0.03]"
                                 @click="openId = openId === '{{ $kelasGrup->id }}' ? null : '{{ $kelasGrup->id }}'"
                                 :aria-expanded="openId === '{{ $kelasGrup->id }}'">
                                 <td class="px-5 py-4 text-center text-sm font-semibold text-slate-400">{{ $loop->iteration }}</td>
                                 <td class="px-5 py-4">
                                     <div class="flex items-center gap-3">
-                                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition group-hover:bg-[#321270] group-hover:text-white">
+                                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition group-hover:bg-[#720c16] group-hover:text-white">
                                             <svg class="h-4 w-4 transition" :class="openId === '{{ $kelasGrup->id }}' ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
                                         </span>
                                         <div>
-                                            <p class="font-bold text-slate-700 transition group-hover:text-[#321270]">Kelas {{ $kelasGrup->kode }}</p>
+                                            <p class="font-bold text-slate-700 transition group-hover:text-[#720c16]">Kelas {{ $kelasGrup->kode }}</p>
                                             <p class="mt-0.5 text-xs font-medium text-slate-400">Klik untuk melihat mata pelajaran</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-5 py-4 text-center">
-                                    <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-700">{{ $kelasGrup->jumlah_mata_kuliah }} Mata Pelajaran</span>
+                                    <span class="inline-flex items-center rounded-full bg-[#fdf2f2] px-3 py-1.5 text-xs font-bold text-[#5c0912]">{{ $kelasGrup->jumlah_mata_kuliah }} Mata Pelajaran</span>
                                 </td>
                             </tr>
 
                             {{-- Baris terbuka: daftar MATA PELAJARAN di dalam kelas --}}
                             <tr x-show="openId === '{{ $kelasGrup->id }}'" x-cloak x-transition>
                                 <td colspan="3" class="bg-slate-50/70 p-4 sm:p-5">
-                                    <div class="space-y-4 border-l-2 border-[#321270] pl-4 sm:pl-5">
+                                    <div class="space-y-4 border-l-2 border-[#720c16] pl-4 sm:pl-5">
                                         @foreach($kelasGrup->mata_kuliah as $kelas)
                                             <section class="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                                                <div class="flex items-center justify-between border-b border-slate-100 bg-indigo-50/60 px-4 py-3">
+                                                <div class="flex items-center justify-between border-b border-slate-100 bg-[#fdf2f2]/60 px-4 py-3">
                                                     <div>
-                                                        <p class="text-sm font-bold text-indigo-800">{{ $kelas->mataKuliah->nama_mk }}</p>
+                                                        <p class="text-sm font-bold text-[#45070d]">{{ $kelas->mataKuliah->nama_mk }}</p>
                                                         <p class="mt-0.5 text-xs text-slate-500">{{ $kelas->mataKuliah->kode_mk }} · {{ $kelas->mahasiswa->count() }} mahasiswa terdaftar</p>
                                                     </div>
                                                     <span class="rounded-full bg-white px-2.5 py-1 text-xs font-bold text-slate-600 ring-1 ring-slate-200">{{ $kelas->absensi->count() }} Pertemuan</span>
@@ -104,7 +104,7 @@
                                                                             </div>
                                                                         </td>
                                                                         <td class="px-4 py-3 text-right">
-                                                                            <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" class="inline-flex items-center gap-1 rounded-lg border border-[#321270]/20 bg-[#321270]/5 px-2.5 py-1.5 text-xs font-bold text-[#321270] transition hover:bg-[#321270] hover:text-white">
+                                                                            <a href="{{ route('dosen.absensi.show', ['kelasId' => $kelas->id, 'absensiId' => $absensi->id]) }}" class="inline-flex items-center gap-1 rounded-lg border border-[#720c16]/20 bg-[#720c16]/5 px-2.5 py-1.5 text-xs font-bold text-[#720c16] transition hover:bg-[#720c16] hover:text-white">
                                                                                 <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                                                                 Lihat
                                                                             </a>

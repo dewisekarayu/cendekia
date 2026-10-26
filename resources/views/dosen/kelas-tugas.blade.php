@@ -6,14 +6,14 @@
 @section('content')
 
     <!-- Class Header Banner -->
-    <div class="bg-[#321270] dark:bg-gradient-to-r dark:from-indigo-950 dark:to-purple-900 rounded-xl px-8 py-6 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-sm">
+    <div class="bg-[#720c16] dark:bg-gradient-to-r dark:from-[#1b0305] dark:to-[#2f0509] rounded-xl px-8 py-6 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-sm">
         <div>
             <div class="flex items-center gap-2 mb-2">
                 <span class="text-xs font-semibold bg-white/15 text-white px-2.5 py-1 rounded">{{ $kelas->mataKuliah->kode_mk ?? '-' }}</span>
                 <span class="text-xs text-white/80">Semester {{ $kelas->semester->nama_semester ?? '-' }}</span>
             </div>
             <h1 class="text-xl font-bold text-white">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</h1>
-            <p class="text-sm text-blue-200 dark:text-purple-200 mt-1">
+            <p class="text-sm text-blue-200 dark:text-[#fecaca] mt-1">
                 {{ $kelas->hari }}, {{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }} • {{ $kelas->ruangan }}
             </p>
         </div>
@@ -55,7 +55,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <input id="searchTugas" type="text" placeholder="Cari tugas..." class="w-full sm:w-56 pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none">
+                <input id="searchTugas" type="text" placeholder="Cari tugas..." class="w-full sm:w-56 pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#a92a35] focus:ring-2 focus:ring-[#a92a35]/20 outline-none">
             </label>
 
             {{-- Filter Status --}}
@@ -66,7 +66,7 @@
             </div>
 
             <button type="button" onclick="toggleModal('modalTugas')"
-                    class="inline-flex items-center justify-center gap-2 w-full sm:w-auto bg-[#321270] dark:bg-[#6c2bd9] hover:bg-[#230c50] dark:hover:bg-[#5b21b6] text-white text-sm font-semibold px-[18px] py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]">
+                    class="inline-flex items-center justify-center gap-2 w-full sm:w-auto bg-[#720c16] dark:bg-[#9a1622] hover:bg-[#4c0810] dark:hover:bg-[#5c0912] text-white text-sm font-semibold px-[18px] py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -84,7 +84,7 @@
                 </svg>
                 <p class="text-gray-500 dark:text-slate-400 text-sm mb-4">Belum ada tugas untuk kelas ini.</p>
                 <button type="button" onclick="toggleModal('modalTugas')"
-                    class="inline-flex items-center gap-1.5 text-xs font-bold bg-[#321270] dark:bg-[#6c2bd9] text-white px-4 py-2 rounded-lg hover:bg-[#321270]/90 dark:hover:bg-[#5b21b6] transition">
+                    class="inline-flex items-center gap-1.5 text-xs font-bold bg-[#720c16] dark:bg-[#9a1622] text-white px-4 py-2 rounded-lg hover:bg-[#720c16]/90 dark:hover:bg-[#5c0912] transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
@@ -141,7 +141,7 @@
                             <td class="px-5 py-3">
                                 <p class="text-gray-600 dark:text-slate-300 mb-1">{{ $submitted }}/{{ $total }} terkumpul</p>
                                 <div class="w-28 h-1.5 rounded-full bg-gray-100 dark:bg-slate-700 overflow-hidden">
-                                    <div class="h-full bg-[#321270] dark:bg-purple-500 rounded-full" style="width: {{ $persen }}%"></div>
+                                    <div class="h-full bg-[#720c16] dark:bg-[#a92a35] rounded-full" style="width: {{ $persen }}%"></div>
                                 </div>
                             </td>
                             <td class="px-5 py-3">
@@ -252,7 +252,7 @@
                 <div class="relative bg-white dark:bg-slate-800 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
 
                     <div class="px-8 py-6 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-4">
-                        <div class="bg-[#321270] dark:bg-purple-700 p-2 rounded-lg text-white">
+                        <div class="bg-[#720c16] dark:bg-[#5c0912] p-2 rounded-lg text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
@@ -267,19 +267,19 @@
                             <div class="space-y-2">
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Judul Tugas</label>
                                 <input type="text" name="judul" value="{{ $tugas->judul }}" required maxlength="255"
-                                    class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                    class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100">
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
                                     <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Deadline</label>
                                     <input type="datetime-local" name="deadline" value="{{ $tugas->deadline->format('Y-m-d\TH:i') }}" required
-                                        class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                        class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Bobot Nilai (Poin)</label>
                                     <input type="number" name="poin" value="{{ $tugas->bobot_nilai }}" required min="1" max="100"
-                                        class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                        class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100">
                                 </div>
                             </div>
 
@@ -287,7 +287,7 @@
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instruksi Tugas</label>
                                 <textarea name="instruksi" rows="5" required maxlength="5000"
                                 <textarea name="instruksi" rows="5" required maxlength="5000" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..."
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none resize-none">{{ $tugas->instruksi }}</textarea>
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none resize-none">{{ $tugas->instruksi }}</textarea>
                             </div>
                             
                             <div class="space-y-2" x-data="{ linkInput: '{{ $tugas->link_lampiran }}', previewUrl() { 
@@ -304,7 +304,7 @@
                                         </svg>
                                     </div>
                                     <input type="url" name="link_lampiran" x-model="linkInput" placeholder="https://..."
-                                        class="pl-10 w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none">
+                                        class="pl-10 w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none">
                                 </div>
                                 
                                 <template x-if="previewUrl()">
@@ -358,7 +358,7 @@
                             <button type="button" onclick="toggleModal('modalEditTugas{{ $tugas->id }}')" class="px-6 py-2.5 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 font-semibold hover:bg-gray-100 dark:hover:bg-slate-800 transition">
                                 Batal
                             </button>
-                            <button type="submit" class="px-6 py-2.5 rounded-lg bg-[#321270] dark:bg-[#6c2bd9] text-white font-semibold hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
+                            <button type="submit" class="px-6 py-2.5 rounded-lg bg-[#720c16] dark:bg-[#9a1622] text-white font-semibold hover:bg-opacity-90 dark:hover:bg-[#5c0912] transition">
                                 Simpan Perubahan
                             </button>
                         </div>
@@ -376,7 +376,7 @@
             <div class="relative bg-white dark:bg-slate-800 w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
 
                 <div class="px-8 py-6 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-4">
-                    <div class="bg-[#321270] dark:bg-purple-700 p-2 rounded-lg text-white">
+                    <div class="bg-[#720c16] dark:bg-[#5c0912] p-2 rounded-lg text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                         </svg>
@@ -389,17 +389,17 @@
                     <div class="px-8 py-6 space-y-6">
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Judul Tugas</label>
-                            <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="255" placeholder="Contoh: Implementasi Stack dan Queue" class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                            <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="255" placeholder="Contoh: Implementasi Stack dan Queue" class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Deadline</label>
-                                <input type="datetime-local" name="deadline" value="{{ old('deadline') }}" required class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                <input type="datetime-local" name="deadline" value="{{ old('deadline') }}" required class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Bobot Nilai (Poin)</label>
-                                <input type="number" name="poin" value="{{ old('poin', 100) }}" required min="1" max="100" class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100">
+                                <input type="number" name="poin" value="{{ old('poin', 100) }}" required min="1" max="100" class="w-full px-4 py-2 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100">
                             </div>
                         </div>
 
@@ -407,14 +407,14 @@
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                                 <label class="text-sm font-bold text-gray-700 dark:text-slate-300">Instruksi Tugas</label>
                                 <div class="flex flex-wrap items-center gap-2">
-                                    <input type="number" id="ai_jumlah_soal" class="w-16 text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Jml" value="5" min="1" max="50" title="Jumlah Soal">
-                                    <select id="ai_tipe_soal" class="text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <input type="number" id="ai_jumlah_soal" class="w-16 text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#a92a35]" placeholder="Jml" value="5" min="1" max="50" title="Jumlah Soal">
+                                    <select id="ai_tipe_soal" class="text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#a92a35]">
                                         <option value="Soal Essay">Soal Essay</option>
                                         <option value="Soal Pilihan Ganda">Soal Pilihan Ganda</option>
                                         <option value="Soal Pilihan Ganda Kompleks (Lebih dari 1 Jawaban Benar)">Soal Pilihan Ganda Kompleks</option>
                                         <option value="Campuran (Pilihan Ganda & Essay)">Campuran</option>
                                     </select>
-                                    <button type="button" onclick="generateAiInstruksi(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
+                                    <button type="button" onclick="generateAiInstruksi(this)" class="text-xs flex items-center gap-1 bg-[#fee2e2] text-[#5c0912] hover:bg-[#fecaca] px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                         Instruksi AI
                                     </button>
@@ -423,7 +423,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <textarea name="instruksi" rows="5" required maxlength="5000" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none resize-none">{{ old('instruksi') }}</textarea>
+                            <textarea name="instruksi" rows="5" required maxlength="5000" placeholder="Tuliskan detail instruksi pengerjaan tugas di sini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none resize-none">{{ old('instruksi') }}</textarea>
                         </div>
                         
                         <div class="space-y-2" x-data="{ linkInput: '{{ old('link_lampiran') }}', previewUrl() { 
@@ -440,7 +440,7 @@
                                     </svg>
                                 </div>
                                 <input type="url" name="link_lampiran" x-model="linkInput" placeholder="https://..."
-                                    class="pl-10 w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500 focus:outline-none">
+                                    class="pl-10 w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#a92a35] focus:outline-none">
                             </div>
                             
                             <template x-if="previewUrl()">
@@ -467,8 +467,8 @@
 
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-gray-700 dark:text-slate-300">File Lampiran Template (Opsional)</label>
-                            <label class="block w-full border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-purple-500 transition cursor-pointer bg-slate-50/50 dark:bg-slate-900">
-                                <div class="bg-blue-50 dark:bg-purple-950/40 p-4 rounded-xl mb-3 text-[#321270] dark:text-purple-300">
+                            <label class="block w-full border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-[#a92a35] transition cursor-pointer bg-slate-50/50 dark:bg-slate-900">
+                                <div class="bg-blue-50 dark:bg-[#1b0305]/40 p-4 rounded-xl mb-3 text-[#720c16] dark:text-[#fca5a5]">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
@@ -487,7 +487,7 @@
                         <button type="button" onclick="toggleModal('modalTugas')" class="px-6 py-2.5 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-400 font-semibold hover:bg-gray-100 dark:hover:bg-slate-800 transition">
                             Batal
                         </button>
-                        <button type="submit" class="px-6 py-2.5 rounded-lg bg-[#321270] dark:bg-[#6c2bd9] text-white font-semibold flex items-center gap-2 hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
+                        <button type="submit" class="px-6 py-2.5 rounded-lg bg-[#720c16] dark:bg-[#9a1622] text-white font-semibold flex items-center gap-2 hover:bg-opacity-90 dark:hover:bg-[#5c0912] transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
@@ -885,14 +885,14 @@
             color: rgb(100 116 139);
         }
         .filter-status-btn.is-active {
-            background-color: #321270;
+            background-color: #720c16;
             color: #fff;
         }
         .dark .filter-status-btn {
             color: rgb(148 163 184);
         }
         .dark .filter-status-btn.is-active {
-            background-color: #6c2bd9;
+            background-color: #9a1622;
             color: #fff;
         }
         #sortDeadlineIcon {

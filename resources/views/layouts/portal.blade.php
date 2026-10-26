@@ -8,8 +8,8 @@
 
     <title>@yield('title', 'Dashboard') - Cendekia</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.jpg') }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -39,10 +39,19 @@
             width: 0 !important;
             height: 0 !important;
         }
+        aside nav {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
+        }
+        aside nav::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
 
         /* Dark Mode overrides for Student/Dosen portal */
         html.dark body {
-            background-color: #0f172a !important; /* slate-900 */
+            background-color: #1b1115 !important;
             color: #cbd5e1 !important;
         }
 
@@ -88,7 +97,9 @@
             color: #6ee7b7 !important;
         }
 
-        html.dark .text-\[\#321270\],
+        html.dark .text-\[\#720c16\] {
+            color: #fca5a5 !important;
+        }
         html.dark .text-purple-900 {
             color: #a78bfa !important;
         }
@@ -286,7 +297,7 @@
     </style>
 </head>
 
-<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
+<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200 {{ request()->routeIs('dosen.kalender-akademik.*') ? 'calendar-dark-background' : '' }}">
     @php
         $user = auth()->user();
         $currentLocale = session('locale', $user->language ?? 'id');
@@ -294,7 +305,7 @@
         $hasAdmin = $user && $user->hasRole('admin');
 
         if ($hasDosen) {
-            $sidebarBg = '#064e3b';
+            $sidebarBg = '#720c16';
             $sidebarText = 'rgba(255,255,255,0.75)';
             $sidebarTitle = '#FFFFFF';
             $sidebarMuted = 'rgba(255,255,255,0.5)';
@@ -334,7 +345,7 @@
             aria-hidden="true"></div>
 
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-hidden transition-transform duration-200 lg:w-64"
+            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64 {{ $hasDosen ? 'dosen-sidebar' : '' }}"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
 
@@ -342,7 +353,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <a href="/" class="flex min-w-0 items-center gap-2" style="gap: 0.5rem;">
                         <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
-                            <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="" />
+                            <img src="{{ asset('images/logo.jpg') }}" alt="Cendekia" class="rounded-full object-cover" />
                         </div>
                         <div class="min-w-0">
                             <div class="text-base font-bold leading-tight truncate notranslate" translate="no" style="color: {{ $sidebarTitle }};">Cendekia</div>
@@ -543,7 +554,7 @@
             </nav>
         </aside>
 
-        <div class="flex-1 min-w-0 w-full transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
+        <div class="flex-1 min-w-0 w-full dark:bg-[#1b1115] transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
 
             <header class="sticky top-0 z-30 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-700/80 px-3 py-2.5 sm:px-6 sm:py-3.5 flex items-center justify-between gap-3 transition-colors duration-200">
 
@@ -751,7 +762,7 @@
 
                     {{-- User Profile Pill --}}
                     <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 rounded-xl p-1 sm:pr-3 shrink-0">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#047857] flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg {{ $hasDosen ? 'bg-[#720c16]' : 'bg-[#047857]' }} flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
                             @if (auth()->user()->foto)
                                 <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
                             @else
@@ -763,7 +774,7 @@
                 </div>
             </header>
 
-            <main class="w-full min-w-0 overflow-x-hidden p-4 sm:p-6 lg:p-8">
+            <main class="w-full min-w-0 overflow-x-hidden p-4 sm:p-6 lg:p-8 {{ request()->routeIs('dosen.kalender-akademik.*') ? 'calendar-page-container' : '' }}">
                 @yield('content')
             </main>
         </div>
@@ -791,17 +802,30 @@
             background-color: #0f172a !important;
             border-right: 1px solid #1e293b !important;
         }
+        html.dark aside.dosen-sidebar {
+            background-color: #350a12 !important;
+            border-right-color: #57121d !important;
+        }
         html.dark aside .sidebar-link {
             color: #94a3b8 !important;
+        }
+        html.dark aside.dosen-sidebar .sidebar-link:hover {
+            background-color: #4a1019 !important;
+            color: #fff1f2 !important;
         }
         html.dark aside .sidebar-link:hover {
             background-color: #1e293b !important;
             color: #f8fafc !important;
         }
+        html.dark aside.dosen-sidebar .sidebar-link-active {
+            background-color: #681521 !important;
+            color: #ffe4e6 !important;
+            border-left-color: #f87171 !important;
+        }
         html.dark aside .sidebar-link-active {
-            background-color: #1e1b4b !important;
-            color: #c084fc !important;
-            border-left: 3px solid #a855f7 !important;
+            background-color: #45070d !important;
+            color: #fca5a5 !important;
+            border-left: 3px solid #a92a35 !important;
             padding-left: calc(0.75rem - 3px) !important;
         }
         html.dark aside .pt-4.mt-4 {
@@ -881,7 +905,7 @@
         }
         html.dark input::placeholder,
         html.dark textarea::placeholder {
-            color: #475569 !important;
+            color: #94a3b8 !important;
         }
         html.dark .bg-white.text-slate-700,
         html.dark .bg-white.text-gray-700,
@@ -927,92 +951,10 @@
             color: #fda4af !important;
             border-color: #9f1239 !important;
         }
-        html.dark body {
-            background-color: #012428 !important;
-            color: #d1e7dc !important;
-        }
-        html.dark .bg-white,
-        html.dark .bg-slate-800,
-        html.dark .bg-gray-800,
-        html.dark .bg-light {
-            background-color: #102820 !important;
-            color: #e5f5ed !important;
-        }
-        html.dark .bg-slate-900,
-        html.dark .bg-gray-900,
-        html.dark .bg-slate-50,
-        html.dark .bg-gray-50,
-        html.dark .bg-gray-100,
-        html.dark .bg-slate-100 {
-            background-color: #012428 !important;
-        }
-        html.dark :is([class*="dark:bg-slate-"], [class*="dark:bg-gray-"]) {
-            background-color: #102820 !important;
-        }
-        html.dark :is([class*="dark:bg-slate-900"], [class*="dark:bg-slate-950"], [class*="dark:bg-gray-900"], [class*="dark:bg-gray-950"]) {
-            background-color: #012428 !important;
-        }
-        html.dark [class*="dark:bg-blue-"] {
-            background-color: rgba(16, 185, 129, 0.16) !important;
-        }
-        html.dark [class*="bg-blue-"] {
-            background-color: rgba(16, 185, 129, 0.16) !important;
-        }
-        html.dark .bg-gradient-to-br.from-blue-50.to-indigo-50 {
-            background-image: none !important;
-            background-color: #102820 !important;
-            border-color: #315747 !important;
-        }
-        html.dark .forum-chip {
-            background-color: #145943 !important;
-            color: #6ee7b7 !important;
-        }
-        html.dark .forum-date-chip {
-            background-color: #102820 !important;
-            color: #d1e7dc !important;
-        }
-        html.dark [class*="dark:hover:bg-slate-"]:hover,
-        html.dark [class*="dark:hover:bg-gray-"]:hover {
-            background-color: #17382b !important;
-        }
-        html.dark [class*="border-slate-"],
-        html.dark [class*="border-gray-"] {
-            border-color: #25463a !important;
-        }
-        html.dark [class*="text-blue-"] {
-            color: #6ee7b7 !important;
-        }
-        html.dark aside {
-            background-color: #012428 !important;
-        }
-        html.dark aside .sidebar-link-active {
-            background-color: #145943 !important;
-            color: #f0fdf4 !important;
-        }
-        html.dark :is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"]) {
-            background-color: rgba(16, 185, 129, 0.16) !important;
-        }
-        html.dark :is([class~="bg-blue-500"], [class~="bg-blue-600"], [class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"], [class~="dark:bg-blue-500"], [class~="dark:bg-blue-600"], [class~="dark:bg-blue-700"], [class~="dark:bg-blue-800"], [class~="dark:bg-blue-900"]) {
-            background-color: #145943 !important;
-        }
-        html.dark :is([class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"], [class~="dark:text-blue-300"], [class~="dark:text-blue-400"], [class~="text-primary"]) {
-            color: #6ee7b7 !important;
-        }
-        html.dark :is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="dark:border-blue-700"]) {
-            border-color: rgba(52, 211, 153, 0.3) !important;
-        }
-        html.dark input,
-        html.dark select,
-        html.dark textarea,
-        html.dark .form-control,
-        html.dark .form-select {
-            background-color: #091f19 !important;
-            border-color: #315747 !important;
-            color: #e5f5ed !important;
-        }
-        aside nav {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(167, 243, 208, 0.35) transparent;
+        html.dark body.calendar-dark-background main,
+        html.dark body.calendar-dark-background main > .calendar-page,
+        html.dark body.calendar-dark-background div.flex-1.min-w-0.w-full {
+            background-color: #1b1115 !important;
         }
     </style>
 

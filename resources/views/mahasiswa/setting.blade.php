@@ -242,7 +242,8 @@
             icon: 'success',
             title: "{{ app()->getLocale() === 'en' ? 'Success' : 'Berhasil' }}",
             text: "{{ session('success') }}",
-            confirmButtonColor: '#047857',
+            confirmButtonText: "{{ app()->getLocale() === 'en' ? 'Close' : 'Tutup' }}",
+            confirmButtonColor: '#002B6B',
         });
     });
 </script>

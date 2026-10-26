@@ -17,17 +17,16 @@
         }
     }
 
-    $inputClass = 'w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 outline-none transition focus:border-transparent focus:ring-2 focus:ring-[#002B6B] dark:focus:ring-blue-600';
+    $inputClass = 'help-center-input w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 outline-none transition focus:border-transparent focus:ring-2 focus:ring-[#720c16] dark:focus:ring-[#a92a35]';
     $labelClass = 'mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-300';
 @endphp
 
-<div class="max-w-6xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
+<div class="help-center-page max-w-6xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
 
     {{-- ===== HERO ===== --}}
-    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#002B6B] via-indigo-700 to-purple-600 p-6 sm:p-8 shadow-xl shadow-blue-950/10">
+    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#720c16] via-[#3b1748] to-[#c0e6ff] p-6 sm:p-8 shadow-xl shadow-blue-950/10">
         <div class="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full bg-white/10 blur-2xl"></div>
         <div class="pointer-events-none absolute -bottom-16 left-10 h-64 w-64 rounded-full bg-blue-400/10 blur-2xl"></div>
-
         <div class="relative z-10">
             <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
@@ -59,7 +58,7 @@
                     @endauth
                 </div>
 
-                <span id="admin-status-badge" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+                <span id="admin-status-badge" class="help-center-surface-secondary inline-flex items-center gap-2 rounded-full border border-[#012428]/15 bg-white/60 px-3.5 py-1.5 text-xs font-semibold text-[#012428] backdrop-blur-md dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100">
                     <span class="relative flex h-2 w-2">
                         <span id="admin-status-ping" class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 {{ $adminOnline ? 'bg-emerald-400' : 'bg-slate-400' }}"></span>
                         <span id="admin-status-dot" class="relative inline-flex h-2 w-2 rounded-full {{ $adminOnline ? 'bg-emerald-500' : 'bg-slate-500' }}"></span>
@@ -96,7 +95,7 @@
             <h1 class="font-display text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
                 {{ $isEn ? 'How can we help you?' : 'Ada yang bisa kami bantu?' }}
             </h1>
-            <p class="mt-3 max-w-2xl text-sm leading-relaxed text-blue-100/90 sm:text-base">
+            <p class="mt-3 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
                 {{ $isEn ? 'Find guides on accounts, classes, assignments, attendance, and grading in LMS Cendekia.' : 'Temukan panduan seputar akun, kelas, tugas, absensi, hingga penilaian di LMS Cendekia.' }}
             </p>
 
@@ -105,7 +104,7 @@
                 <div class="group relative rounded-2xl shadow-xl shadow-black/10 transition focus-within:ring-4 focus-within:ring-white/25">
                     <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition group-focus-within:text-[#002B6B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                     <input id="faqSearch" type="text" autocomplete="off" placeholder="{{ $isEn ? 'Search: login, upload assignment, reset password...' : 'Cari: login, upload tugas, reset password...' }}"
-                        class="h-14 w-full rounded-2xl bg-white pl-12 pr-12 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400">
+                        class="help-center-input h-14 w-full rounded-2xl bg-white pl-12 pr-12 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400">
                     <button type="button" id="clearSearch" aria-label="{{ $isEn ? 'Clear search' : 'Hapus pencarian' }}"
                         class="absolute right-3 top-1/2 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -130,11 +129,11 @@
 
             <div class="space-y-3">
                 @forelse ($allFaqs as $faq)
-                    <div class="faq-item rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-colors duration-200 hover:border-blue-500/30 dark:border-slate-800 dark:bg-slate-900"
+                    <div class="faq-item help-center-surface rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-colors duration-200 hover:border-[#a92a35]/50 dark:border-slate-800 dark:bg-slate-900"
                          data-question="{{ Str::lower($faq['question']) }}" data-answer="{{ Str::lower($faq['answer']) }}">
                         <button type="button" class="faq-toggle flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left" aria-expanded="false">
                             <span class="flex-1 text-sm font-semibold leading-snug text-slate-800 dark:text-slate-100 sm:text-[15px]">{{ $faq['question'] }}</span>
-                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                            <span class="help-center-surface-secondary flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                                 <svg class="faq-chevron h-4 w-4 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
                             </span>
                         </button>
@@ -146,8 +145,8 @@
                         </div>
                     </div>
                 @empty
-                    <div class="rounded-3xl border border-slate-100 bg-white py-16 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-800">
+                    <div class="help-center-surface rounded-3xl border border-slate-100 bg-white py-16 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                        <div class="help-center-surface-secondary mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-800">
                             <svg class="h-7 w-7 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m20 20-3.2-3.2"/></svg>
                         </div>
                         <p class="mb-1 font-semibold text-slate-700 dark:text-slate-200">{{ $isEn ? 'No FAQs available yet' : 'Belum ada FAQ' }}</p>
@@ -156,15 +155,15 @@
                 @endforelse
 
                 {{-- Hasil pencarian kosong --}}
-                <div id="noResults" class="hidden rounded-3xl border border-slate-100 bg-white py-14 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <div id="noResults" class="help-center-surface hidden rounded-3xl border border-slate-100 bg-white py-14 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
                     <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-100 bg-amber-50 dark:border-amber-500/20 dark:bg-amber-500/10">
                         <svg class="h-7 w-7 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m20 20-3.2-3.2"/></svg>
                     </div>
                     <p class="mb-1 font-semibold text-slate-800 dark:text-slate-200">{{ $isEn ? 'No solution found' : 'Solusi tidak ditemukan' }}</p>
                     <p class="mx-auto mb-5 max-w-xs text-xs text-slate-400">{{ $isEn ? 'Try different keywords, or submit a support ticket so our admin can assist you directly.' : 'Coba kata kunci lain, atau buat tiket support agar admin bisa membantu langsung.' }}</p>
                     <div class="flex flex-wrap items-center justify-center gap-2">
-                        <button type="button" id="resetSearch" class="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">{{ $isEn ? 'Clear search' : 'Bersihkan pencarian' }}</button>
-                        <button type="button" data-open-ticket class="rounded-xl bg-[#002B6B] px-3.5 py-2 text-xs font-bold text-white transition hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">{{ $isEn ? 'Create ticket' : 'Buat tiket' }}</button>
+                        <button type="button" id="resetSearch" class="help-center-surface-secondary rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">{{ $isEn ? 'Clear search' : 'Bersihkan pencarian' }}</button>
+                        <button type="button" data-open-ticket class="rounded-xl bg-gradient-to-r from-[#720c16] via-[#720c16] to-[#c0e6ff] px-3.5 py-2 text-xs font-bold text-white transition hover:brightness-95">{{ $isEn ? 'Create ticket' : 'Buat tiket' }}</button>
                     </div>
                 </div>
             </div>
@@ -173,19 +172,19 @@
         {{-- SIDEBAR --}}
         <aside class="space-y-6 lg:sticky lg:top-6">
             {{-- Hubungi Kami --}}
-            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#002B6B]/10 text-[#002B6B] dark:bg-blue-500/10 dark:text-blue-400">
+            <div class="help-center-surface rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#720c16]/10 text-[#720c16] dark:bg-[#720c16]/20 dark:text-[#f87171]">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 dark:text-white">{{ $isEn ? 'Haven\'t found an answer?' : 'Belum menemukan jawaban?' }}</h3>
                 <p class="mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $isEn ? 'Create a ticket for more detailed issues. Admin will respond within 1-2 business hours.' : 'Buat tiket untuk masalah yang lebih detail. Admin akan merespons dalam 1-2 jam kerja.' }}</p>
                 <button type="button" data-open-ticket
-                    class="mt-4 w-full rounded-xl bg-[#002B6B] px-4 py-3 text-xs font-bold text-white shadow-md shadow-blue-700/15 transition hover:bg-blue-800 hover:shadow-lg dark:bg-blue-600 dark:hover:bg-blue-700">
+                    class="mt-4 w-full rounded-xl bg-gradient-to-r from-[#720c16] via-[#720c16] to-[#c0e6ff] px-4 py-3 text-xs font-bold text-white shadow-md shadow-[#720c16]/15 transition hover:brightness-95 hover:shadow-lg">
                     {{ $isEn ? 'Create Support Ticket' : 'Buat Tiket Support' }}
                 </button>
                 @auth
                     <a href="{{ route('help-center.my-tickets') }}"
-                       class="mt-2.5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 transition text-decoration-none">
+                       class="help-center-surface-secondary mt-2.5 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 transition text-decoration-none">
                         <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                         <span>{{ $isEn ? 'View My Support Tickets' : 'Lihat Tiket Bantuan Saya' }}</span>
                     </a>
@@ -194,7 +193,7 @@
             </div>
 
             {{-- Tips --}}
-            <div class="rounded-2xl border border-blue-500/10 bg-gradient-to-br from-blue-500/[0.05] to-indigo-500/[0.04] p-5 dark:border-blue-500/20 dark:from-blue-500/[0.08] dark:to-transparent">
+            <div class="help-center-surface-secondary rounded-2xl border border-blue-500/10 bg-gradient-to-br from-blue-500/[0.05] to-indigo-500/[0.04] p-5 dark:border-blue-500/20 dark:from-blue-500/[0.08] dark:to-transparent">
                 <p class="mb-3 text-sm font-bold text-slate-900 dark:text-white">{{ $isEn ? 'Usage Tips' : 'Tips Penggunaan' }}</p>
                 <ul class="space-y-2.5 text-xs font-medium text-slate-600 dark:text-slate-400">
                     @php
@@ -225,61 +224,65 @@
 {{-- Modal diletakkan di luar wrapper .animate-fade-in supaya position:fixed
      menempel ke viewport (animasi transform di wrapper membuat 'fixed' ikut wrapper). --}}
 {{-- ===== TICKET MODAL ===== --}}
-<div id="ticketModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4 py-6" role="dialog" aria-modal="true" aria-labelledby="ticketTitle">
+<div id="ticketModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4 py-4 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="ticketTitle">
     <div id="ticketOverlay" class="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"></div>
 
-    <div id="modalContainer" class="relative max-h-full w-full max-w-md scale-95 transform overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 opacity-0 shadow-2xl transition-all duration-300 dark:border-slate-800 dark:bg-slate-900 sm:p-7">
-        <div class="mb-5 flex items-start justify-between gap-3">
+    <div id="modalContainer" class="help-center-surface relative flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl scale-95 transform flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white opacity-0 shadow-2xl transition-all duration-300 dark:border-slate-800 dark:bg-slate-900">
+        <div class="flex shrink-0 items-start justify-between gap-3 px-5 pb-4 pt-5 sm:px-7 sm:pt-6">
             <div>
                 <h3 id="ticketTitle" class="font-display text-lg font-bold text-slate-900 dark:text-white">{{ $isEn ? 'Create Support Ticket' : 'Buat Tiket Bantuan' }}</h3>
                 <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $isEn ? 'Explain your issue, admin will follow up.' : 'Jelaskan kendala Anda, admin akan menindaklanjuti.' }}</p>
             </div>
             <button type="button" id="closeTicketModal" aria-label="{{ $isEn ? 'Close' : 'Tutup' }}"
-                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200">
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 
-        <form id="ticketForm" class="space-y-4">
-            <div>
-                <label for="t_name" class="{{ $labelClass }}">{{ $isEn ? 'Full name' : 'Nama lengkap' }}</label>
-                <input id="t_name" type="text" name="name" required value="{{ auth()->user()?->name }}" placeholder="{{ $isEn ? 'Your full name' : 'Nama lengkap Anda' }}" class="{{ $inputClass }}">
-            </div>
-            <div>
-                <label for="t_email" class="{{ $labelClass }}">{{ $isEn ? 'Institutional email' : 'Email institusi' }}</label>
-                <input id="t_email" type="email" name="email" required value="{{ auth()->user()?->email }}" placeholder="nama@kampus.ac.id" class="{{ $inputClass }}">
-            </div>
-            <div>
-                <label for="t_subject" class="{{ $labelClass }}">{{ $isEn ? 'Subject' : 'Subjek' }}</label>
-                <input id="t_subject" type="text" name="subject" required placeholder="{{ $isEn ? 'Main issue summary' : 'Inti kendala' }}" class="{{ $inputClass }}">
-            </div>
-            <div>
-                <label for="t_category" class="{{ $labelClass }}">{{ $isEn ? 'Category' : 'Kategori' }}</label>
-                <div class="relative">
-                    <select id="t_category" name="category" required class="{{ $inputClass }} appearance-none pr-10">
-                        <option value="">{{ $isEn ? 'Select category' : 'Pilih kategori' }}</option>
-                        <option value="akun">{{ $isEn ? 'Account Login & Authentication' : 'Login & Otentikasi Akun' }}</option>
-                        <option value="kelas">{{ $isEn ? 'Courses & Class Syllabus' : 'Mata Kuliah & Silabus Kelas' }}</option>
-                        <option value="tugas">{{ $isEn ? 'Assignment Submission' : 'Pengunggahan Tugas' }}</option>
-                        <option value="absensi">{{ $isEn ? 'Attendance & QR Code' : 'Presensi & QR Code' }}</option>
-                        <option value="nilai">{{ $isEn ? 'Grade Transcript & Gradebook' : 'Transkrip Nilai & Gradebook' }}</option>
-                        <option value="teknis">{{ $isEn ? 'System Bugs & Technical Issues' : 'Bug Sistem & Teknis' }}</option>
-                        <option value="lainnya">{{ $isEn ? 'Other' : 'Lainnya' }}</option>
-                    </select>
-                    <svg class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+        <form id="ticketForm" class="flex min-h-0 flex-1 flex-col">
+            <div class="min-h-0 flex-1 overflow-y-auto px-5 pb-4 sm:px-7">
+                <div class="grid gap-x-4 gap-y-3.5 sm:grid-cols-2">
+                    <div>
+                        <label for="t_name" class="{{ $labelClass }}">{{ $isEn ? 'Full name' : 'Nama lengkap' }}</label>
+                        <input id="t_name" type="text" name="name" required value="{{ auth()->user()?->name }}" placeholder="{{ $isEn ? 'Your full name' : 'Nama lengkap Anda' }}" class="{{ $inputClass }}">
+                    </div>
+                    <div>
+                        <label for="t_email" class="{{ $labelClass }}">{{ $isEn ? 'Institutional email' : 'Email institusi' }}</label>
+                        <input id="t_email" type="email" name="email" required value="{{ auth()->user()?->email }}" placeholder="nama@kampus.ac.id" class="{{ $inputClass }}">
+                    </div>
+                    <div>
+                        <label for="t_subject" class="{{ $labelClass }}">{{ $isEn ? 'Subject' : 'Subjek' }}</label>
+                        <input id="t_subject" type="text" name="subject" required placeholder="{{ $isEn ? 'Main issue summary' : 'Inti kendala' }}" class="{{ $inputClass }}">
+                    </div>
+                    <div>
+                        <label for="t_category" class="{{ $labelClass }}">{{ $isEn ? 'Category' : 'Kategori' }}</label>
+                        <div class="relative">
+                            <select id="t_category" name="category" required class="{{ $inputClass }} appearance-none pr-10">
+                                <option value="">{{ $isEn ? 'Select category' : 'Pilih kategori' }}</option>
+                                <option value="akun">{{ $isEn ? 'Account Login & Authentication' : 'Login & Otentikasi Akun' }}</option>
+                                <option value="kelas">{{ $isEn ? 'Courses & Class Syllabus' : 'Mata Kuliah & Silabus Kelas' }}</option>
+                                <option value="tugas">{{ $isEn ? 'Assignment Submission' : 'Pengunggahan Tugas' }}</option>
+                                <option value="absensi">{{ $isEn ? 'Attendance & QR Code' : 'Presensi & QR Code' }}</option>
+                                <option value="nilai">{{ $isEn ? 'Grade Transcript & Gradebook' : 'Transkrip Nilai & Gradebook' }}</option>
+                                <option value="teknis">{{ $isEn ? 'System Bugs & Technical Issues' : 'Bug Sistem & Teknis' }}</option>
+                                <option value="lainnya">{{ $isEn ? 'Other' : 'Lainnya' }}</option>
+                            </select>
+                            <svg class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="t_message" class="{{ $labelClass }}">{{ $isEn ? 'Description' : 'Deskripsi' }}</label>
+                        <textarea id="t_message" name="message" required rows="4" placeholder="{{ $isEn ? 'Explain the issue in detail...' : 'Jelaskan kendala secara detail...' }}" class="{{ $inputClass }} resize-y"></textarea>
+                    </div>
                 </div>
+                <div id="ticketStatus" class="hidden mt-4 rounded-xl p-3 text-xs font-semibold" role="status"></div>
             </div>
-            <div>
-                <label for="t_message" class="{{ $labelClass }}">{{ $isEn ? 'Description' : 'Deskripsi' }}</label>
-                <textarea id="t_message" name="message" required rows="4" placeholder="{{ $isEn ? 'Explain the issue in detail...' : 'Jelaskan kendala secara detail...' }}" class="{{ $inputClass }} resize-none"></textarea>
+            <div class="help-center-surface-secondary shrink-0 border-t border-slate-100 bg-white px-5 py-4 dark:border-slate-800 dark:bg-slate-900 sm:px-7">
+                <button type="submit" id="ticketSubmit"
+                    class="w-full rounded-xl bg-gradient-to-r from-[#720c16] via-[#720c16] to-[#c0e6ff] py-3 text-sm font-bold text-white shadow-md shadow-[#720c16]/10 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60">
+                    {{ $isEn ? 'Submit Ticket' : 'Kirim Tiket' }}
+                </button>
             </div>
-
-            <div id="ticketStatus" class="hidden rounded-xl p-3 text-xs font-semibold" role="status"></div>
-
-            <button type="submit" id="ticketSubmit"
-                class="w-full rounded-xl bg-[#002B6B] py-3 text-sm font-bold text-white shadow-md shadow-blue-700/10 transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-blue-600 dark:hover:bg-blue-700">
-                {{ $isEn ? 'Submit Ticket' : 'Kirim Tiket' }}
-            </button>
         </form>
     </div>
 </div>
@@ -441,6 +444,31 @@
 </script>
 
 <style>
+    html.dark .help-center-page .help-center-surface {
+        background-color: #211419 !important;
+        border-color: #4a2c33 !important;
+    }
+
+    html.dark .help-center-page .help-center-surface-secondary {
+        background-color: #2b171d !important;
+        background-image: none !important;
+        border-color: #4a2c33 !important;
+    }
+
+    html.dark .help-center-page .help-center-input {
+        background-color: #2b171d !important;
+        border-color: #4a2c33 !important;
+        color: #f8fafc !important;
+    }
+
+    html.dark .help-center-page .help-center-input::placeholder {
+        color: #cbd5e1 !important;
+    }
+
+    html.dark .help-center-page .faq-item.open {
+        border-color: #a92a35 !important;
+    }
+
     /* Accordion: animasi tinggi via grid-template-rows (tanpa hitung scrollHeight) */
     .faq-answer {
         display: grid;
@@ -450,8 +478,6 @@
     .faq-answer > div { overflow: hidden; }
     .faq-item.open .faq-answer { grid-template-rows: 1fr; }
     .faq-item.open .faq-chevron { transform: rotate(180deg); }
-    .faq-item.open { border-color: rgba(59, 130, 246, 0.35); }
-
     html { scroll-behavior: smooth; }
     :focus-visible { outline: 3px solid rgba(0, 43, 107, 0.3); outline-offset: 2px; }
 

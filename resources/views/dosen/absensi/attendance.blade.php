@@ -47,7 +47,7 @@
         </div>
         
         <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm flex items-center gap-3 hover:border-blue-200 transition-all duration-300">
-            <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg">
+            <div class="p-2.5 bg-[#fdf2f2] text-[#720c16] rounded-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -235,7 +235,7 @@
                 Reset Form
             </button>
             <button type="submit" 
-                    class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
+                    class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-[#720c16] hover:from-blue-700 hover:to-[#5c0912] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
                 Simpan Perubahan Data
             </button>
         </div>

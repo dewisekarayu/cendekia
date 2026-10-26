@@ -22,20 +22,6 @@
     }
 
     html.dark body {
-        background-color: #012428;
-    }
-
-    /* Keep page surfaces solid and clean instead of using gradient fills. */
-    [class*="bg-gradient"] {
-        background-image: none !important;
-        background-color: #f1f8f4 !important;
-    }
-
-    html.dark [class*="bg-gradient"] {
-        background-color: #102820 !important;
-    }
-
-    html.dark body {
         background-color: #0f172a;
         color: #cbd5e1;
     }
