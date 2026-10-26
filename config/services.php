@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'ai_router' => [
+        'base_url' => env('AI_ROUTER_BASE_URL'),
+        'api_key' => env('AI_ROUTER_API_KEY'),
+        'model' => env('AI_ROUTER_MODEL'),
+    ],
+
 ];
