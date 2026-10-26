@@ -40,8 +40,9 @@
         justify-content: space-between !important;
         gap: 14px;
         padding: 16px 20px;
-        background: linear-gradient(120deg, var(--forum-primary) 0%, var(--forum-primary-dark) 100%);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, #c0e6ff 0%, #d7efff 50%, #e8f5ff 100%);
+        border-bottom: 1px solid rgba(163, 218, 248, 0.8);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .forum-header-left{
         display: flex !important;
@@ -55,8 +56,8 @@
         display: none;
         width: 36px; height: 36px; border-radius: 50%;
         align-items: center; justify-content: center;
-        color: #fff; background: rgba(255,255,255,.08);
-        border: 1px solid rgba(255,255,255,.25);
+        color: #002B6B; background: rgba(255,255,255,.9);
+        border: 1px solid rgba(0,43,107,.2);
         flex-shrink: 0;
     }
     @media (max-width: 575.98px){
@@ -67,28 +68,29 @@
         width: 46px; height: 46px; border-radius: 50%;
         display: flex !important; align-items: center; justify-content: center;
         color: #fff; font-weight: 700; font-size: 13px;
-        border: 2px solid rgba(255,255,255,.35);
+        border: 2px solid rgba(255,255,255,.6);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         flex-shrink: 0;
     }
 
     .forum-header-text{ flex: 1 1 auto; min-width: 0; }
     .forum-header-title{
-        color: #fff; font-weight: 700; font-size: 15px; margin: 0;
+        color: #002B6B; font-weight: 800; font-size: 15px; margin: 0;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .forum-header-sub{
-        color: var(--forum-light); font-size: 12px; margin: 2px 0 0 0;
+        color: #003b8e; font-size: 12px; margin: 2px 0 0 0;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     .forum-header-btn{
         width: 38px; height: 38px; border-radius: 50%;
         display: flex !important; align-items: center; justify-content: center;
-        color: #fff; background: rgba(255,255,255,.08);
-        border: 1px solid rgba(255,255,255,.25);
+        color: #002B6B; background: rgba(255,255,255,.9);
+        border: 1px solid rgba(0,43,107,.2);
         transition: .2s; flex-shrink: 0; text-decoration: none;
     }
-    .forum-header-btn:hover{ background: rgba(255,255,255,.2); color: #fff; }
+    .forum-header-btn:hover{ background: #002B6B; color: #fff; }
 
     /* ===== Body ===== */
     .forum-body{
@@ -174,7 +176,7 @@
         box-shadow: 0 2px 6px rgba(15,23,42,.06);
         border: 1px solid rgba(0,43,107,.12);
     }
-    .forum-bubble.mine{ background: var(--forum-primary); border-bottom-right-radius: 4px; }
+    .forum-bubble.mine{ background: #c0e6ff; border-bottom-right-radius: 4px; border: 1px solid rgba(0,43,107,.15); }
     .forum-bubble.theirs{ background: #fff; border-bottom-left-radius: 4px; }
     .forum-bubble.theirs.dosen{ background: #E9E7FF; }
     
@@ -185,14 +187,14 @@
         font-size: 14px; line-height: 1.5; color: #1F2937;
         white-space: pre-wrap; word-break: break-word; margin: 0; font-weight: 500;
     }
-    .forum-bubble.mine .forum-bubble-text{ color: #fff; }
+    .forum-bubble.mine .forum-bubble-text{ color: #002B6B; font-weight: 600; }
 
     .forum-bubble-meta{
         display: flex !important; align-items: center; justify-content: flex-end;
         gap: 6px; margin-top: 6px;
     }
     .forum-bubble-time{ font-size: 11px; color: #6B7280; white-space: nowrap; }
-    .forum-bubble.mine .forum-bubble-time{ color: rgba(255, 255, 255, 0.75); }
+    .forum-bubble.mine .forum-bubble-time{ color: #003b8e; }
 
     .forum-empty{
         display: flex !important;
@@ -260,11 +262,11 @@
     .forum-send-btn{
         width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
         display: flex !important; align-items: center; justify-content: center;
-        background: linear-gradient(135deg, var(--forum-primary) 0%, var(--forum-primary-dark) 100%);
-        color: #fff; border: none; box-shadow: 0 3px 10px rgba(0,43,107,.3);
+        background: #c0e6ff;
+        color: #002B6B; border: 1px solid rgba(0,43,107,.2); box-shadow: 0 2px 6px rgba(0,43,107,.15);
         transition: .15s; cursor: pointer;
     }
-    .forum-send-btn:hover{ filter: brightness(1.1); }
+    .forum-send-btn:hover{ background: #a8daf8; }
     .forum-send-btn:active{ transform: scale(.94); }
 
     /* ===== Empty state ===== */
@@ -299,8 +301,8 @@
         <a href="{{ $tab['url'] }}"
            class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition
                {{ $key === 'forum'
-                   ? 'bg-[#002B6B] text-white shadow-sm shadow-blue-900/20'
-                   : 'bg-white border border-gray-200 text-gray-600 hover:border-[#002B6B] hover:text-[#002B6B]' }}">
+                   ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/30 font-bold shadow-xs'
+                   : 'bg-white border border-gray-200 text-gray-600 hover:border-sky-400 hover:text-[#002B6B]' }}">
             {{ $tab['label'] }}
         </a>
     @endforeach

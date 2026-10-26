@@ -19,30 +19,30 @@
 @endphp
 
 {{-- ===== HEADER BANNER ===== --}}
-<div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] p-6 sm:p-7 shadow-lg shadow-blue-950/15 relative">
-    <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
-    <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
+<div class="mb-5 overflow-hidden rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 border border-[#a3daf8]/80 dark:border-blue-900/40 p-6 sm:p-7 shadow-sm relative">
+    <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/40 dark:bg-white/5"></div>
+    <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/40 dark:bg-white/5"></div>
     <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div class="min-w-0">
             <div class="mb-2 flex flex-wrap items-center gap-2">
-                <span class="rounded-lg bg-white/15 border border-white/20 px-2.5 py-1 text-xs font-bold text-white">
+                <span class="rounded-lg bg-white/80 dark:bg-white/15 border border-[#002B6B]/15 dark:border-white/20 px-2.5 py-1 text-xs font-bold text-[#002B6B] dark:text-white shadow-2xs">
                     {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
                 </span>
-                <span class="text-xs text-blue-200/80">Kelas {{ $kelas->kode_kelas }}</span>
+                <span class="text-xs font-semibold text-[#002B6B]/80 dark:text-blue-200/80">Kelas {{ $kelas->kode_kelas }}</span>
                 @if ($statusLabel)
                     <span class="rounded-full {{ $statusClass }} px-2.5 py-1 text-[10px] font-bold">{{ $statusLabel }}</span>
                 @endif
             </div>
-            <h1 class="text-xl font-extrabold leading-tight text-white sm:text-2xl">
+            <h1 class="text-xl font-extrabold leading-tight text-[#002B6B] dark:text-white sm:text-2xl">
                 {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
             </h1>
-            <p class="mt-1.5 text-sm text-blue-100/80">
+            <p class="mt-1.5 text-sm font-medium text-[#002B6B]/80 dark:text-blue-100/80">
                 Bersama {{ $kelas->dosen?->name ?? 'Dosen pengampu' }}
             </p>
         </div>
         <a href="{{ route('mahasiswa.kelas-saya') }}"
-           class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+           class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-[#002B6B]/20 dark:border-white/20 bg-white/90 dark:bg-white/10 px-3.5 py-2 text-xs font-bold text-[#002B6B] dark:text-white hover:bg-[#002B6B] hover:text-white dark:hover:bg-white/20 transition shadow-2xs">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             Kembali
         </a>
     </div>
@@ -97,7 +97,7 @@
             @foreach ($tabs as $key => $t)
                 <button @click="tab = '{{ $key }}'"
                         :class="tab === '{{ $key }}'
-                            ? 'bg-[#002B6B] dark:bg-blue-600 text-white shadow-sm shadow-blue-900/20'
+                            ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/30 font-bold shadow-xs'
                             : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-[#002B6B] hover:text-[#002B6B] dark:hover:border-blue-400 dark:hover:text-blue-300'"
                         class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition inline-flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -159,7 +159,7 @@
                         </div>
                         @if ($materi->files->isNotEmpty())
                             <a href="{{ route('mahasiswa.materi.buka', [$kelas->id, $materi->id]) }}"
-                            class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#002B6B] px-4 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
+                            class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 px-4 py-2.5 text-xs font-bold hover:bg-[#a8daf8] transition shadow-2xs">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                                 Buka ({{ $materi->files->count() }})
                             </a>
@@ -177,19 +177,19 @@
 
                         if ($pengumpulanSaya && $pengumpulanSaya->status === \App\Models\PengumpulanTugas::STATUS_DINILAI) {
                             $tugasBtnLabel = 'Lihat Nilai';
-                            $tugasBtnClass = 'bg-blue-600 hover:bg-blue-700';
+                            $tugasBtnClass = 'bg-blue-600 hover:bg-blue-700 text-white';
                             $tugasBtnIcon  = 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
                         } elseif ($pengumpulanSaya) {
                             $tugasBtnLabel = 'Lihat Pengumpulan';
-                            $tugasBtnClass = 'bg-slate-600 hover:bg-slate-700';
+                            $tugasBtnClass = 'bg-slate-600 hover:bg-slate-700 text-white';
                             $tugasBtnIcon  = 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z';
                         } elseif ($isClosed) {
                             $tugasBtnLabel = 'Ditutup';
-                            $tugasBtnClass = 'bg-slate-500 hover:bg-slate-600';
+                            $tugasBtnClass = 'bg-slate-500 hover:bg-slate-600 text-white';
                             $tugasBtnIcon  = 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z';
                         } else {
                             $tugasBtnLabel = 'Kerjakan';
-                            $tugasBtnClass = 'bg-[#002B6B] hover:bg-blue-800';
+                            $tugasBtnClass = 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 hover:bg-[#a8daf8] shadow-2xs';
                             $tugasBtnIcon  = 'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14';
                         }
                     @endphp
@@ -311,7 +311,7 @@
                 <h3 class="text-lg font-bold text-slate-800 mb-2">Forum Diskusi</h3>
                 <p class="text-sm text-gray-500 mb-5">Buka forum diskusi untuk chat dengan dosen dan teman sekelas</p>
                 <a href="{{ route('mahasiswa.kelas-forum', $kelas->id) }}"
-                   class="inline-flex items-center gap-2 rounded-xl bg-[#002B6B] px-6 py-3 text-sm font-semibold text-white hover:bg-blue-800 transition">
+                   class="inline-flex items-center gap-2 rounded-xl bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 hover:bg-[#a8daf8] px-6 py-3 text-sm font-bold transition shadow-2xs">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     Buka Forum
                 </a>
@@ -331,7 +331,7 @@
                 <span class="font-bold text-[#002B6B] dark:text-blue-400">{{ $progress }}%</span>
             </div>
             <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-slate-700">
-                <div class="h-full rounded-full bg-[#002B6B] dark:bg-blue-500 transition-all" style="width: {{ $progress }}%"></div>
+                <div class="h-full rounded-full bg-sky-500 dark:bg-blue-500 transition-all" style="width: {{ $progress }}%"></div>
             </div>
 
             {{-- Kehadiran --}}
@@ -362,14 +362,14 @@
         </div>
 
         {{-- Ringkasan Card --}}
-        <div class="bg-gradient-to-br from-[#002B6B]/5 to-blue-50 dark:from-blue-950/40 dark:to-slate-800 rounded-2xl border border-blue-100 dark:border-blue-900/40 p-5 shadow-sm transition-colors duration-200">
+        <div class="bg-gradient-to-br from-[#c0e6ff]/35 to-sky-50 dark:from-blue-950/40 dark:to-slate-800 rounded-2xl border border-[#c0e6ff] dark:border-blue-900/40 p-5 shadow-sm transition-colors duration-200">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-7 h-7 rounded-lg bg-[#002B6B] flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-7 h-7 rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#002B6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14"/>
                     </svg>
                 </div>
-                <h3 class="font-bold text-blue-900 text-sm">Ringkasan</h3>
+                <h3 class="font-bold text-[#002B6B] dark:text-blue-200 text-sm">Ringkasan</h3>
             </div>
             <a href="{{ route('mahasiswa.absensi.show', $kelas->id) }}" class="flex items-center justify-between text-sm font-bold text-blue-700 hover:text-blue-900 transition-colors duration-200 group">
                 <span>Lihat Riwayat Lengkap</span>

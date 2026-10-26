@@ -78,7 +78,7 @@
                     <a href="{{ route('mahasiswa.setting') }}" class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
                         {{ $isEn ? 'Cancel' : 'Batal' }}
                     </a>
-                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition">
+                    <button type="submit" class="rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-6 py-2.5 text-sm font-bold hover:bg-[#a8daf8] transition shadow-xs">
                         {{ $isEn ? 'Save' : 'Simpan' }}
                     </button>
                 </div>
@@ -125,7 +125,7 @@
                     <a href="{{ route('mahasiswa.setting') }}" class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
                         {{ $isEn ? 'Cancel' : 'Batal' }}
                     </a>
-                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition">
+                    <button type="submit" class="rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-6 py-2.5 text-sm font-bold hover:bg-[#a8daf8] transition shadow-xs">
                         {{ $isEn ? 'Save' : 'Simpan' }}
                     </button>
                 </div>
@@ -183,7 +183,7 @@
                     <a href="{{ route('mahasiswa.setting') }}" class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
                         {{ $isEn ? 'Cancel' : 'Batal' }}
                     </a>
-                    <button type="submit" class="rounded-lg bg-[#002B6B] px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition">
+                    <button type="submit" class="rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-6 py-2.5 text-sm font-bold hover:bg-[#a8daf8] transition shadow-xs">
                         {{ $isEn ? 'Save' : 'Simpan' }}
                     </button>
                 </div>

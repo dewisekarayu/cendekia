@@ -3,26 +3,26 @@
 @section('title', 'Kartu Rencana Studi (KRS)')
 
 @section('content')
-<div class="mb-6 rounded-2xl bg-gradient-to-r from-[#002B6B] via-[#0044a8] to-blue-600 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+<div class="mb-6 rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-sm">
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-[#c0e6ff]">Akademik</p>
-            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Kartu Rencana Studi</h1>
-            <p class="mt-2 text-sm text-blue-100/90">Pilih mata kuliah yang akan diambil pada semester ini dan ajukan ke Dosen PA.</p>
+            <p class="text-xs font-bold uppercase tracking-wide text-[#002B6B]/75 dark:text-blue-300">Akademik</p>
+            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-[#002B6B] dark:text-white">Kartu Rencana Studi</h1>
+            <p class="mt-2 text-sm text-[#003b8e]/80 dark:text-blue-200/80">Pilih mata kuliah yang akan diambil pada semester ini dan ajukan ke Dosen PA.</p>
         </div>
         
         <div class="flex items-center gap-2">
             @php
-                $statusClass = 'bg-gray-100 text-gray-700';
+                $statusClass = 'bg-white/80 text-gray-700 border border-gray-200';
                 $statusLabel = 'Draft';
                 if ($krs->status == 'diajukan') {
-                    $statusClass = 'bg-amber-100 text-amber-700';
+                    $statusClass = 'bg-amber-100 text-amber-800 border border-amber-200';
                     $statusLabel = 'Menunggu Persetujuan';
                 } elseif ($krs->status == 'disetujui') {
-                    $statusClass = 'bg-blue-100 text-blue-700';
+                    $statusClass = 'bg-blue-100 text-[#002B6B] border border-blue-200';
                     $statusLabel = 'Disetujui Dosen PA';
                 } elseif ($krs->status == 'ditolak') {
-                    $statusClass = 'bg-rose-100 text-rose-700';
+                    $statusClass = 'bg-rose-100 text-rose-700 border border-rose-200';
                     $statusLabel = 'Perlu Revisi / Ditolak';
                 }
             @endphp
@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/10 pointer-events-none"></div>
+    <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/40 pointer-events-none"></div>
 </div>
 
 @if(session('success'))
@@ -112,7 +112,7 @@
                 <div class="p-5 border-t border-gray-100 bg-gray-50">
                     <form action="{{ route('mahasiswa.krs.ajukan', $krs->id) }}" method="POST">
                         @csrf
-                        <button type="submit" class="w-full py-2.5 bg-[#002B6B] hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors" onclick="return confirm('Apakah Anda yakin ingin mengajukan KRS? Setelah diajukan, Anda tidak dapat mengubahnya hingga diperiksa Dosen PA.')">
+                        <button type="submit" class="w-full py-2.5 bg-[#c0e6ff] hover:bg-[#a8daf8] text-[#002B6B] border border-[#002B6B]/20 rounded-xl text-sm font-bold shadow-sm transition-colors" onclick="return confirm('Apakah Anda yakin ingin mengajukan KRS? Setelah diajukan, Anda tidak dapat mengubahnya hingga diperiksa Dosen PA.')">
                             Ajukan KRS ke Dosen PA
                         </button>
                     </form>

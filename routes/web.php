@@ -131,6 +131,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.mahasiswa')
         ->parameters(['mahasiswa' => 'mahasiswa']);
 
+    Route::post('admin/pengumuman/bulk-delete', [AdminPengumumanController::class, 'bulkDestroy'])
+        ->name('admin.pengumuman.bulk-destroy');
+
     Route::resource('admin/pengumuman', AdminPengumumanController::class)
         ->only(['index', 'store', 'update', 'destroy'])
         ->names('admin.pengumuman');
