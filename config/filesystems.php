@@ -45,7 +45,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => $publicStoragePath,
+            'root' => env('PUBLIC_STORAGE_PATH', storage_path('app/public')),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -79,7 +79,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => $publicStoragePath,
+        public_path('storage') => env('PUBLIC_STORAGE_PATH', storage_path('app/public')),
     ],
 
 ];

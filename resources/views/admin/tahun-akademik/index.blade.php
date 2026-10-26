@@ -17,7 +17,7 @@
             <p class="text-muted mb-0" style="font-size: 0.9rem;">Kelola data semester dan periode akademik aktif.</p>
         </div>
         <div>
-            <a href="{{ route('admin.tahun-akademik.create') }}" class="btn btn-primary d-flex align-items-center gap-2 fw-semibold px-4 py-2" style="background-color: #012428; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(1, 36, 40, 0.15);">
+            <a href="{{ route('admin.tahun-akademik.create') }}" class="btn btn-primary d-flex align-items-center gap-2 fw-semibold px-4 py-2" style="background-color: #047857; border: none; border-radius: 8px; box-shadow: 0 4px 12px rgba(4, 120, 87, 0.18);">
                 <i class="bi bi-plus-lg"></i>
                 Tambah Tahun Akademik
             </a>
@@ -90,8 +90,8 @@
     .action-btn-view { background-color: rgba(100, 116, 139, 0.1); color: #64748b; }
     .action-btn-view:hover { background-color: rgba(100, 116, 139, 0.2); color: #475569; }
     
-    .action-btn-edit { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-    .action-btn-edit:hover { background-color: rgba(59, 130, 246, 0.2); color: #2563eb; }
+    .action-btn-edit { background-color: rgba(4, 120, 87, 0.1); color: #047857; }
+    .action-btn-edit:hover { background-color: rgba(4, 120, 87, 0.2); color: #065f46; }
     
     .action-btn-delete { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
     .action-btn-delete:hover { background-color: rgba(239, 68, 68, 0.2); color: #dc2626; }
