@@ -129,7 +129,8 @@
                             </div>
                             <div class="px-4 pb-4 sm:px-5 sm:pb-5">
                                 <a href="{{ route('mahasiswa.kelas-detail', $kelas['id']) }}"
-                                   class="block w-full rounded-xl {{ $cc['btn'] }} py-2.5 text-center text-xs font-bold shadow-2xs hover:opacity-90 active:scale-[0.99] transition">
+                                   class="block w-full rounded-xl {{ $cc['btn'] }} py-2.5 text-center text-xs font-bold shadow-2xs hover:opacity-90 active:scale-[0.99] transition"
+                                   style="color: #002B6B !important;">
                                     Masuk Kelas →
                                 </a>
                             </div>

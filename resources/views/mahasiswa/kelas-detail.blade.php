@@ -99,6 +99,7 @@
                         :class="tab === '{{ $key }}'
                             ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/30 font-bold shadow-xs'
                             : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-[#002B6B] hover:text-[#002B6B] dark:hover:border-blue-400 dark:hover:text-blue-300'"
+                        :style="tab === '{{ $key }}' ? 'color: #002B6B !important' : ''"
                         class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition inline-flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="{{ $t['icon'] }}"/>
@@ -311,7 +312,8 @@
                 <h3 class="text-lg font-bold text-slate-800 mb-2">Forum Diskusi</h3>
                 <p class="text-sm text-gray-500 mb-5">Buka forum diskusi untuk chat dengan dosen dan teman sekelas</p>
                 <a href="{{ route('mahasiswa.kelas-forum', $kelas->id) }}"
-                   class="inline-flex items-center gap-2 rounded-xl bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 hover:bg-[#a8daf8] px-6 py-3 text-sm font-bold transition shadow-2xs">
+                   class="inline-flex items-center gap-2 rounded-xl bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 hover:bg-[#a8daf8] px-6 py-3 text-sm font-bold transition shadow-2xs"
+                   style="color: #002B6B !important;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     Buka Forum
                 </a>
