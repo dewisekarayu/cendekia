@@ -7,17 +7,17 @@
 @section('content')
 
     {{-- Header --}}
-    <div class="mb-6 rounded-2xl bg-[#002B6B] px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg shadow-blue-950/10">
+    <div class="mb-6 rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-sm">
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
-                <p class="text-xs font-bold uppercase tracking-wide text-blue-200/70">Semester Aktif</p>
-                <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white leading-tight">My Courses</h1>
-                <p class="mt-1 text-sm text-blue-100/70">{{ $kelasList->count() }} kelas terdaftar semester ini</p>
+                <p class="text-xs font-bold uppercase tracking-wide text-[#002B6B]/75 dark:text-blue-300/80">Semester Aktif</p>
+                <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-[#002B6B] dark:text-white leading-tight">My Courses</h1>
+                <p class="mt-1 text-sm text-[#003b8e]/80 dark:text-blue-200/80">{{ $kelasList->count() }} kelas terdaftar semester ini</p>
             </div>
         </div>
         {{-- decorative --}}
-        <div class="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/5 pointer-events-none"></div>
-        <div class="absolute right-16 -bottom-10 w-28 h-28 rounded-full bg-white/5 pointer-events-none"></div>
+        <div class="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/40 pointer-events-none"></div>
+        <div class="absolute right-16 -bottom-10 w-28 h-28 rounded-full bg-white/30 pointer-events-none"></div>
     </div>
 
     {{-- Search bar --}}
@@ -27,7 +27,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input id="kelasSearch" type="text" placeholder="Cari mata kuliah..." autocomplete="off"
-                   class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm text-gray-700 shadow-sm focus:border-[#002B6B] focus:outline-none focus:ring-2 focus:ring-[#002B6B]/10">
+                   class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm text-gray-700 shadow-sm focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200">
         </div>
         <span id="kelasCount" class="shrink-0 text-xs text-gray-400 font-medium">{{ $kelasList->count() }} kelas</span>
     </div>
@@ -42,19 +42,19 @@
             <h3 class="font-bold text-gray-700">Belum Ada Kelas Terdaftar</h3>
             <p class="mt-1 max-w-xs text-xs text-gray-400 leading-relaxed">Kamu belum terdaftar di kelas manapun. Jelajahi kelas yang tersedia dan bergabung sekarang.</p>
             <a href="{{ route('mahasiswa.jelajahi-kelas') }}"
-               class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#002B6B] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 transition">
+               class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#c0e6ff] px-5 py-2.5 text-sm font-bold text-[#002B6B] border border-[#002B6B]/20 shadow-sm hover:bg-[#a8daf8] transition">
                 Jelajahi Kelas Sekarang
             </a>
         </div>
     @else
         @php
             $colors = [
-                ['bg' => 'bg-[#002B6B]', 'light' => 'bg-blue-50',   'text' => 'text-[#002B6B]', 'bar' => 'bg-[#002B6B]'],
-                ['bg' => 'bg-blue-600',   'light' => 'bg-blue-50',   'text' => 'text-blue-700',   'bar' => 'bg-blue-600'],
-                ['bg' => 'bg-sky-500',    'light' => 'bg-sky-50',    'text' => 'text-sky-700',    'bar' => 'bg-sky-500'],
-                ['bg' => 'bg-indigo-600', 'light' => 'bg-indigo-50', 'text' => 'text-indigo-700', 'bar' => 'bg-indigo-600'],
-                ['bg' => 'bg-cyan-600',   'light' => 'bg-cyan-50',   'text' => 'text-cyan-700',   'bar' => 'bg-cyan-600'],
-                ['bg' => 'bg-blue-700',   'light' => 'bg-sky-100',   'text' => 'text-blue-800',   'bar' => 'bg-blue-700'],
+                ['bg' => 'bg-[#c0e6ff]', 'light' => 'bg-sky-50',   'text' => 'text-[#002B6B]', 'bar' => 'bg-[#c0e6ff]', 'btn' => 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 hover:bg-[#a8daf8]'],
+                ['bg' => 'bg-blue-600',   'light' => 'bg-blue-50',  'text' => 'text-blue-700',   'bar' => 'bg-blue-600',   'btn' => 'bg-blue-600 text-white hover:bg-blue-700'],
+                ['bg' => 'bg-sky-500',    'light' => 'bg-sky-50',   'text' => 'text-sky-700',    'bar' => 'bg-sky-500',    'btn' => 'bg-sky-500 text-white hover:bg-sky-600'],
+                ['bg' => 'bg-indigo-600', 'light' => 'bg-indigo-50','text' => 'text-indigo-700', 'bar' => 'bg-indigo-600', 'btn' => 'bg-indigo-600 text-white hover:bg-indigo-700'],
+                ['bg' => 'bg-cyan-600',   'light' => 'bg-cyan-50',  'text' => 'text-cyan-700',   'bar' => 'bg-cyan-600',   'btn' => 'bg-cyan-600 text-white hover:bg-cyan-700'],
+                ['bg' => 'bg-blue-500',   'light' => 'bg-sky-100',  'text' => 'text-blue-800',   'bar' => 'bg-blue-500',   'btn' => 'bg-blue-500 text-white hover:bg-blue-600'],
             ];
         @endphp
 
@@ -103,7 +103,7 @@
 
                         {{-- CTA --}}
                         <div class="mt-3">
-                            <span class="flex w-full items-center justify-center gap-1.5 rounded-xl {{ $c['bg'] }} py-2 text-xs font-bold text-white shadow-sm group-hover:opacity-90 transition">
+                            <span class="flex w-full items-center justify-center gap-1.5 rounded-xl {{ $c['btn'] ?? ($c['bg'] . ' text-white') }} py-2 text-xs font-bold shadow-sm transition">
                                 Masuk Kelas
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />

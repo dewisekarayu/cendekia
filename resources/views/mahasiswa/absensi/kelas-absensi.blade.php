@@ -6,26 +6,26 @@
 <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto p-3 sm:p-4 overflow-x-hidden">
 
     {{-- ===== HEADER BANNER ===== --}}
-    <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] dark:from-[#071324] dark:to-[#002B6B] p-4 sm:p-7 shadow-lg shadow-blue-950/15 relative transition-all">
-        <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
-        <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
+    <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 p-4 sm:p-7 shadow-sm relative transition-all">
+        <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/40"></div>
+        <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/30"></div>
         <div class="relative z-10 flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div class="min-w-0">
                 <div class="mb-2 flex flex-wrap items-center gap-2">
-                    <span class="rounded-lg bg-white/15 border border-white/20 px-2.5 py-1 text-xs font-bold text-white">
+                    <span class="rounded-lg bg-white/80 border border-[#002B6B]/20 px-2.5 py-1 text-xs font-bold text-[#002B6B]">
                         {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
                     </span>
-                    <span class="text-xs text-blue-200/80">Kelas {{ $kelas->kode_kelas }}</span>
+                    <span class="text-xs text-[#002B6B]/75 dark:text-blue-300">Kelas {{ $kelas->kode_kelas }}</span>
                 </div>
-                <h1 class="text-lg font-extrabold leading-tight text-white break-words sm:text-2xl">
+                <h1 class="text-lg font-extrabold leading-tight text-[#002B6B] dark:text-white break-words sm:text-2xl">
                     {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
                 </h1>
-                <p class="mt-1.5 text-xs sm:text-sm text-blue-100/80 break-words">
+                <p class="mt-1.5 text-xs sm:text-sm text-[#003b8e]/80 dark:text-blue-200/80 break-words">
                     Bersama {{ $kelas->dosen?->name ?? 'Dosen pengampu' }}
                 </p>
             </div>
             <a href="{{ route('mahasiswa.kelas-saya') }}"
-               class="shrink-0 inline-flex w-fit items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 transition">
+               class="shrink-0 inline-flex w-fit items-center gap-1.5 rounded-xl border border-[#002B6B]/20 bg-white/90 hover:bg-[#002B6B] hover:text-white px-3 py-2 text-xs font-semibold text-[#002B6B] transition shadow-xs">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                 Kembali
             </a>
@@ -70,8 +70,8 @@
             <a href="{{ $tabLinks[$key] }}"
                class="shrink-0 whitespace-nowrap rounded-full px-4 sm:px-5 py-2 text-xs font-bold transition-all duration-200
                    {{ $key === 'absensi'
-                       ? 'bg-[#002B6B] dark:bg-blue-600 text-white shadow-sm shadow-blue-900/20'
-                       : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-[#002B6B] dark:hover:border-blue-500 hover:text-[#002B6B] dark:hover:text-blue-400' }}">
+                       ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/30 font-bold shadow-xs'
+                       : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-sky-400 hover:text-[#002B6B] dark:hover:text-blue-400' }}">
                 {{ $label }}
             </a>
         @endforeach
@@ -93,21 +93,21 @@
 
             @if($absensiAktif)
                 <!-- Banner Sesi Presensi Aktif -->
-                <div class="bg-gradient-to-r from-[#002B6B] to-blue-600 rounded-2xl p-4 sm:p-5 text-white shadow-md shadow-blue-200 relative overflow-hidden">
-                    <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10"></div>
+                <div class="bg-gradient-to-r from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 rounded-2xl p-4 sm:p-5 text-[#002B6B] dark:text-white shadow-sm relative overflow-hidden">
+                    <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/40"></div>
                     <div class="flex flex-wrap items-center justify-between gap-2.5 relative z-10">
                         <div class="flex min-w-0 items-center gap-3">
-                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/25">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-white/80 border border-[#002B6B]/20 flex items-center justify-center text-[#002B6B]">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
                             <div class="min-w-0">
                                 <h2 class="text-base sm:text-lg font-extrabold tracking-tight leading-tight">Sesi Presensi Aktif</h2>
-                                <p class="text-blue-100 text-xs mt-0.5">Silakan segera melakukan presensi</p>
+                                <p class="text-[#003b8e]/80 dark:text-blue-200 text-xs mt-0.5">Silakan segera melakukan presensi</p>
                             </div>
                         </div>
-                        <span class="inline-flex shrink-0 items-center px-3 py-1 rounded-full text-xs font-bold bg-white/25 backdrop-blur-md border border-white/30 text-white tracking-wide">
+                        <span class="inline-flex shrink-0 items-center px-3 py-1 rounded-full text-xs font-bold bg-[#002B6B]/10 border border-[#002B6B]/20 text-[#002B6B] dark:bg-white/20 dark:text-white tracking-wide">
                             ● Terbuka
                         </span>
                     </div>
@@ -196,8 +196,8 @@
                                     <button type="button" @click="status = 'hadir'"
                                             :class="status === 'hadir' ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-slate-200 bg-white hover:border-blue-200'"
                                             class="flex min-w-0 flex-col items-center justify-center gap-1.5 sm:gap-2 rounded-2xl border-2 py-3.5 sm:py-5 px-1 sm:px-2 transition">
-                                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#002B6B] flex items-center justify-center">
-                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#c0e6ff] text-[#002B6B] flex items-center justify-center">
+                                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#002B6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                                         </div>
                                         <span class="text-xs sm:text-sm font-bold text-slate-800">Hadir</span>
                                         <span class="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Saya hadir</span>
@@ -234,7 +234,7 @@
                             </div>
 
                             <button type="submit"
-                                    class="w-full flex items-center justify-center gap-2.5 py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-[#002B6B] to-blue-600 hover:from-blue-900 hover:to-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-500/10 hover:shadow-xl transition-all duration-300 sm:hover:scale-[1.01] active:scale-[0.99]">
+                                    class="w-full flex items-center justify-center gap-2.5 py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-[#c0e6ff] hover:bg-[#a8daf8] text-[#002B6B] border border-[#002B6B]/25 font-bold text-sm shadow-sm hover:shadow-md transition-all duration-300 sm:hover:scale-[1.01] active:scale-[0.99]">
                                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <span>Presensi / Absen Masuk</span>
                             </button>

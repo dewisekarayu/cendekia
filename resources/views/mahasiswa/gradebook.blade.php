@@ -58,14 +58,14 @@
 <style>[x-cloak]{display:none!important}</style>
 
 {{-- ===== HEADER ===== --}}
-<div class="mb-4 sm:mb-6 rounded-2xl bg-gradient-to-r from-[#002B6B] via-[#0044a8] to-[#0052cc] px-4 py-4 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg shadow-blue-950/15">
+<div class="mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 px-4 py-4 sm:px-8 sm:py-6 relative overflow-hidden shadow-sm">
     <div class="relative z-10">
-        <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-[#c0e6ff]">Akademik &amp; EWS</p>
-        <h1 class="mt-1 text-lg sm:text-2xl font-extrabold text-white">Gradebook &amp; Self-Analytics</h1>
-        <p class="mt-1 text-xs sm:text-sm text-blue-100/90">Rekap nilai akhir, tugas, dan pantauan performa akademik Anda secara mandiri (EWS).</p>
+        <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-[#002B6B]/75 dark:text-blue-300">Akademik &amp; EWS</p>
+        <h1 class="mt-1 text-lg sm:text-2xl font-extrabold text-[#002B6B] dark:text-white">Gradebook &amp; Self-Analytics</h1>
+        <p class="mt-1 text-xs sm:text-sm text-[#003b8e]/80 dark:text-blue-200/80">Rekap nilai akhir, tugas, dan pantauan performa akademik Anda secara mandiri (EWS).</p>
     </div>
-    <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/10 pointer-events-none"></div>
-    <div class="absolute right-20 -bottom-8 w-24 h-24 rounded-full bg-white/10 pointer-events-none"></div>
+    <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/40 pointer-events-none"></div>
+    <div class="absolute right-20 -bottom-8 w-24 h-24 rounded-full bg-white/30 pointer-events-none"></div>
 </div>
 
 {{-- ===== STAT CARDS ===== --}}
