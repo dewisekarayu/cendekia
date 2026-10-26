@@ -209,6 +209,63 @@
 
     </div>
 
+    <section class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div class="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div>
+                <h2 class="text-base font-bold text-slate-800 dark:text-white">Mahasiswa Terbaru</h2>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Lima mahasiswa terakhir yang terdaftar.</p>
+            </div>
+            <a href="{{ route('admin.mahasiswa.index') }}" class="inline-flex items-center gap-2 self-start rounded-lg border border-emerald-200 px-3 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-300 dark:hover:bg-emerald-950/40 sm:self-auto">
+                Lihat Semua <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="table table-hover mb-0 align-middle">
+                <thead>
+                    <tr>
+                        <th class="whitespace-nowrap">NIM</th>
+                        <th class="whitespace-nowrap">Nama Mahasiswa</th>
+                        <th class="whitespace-nowrap">Program Studi</th>
+                        <th class="whitespace-nowrap">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recentMahasiswa as $mahasiswa)
+                        <tr>
+                            <td><span class="badge-code">{{ $mahasiswa->nip_nim }}</span></td>
+                            <td>
+                                <div class="flex min-w-52 items-center gap-3">
+                                    <x-user-avatar :name="$mahasiswa->name" :photo-url="$mahasiswa->foto_url" :size="40" />
+                                    <div class="min-w-0">
+                                        <p class="truncate font-semibold text-slate-800 dark:text-slate-100">{{ $mahasiswa->name }}</p>
+                                        <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ $mahasiswa->email }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-slate-600 dark:text-slate-300">{{ $mahasiswa->programStudi?->nama_prodi ?? 'Belum memilih prodi' }}</td>
+                            <td>
+                                @if($mahasiswa->status === 'aktif')
+                                    <span class="badge-status badge-status-aktif"><span class="status-dot"></span>Aktif</span>
+                                @elseif($mahasiswa->status === 'cuti')
+                                    <span class="badge-status badge-status-cuti"><span class="status-dot"></span>Cuti</span>
+                                @else
+                                    <span class="badge-status badge-status-nonaktif"><span class="status-dot"></span>Nonaktif</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+                                Belum ada data mahasiswa.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </section>
+
 </div>
 
 @endsection

@@ -113,6 +113,11 @@ class DashboardController extends Controller
 
 
         $recentUsers = User::latest()->take(5)->get();
+        $recentMahasiswa = User::role('mahasiswa')
+            ->with('programStudi')
+            ->latest()
+            ->take(5)
+            ->get();
         $uptime = '99.9';
 
         return view('admin.dashboard', compact(
@@ -131,6 +136,7 @@ class DashboardController extends Controller
             'aktivitasBulanan',
             'aktivitasMingguan',
             'recentUsers',
+            'recentMahasiswa',
             'uptime'
         ));
     }
