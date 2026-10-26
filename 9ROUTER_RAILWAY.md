@@ -27,12 +27,17 @@ AI_ROUTER_API_KEY=<API key dari dashboard 9Router>
 AI_ROUTER_MODEL=<model ID yang tersedia di 9Router>
 ```
 
-Jangan commit API key ke repository. Setelah variables tersimpan, deploy ulang
-service Laravel. Semua fitur generatif di AI Assistant dosen menggunakan 9Router
-sebagai satu-satunya provider AI. Jika konfigurasi 9Router tidak tersedia atau
-gagal, aplikasi menampilkan pesan error yang jelas dan tidak diam-diam mengirim
-prompt ke provider lain. Prediksi EWS yang berbasis aturan/data lokal tidak
-menggunakan model AI eksternal.
+Buat API key dari menu **Endpoint & Key** 9Router. Jangan gunakan credential
+provider sebagai API key aplikasi. Simpan key hanya di Variables service Laravel;
+jangan kirim melalui chat atau commit ke repository. Jika key pernah dibagikan,
+cabut key tersebut dan buat key baru. Setelah variables tersimpan, deploy ulang
+service Laravel agar konfigurasi cache memuat nilainya.
+
+Semua fitur generatif di AI Assistant dosen menggunakan 9Router sebagai
+satu-satunya provider AI. Jika konfigurasi 9Router tidak tersedia atau gagal,
+aplikasi menampilkan pesan error yang jelas dan tidak diam-diam mengirim prompt
+ke provider lain. Prediksi EWS yang berbasis aturan/data lokal tidak menggunakan
+model AI eksternal.
 
 ## Menjalankan lokal dengan Docker
 

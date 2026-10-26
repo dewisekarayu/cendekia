@@ -32,6 +32,10 @@ class AiAssistantController extends Controller
             throw new RuntimeException('Layanan AI belum dikonfigurasi. Hubungi administrator untuk mengaktifkan 9Router.');
         }
 
+        if (!str_ends_with(strtolower($baseUrl), '/v1')) {
+            $baseUrl .= '/v1';
+        }
+
         set_time_limit(180);
 
         try {
@@ -57,7 +61,16 @@ class AiAssistantController extends Controller
                 'status' => $response->status(),
             ]);
 
-            throw new RuntimeException('9Router gagal memproses permintaan (HTTP '.$response->status().'). Periksa API key, provider, dan model.');
+            $errorMessage = match ($response->status()) {
+                401 => '9Router menolak API key (HTTP 401). Buat API key baru di menu Endpoint & Key 9Router, simpan sebagai AI_ROUTER_API_KEY pada service Laravel, lalu deploy ulang.',
+                403 => '9Router menolak akses (HTTP 403). Pastikan API key memiliki akses ke endpoint atau provider yang dipilih.',
+                404 => 'Endpoint atau model 9Router tidak ditemukan (HTTP 404). Periksa AI_ROUTER_BASE_URL dan AI_ROUTER_MODEL.',
+                422 => '9Router menolak format permintaan (HTTP 422). Periksa model yang dipilih dan pastikan model mendukung chat completions.',
+                429 => 'Batas penggunaan 9Router tercapai (HTTP 429). Periksa kuota atau batas provider.',
+                default => '9Router gagal memproses permintaan (HTTP '.$response->status().'). Periksa status service dan konfigurasi provider.',
+            };
+
+            throw new RuntimeException($errorMessage);
         }
 
         $content = data_get($response->json(), 'choices.0.message.content');
