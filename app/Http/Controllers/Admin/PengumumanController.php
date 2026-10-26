@@ -79,6 +79,22 @@ class PengumumanController extends Controller
     }
 
     /**
+     * Hapus beberapa pengumuman yang dipilih dari halaman manajemen.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'pengumuman_ids' => ['required', 'array', 'min:1'],
+            'pengumuman_ids.*' => ['required', 'integer', 'distinct', 'exists:pengumuman,id'],
+        ]);
+
+        $deletedCount = Pengumuman::whereIn('id', $validated['pengumuman_ids'])->delete();
+
+        return redirect()->route('admin.pengumuman.index')
+            ->with('success', "{$deletedCount} pengumuman berhasil dihapus.");
+    }
+
+    /**
      * Aturan validasi bersama untuk store & update.
      */
     private function validatedData(Request $request): array
