@@ -742,3 +742,61 @@ html.dark body.role-mahasiswa .semester-pill {
     background-color: #1e3a8a !important;
     color: #bfdbfe !important;
 }
+
+/* Shared Help Center palette: neutral navy with a sky-blue accent. */
+.help-center-hero {
+    background-image: linear-gradient(135deg, #0f172a 0%, #1e3a5f 56%, #0369a1 100%) !important;
+}
+
+.help-center-primary {
+    background-color: #1e293b !important;
+    border-color: #1e293b !important;
+    color: #ffffff !important;
+}
+
+.help-center-primary:hover {
+    background-color: #334155 !important;
+    border-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+.help-center-contextual {
+    background: linear-gradient(135deg, #f8fafc, #eff6ff) !important;
+    border-color: #cbd5e1 !important;
+    color: #334155 !important;
+}
+
+.help-center-contextual p,
+.help-center-contextual li {
+    color: #334155 !important;
+}
+
+html.dark .help-center-hero {
+    background-image: linear-gradient(135deg, #0b1220 0%, #172f4d 56%, #075985 100%) !important;
+}
+
+html.dark .help-center-primary {
+    background-color: #0369a1 !important;
+    border-color: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+html.dark .help-center-primary:hover {
+    background-color: #075985 !important;
+    border-color: #0369a1 !important;
+}
+
+html.dark .help-center-contextual {
+    background: linear-gradient(135deg, #1e293b, #172f4d) !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+html.dark .help-center-contextual p,
+html.dark .help-center-contextual li {
+    color: #cbd5e1 !important;
+}
+
+html.dark .help-center-contextual .text-sky-700 {
+    color: #7dd3fc !important;
+}
