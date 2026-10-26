@@ -24,8 +24,8 @@
                                 $photoUrl = $item->foto_url;
                                 $photoInitial = mb_strtoupper(mb_substr($item->name, 0, 1));
                             @endphp
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-success flex-shrink-0"
-                                  style="width: 38px; height: 38px; background-color: #ecfdf5; border: 1.5px solid #a7f3d0; {{ $photoUrl ? 'display: none !important;' : '' }}">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-white flex-shrink-0 shadow-sm"
+                                  style="width: 38px; height: 38px; background: linear-gradient(135deg, #34d399, #047857); border: 1.5px solid #a7f3d0; {{ $photoUrl ? 'display: none !important;' : '' }}">
                                 {{ $photoInitial }}
                             </span>
                             @if($photoUrl)

@@ -33,14 +33,14 @@
                                 <img id="photoPreview" @if($photoUrl) src="{{ $photoUrl }}" @endif
                                     onerror="this.style.display='none'; document.getElementById('photoFallback').style.display='flex';"
                                     style="display: {{ $photoUrl ? 'block' : 'none' }}; width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; background-color: #f1f5f9;" alt="Preview">
-                                <span id="photoFallback" class="fw-bold text-success"
-                                    style="display: {{ $photoUrl ? 'none' : 'flex' }}; align-items: center; justify-content: center; width: 85px; height: 85px; border-radius: 50%; border: 2px solid #a7f3d0; background-color: #ecfdf5; font-size: 1.5rem;">
+                                <span id="photoFallback" class="fw-bold text-white"
+                                    style="display: {{ $photoUrl ? 'none' : 'flex' }}; align-items: center; justify-content: center; width: 85px; height: 85px; border-radius: 50%; border: 2px solid #a7f3d0; background: linear-gradient(135deg, #34d399, #047857); font-size: 1.5rem; box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);">
                                     {{ $photoInitial }}
                                 </span>
                             </div>
                             <div class="flex-1">
                                 <input type="file" class="form-control @error('foto') is-invalid @enderror" id="photoInput" name="foto" accept="image/*">
-                                <small class="text-muted d-block mt-2">Format: JPG, PNG (Max 2MB). Kosongkan jika tidak ingin mengganti foto profil.</small>
+                                <small class="text-muted d-block mt-2">Format gambar (Maksimal 10 MB). Kosongkan jika tidak ingin mengganti foto profil.</small>
                                 @error('foto') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                             </div>
                         </div>
