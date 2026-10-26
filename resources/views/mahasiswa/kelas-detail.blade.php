@@ -9,7 +9,7 @@
         if ($sekarang < $kelas->jam_mulai) {
             $statusLabel = 'Belum Mulai'; $statusClass = 'bg-amber-50 text-amber-600 border border-amber-200';
         } elseif ($sekarang <= $kelas->jam_selesai) {
-            $statusLabel = 'Sedang Berlangsung'; $statusClass = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+            $statusLabel = 'Sedang Berlangsung'; $statusClass = 'bg-blue-50 text-blue-700 border border-blue-200';
         } else {
             $statusLabel = 'Selesai Hari Ini'; $statusClass = 'bg-gray-100 text-gray-500 border border-gray-200';
         }
@@ -108,7 +108,7 @@
             @endforeach
 
             <!-- <div class="flex gap-2 ml-auto items-center">
-                <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition inline-flex items-center gap-1.5">
+                <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition inline-flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                     Pencet Absen
                 </a>
@@ -177,7 +177,7 @@
 
                         if ($pengumpulanSaya && $pengumpulanSaya->status === \App\Models\PengumpulanTugas::STATUS_DINILAI) {
                             $tugasBtnLabel = 'Lihat Nilai';
-                            $tugasBtnClass = 'bg-emerald-600 hover:bg-emerald-700';
+                            $tugasBtnClass = 'bg-blue-600 hover:bg-blue-700';
                             $tugasBtnIcon  = 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
                         } elseif ($pengumpulanSaya) {
                             $tugasBtnLabel = 'Lihat Pengumpulan';
@@ -202,7 +202,7 @@
                             <p class="mt-0.5 text-xs text-gray-400 dark:text-slate-400">
                                 Deadline: {{ $dl->format('d M Y, H:i') }}
                                 @if ($pengumpulanSaya)
-                                    <span class="ml-1 font-semibold text-emerald-600 dark:text-emerald-400">· Sudah dikumpulkan</span>
+                                    <span class="ml-1 font-semibold text-blue-600 dark:text-blue-400">· Sudah dikumpulkan</span>
                                 @elseif ($isClosed)
                                     <span class="ml-1 font-semibold text-red-500 dark:text-red-400">· Ditutup</span>
                                 @elseif ($daysLeft <= 2)
@@ -217,7 +217,7 @@
                             @endif
 
                             @if ($pengumpulanSaya?->is_graded)
-                                <span class="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700">{{ $pengumpulanSaya->nilai }}/100</span>
+                                <span class="rounded-lg bg-blue-50 border border-blue-100 px-2.5 py-1 text-[11px] font-bold text-blue-700">{{ $pengumpulanSaya->nilai }}/100</span>
                             @endif
 
                             <a href="{{ route('mahasiswa.pengumpulan-tugas.show', $tugas->id) }}"
@@ -243,8 +243,8 @@
                         }
 
                         $absenMap = [
-                            'hadir'    => ['label' => 'Hadir',         'class' => 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/30', 'icon' => 'M5 13l4 4L19 7'],
-                            'izin'     => ['label' => 'Izin',           'class' => 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30',           'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                            'hadir'    => ['label' => 'Hadir',         'class' => 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/30', 'icon' => 'M5 13l4 4L19 7'],
+                            'izin'     => ['label' => 'Izin',           'class' => 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-900/30',           'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                             'sakit'    => ['label' => 'Sakit',          'class' => 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/30',      'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                             'alpha'    => ['label' => 'Tidak Hadir',    'class' => 'bg-red-50 text-red-700 border-red-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/30',              'icon' => 'M6 18L18 6M6 6l12 12'],
                             'terbuka'  => ['label' => 'Terbuka',        'class' => 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-900/30',  'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
@@ -276,7 +276,7 @@
                                 }
                             @endphp
                             @if($showAbsenBtn)
-                                <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white hover:text-white text-decoration-none transition shadow-sm">
+                                <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white hover:text-white text-decoration-none transition shadow-sm">
                                     Absen Masuk
                                 </a>
                             @endif
@@ -305,7 +305,7 @@
         {{-- FORUM --}}
         <div x-show="tab === 'forum'" class="space-y-4">
             <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm text-center">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600 mx-auto mb-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 mx-auto mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                 </div>
                 <h3 class="text-lg font-bold text-slate-800 mb-2">Forum Diskusi</h3>
@@ -337,13 +337,13 @@
             {{-- Kehadiran --}}
             <div class="mb-1.5 flex items-center justify-between text-xs font-semibold">
                 <span class="text-gray-500 dark:text-slate-400">Kehadiran</span>
-                <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ $totalHadir }}/{{ $totalPertemuan }}</span>
+                <span class="font-bold text-blue-600 dark:text-blue-400">{{ $totalHadir }}/{{ $totalPertemuan }}</span>
             </div>
             <div class="mb-5 h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-slate-700">
                 @php
                     $persenHadir = $totalPertemuan > 0 ? round(($totalHadir / $totalPertemuan) * 100) : 0;
                 @endphp
-                <div class="h-full rounded-full bg-emerald-500 transition-all" style="width: {{ $persenHadir }}%"></div>
+                <div class="h-full rounded-full bg-blue-600 dark:bg-blue-500 transition-all" style="width: {{ $persenHadir }}%"></div>
             </div>
 
             {{-- Detail Informasi --}}

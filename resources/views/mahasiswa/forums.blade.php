@@ -14,7 +14,7 @@
     :root{
         --forum-primary: #002B6B;
         --forum-primary-dark: #001A40;
-        --forum-light: #CDDCFF;
+        --forum-light: #c0e6ff;
         --forum-bg-1: #F4F7FF;
         --forum-bg-2: #E9EFFF;
     }
@@ -304,7 +304,7 @@
             {{ $tab['label'] }}
         </a>
     @endforeach
-    <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="ml-auto whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition inline-flex items-center gap-1.5">
+    <a href="{{ route('mahasiswa.absensi.kelas', $kelas->id) }}" class="ml-auto whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition inline-flex items-center gap-1.5 shadow-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
         Pencet Absen
     </a>

@@ -3,12 +3,12 @@
 @section('title', 'Kartu Rencana Studi (KRS)')
 
 @section('content')
-<div class="mb-6 rounded-2xl bg-gradient-to-r from-blue-700 to-indigo-800 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+<div class="mb-6 rounded-2xl bg-gradient-to-r from-[#002B6B] via-[#0044a8] to-blue-600 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-blue-200/70">Akademik</p>
+            <p class="text-xs font-bold uppercase tracking-wide text-[#c0e6ff]">Akademik</p>
             <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Kartu Rencana Studi</h1>
-            <p class="mt-2 text-sm text-blue-100/70">Pilih mata kuliah yang akan diambil pada semester ini dan ajukan ke Dosen PA.</p>
+            <p class="mt-2 text-sm text-blue-100/90">Pilih mata kuliah yang akan diambil pada semester ini dan ajukan ke Dosen PA.</p>
         </div>
         
         <div class="flex items-center gap-2">
@@ -16,10 +16,10 @@
                 $statusClass = 'bg-gray-100 text-gray-700';
                 $statusLabel = 'Draft';
                 if ($krs->status == 'diajukan') {
-                    $statusClass = 'bg-blue-100 text-blue-700';
+                    $statusClass = 'bg-amber-100 text-amber-700';
                     $statusLabel = 'Menunggu Persetujuan';
                 } elseif ($krs->status == 'disetujui') {
-                    $statusClass = 'bg-emerald-100 text-emerald-700';
+                    $statusClass = 'bg-blue-100 text-blue-700';
                     $statusLabel = 'Disetujui Dosen PA';
                 } elseif ($krs->status == 'ditolak') {
                     $statusClass = 'bg-rose-100 text-rose-700';
@@ -35,7 +35,7 @@
 </div>
 
 @if(session('success'))
-    <div class="mb-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold">
+    <div class="mb-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm font-semibold">
         {{ session('success') }}
     </div>
 @endif
@@ -112,7 +112,7 @@
                 <div class="p-5 border-t border-gray-100 bg-gray-50">
                     <form action="{{ route('mahasiswa.krs.ajukan', $krs->id) }}" method="POST">
                         @csrf
-                        <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold shadow-sm transition-colors" onclick="return confirm('Apakah Anda yakin ingin mengajukan KRS? Setelah diajukan, Anda tidak dapat mengubahnya hingga diperiksa Dosen PA.')">
+                        <button type="submit" class="w-full py-2.5 bg-[#002B6B] hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-sm transition-colors" onclick="return confirm('Apakah Anda yakin ingin mengajukan KRS? Setelah diajukan, Anda tidak dapat mengubahnya hingga diperiksa Dosen PA.')">
                             Ajukan KRS ke Dosen PA
                         </button>
                     </form>

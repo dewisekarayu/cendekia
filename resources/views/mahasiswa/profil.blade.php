@@ -20,7 +20,7 @@
     </div>
 
     @if (session('success'))
-        <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400 font-medium">
+        <div class="rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 px-4 py-3 text-sm text-blue-700 dark:text-blue-400 font-medium">
             {{ session('success') }}
         </div>
     @endif
@@ -68,7 +68,7 @@
                         <h3 class="text-lg font-bold text-slate-800 dark:text-white">{{ $user->name }}</h3>
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                         <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#002B6B]/10 dark:bg-blue-950/40 px-3 py-1 text-xs font-semibold text-[#002B6B] dark:text-blue-300">
-                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                            <span class="h-2 w-2 rounded-full bg-blue-500"></span>
                             Mahasiswa
                         </div>
                     </div>
