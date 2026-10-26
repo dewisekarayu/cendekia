@@ -25,19 +25,7 @@
                     <div class="mb-4">
                         <label class="form-label fw-bold text-muted small text-uppercase">Foto Profil</label>
                         <div style="display: flex; align-items: center; gap: 1.5rem;">
-                            @php
-                                $photoUrl = $dosenMember->foto_url;
-                                $photoInitial = mb_strtoupper(mb_substr($dosenMember->name, 0, 1));
-                            @endphp
-                            <div style="position: relative; width: 85px; height: 85px; flex-shrink: 0;">
-                                <img id="photoPreview" @if($photoUrl) src="{{ $photoUrl }}" @endif
-                                    onerror="this.style.display='none'; document.getElementById('photoFallback').style.display='flex';"
-                                    style="display: {{ $photoUrl ? 'block' : 'none' }}; width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; background-color: #f1f5f9;" alt="Preview">
-                                <span id="photoFallback" class="fw-bold text-white"
-                                    style="display: {{ $photoUrl ? 'none' : 'flex' }}; align-items: center; justify-content: center; width: 85px; height: 85px; border-radius: 50%; border: 2px solid #a7f3d0; background: linear-gradient(135deg, #34d399, #047857); font-size: 1.5rem; box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);">
-                                    {{ $photoInitial }}
-                                </span>
-                            </div>
+                            <x-user-avatar :name="$dosenMember->name" :photo-url="$dosenMember->foto_url" :size="85" id="photoPreview" />
                             <div class="flex-1">
                                 <input type="file" class="form-control @error('foto') is-invalid @enderror" id="photoInput" name="foto" accept="image/*">
                                 <small class="text-muted d-block mt-2">Format gambar (Maksimal 10 MB). Kosongkan jika tidak ingin mengganti foto profil.</small>
@@ -124,8 +112,7 @@
                 reader.onload = function(event) {
                     const preview = document.getElementById('photoPreview');
                     preview.src = event.target.result;
-                    preview.style.display = 'block';
-                    document.getElementById('photoFallback').style.display = 'none';
+                    preview.dataset.fallback = preview.src;
                 };
                 reader.readAsDataURL(file);
             }
