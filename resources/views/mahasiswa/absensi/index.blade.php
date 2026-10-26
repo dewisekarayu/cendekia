@@ -20,11 +20,11 @@
     </div>
 
     @if(session('success'))
-        <div class="animate-in slide-in-from-top-2 duration-300 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
-            <div class="p-1 bg-emerald-100 text-emerald-700 rounded-md flex-shrink-0">
+        <div class="animate-in slide-in-from-top-2 duration-300 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3 shadow-sm">
+            <div class="p-1 bg-blue-100 text-blue-700 rounded-md flex-shrink-0">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
             </div>
-            <p class="text-sm font-bold text-emerald-900">{{ session('success') }}</p>
+            <p class="text-sm font-bold text-blue-900">{{ session('success') }}</p>
         </div>
     @endif
     @if(session('warning'))
@@ -71,8 +71,8 @@
                                 Kelas {{ $kelas->kode_kelas }}
                             </span>
                             @if($absensiAktif)
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold shadow-sm">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-sky-50 text-sky-700 border border-sky-200 text-xs font-bold shadow-sm">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
                                     Presensi Terbuka
                                 </span>
                             @endif
