@@ -8,16 +8,16 @@
         ? ['akun' => 'Account', 'kelas' => 'Classes', 'tugas' => 'Assignments', 'absensi' => 'Attendance', 'nilai' => 'Grades', 'teknis' => 'Technical', 'lainnya' => 'Other']
         : ['akun' => 'Akun', 'kelas' => 'Kelas', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'nilai' => 'Nilai', 'teknis' => 'Teknis', 'lainnya' => 'Lainnya'];
 @endphp
-<div class="max-w-4xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
+<div class="help-center-page max-w-4xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
 
     {{-- Breadcrumb & Back --}}
     <div class="flex items-center justify-between gap-3">
         <nav class="flex items-center gap-2 text-xs font-medium text-slate-400" aria-label="Breadcrumb">
-            <a href="{{ route('help-center.index') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition text-decoration-none text-slate-500 dark:text-slate-400">
+            <a href="{{ route('help-center.index') }}" class="hover:text-slate-800 dark:hover:text-white transition text-decoration-none text-slate-500 dark:text-slate-400">
                 {{ $isEn ? 'Help Center' : 'Pusat Bantuan' }}
             </a>
             <span>&bull;</span>
-            <a href="{{ route('help-center.my-tickets') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition text-decoration-none text-slate-500 dark:text-slate-400">
+            <a href="{{ route('help-center.my-tickets') }}" class="hover:text-slate-800 dark:hover:text-white transition text-decoration-none text-slate-500 dark:text-slate-400">
                 {{ $isEn ? 'My Tickets' : 'Tiket Saya' }}
             </a>
             <span>&bull;</span>
@@ -100,7 +100,7 @@
         <div class="rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm space-y-3">
             <div class="flex items-center justify-between gap-3 border-b border-gray-100 dark:border-slate-700/60 pb-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-[#002B6B] text-white flex items-center justify-center text-xs font-bold shadow-2xs">
+                    <div class="w-8 h-8 rounded-full bg-slate-700 text-white flex items-center justify-center text-xs font-bold shadow-2xs">
                         {{ substr($ticket->name, 0, 1) }}
                     </div>
                     <div>
@@ -108,7 +108,7 @@
                         <p class="text-[11px] text-slate-400 m-0">{{ $ticket->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">
                     {{ $isEn ? 'Original Question' : 'Pertanyaan Awal' }}
                 </span>
             </div>
@@ -120,7 +120,7 @@
             @if($ticket->attachment_path)
                 <div class="pt-2 border-t border-gray-50 dark:border-slate-700/40">
                     <a href="{{ asset('storage/' . $ticket->attachment_path) }}" target="_blank" 
-                       class="inline-flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                       class="inline-flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:underline">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
                         <span>{{ $isEn ? 'View Attachment' : 'Lihat Lampiran Berkas' }}</span>
                     </a>
@@ -133,10 +133,10 @@
             @php
                 $isAdmin = $reply->user && $reply->user->hasRole('admin');
             @endphp
-            <div class="rounded-2xl border {{ $isAdmin ? 'border-emerald-200 dark:border-emerald-800/80 bg-emerald-50/40 dark:bg-slate-800/90' : 'border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800' }} p-5 shadow-sm space-y-3">
-                <div class="flex items-center justify-between gap-3 border-b {{ $isAdmin ? 'border-emerald-100 dark:border-emerald-900/50' : 'border-gray-100 dark:border-slate-700/60' }} pb-3">
+            <div class="rounded-2xl border {{ $isAdmin ? 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/90' : 'border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800' }} p-5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between gap-3 border-b {{ $isAdmin ? 'border-slate-200 dark:border-slate-600' : 'border-gray-100 dark:border-slate-700/60' }} pb-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full {{ $isAdmin ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-white' }} flex items-center justify-center text-xs font-bold shadow-2xs">
+                        <div class="w-8 h-8 rounded-full bg-slate-700 text-white flex items-center justify-center text-xs font-bold shadow-2xs">
                             @if($isAdmin)
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                             @else
@@ -144,7 +144,7 @@
                             @endif
                         </div>
                         <div>
-                            <p class="text-xs font-bold {{ $isAdmin ? 'text-emerald-950 dark:text-emerald-300' : 'text-slate-900 dark:text-white' }} m-0">
+                            <p class="text-xs font-bold text-slate-900 dark:text-white m-0">
                                 {{ $reply->user->name ?? 'Tim Support' }}
                             </p>
                             <p class="text-[11px] text-slate-400 m-0">{{ $reply->created_at->diffForHumans() }} &bull; {{ $reply->created_at->translatedFormat('d M Y, H:i') }}</p>
@@ -152,7 +152,7 @@
                     </div>
 
                     @if($isAdmin)
-                        <span class="inline-flex items-center gap-1 text-[11px] font-black px-2.5 py-0.5 rounded-full bg-emerald-600 text-white shadow-2xs">
+                        <span class="inline-flex items-center gap-1 text-[11px] font-black px-2.5 py-0.5 rounded-full bg-slate-700 text-white shadow-2xs">
                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
                             <span>{{ $isEn ? 'Admin Response' : 'Jawaban Admin' }}</span>
                         </span>
@@ -189,7 +189,7 @@
     @if($ticket->status !== 'closed')
         <div class="rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 sm:p-6 shadow-sm space-y-3">
             <h3 class="text-sm font-bold text-slate-900 dark:text-white m-0 flex items-center gap-2">
-                <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+                <svg class="w-4 h-4 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
                 <span>{{ $isEn ? 'Send Follow-up Reply' : 'Kirim Tanggapan Lanjutan' }}</span>
             </h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 m-0">
@@ -199,12 +199,12 @@
             <form action="{{ route('help-center.my-tickets.reply', $ticket->id) }}" method="POST" class="space-y-3 m-0">
                 @csrf
                 <textarea name="message" rows="3" required
-                    class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900 px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 dark:text-white placeholder:text-slate-400 outline-none transition focus:border-blue-600 focus:bg-white dark:focus:bg-slate-900"
+                    class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900 px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 dark:text-white placeholder:text-slate-400 outline-none transition focus:border-slate-500 focus:bg-white dark:focus:bg-slate-900"
                     placeholder="{{ $isEn ? 'Write your follow-up reply here...' : 'Ketik tanggapan atau informasi tambahan Anda di sini...' }}"></textarea>
 
                 <div class="flex justify-end">
                     <button type="submit" 
-                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#002B6B] hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-xs font-bold text-white transition shadow-sm">
+                        class="help-center-primary inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white transition shadow-sm">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
                         <span>{{ $isEn ? 'Send Reply' : 'Kirim Balasan' }}</span>
                     </button>

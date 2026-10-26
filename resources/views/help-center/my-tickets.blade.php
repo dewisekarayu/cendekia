@@ -8,13 +8,13 @@
         ? ['akun' => 'Account', 'kelas' => 'Classes', 'tugas' => 'Assignments', 'absensi' => 'Attendance', 'nilai' => 'Grades', 'teknis' => 'Technical', 'lainnya' => 'Other']
         : ['akun' => 'Akun', 'kelas' => 'Kelas', 'tugas' => 'Tugas', 'absensi' => 'Absensi', 'nilai' => 'Nilai', 'teknis' => 'Teknis', 'lainnya' => 'Lainnya'];
 @endphp
-<div class="max-w-5xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
+<div class="help-center-page max-w-5xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
 
     {{-- Breadcrumb & Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <nav class="flex items-center gap-2 text-xs font-medium text-slate-400 mb-1.5" aria-label="Breadcrumb">
-                <a href="{{ route('help-center.index') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
+                <a href="{{ route('help-center.index') }}" class="hover:text-slate-800 dark:hover:text-white transition">
                     {{ $isEn ? 'Help Center' : 'Pusat Bantuan' }}
                 </a>
                 <span>&bull;</span>
@@ -42,7 +42,7 @@
                 <span>{{ $isEn ? 'Back to FAQ' : 'Kembali ke FAQ' }}</span>
             </a>
             <a href="{{ route('help-center.index') }}#form-tiket" 
-               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#002B6B] hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-xs font-bold text-white transition shadow-sm text-decoration-none">
+               class="help-center-primary inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white transition shadow-sm text-decoration-none">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
@@ -66,10 +66,10 @@
         @foreach($tabs as $sKey => $tab)
             @php $isActive = $currentStatus === $sKey; @endphp
             <a href="{{ route('help-center.my-tickets', array_filter(['status' => $sKey])) }}"
-               class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 text-decoration-none {{ $isActive ? 'bg-[#002B6B] text-white shadow-xs' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60' }}">
+               class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 shrink-0 text-decoration-none {{ $isActive ? 'help-center-primary text-white shadow-xs' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60' }}">
                 <span>{{ $tab['label'] }}</span>
                 @if($tab['count'] > 0)
-                    <span class="px-1.5 py-0.2 rounded-full text-[10px] font-black {{ $isActive ? 'bg-white text-[#002B6B]' : ($sKey === 'responded' ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300') }}">
+                    <span class="px-1.5 py-0.2 rounded-full text-[10px] font-black {{ $isActive ? 'bg-white text-slate-700' : ($sKey === 'responded' ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300') }}">
                         {{ $tab['count'] }}
                     </span>
                 @endif
@@ -165,7 +165,7 @@
                     @endif
 
                     <a href="{{ route('help-center.my-tickets.show', $ticket->id) }}" 
-                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-[#002B6B] hover:text-white dark:bg-slate-700 dark:hover:bg-blue-600 text-slate-700 dark:text-slate-200 text-xs font-bold transition text-decoration-none">
+                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-700 hover:text-white dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold transition text-decoration-none">
                         <span>{{ $isEn ? 'View Replies' : 'Lihat Jawaban' }}</span>
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </a>
@@ -186,7 +186,7 @@
                 </p>
                 <div class="mt-4">
                     <a href="{{ route('help-center.index') }}#form-tiket" 
-                       class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#002B6B] hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-xs font-bold text-white transition text-decoration-none">
+                       class="help-center-primary inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition text-decoration-none">
                         <span>{{ $isEn ? 'Create Ticket Now' : 'Buat Tiket Sekarang' }}</span>
                     </a>
                 </div>

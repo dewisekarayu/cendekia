@@ -17,14 +17,14 @@
         }
     }
 
-    $inputClass = 'help-center-input w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 outline-none transition focus:border-transparent focus:ring-2 focus:ring-[#720c16] dark:focus:ring-[#a92a35]';
+    $inputClass = 'help-center-input w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 outline-none transition focus:border-transparent focus:ring-2 focus:ring-sky-600';
     $labelClass = 'mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-300';
 @endphp
 
 <div class="help-center-page max-w-6xl mx-auto px-4 sm:px-0 my-4 sm:my-6 space-y-6 animate-fade-in">
 
     {{-- ===== HERO ===== --}}
-    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#720c16] via-[#3b1748] to-[#c0e6ff] p-6 sm:p-8 shadow-xl shadow-blue-950/10">
+    <section class="help-center-hero relative overflow-hidden rounded-3xl p-6 sm:p-8 shadow-xl shadow-blue-950/10">
         <div class="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full bg-white/10 blur-2xl"></div>
         <div class="pointer-events-none absolute -bottom-16 left-10 h-64 w-64 rounded-full bg-blue-400/10 blur-2xl"></div>
         <div class="relative z-10">
@@ -102,7 +102,7 @@
             {{-- Search --}}
             <div class="mt-6 max-w-2xl">
                 <div class="group relative rounded-2xl shadow-xl shadow-black/10 transition focus-within:ring-4 focus-within:ring-white/25">
-                    <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition group-focus-within:text-[#002B6B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 transition group-focus-within:text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                     <input id="faqSearch" type="text" autocomplete="off" placeholder="{{ $isEn ? 'Search: login, upload assignment, reset password...' : 'Cari: login, upload tugas, reset password...' }}"
                         class="help-center-input h-14 w-full rounded-2xl bg-white pl-12 pr-12 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400">
                     <button type="button" id="clearSearch" aria-label="{{ $isEn ? 'Clear search' : 'Hapus pencarian' }}"
@@ -129,7 +129,7 @@
 
             <div class="space-y-3">
                 @forelse ($allFaqs as $faq)
-                    <div class="faq-item help-center-surface rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-colors duration-200 hover:border-[#a92a35]/50 dark:border-slate-800 dark:bg-slate-900"
+                    <div class="faq-item help-center-surface rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-colors duration-200 hover:border-sky-500/50 dark:border-slate-800 dark:bg-slate-900"
                          data-question="{{ Str::lower($faq['question']) }}" data-answer="{{ Str::lower($faq['answer']) }}">
                         <button type="button" class="faq-toggle flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left" aria-expanded="false">
                             <span class="flex-1 text-sm font-semibold leading-snug text-slate-800 dark:text-slate-100 sm:text-[15px]">{{ $faq['question'] }}</span>
@@ -163,7 +163,7 @@
                     <p class="mx-auto mb-5 max-w-xs text-xs text-slate-400">{{ $isEn ? 'Try different keywords, or submit a support ticket so our admin can assist you directly.' : 'Coba kata kunci lain, atau buat tiket support agar admin bisa membantu langsung.' }}</p>
                     <div class="flex flex-wrap items-center justify-center gap-2">
                         <button type="button" id="resetSearch" class="help-center-surface-secondary rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">{{ $isEn ? 'Clear search' : 'Bersihkan pencarian' }}</button>
-                        <button type="button" data-open-ticket class="rounded-xl bg-gradient-to-r from-[#720c16] via-[#720c16] to-[#c0e6ff] px-3.5 py-2 text-xs font-bold text-white transition hover:brightness-95">{{ $isEn ? 'Create ticket' : 'Buat tiket' }}</button>
+                        <button type="button" data-open-ticket class="help-center-primary rounded-xl px-3.5 py-2 text-xs font-bold text-white transition hover:brightness-95">{{ $isEn ? 'Create ticket' : 'Buat tiket' }}</button>
                     </div>
                 </div>
             </div>
@@ -173,13 +173,13 @@
         <aside class="space-y-6 lg:sticky lg:top-6">
             {{-- Hubungi Kami --}}
             <div class="help-center-surface rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#720c16]/10 text-[#720c16] dark:bg-[#720c16]/20 dark:text-[#f87171]">
+                <div class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
                 <h3 class="text-base font-bold text-slate-900 dark:text-white">{{ $isEn ? 'Haven\'t found an answer?' : 'Belum menemukan jawaban?' }}</h3>
                 <p class="mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{{ $isEn ? 'Create a ticket for more detailed issues. Admin will respond within 1-2 business hours.' : 'Buat tiket untuk masalah yang lebih detail. Admin akan merespons dalam 1-2 jam kerja.' }}</p>
                 <button type="button" data-open-ticket
-                    class="mt-4 w-full rounded-xl bg-gradient-to-r from-[#720c16] via-[#720c16] to-[#c0e6ff] px-4 py-3 text-xs font-bold text-white shadow-md shadow-[#720c16]/15 transition hover:brightness-95 hover:shadow-lg">
+                    class="help-center-primary mt-4 w-full rounded-xl px-4 py-3 text-xs font-bold text-white shadow-md transition hover:brightness-95 hover:shadow-lg">
                     {{ $isEn ? 'Create Support Ticket' : 'Buat Tiket Support' }}
                 </button>
                 @auth
@@ -193,7 +193,7 @@
             </div>
 
             {{-- Tips --}}
-            <div class="rounded-2xl border border-[#720c16]/20 bg-white p-5 shadow-sm dark:border-[#a92a35]/40 dark:bg-slate-900">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
                 <p class="mb-3 text-sm font-bold text-slate-900 dark:text-white">{{ $isEn ? 'Usage Tips' : 'Tips Penggunaan' }}</p>
                 <ul class="space-y-2.5 text-xs font-medium text-slate-600 dark:text-slate-400">
                     @php
@@ -211,7 +211,7 @@
                     @endphp
                     @foreach ($tips as $tip)
                         <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#720c16] dark:text-[#f87171]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-sky-700 dark:text-sky-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                             <span class="leading-relaxed">{{ $tip }}</span>
                         </li>
                     @endforeach
@@ -224,7 +224,7 @@
 {{-- Modal diletakkan di luar wrapper .animate-fade-in supaya position:fixed
      menempel ke viewport (animasi transform di wrapper membuat 'fixed' ikut wrapper). --}}
 {{-- ===== TICKET MODAL ===== --}}
-<div id="ticketModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4 py-4 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="ticketTitle">
+<div id="ticketModal" class="help-center-page fixed inset-0 z-50 hidden items-center justify-center px-4 py-4 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="ticketTitle">
     <div id="ticketOverlay" class="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"></div>
 
     <div id="modalContainer" class="help-center-surface relative flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl scale-95 transform flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white opacity-0 shadow-2xl transition-all duration-300 dark:border-slate-800 dark:bg-slate-900">
@@ -279,7 +279,7 @@
             </div>
             <div class="help-center-surface-secondary shrink-0 border-t border-slate-100 bg-white px-5 py-4 dark:border-slate-800 dark:bg-slate-900 sm:px-7">
                 <button type="submit" id="ticketSubmit"
-                    class="w-full rounded-xl bg-gradient-to-r from-[#720c16] via-[#720c16] to-[#c0e6ff] py-3 text-sm font-bold text-white shadow-md shadow-[#720c16]/10 transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60">
+                    class="help-center-primary w-full rounded-xl py-3 text-sm font-bold text-white shadow-md transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60">
                     {{ $isEn ? 'Submit Ticket' : 'Kirim Tiket' }}
                 </button>
             </div>
@@ -445,19 +445,19 @@
 
 <style>
     html.dark .help-center-page .help-center-surface {
-        background-color: #211419 !important;
-        border-color: #4a2c33 !important;
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
     }
 
     html.dark .help-center-page .help-center-surface-secondary {
-        background-color: #2b171d !important;
+        background-color: #27364a !important;
         background-image: none !important;
-        border-color: #4a2c33 !important;
+        border-color: #475569 !important;
     }
 
     html.dark .help-center-page .help-center-input {
-        background-color: #2b171d !important;
-        border-color: #4a2c33 !important;
+        background-color: #0f172a !important;
+        border-color: #475569 !important;
         color: #f8fafc !important;
     }
 
@@ -466,7 +466,7 @@
     }
 
     html.dark .help-center-page .faq-item.open {
-        border-color: #a92a35 !important;
+        border-color: #38bdf8 !important;
     }
 
     /* Accordion: animasi tinggi via grid-template-rows (tanpa hitung scrollHeight) */
