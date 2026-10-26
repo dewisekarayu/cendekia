@@ -20,7 +20,7 @@
     </div>
 
     @if (session('success'))
-        <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400 font-medium">
+        <div class="rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 px-4 py-3 text-sm text-blue-700 dark:text-blue-400 font-medium">
             {{ session('success') }}
         </div>
     @endif
@@ -30,17 +30,15 @@
         {{-- PROFILE CARD --}}
         <div class="lg:col-span-1">
             <div class="overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors duration-200">
-                <div class="border-t-4 border-[#002B6B] dark:border-blue-600 px-5 pt-6 pb-5">
+                <div class="border-t-4 border-[#c0e6ff] dark:border-blue-600 px-5 pt-6 pb-5">
                     <div class="space-y-1 text-center">
                         {{-- AVATAR EDITABLE --}}
                         <form action="{{ route('mahasiswa.setting.foto') }}" method="POST" enctype="multipart/form-data" id="formFoto">
                             @csrf
                             @method('PUT')
                             <div class="relative mx-auto mb-3 h-24 w-24 group/avatar">
-                                <img id="avatarPreview"
-                                     src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}"
-                                     alt="Foto Profil"
-                                     class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700">
+                                <x-user-avatar id="avatarPreview" :name="$user->name" :photo-url="$user->foto_url" :size="96"
+                                               class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700" />
 
                                 <label for="fotoInput"
                                        class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer">
@@ -54,7 +52,7 @@
 
                             <div id="fotoActions" class="hidden justify-center gap-2 mb-3">
                                 <button type="submit"
-                                        class="rounded-full bg-[#002B6B] dark:bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#002B6B]/90 dark:hover:bg-blue-700 transition">
+                                        class="rounded-full bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-4 py-1.5 text-xs font-bold hover:bg-[#a8daf8] transition">
                                     Simpan Foto
                                 </button>
                                 <button type="button" onclick="batalFoto()"
@@ -70,7 +68,7 @@
                         <h3 class="text-lg font-bold text-slate-800 dark:text-white">{{ $user->name }}</h3>
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                         <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#002B6B]/10 dark:bg-blue-950/40 px-3 py-1 text-xs font-semibold text-[#002B6B] dark:text-blue-300">
-                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                            <span class="h-2 w-2 rounded-full bg-blue-500"></span>
                             Mahasiswa
                         </div>
                     </div>
@@ -155,7 +153,7 @@
                                     class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-750 transition">
                                 Batal
                             </button>
-                            <button type="submit" class="rounded-lg bg-[#002B6B] dark:bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-blue-700 hover:bg-[#002B6B]/90 transition">
+                            <button type="submit" class="rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-6 py-2.5 text-sm font-bold hover:bg-[#a8daf8] transition shadow-xs">
                                 Simpan Perubahan
                             </button>
                         </div>
@@ -198,7 +196,7 @@
                                     class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-750 transition">
                                 Batal
                             </button>
-                            <button type="submit" class="rounded-lg bg-[#002B6B] dark:bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-blue-700 hover:bg-[#002B6B]/90 transition">
+                            <button type="submit" class="rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-6 py-2.5 text-sm font-bold hover:bg-[#a8daf8] transition shadow-xs">
                                 Update Password
                             </button>
                         </div>
@@ -248,6 +246,6 @@
         document.getElementById('fotoInput').value = '';
         document.getElementById('fotoActions').classList.add('hidden');
         document.getElementById('fotoActions').classList.remove('flex');
-        document.getElementById('avatarPreview').src = "{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}";
+        document.getElementById('avatarPreview').src = document.getElementById('avatarPreview').dataset.original;
     }
 </script>

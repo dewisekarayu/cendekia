@@ -51,21 +51,21 @@
     $cardAccent = [
         'kritis'  => 'border-l-rose-500',
         'waspada' => 'border-l-amber-400',
-        'aman'    => 'border-l-emerald-400',
+        'aman'    => 'border-l-blue-500',
     ];
 @endphp
 
 <style>[x-cloak]{display:none!important}</style>
 
 {{-- ===== HEADER ===== --}}
-<div class="mb-4 sm:mb-6 rounded-2xl bg-[#002B6B] px-4 py-4 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg shadow-blue-950/10">
+<div class="mb-4 sm:mb-6 rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 px-4 py-4 sm:px-8 sm:py-6 relative overflow-hidden shadow-sm">
     <div class="relative z-10">
-        <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-blue-200/70">Akademik &amp; EWS</p>
-        <h1 class="mt-1 text-lg sm:text-2xl font-extrabold text-white">Gradebook &amp; Self-Analytics</h1>
-        <p class="mt-1 text-xs sm:text-sm text-blue-100/70">Rekap nilai akhir, tugas, dan pantauan performa akademik Anda secara mandiri (EWS).</p>
+        <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-[#002B6B]/75 dark:text-blue-300">Akademik &amp; EWS</p>
+        <h1 class="mt-1 text-lg sm:text-2xl font-extrabold text-[#002B6B] dark:text-white">Gradebook &amp; Self-Analytics</h1>
+        <p class="mt-1 text-xs sm:text-sm text-[#003b8e]/80 dark:text-blue-200/80">Rekap nilai akhir, tugas, dan pantauan performa akademik Anda secara mandiri (EWS).</p>
     </div>
-    <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/5 pointer-events-none"></div>
-    <div class="absolute right-20 -bottom-8 w-24 h-24 rounded-full bg-white/5 pointer-events-none"></div>
+    <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/40 pointer-events-none"></div>
+    <div class="absolute right-20 -bottom-8 w-24 h-24 rounded-full bg-white/30 pointer-events-none"></div>
 </div>
 
 {{-- ===== STAT CARDS ===== --}}
@@ -77,7 +77,7 @@
     </div>
     <div class="rounded-2xl bg-white border border-slate-200/80 p-3.5 sm:p-4 shadow-sm">
         <p class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide text-gray-400">Nilai Tertinggi</p>
-        <p class="mt-1.5 sm:mt-2 text-2xl sm:text-3xl font-extrabold text-emerald-600">{{ $nilaiTertinggi ? number_format($nilaiTertinggi, 1) : '-' }}</p>
+        <p class="mt-1.5 sm:mt-2 text-2xl sm:text-3xl font-extrabold text-blue-600">{{ $nilaiTertinggi ? number_format($nilaiTertinggi, 1) : '-' }}</p>
         <p class="mt-1 text-[11px] sm:text-xs text-gray-400">nilai terbaik kamu</p>
     </div>
     <div class="rounded-2xl bg-white border border-slate-200/80 p-3.5 sm:p-4 shadow-sm">
@@ -87,7 +87,7 @@
     </div>
     <div class="rounded-2xl bg-white border border-slate-200/80 p-3.5 sm:p-4 shadow-sm">
         <p class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide text-gray-400">Tugas Dinilai</p>
-        <p class="mt-1.5 sm:mt-2 text-2xl sm:text-3xl font-extrabold text-violet-600">{{ $nilaiTugasList->count() }}</p>
+        <p class="mt-1.5 sm:mt-2 text-2xl sm:text-3xl font-extrabold text-sky-600">{{ $nilaiTugasList->count() }}</p>
         <p class="mt-1 text-[11px] sm:text-xs text-gray-400">tugas sudah ada nilainya</p>
     </div>
 </div>
@@ -240,7 +240,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-5">
             <div class="flex items-center gap-3.5">
-                <div class="w-11 h-11 shrink-0 rounded-full flex items-center justify-center {{ $globalAttendance < 75 ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600' }}">
+                <div class="w-11 h-11 shrink-0 rounded-full flex items-center justify-center {{ $globalAttendance < 75 ? 'bg-rose-100 text-rose-600' : 'bg-blue-100 text-blue-600' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
                 <div class="min-w-0 flex-1">
@@ -249,7 +249,7 @@
                 </div>
             </div>
             <div class="mt-3 h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
-                <div class="h-full rounded-full {{ $globalAttendance < 75 ? 'bg-rose-500' : 'bg-emerald-500' }}" style="width: {{ min(100, max(0, (float) $globalAttendance)) }}%"></div>
+                <div class="h-full rounded-full {{ $globalAttendance < 75 ? 'bg-rose-500' : 'bg-blue-600' }}" style="width: {{ min(100, max(0, (float) $globalAttendance)) }}%"></div>
             </div>
         </div>
 
@@ -296,7 +296,7 @@
                     Waspada <span class="opacity-70">{{ $cntWaspada }}</span>
                 </button>
                 <button type="button" @click="filter = 'aman'"
-                        :class="filter === 'aman' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-emerald-700 border-emerald-200 hover:border-emerald-300'"
+                        :class="filter === 'aman' ? 'bg-sky-600 text-white border-sky-600' : 'bg-white text-sky-700 border-sky-200 hover:border-sky-300'"
                         class="rounded-full border px-3 py-1.5 text-xs font-bold transition">
                     Aman <span class="opacity-70">{{ $cntAman }}</span>
                 </button>
@@ -325,10 +325,10 @@
                         <div>
                             <div class="flex items-baseline justify-between">
                                 <p class="text-[10px] font-bold text-gray-400 uppercase">Kehadiran</p>
-                                <p class="font-black text-sm {{ $data->attendance_rate < 75 ? 'text-rose-600' : 'text-emerald-600' }}">{{ $data->attendance_rate }}%</p>
+                                <p class="font-black text-sm {{ $data->attendance_rate < 75 ? 'text-rose-600' : 'text-blue-600' }}">{{ $data->attendance_rate }}%</p>
                             </div>
                             <div class="mt-1.5 h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
-                                <div class="h-full rounded-full {{ $data->attendance_rate < 75 ? 'bg-rose-500' : 'bg-emerald-500' }}" style="width: {{ $rate }}%"></div>
+                                <div class="h-full rounded-full {{ $data->attendance_rate < 75 ? 'bg-rose-500' : 'bg-blue-600' }}" style="width: {{ $rate }}%"></div>
                             </div>
                         </div>
                         <div>

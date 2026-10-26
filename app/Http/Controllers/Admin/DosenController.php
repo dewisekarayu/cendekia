@@ -10,10 +10,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Throwable;
 
 class DosenController extends Controller
 {
@@ -66,7 +68,7 @@ class DosenController extends Controller
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', 'in:aktif,non_aktif'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ]);
 
         $fotoPath = null;
@@ -114,14 +116,23 @@ class DosenController extends Controller
             'email'            => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($dosenMember->id)],
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', 'in:aktif,non_aktif'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ]);
 
         $fotoLama = $dosenMember->foto;
         $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('foto-profil', 'public');
-            if ($fotoPath === false) {
+            try {
+                $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+                if (!$fotoPath || !Storage::disk('public')->exists($fotoPath)) {
+                    throw new \RuntimeException('Uploaded lecturer photo was not written to public storage.');
+                }
+            } catch (Throwable $exception) {
+                Log::error('Unable to store lecturer photo from admin edit.', [
+                    'user_id' => $dosenMember->id,
+                    'exception' => $exception,
+                ]);
+
                 return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.'])->withInput();
             }
         }
@@ -138,16 +149,41 @@ class DosenController extends Controller
             $dataDosen['foto'] = $fotoPath;
         }
 
-        if (!$dosenMember->update($dataDosen)) {
+        try {
+            if (!$dosenMember->update($dataDosen)) {
+                throw new \RuntimeException('Lecturer record update returned false.');
+            }
+        } catch (Throwable $exception) {
             if ($fotoPath !== null) {
-                Storage::disk('public')->delete($fotoPath);
+                try {
+                    Storage::disk('public')->delete($fotoPath);
+                } catch (Throwable $cleanupException) {
+                    Log::warning('Unable to remove unused lecturer photo after update failure.', [
+                        'user_id' => $dosenMember->id,
+                        'path' => $fotoPath,
+                        'exception' => $cleanupException,
+                    ]);
+                }
             }
 
-            return back()->withErrors(['foto' => 'Data dosen gagal diperbarui. Silakan coba lagi.'])->withInput();
+            Log::error('Unable to update lecturer record from admin edit.', [
+                'user_id' => $dosenMember->id,
+                'exception' => $exception,
+            ]);
+
+            return back()->withErrors(['foto' => 'Data dosen atau foto gagal diperbarui. Silakan coba lagi.'])->withInput();
         }
 
         if ($fotoPath !== null && $fotoLama) {
-            Storage::disk('public')->delete($fotoLama);
+            try {
+                Storage::disk('public')->delete($fotoLama);
+            } catch (Throwable $exception) {
+                Log::warning('Unable to remove previous lecturer photo after replacement.', [
+                    'user_id' => $dosenMember->id,
+                    'path' => $fotoLama,
+                    'exception' => $exception,
+                ]);
+            }
         }
 
         return redirect()->route('admin.dosen.index')
