@@ -70,14 +70,14 @@
         <!-- VIEW SELECTOR & DAY SELECTOR TABS -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 rounded-2xl shadow-sm">
             <div class="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 p-1 rounded-xl w-fit">
-                <button @click="viewMode = 'weekly'" :class="viewMode === 'weekly' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" class="px-4 py-2 text-xs font-bold rounded-lg transition">
+                <button @click="viewMode = 'weekly'" :class="viewMode === 'weekly' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" :style="viewMode === 'weekly' ? 'color: #002B6B !important' : ''" class="px-4 py-2 text-xs font-bold rounded-lg transition">
                     Weekly View
                 </button>
-                <button @click="viewMode = 'daily'" :class="viewMode === 'daily' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" class="px-4 py-2 text-xs font-bold rounded-lg transition">
+                <button @click="viewMode = 'daily'" :class="viewMode === 'daily' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" :style="viewMode === 'daily' ? 'color: #002B6B !important' : ''" class="px-4 py-2 text-xs font-bold rounded-lg transition">
                     Daily View
                 </button>
                 @if(isset($reschedules) && $reschedules->isNotEmpty())
-                <button @click="viewMode = 'reschedule'" :class="viewMode === 'reschedule' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-[#002B6B] hover:text-blue-800'" class="px-4 py-2 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
+                <button @click="viewMode = 'reschedule'" :class="viewMode === 'reschedule' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-[#002B6B] hover:text-blue-800'" :style="viewMode === 'reschedule' ? 'color: #002B6B !important' : ''" class="px-4 py-2 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
                     Kelas Pengganti <span :class="viewMode === 'reschedule' ? 'bg-[#002B6B]/15 text-[#002B6B]' : 'bg-blue-100 text-[#002B6B]'" class="px-1.5 py-0.5 rounded text-[10px]">{{ $reschedules->count() }}</span>
                 </button>
                 @endif
@@ -85,7 +85,7 @@
             
             <div x-show="viewMode === 'daily'" x-transition class="flex flex-wrap gap-1">
                 @foreach ($days as $day)
-                    <button @click="activeDay = '{{ $day }}'" :class="activeDay === '{{ $day }}' ? 'bg-[#c0e6ff] text-[#002B6B] border-[#002B6B]/30 font-extrabold shadow-xs' : 'bg-transparent text-gray-500 border-transparent dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" class="px-3 py-1.5 text-xs font-bold border rounded-lg transition">
+                    <button @click="activeDay = '{{ $day }}'" :class="activeDay === '{{ $day }}' ? 'bg-[#c0e6ff] text-[#002B6B] border-[#002B6B]/30 font-extrabold shadow-xs' : 'bg-transparent text-gray-500 border-transparent dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" :style="activeDay === '{{ $day }}' ? 'color: #002B6B !important' : ''" class="px-3 py-1.5 text-xs font-bold border rounded-lg transition">
                         {{ $day }}
                     </button>
                 @endforeach
@@ -138,7 +138,7 @@
                                 @foreach ($days as $day)
                                     @php $isToday = $day === $hariIni; @endphp
                                     <th @click="viewMode = 'daily'; activeDay = '{{ $day }}'" class="w-32 px-3 py-3 text-center border-l border-gray-100 dark:border-slate-800 {{ $isToday ? 'bg-[#c0e6ff]' : 'bg-gray-50/80 dark:bg-slate-800/40' }} cursor-pointer hover:bg-sky-100/60 dark:hover:bg-slate-800 transition duration-150">
-                                        <span class="text-xs font-bold {{ $isToday ? 'text-[#002B6B]' : 'text-gray-600 dark:text-slate-300' }}">{{ $day }}</span>
+                                        <span class="text-xs font-bold {{ $isToday ? 'text-[#002B6B]' : 'text-gray-600 dark:text-slate-300' }}" @if($isToday) style="color: #002B6B !important;" @endif>{{ $day }}</span>
                                     </th>
                                 @endforeach
                             </tr>

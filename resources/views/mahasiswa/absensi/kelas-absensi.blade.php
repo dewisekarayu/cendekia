@@ -419,7 +419,7 @@ html.dark .border-gray-200.peer-checked\:border-yellow-500 {
     border-color: #475569 !important;
 }
 html.dark .peer-checked\:bg-gradient-to-b.peer-checked\:from-green-50.peer-checked\:to-emerald-50 {
-    background-image: linear-gradient(to bottom, #064e3b, #022c22) !important;
+    background-image: linear-gradient(to bottom, #1e3a8a, #0f172a) !important;
 }
 html.dark .peer-checked\:bg-gradient-to-b.peer-checked\:from-blue-50.peer-checked\:to-indigo-50 {
     background-image: linear-gradient(to bottom, #1e1b4b, #0f172a) !important;

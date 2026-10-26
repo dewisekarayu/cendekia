@@ -3,6 +3,9 @@
     <table class="table table-hover align-middle mb-0">
         <thead>
             <tr>
+                <th style="width: 44px; text-align: center;">
+                    <span class="visually-hidden">Pilih</span>
+                </th>
                 <th style="width: 60px; text-align: center; padding-left: 1.5rem;">NO</th>
                 <th>FOTO & NAMA LENGKAP</th>
                 <th>NIDN</th>
@@ -15,6 +18,12 @@
         <tbody>
             @forelse ($dosen as $item)
                 <tr>
+                    <td class="text-center">
+                        <input type="checkbox" name="user_ids[]" value="{{ $item->id }}"
+                               class="form-check-input dosen-select"
+                               form="bulkDeleteDosenForm"
+                               aria-label="Pilih dosen {{ $item->name }}">
+                    </td>
                     <td style="padding-left: 1.5rem;" class="text-center font-monospace fw-bold" style="color:#64748b">
                         {{ ($dosen->currentPage() - 1) * $dosen->perPage() + $loop->iteration }}
                     </td>
@@ -70,7 +79,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center py-5">
+                    <td colspan="8" class="text-center py-5">
                         <div class="d-flex flex-column align-items-center justify-content-center text-muted">
                             <i class="bi bi-people fs-1 text-slate-300 dark:text-slate-600 mb-2"></i>
                             <p class="fw-semibold mb-0">Belum ada data dosen terdaftar.</p>

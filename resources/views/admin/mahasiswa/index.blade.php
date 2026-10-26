@@ -46,16 +46,6 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div class="alert alert-success d-flex align-items-center justify-content-between border-0 shadow-sm mb-4" style="border-radius: 0.85rem; background-color: #ecfdf5; color: #065f46;" role="alert">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-check-circle-fill fs-5 text-success"></i>
-                    <span class="fw-semibold">{{ session('success') }}</span>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         {{-- 4 Stat Cards --}}
         <div class="row g-3 mb-4">
             <div class="col-lg-3 col-sm-6">
@@ -130,6 +120,8 @@
                     </div>
                 </div>
             </form>
+
+            <x-admin.bulk-delete-confirmation type="mahasiswa" label="mahasiswa" />
 
             <div id="tableContainer">
                 @include('admin.mahasiswa.table')
