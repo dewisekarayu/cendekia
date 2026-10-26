@@ -126,10 +126,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->names('admin.dosen')
         ->parameters(['dosen' => 'dosen']);
 
+    Route::post('admin/dosen/bulk-delete', [AdminDosenController::class, 'bulkDestroy'])
+        ->name('admin.dosen.bulk-destroy');
+
     Route::resource('admin/mahasiswa', AdminMahasiswaController::class)
         ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
         ->names('admin.mahasiswa')
         ->parameters(['mahasiswa' => 'mahasiswa']);
+
+    Route::post('admin/mahasiswa/bulk-delete', [AdminMahasiswaController::class, 'bulkDestroy'])
+        ->name('admin.mahasiswa.bulk-destroy');
 
     Route::post('admin/pengumuman/bulk-delete', [AdminPengumumanController::class, 'bulkDestroy'])
         ->name('admin.pengumuman.bulk-destroy');

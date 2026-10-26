@@ -273,6 +273,44 @@ class MahasiswaController extends Controller
     }
 
     /**
+     * Hapus beberapa data mahasiswa yang dipilih.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'user_ids' => ['required', 'array', 'min:1'],
+            'user_ids.*' => ['required', 'integer', 'distinct', 'exists:users,id'],
+        ]);
+
+        $mahasiswa = User::role('mahasiswa')
+            ->whereIn('id', $validated['user_ids'])
+            ->get();
+
+        if ($mahasiswa->count() !== count($validated['user_ids'])) {
+            return back()->withErrors([
+                'user_ids' => 'Pilihan berisi akun yang bukan mahasiswa atau sudah tidak tersedia. Tidak ada data yang dihapus.',
+            ]);
+        }
+
+        DB::transaction(function () use ($mahasiswa) {
+            foreach ($mahasiswa as $item) {
+                if (!$item->delete()) {
+                    throw new \RuntimeException("Gagal menghapus data mahasiswa {$item->id}.");
+                }
+            }
+        });
+
+        foreach ($mahasiswa->pluck('foto')->filter() as $foto) {
+            if (!Storage::disk('public')->delete($foto)) {
+                Log::warning('Unable to remove student photo after bulk deletion.', ['path' => $foto]);
+            }
+        }
+
+        return redirect()->route('admin.mahasiswa.index')
+            ->with('success', "{$mahasiswa->count()} data mahasiswa berhasil dihapus.");
+    }
+
+    /**
      * 1. Unduh Template File CSV (Kompatibel dengan Microsoft Excel)
      */
     public function downloadTemplate()
