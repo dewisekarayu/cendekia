@@ -9,6 +9,7 @@ use App\Models\MataKuliah;
 use App\Models\AktivitasPengguna;
 use App\Models\AbsensiMahasiswa;
 use App\Models\PengumpulanTugas;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -54,7 +55,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Hitung aktivitas bulanan (Tahun Berjalan)
+        // Use the current year when it has data; otherwise show the latest year with activity.
         $bulanList = $isEn ? [
             1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
             5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
@@ -66,13 +67,30 @@ class DashboardController extends Controller
         ];
 
         $currentYear = now()->year;
+        $latestActivityDate = collect([
+            class_exists(AktivitasPengguna::class) ? AktivitasPengguna::max('terjadi_pada') : null,
+            class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::max('waktu_absensi') : null,
+            class_exists(PengumpulanTugas::class) ? PengumpulanTugas::max('waktu_kumpul') : null,
+        ])->filter()->max();
+        $latestActivityDate = $latestActivityDate ? Carbon::parse($latestActivityDate) : null;
+
+        $currentYearActivityCount =
+            AktivitasPengguna::whereYear('terjadi_pada', $currentYear)->count()
+            + AbsensiMahasiswa::whereYear('waktu_absensi', $currentYear)->count()
+            + PengumpulanTugas::whereYear('waktu_kumpul', $currentYear)->count();
+        $activityYear = $currentYearActivityCount > 0
+            ? $currentYear
+            : ($latestActivityDate?->year ?? $currentYear);
+        $activityPeriodLabel = $activityYear === $currentYear
+            ? ($isEn ? "Activity in {$activityYear}" : "Aktivitas tahun {$activityYear}")
+            : ($isEn ? "Latest activity year: {$activityYear}" : "Periode aktivitas terakhir: {$activityYear}");
         $aktivitasBulanan = [];
         $totalAktivitas = 0;
 
         foreach ($bulanList as $bulanNum => $bulanLabel) {
-            $c1 = class_exists(AktivitasPengguna::class) ? AktivitasPengguna::whereYear('terjadi_pada', $currentYear)->whereMonth('terjadi_pada', $bulanNum)->count() : 0;
-            $c2 = class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::whereYear('waktu_absensi', $currentYear)->whereMonth('waktu_absensi', $bulanNum)->count() : 0;
-            $c3 = class_exists(PengumpulanTugas::class) ? PengumpulanTugas::whereYear('waktu_kumpul', $currentYear)->whereMonth('waktu_kumpul', $bulanNum)->count() : 0;
+            $c1 = AktivitasPengguna::whereYear('terjadi_pada', $activityYear)->whereMonth('terjadi_pada', $bulanNum)->count();
+            $c2 = AbsensiMahasiswa::whereYear('waktu_absensi', $activityYear)->whereMonth('waktu_absensi', $bulanNum)->count();
+            $c3 = PengumpulanTugas::whereYear('waktu_kumpul', $activityYear)->whereMonth('waktu_kumpul', $bulanNum)->count();
 
             $totalMonthly = $c1 + $c2 + $c3;
             $totalAktivitas += $totalMonthly;
@@ -94,14 +112,24 @@ class DashboardController extends Controller
             'Sunday'    => 'Minggu',
         ];
 
+        $weekReferenceDate = now();
+        $currentWeekActivityCount =
+            AktivitasPengguna::whereBetween('terjadi_pada', [$weekReferenceDate->copy()->startOfDay()->subDays(6), $weekReferenceDate->copy()->endOfDay()])->count()
+            + AbsensiMahasiswa::whereBetween('waktu_absensi', [$weekReferenceDate->copy()->startOfDay()->subDays(6), $weekReferenceDate->copy()->endOfDay()])->count()
+            + PengumpulanTugas::whereBetween('waktu_kumpul', [$weekReferenceDate->copy()->startOfDay()->subDays(6), $weekReferenceDate->copy()->endOfDay()])->count();
+
+        if ($currentWeekActivityCount === 0 && $latestActivityDate) {
+            $weekReferenceDate = $latestActivityDate->copy();
+        }
+
         $aktivitasMingguan = [];
         for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i);
+            $date = $weekReferenceDate->copy()->subDays($i);
             $dayName = $isEn ? $date->format('l') : ($hariIndo[$date->format('l')] ?? $date->format('D'));
             
-            $c1 = class_exists(AktivitasPengguna::class) ? AktivitasPengguna::whereDate('terjadi_pada', $date->toDateString())->count() : 0;
-            $c2 = class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::whereDate('waktu_absensi', $date->toDateString())->count() : 0;
-            $c3 = class_exists(PengumpulanTugas::class) ? PengumpulanTugas::whereDate('waktu_kumpul', $date->toDateString())->count() : 0;
+            $c1 = AktivitasPengguna::whereDate('terjadi_pada', $date->toDateString())->count();
+            $c2 = AbsensiMahasiswa::whereDate('waktu_absensi', $date->toDateString())->count();
+            $c3 = PengumpulanTugas::whereDate('waktu_kumpul', $date->toDateString())->count();
 
             $dailyTotal = $c1 + $c2 + $c3;
 
@@ -131,6 +159,7 @@ class DashboardController extends Controller
             'totalCuti',
             'totalNonAktif',
             'totalAktivitas',
+            'activityPeriodLabel',
             'programStudiList',
             'mahasiswaPerProdi',
             'aktivitasBulanan',

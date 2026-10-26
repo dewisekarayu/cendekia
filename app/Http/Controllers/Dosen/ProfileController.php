@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Dosen;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Throwable;
 
 class ProfileController extends Controller
 {
@@ -56,19 +58,35 @@ class ProfileController extends Controller
         $user = $request->user();
         $fotoLama = $user->foto;
 
-        $path = $request->file('foto')->store('foto-profil', 'public');
-        if ($path === false) {
-            return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.']);
-        }
+        try {
+            $path = $request->file('foto')->store('foto-profil', 'public');
+            if (!$path || !Storage::disk('public')->exists($path)) {
+                throw new \RuntimeException('Uploaded profile photo was not written to public storage.');
+            }
 
-        if (!$user->update(['foto' => $path])) {
-            Storage::disk('public')->delete($path);
+            if (!$user->update(['foto' => $path])) {
+                Storage::disk('public')->delete($path);
+                throw new \RuntimeException('Profile photo path was not saved to the user record.');
+            }
+        } catch (Throwable $exception) {
+            Log::error('Unable to update lecturer profile photo.', [
+                'user_id' => $user->id,
+                'exception' => $exception,
+            ]);
 
-            return back()->withErrors(['foto' => 'Foto profil gagal diperbarui. Silakan coba lagi.']);
+            return redirect()->route('dosen.setting', ['tab' => 'profil'])
+                ->withErrors(['foto' => 'Foto gagal disimpan. Pastikan penyimpanan tersedia dan coba lagi.']);
         }
 
         if ($fotoLama) {
-            Storage::disk('public')->delete($fotoLama);
+            try {
+                Storage::disk('public')->delete($fotoLama);
+            } catch (Throwable $exception) {
+                Log::warning('Unable to remove previous lecturer profile photo.', [
+                    'user_id' => $user->id,
+                    'exception' => $exception,
+                ]);
+            }
         }
 
         return redirect()->route('dosen.setting', ['tab' => 'profil'])
