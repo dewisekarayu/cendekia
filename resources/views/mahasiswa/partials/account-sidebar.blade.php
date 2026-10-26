@@ -21,10 +21,8 @@
                     @csrf
                     @method('PUT')
                     <div class="relative mx-auto mb-3 h-24 w-24 group/avatar">
-                        <img id="avatarPreview"
-                             src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=002B6B&color=fff&bold=true' }}"
-                             alt="Foto Profil"
-                             class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700">
+                        <x-user-avatar id="avatarPreview" :name="$user->name" :photo-url="$user->foto_url" :size="96"
+                                       class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700" />
 
                         <label for="fotoInput"
                                class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer">
@@ -54,7 +52,7 @@
                 <h3 class="text-lg font-bold text-slate-800 dark:text-white">{{ $user->name }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                 <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#002B6B]/10 dark:bg-blue-950/40 px-3 py-1 text-xs font-semibold text-[#002B6B] dark:text-blue-300">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                    <span class="h-2 w-2 rounded-full bg-blue-500"></span>
                     {{ $roleLabel }}
                 </div>
             </div>
@@ -66,8 +64,8 @@
             <div class="space-y-3">
                 <div class="flex items-center justify-between text-xs">
                     <span class="text-gray-500 dark:text-slate-400">Status</span>
-                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-sky-50 dark:bg-sky-500/10 px-2.5 py-1 text-[11px] font-bold text-sky-700 dark:text-sky-400">
+                        <span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>
                         Aktif
                     </span>
                 </div>
@@ -105,7 +103,7 @@
     const fileInput = document.getElementById('fotoInput');
     const preview = document.getElementById('avatarPreview');
     const actions = document.getElementById('fotoActions');
-    const originalSrc = preview.src;
+    const originalSrc = preview.dataset.original;
 
     // Tampilkan preview + tombol Simpan/Batal begitu user pilih file baru
     window.previewFoto = function (event) {

@@ -73,6 +73,13 @@ class User extends Authenticatable
 
         $path = preg_replace('#^(?:/?storage/|public/)#i', '', $foto);
 
+        if (Str::startsWith($path, 'foto-profil/')) {
+            return route('profile-photos.show', [
+                'filename' => basename($path),
+                'v' => hash('sha256', $path),
+            ], false);
+        }
+
         return Storage::disk('public')->url(ltrim($path, '/'));
     }
 

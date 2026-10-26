@@ -20,7 +20,7 @@
         $eventsByDay[$day] = $items;
     }
     
-    $colors = ['border-blue-400 bg-blue-50/80', 'border-violet-400 bg-violet-50/80', 'border-emerald-400 bg-emerald-50/80', 'border-amber-400 bg-amber-50/80', 'border-rose-400 bg-rose-50/80'];
+    $colors = ['border-blue-500 bg-blue-50/90 text-blue-900', 'border-sky-500 bg-sky-50/90 text-sky-900', 'border-indigo-500 bg-indigo-50/90 text-indigo-900', 'border-cyan-500 bg-cyan-50/90 text-cyan-900', 'border-blue-700 bg-blue-100/90 text-blue-950'];
     $colorIdx = 0;
     $kelasColorMap = [];
     foreach ($kelasList as $k) {
@@ -37,18 +37,18 @@
 <div x-data="{ viewMode: 'weekly', activeDay: '{{ $hariIni }}' }" class="space-y-6">
 
     {{-- HEADER CARD --}}
-    <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] px-6 py-6 sm:px-8 shadow-lg shadow-blue-950/15 relative">
-        <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
-        <div class="pointer-events-none absolute right-20 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
+    <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 px-6 py-6 sm:px-8 shadow-sm relative">
+        <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/40"></div>
+        <div class="pointer-events-none absolute right-20 bottom-0 h-20 w-20 rounded-full bg-white/30"></div>
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-blue-200/80">Semester Aktif</p>
-                <h1 class="mt-1 text-xl font-extrabold text-white sm:text-2xl">Jadwal Kuliah</h1>
-                <p class="mt-1 text-sm text-blue-100/80">Seluruh jadwal kelas yang kamu ikuti minggu ini.</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-[#002B6B]/75 dark:text-blue-300">Semester Aktif</p>
+                <h1 class="mt-1 text-xl font-extrabold text-[#002B6B] dark:text-white sm:text-2xl">Jadwal Kuliah</h1>
+                <p class="mt-1 text-sm text-[#003b8e]/80 dark:text-blue-200/80">Seluruh jadwal kelas yang kamu ikuti minggu ini.</p>
             </div>
-            <div class="shrink-0 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-center">
-                <p class="text-xs text-blue-200/80 font-medium">Hari ini</p>
-                <p class="text-sm font-extrabold text-white">{{ now()->locale('id')->dayName }}, {{ now()->format('d M') }}</p>
+            <div class="shrink-0 rounded-xl border border-[#002B6B]/20 bg-white/80 dark:bg-white/10 px-4 py-2 text-center shadow-xs">
+                <p class="text-xs text-[#002B6B]/70 dark:text-blue-200/80 font-medium">Hari ini</p>
+                <p class="text-sm font-extrabold text-[#002B6B] dark:text-white">{{ now()->locale('id')->dayName }}, {{ now()->format('d M') }}</p>
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
             </div>
             <h3 class="font-bold text-gray-700 dark:text-slate-200">Belum Ada Jadwal</h3>
             <p class="mt-1 text-xs text-gray-400 dark:text-slate-500">Gabung ke kelas dulu untuk melihat jadwalmu.</p>
-            <a href="{{ route('mahasiswa.jelajahi-kelas') }}" class="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#002B6B] px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition">
+            <a href="{{ route('mahasiswa.jelajahi-kelas') }}" class="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#c0e6ff] px-5 py-2.5 text-sm font-bold text-[#002B6B] border border-[#002B6B]/20 hover:bg-[#a8daf8] transition">
                 Jelajahi Kelas
             </a>
         </div>
@@ -70,22 +70,22 @@
         <!-- VIEW SELECTOR & DAY SELECTOR TABS -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 rounded-2xl shadow-sm">
             <div class="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 p-1 rounded-xl w-fit">
-                <button @click="viewMode = 'weekly'" :class="viewMode === 'weekly' ? 'bg-[#002B6B] text-white dark:bg-blue-600' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" class="px-4 py-2 text-xs font-bold rounded-lg transition">
+                <button @click="viewMode = 'weekly'" :class="viewMode === 'weekly' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" class="px-4 py-2 text-xs font-bold rounded-lg transition">
                     Weekly View
                 </button>
-                <button @click="viewMode = 'daily'" :class="viewMode === 'daily' ? 'bg-[#002B6B] text-white dark:bg-blue-600' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" class="px-4 py-2 text-xs font-bold rounded-lg transition">
+                <button @click="viewMode = 'daily'" :class="viewMode === 'daily' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'" class="px-4 py-2 text-xs font-bold rounded-lg transition">
                     Daily View
                 </button>
                 @if(isset($reschedules) && $reschedules->isNotEmpty())
-                <button @click="viewMode = 'reschedule'" :class="viewMode === 'reschedule' ? 'bg-[#002B6B] text-white' : 'text-[#002B6B] hover:text-blue-800'" class="px-4 py-2 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
-                    Kelas Pengganti <span :class="viewMode === 'reschedule' ? 'bg-white/20' : 'bg-blue-100 text-[#002B6B]'" class="px-1.5 py-0.5 rounded text-[10px]">{{ $reschedules->count() }}</span>
+                <button @click="viewMode = 'reschedule'" :class="viewMode === 'reschedule' ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/25 font-bold shadow-xs' : 'text-[#002B6B] hover:text-blue-800'" class="px-4 py-2 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
+                    Kelas Pengganti <span :class="viewMode === 'reschedule' ? 'bg-[#002B6B]/15 text-[#002B6B]' : 'bg-blue-100 text-[#002B6B]'" class="px-1.5 py-0.5 rounded text-[10px]">{{ $reschedules->count() }}</span>
                 </button>
                 @endif
             </div>
             
             <div x-show="viewMode === 'daily'" x-transition class="flex flex-wrap gap-1">
                 @foreach ($days as $day)
-                    <button @click="activeDay = '{{ $day }}'" :class="activeDay === '{{ $day }}' ? 'bg-[#002B6B]/10 text-[#002B6B] border-[#002B6B] dark:bg-blue-600/10 dark:text-blue-400 dark:border-blue-500/50 font-extrabold' : 'bg-transparent text-gray-500 border-transparent dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" class="px-3 py-1.5 text-xs font-bold border rounded-lg transition">
+                    <button @click="activeDay = '{{ $day }}'" :class="activeDay === '{{ $day }}' ? 'bg-[#c0e6ff] text-[#002B6B] border-[#002B6B]/30 font-extrabold shadow-xs' : 'bg-transparent text-gray-500 border-transparent dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'" class="px-3 py-1.5 text-xs font-bold border rounded-lg transition">
                         {{ $day }}
                     </button>
                 @endforeach
@@ -100,13 +100,13 @@
                     @php $events = $eventsByDay[$day] ?? []; @endphp
                     @if (!empty($events))
                         <div class="overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
-                            <div @click="viewMode = 'daily'; activeDay = '{{ $day }}'" class="flex items-center justify-between px-4 py-2.5 {{ $day === $hariIni ? 'bg-[#002B6B]' : 'bg-gray-50 dark:bg-slate-800/40' }} border-b border-gray-100 dark:border-slate-800 cursor-pointer hover:opacity-90 transition">
-                                <span class="text-xs font-bold {{ $day === $hariIni ? 'text-white' : 'text-gray-700 dark:text-slate-200' }}">{{ $day }}</span>
+                            <div @click="viewMode = 'daily'; activeDay = '{{ $day }}'" class="flex items-center justify-between px-4 py-2.5 {{ $day === $hariIni ? 'bg-[#c0e6ff]' : 'bg-gray-50 dark:bg-slate-800/40' }} border-b border-gray-100 dark:border-slate-800 cursor-pointer hover:opacity-90 transition">
+                                <span class="text-xs font-bold {{ $day === $hariIni ? 'text-[#002B6B]' : 'text-gray-700 dark:text-slate-200' }}">{{ $day }}</span>
                                 <div class="flex items-center gap-1.5">
                                     @if ($day === $hariIni)
-                                        <span class="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">Hari Ini</span>
+                                        <span class="rounded-full bg-[#002B6B]/15 px-2 py-0.5 text-[10px] font-bold text-[#002B6B]">Hari Ini</span>
                                     @endif
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 {{ $day === $hariIni ? 'text-white/80' : 'text-gray-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 {{ $day === $hariIni ? 'text-[#002B6B]' : 'text-gray-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                                 </div>
                             </div>
                             <div class="divide-y divide-gray-50 dark:divide-slate-800/50">
@@ -137,8 +137,8 @@
                                 <th class="w-16 px-3 py-2 text-center text-[10px] font-semibold text-gray-400 dark:text-slate-500"></th>
                                 @foreach ($days as $day)
                                     @php $isToday = $day === $hariIni; @endphp
-                                    <th @click="viewMode = 'daily'; activeDay = '{{ $day }}'" class="w-32 px-3 py-3 text-center border-l border-gray-100 dark:border-slate-800 {{ $isToday ? 'bg-[#002B6B]' : 'bg-gray-50/80 dark:bg-slate-800/40' }} cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition duration-150">
-                                        <span class="text-xs font-bold {{ $isToday ? 'text-white' : 'text-gray-600 dark:text-slate-300' }}">{{ $day }}</span>
+                                    <th @click="viewMode = 'daily'; activeDay = '{{ $day }}'" class="w-32 px-3 py-3 text-center border-l border-gray-100 dark:border-slate-800 {{ $isToday ? 'bg-[#c0e6ff]' : 'bg-gray-50/80 dark:bg-slate-800/40' }} cursor-pointer hover:bg-sky-100/60 dark:hover:bg-slate-800 transition duration-150">
+                                        <span class="text-xs font-bold {{ $isToday ? 'text-[#002B6B]' : 'text-gray-600 dark:text-slate-300' }}">{{ $day }}</span>
                                     </th>
                                 @endforeach
                             </tr>
@@ -201,7 +201,7 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-[#002B6B] dark:bg-blue-500"></span>
                     <span>Jadwal Hari <span x-text="activeDay"></span></span>
                 </h2>
-                <span x-show="activeDay === '{{ $hariIni }}'" class="rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 px-3 py-1 text-xs font-bold">Hari Ini</span>
+                <span x-show="activeDay === '{{ $hariIni }}'" class="rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-400 px-3 py-1 text-xs font-bold">Hari Ini</span>
             </div>
 
             @foreach ($days as $day)

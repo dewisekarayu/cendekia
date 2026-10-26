@@ -10,11 +10,13 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Services\KelasEnrollmentService;
+use Throwable;
 
 class MahasiswaController extends Controller
 {
@@ -100,7 +102,7 @@ class MahasiswaController extends Controller
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', Rule::in(['aktif', 'cuti', 'non_aktif'])],
             'telepon'          => ['nullable', 'string', 'max:20'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ], [
             'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
@@ -175,7 +177,7 @@ class MahasiswaController extends Controller
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', Rule::in(['aktif', 'cuti', 'non_aktif'])],
             'telepon'          => ['nullable', 'string', 'max:20'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ], [
             'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
@@ -184,8 +186,17 @@ class MahasiswaController extends Controller
         $fotoLama = $mahasiswa->foto;
         $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('foto-profil', 'public');
-            if ($fotoPath === false) {
+            try {
+                $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+                if (!$fotoPath || !Storage::disk('public')->exists($fotoPath)) {
+                    throw new \RuntimeException('Uploaded student photo was not written to public storage.');
+                }
+            } catch (Throwable $exception) {
+                Log::error('Unable to store student photo from admin edit.', [
+                    'user_id' => $mahasiswa->id,
+                    'exception' => $exception,
+                ]);
+
                 return back()->withErrors(['foto' => 'Foto profil gagal disimpan. Silakan coba lagi.'])->withInput();
             }
         }
@@ -203,16 +214,41 @@ class MahasiswaController extends Controller
             $dataMahasiswa['foto'] = $fotoPath;
         }
 
-        if (!$mahasiswa->update($dataMahasiswa)) {
+        try {
+            if (!$mahasiswa->update($dataMahasiswa)) {
+                throw new \RuntimeException('Student record update returned false.');
+            }
+        } catch (Throwable $exception) {
             if ($fotoPath !== null) {
-                Storage::disk('public')->delete($fotoPath);
+                try {
+                    Storage::disk('public')->delete($fotoPath);
+                } catch (Throwable $cleanupException) {
+                    Log::warning('Unable to remove unused student photo after update failure.', [
+                        'user_id' => $mahasiswa->id,
+                        'path' => $fotoPath,
+                        'exception' => $cleanupException,
+                    ]);
+                }
             }
 
-            return back()->withErrors(['foto' => 'Data mahasiswa gagal diperbarui. Silakan coba lagi.'])->withInput();
+            Log::error('Unable to update student record from admin edit.', [
+                'user_id' => $mahasiswa->id,
+                'exception' => $exception,
+            ]);
+
+            return back()->withErrors(['foto' => 'Data mahasiswa atau foto gagal diperbarui. Silakan coba lagi.'])->withInput();
         }
 
         if ($fotoPath !== null && $fotoLama) {
-            Storage::disk('public')->delete($fotoLama);
+            try {
+                Storage::disk('public')->delete($fotoLama);
+            } catch (Throwable $exception) {
+                Log::warning('Unable to remove previous student photo after replacement.', [
+                    'user_id' => $mahasiswa->id,
+                    'path' => $fotoLama,
+                    'exception' => $exception,
+                ]);
+            }
         }
 
         return redirect()->route('admin.mahasiswa.index')

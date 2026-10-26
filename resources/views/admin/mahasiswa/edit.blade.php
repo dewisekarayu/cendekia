@@ -23,12 +23,10 @@
                     <div class="mb-4">
                         <label class="form-label">Foto Profil</label>
                         <div style="display: flex; align-items: center; gap: 1rem;">
-                            <img id="photoPreview"
-                                src="{{ $mahasiswaMember->foto ? asset('storage/' . $mahasiswaMember->foto) : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . urlencode($mahasiswaMember->name) }}"
-                                style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background-color: #f1f5f9;" alt="Preview">
+                            <x-user-avatar :name="$mahasiswaMember->name" :photo-url="$mahasiswaMember->foto_url" :size="80" id="photoPreview" />
                             <div>
                                 <input type="file" class="form-control" id="photoInput" name="foto" accept="image/*">
-                                <small class="text-muted d-block mt-2">Format: JPG, PNG (Max 2MB). Kosongkan jika tidak ingin mengganti foto.</small>
+                                <small class="text-muted d-block mt-2">Format gambar (Maksimal 10 MB). Kosongkan jika tidak ingin mengganti foto.</small>
                                 @error('foto') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                             </div>
                         </div>
@@ -117,6 +115,7 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     document.getElementById('photoPreview').src = event.target.result;
+                    document.getElementById('photoPreview').dataset.fallback = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }

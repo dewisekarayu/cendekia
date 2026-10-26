@@ -20,19 +20,7 @@
                     </td>
                     <td>
                         <div class="d-flex align-items-center gap-3">
-                            @php
-                                $photoUrl = $item->foto_url;
-                                $photoInitial = mb_strtoupper(mb_substr($item->name, 0, 1));
-                            @endphp
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-success flex-shrink-0"
-                                  style="width: 38px; height: 38px; background-color: #ecfdf5; border: 1.5px solid #a7f3d0; {{ $photoUrl ? 'display: none !important;' : '' }}">
-                                {{ $photoInitial }}
-                            </span>
-                            @if($photoUrl)
-                                <img src="{{ $photoUrl }}"
-                                     onerror="this.style.display='none'; this.previousElementSibling.style.removeProperty('display');"
-                                     style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background-color: #f1f5f9; border: 1.5px solid #e2e8f0; flex-shrink: 0;" alt="{{ $item->name }}">
-                            @endif
+                            <x-user-avatar :name="$item->name" :photo-url="$item->foto_url" :size="38" />
                             <div>
                                 <div class="fw-bold dosen-name" style="font-size: 0.9rem;">{{ $item->name }}</div>
                                 <small class="dosen-email" style="font-size: 0.775rem;">{{ $item->email }}</small>

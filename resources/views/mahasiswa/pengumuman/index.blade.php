@@ -23,7 +23,7 @@
                             <span class="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 border border-amber-200/40 dark:border-amber-900/30 text-amber-600 dark:text-amber-300 px-2.5 py-0.5 rounded-md">Penting / Global</span>
                         @endif
                         @if($p->kelasPerkuliahan)
-                            <span class="text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/30 text-[#002B6B] dark:text-blue-300 px-2.5 py-0.5 rounded-md">
+                            <span class="text-[10px] font-bold bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/30 text-[#002B6B] dark:text-blue-300 px-2.5 py-0.5 rounded-md">
                                 Kelas: {{ $p->kelasPerkuliahan->kode_kelas }}
                             </span>
                         @endif
