@@ -20,7 +20,7 @@
         $eventsByDay[$day] = $items;
     }
     
-    $colors = ['border-blue-400 bg-blue-50/80', 'border-violet-400 bg-violet-50/80', 'border-emerald-400 bg-emerald-50/80', 'border-amber-400 bg-amber-50/80', 'border-rose-400 bg-rose-50/80'];
+    $colors = ['border-blue-500 bg-blue-50/90 text-blue-900', 'border-sky-500 bg-sky-50/90 text-sky-900', 'border-indigo-500 bg-indigo-50/90 text-indigo-900', 'border-cyan-500 bg-cyan-50/90 text-cyan-900', 'border-blue-700 bg-blue-100/90 text-blue-950'];
     $colorIdx = 0;
     $kelasColorMap = [];
     foreach ($kelasList as $k) {
@@ -42,9 +42,9 @@
         <div class="pointer-events-none absolute right-20 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-blue-200/80">Semester Aktif</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-[#c0e6ff]">Semester Aktif</p>
                 <h1 class="mt-1 text-xl font-extrabold text-white sm:text-2xl">Jadwal Kuliah</h1>
-                <p class="mt-1 text-sm text-blue-100/80">Seluruh jadwal kelas yang kamu ikuti minggu ini.</p>
+                <p class="mt-1 text-sm text-blue-100/90">Seluruh jadwal kelas yang kamu ikuti minggu ini.</p>
             </div>
             <div class="shrink-0 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-center">
                 <p class="text-xs text-blue-200/80 font-medium">Hari ini</p>
@@ -201,7 +201,7 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-[#002B6B] dark:bg-blue-500"></span>
                     <span>Jadwal Hari <span x-text="activeDay"></span></span>
                 </h2>
-                <span x-show="activeDay === '{{ $hariIni }}'" class="rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400 px-3 py-1 text-xs font-bold">Hari Ini</span>
+                <span x-show="activeDay === '{{ $hariIni }}'" class="rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-400 px-3 py-1 text-xs font-bold">Hari Ini</span>
             </div>
 
             @foreach ($days as $day)

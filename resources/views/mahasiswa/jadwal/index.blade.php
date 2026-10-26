@@ -39,8 +39,8 @@
             
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
                 <div class="flex items-center">
-                    <div class="bg-green-100 p-2 rounded-lg mr-3">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-sky-100 p-2 rounded-lg mr-3">
+                        <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
@@ -53,8 +53,8 @@
             
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
                 <div class="flex items-center">
-                    <div class="bg-purple-100 p-2 rounded-lg mr-3">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>

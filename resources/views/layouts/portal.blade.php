@@ -51,8 +51,35 @@
 
         /* Dark Mode overrides for Student/Dosen portal */
         html.dark body {
-            background-color: #1b1115 !important;
+            background-color: #071324 !important;
             color: #cbd5e1 !important;
+        }
+        html.dark body.role-dosen {
+            background-color: #1b1115 !important;
+        }
+        html.dark body.role-admin {
+            background-color: #012428 !important;
+        }
+        html.dark body.role-mahasiswa {
+            background-color: #071324 !important;
+        }
+
+        /* Mahasiswa Sidebar in Dark Mode */
+        html.dark aside.mahasiswa-sidebar {
+            background-color: #0a192f !important;
+            border-color: rgba(192, 230, 255, 0.12) !important;
+        }
+        html.dark aside.mahasiswa-sidebar .sidebar-link {
+            color: #93c5fd !important;
+        }
+        html.dark aside.mahasiswa-sidebar .sidebar-link:hover {
+            background-color: rgba(192, 230, 255, 0.1) !important;
+            color: #ffffff !important;
+        }
+        html.dark aside.mahasiswa-sidebar .sidebar-link-active {
+            background-color: #002B6B !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(0, 43, 107, 0.4) !important;
         }
 
         /* Ensure cards and text are white/slate-200 in dark mode */
@@ -89,12 +116,14 @@
         }
 
         /* Stats numbers and dynamic background boxes in dark mode */
-        html.dark .text-\[\#012428\],
+        html.dark .text-\[\#012428\] {
+            color: #5eead4 !important;
+        }
+
         html.dark .text-\[\#002B6B\],
-        html.dark .text-indigo-900,
         html.dark .text-blue-900,
-        html.dark .text-violet-900 {
-            color: #6ee7b7 !important;
+        html.dark .text-indigo-900 {
+            color: #93c5fd !important;
         }
 
         html.dark .text-\[\#720c16\] {
@@ -297,13 +326,14 @@
     </style>
 </head>
 
-<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200 {{ request()->routeIs('dosen.kalender-akademik.*') ? 'calendar-dark-background' : '' }}">
+@php
+    $user = auth()->user();
+    $currentLocale = session('locale', $user->language ?? 'id');
+    $hasDosen = $user && $user->hasRole('dosen');
+    $hasAdmin = $user && $user->hasRole('admin');
+@endphp
+<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200 {{ $hasDosen ? 'role-dosen' : ($hasAdmin ? 'role-admin' : 'role-mahasiswa') }} {{ request()->routeIs('dosen.kalender-akademik.*') ? 'calendar-dark-background' : '' }}">
     @php
-        $user = auth()->user();
-        $currentLocale = session('locale', $user->language ?? 'id');
-        $hasDosen = $user && $user->hasRole('dosen');
-        $hasAdmin = $user && $user->hasRole('admin');
-
         if ($hasDosen) {
             $sidebarBg = '#720c16';
             $sidebarText = 'rgba(255,255,255,0.75)';
@@ -323,13 +353,14 @@
             $activeBg = 'rgba(255,255,255,0.15)';
             $activeText = '#FFFFFF';
         } else {
-            $sidebarBg = '#f1f8f4';
-            $sidebarText = '#365b4b';
-            $sidebarTitle = '#064e3b';
-            $sidebarMuted = '#6b8b7a';
-            $sidebarBorder = '#dcebe2';
-            $sidebarHover = '#e1f2e8';
-            $activeBg = '#047857';
+            // Mahasiswa - Blue Palette Dominan (#c0e6ff + #002B6B)
+            $sidebarBg = '#c0e6ff';
+            $sidebarText = '#002B6B';
+            $sidebarTitle = '#002B6B';
+            $sidebarMuted = '#1d4ed8';
+            $sidebarBorder = 'rgba(0, 43, 107, 0.15)';
+            $sidebarHover = 'rgba(255, 255, 255, 0.65)';
+            $activeBg = '#002B6B';
             $activeText = '#FFFFFF';
         }
     @endphp
@@ -345,7 +376,7 @@
             aria-hidden="true"></div>
 
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64 {{ $hasDosen ? 'dosen-sidebar' : '' }}"
+            class="fixed inset-y-0 left-0 z-50 flex h-screen w-72 max-w-[86vw] flex-col overflow-y-auto transition-transform duration-200 lg:w-64 {{ $hasDosen ? 'dosen-sidebar' : ($hasAdmin ? 'admin-sidebar' : 'mahasiswa-sidebar') }}"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             style="background-color: {{ $sidebarBg }}; border-right: 1px solid {{ $sidebarBorder }};">
 
@@ -554,7 +585,7 @@
             </nav>
         </aside>
 
-        <div class="flex-1 min-w-0 w-full dark:bg-[#1b1115] transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
+        <div class="flex-1 min-w-0 w-full {{ $hasDosen ? 'dark:bg-[#1b1115]' : ($hasAdmin ? 'dark:bg-[#012428]' : 'dark:bg-[#071324]') }} transition-all duration-200" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
 
             <header class="sticky top-0 z-30 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-700/80 px-3 py-2.5 sm:px-6 sm:py-3.5 flex items-center justify-between gap-3 transition-colors duration-200">
 
@@ -762,7 +793,7 @@
 
                     {{-- User Profile Pill --}}
                     <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 rounded-xl p-1 sm:pr-3 shrink-0">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg {{ $hasDosen ? 'bg-[#720c16]' : 'bg-[#047857]' }} flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg {{ $hasDosen ? 'bg-[#720c16]' : ($hasAdmin ? 'bg-[#012428]' : 'bg-[#002B6B]') }} flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
                             @if (auth()->user()->foto)
                                 <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
                             @else
@@ -798,6 +829,14 @@
             text-decoration: none !important;
         }
 
+        /* Base aside link hover using inline var */
+        aside .sidebar-link:hover {
+            background-color: var(--hover-bg, rgba(255,255,255,0.08)) !important;
+        }
+        aside.mahasiswa-sidebar .sidebar-link-active {
+            box-shadow: 0 2px 8px rgba(0, 43, 107, 0.25) !important;
+        }
+
         html.dark aside {
             background-color: #0f172a !important;
             border-right: 1px solid #1e293b !important;
@@ -806,12 +845,23 @@
             background-color: #350a12 !important;
             border-right-color: #57121d !important;
         }
+        html.dark aside.mahasiswa-sidebar {
+            background-color: #0a192f !important;
+            border-right-color: #1e3a5f !important;
+        }
         html.dark aside .sidebar-link {
             color: #94a3b8 !important;
         }
         html.dark aside.dosen-sidebar .sidebar-link:hover {
             background-color: #4a1019 !important;
             color: #fff1f2 !important;
+        }
+        html.dark aside.mahasiswa-sidebar .sidebar-link {
+            color: #93c5fd !important;
+        }
+        html.dark aside.mahasiswa-sidebar .sidebar-link:hover {
+            background-color: rgba(192, 230, 255, 0.12) !important;
+            color: #c0e6ff !important;
         }
         html.dark aside .sidebar-link:hover {
             background-color: #1e293b !important;
@@ -822,10 +872,16 @@
             color: #ffe4e6 !important;
             border-left-color: #f87171 !important;
         }
+        html.dark aside.mahasiswa-sidebar .sidebar-link-active {
+            background-color: #1d4ed8 !important;
+            color: #ffffff !important;
+            border-left: 3px solid #c0e6ff !important;
+            padding-left: calc(0.75rem - 3px) !important;
+        }
         html.dark aside .sidebar-link-active {
-            background-color: #45070d !important;
-            color: #fca5a5 !important;
-            border-left: 3px solid #a92a35 !important;
+            background-color: #1d4ed8 !important;
+            color: #ffffff !important;
+            border-left: 3px solid #60a5fa !important;
             padding-left: calc(0.75rem - 3px) !important;
         }
         html.dark aside .pt-4.mt-4 {

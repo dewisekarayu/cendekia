@@ -1182,7 +1182,7 @@
     @stack('styles')
 </head>
 
-<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
+<body class="font-sans antialiased bg-gray-50 dark:bg-slate-900 transition-colors duration-200 role-admin">
     @php
         $sidebarBg = '#012428';
         $sidebarText = 'rgba(255,255,255,0.85)';

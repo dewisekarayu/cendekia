@@ -4,12 +4,12 @@
 
 <x-flash-message />
 
-<div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-500 px-6 py-6 sm:px-8 shadow-lg shadow-emerald-900/15 relative">
+<div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] via-[#0052cc] to-[#38bdf8] px-6 py-6 sm:px-8 shadow-lg shadow-blue-950/20 relative">
     <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10"></div>
     <div class="relative z-10">
-        <p class="text-xs font-bold uppercase tracking-widest text-emerald-100/80">Bergabung Kelas Baru</p>
+        <p class="text-xs font-bold uppercase tracking-widest text-[#c0e6ff]">Bergabung Kelas Baru</p>
         <h1 class="mt-1 text-xl font-extrabold text-white sm:text-2xl">Jelajahi Kelas</h1>
-        <p class="mt-1 text-sm text-emerald-100/80">
+        <p class="mt-1 text-sm text-blue-100/90">
             Kelas aktif untuk
             <span class="font-semibold text-white">{{ auth()->user()->programStudi?->nama_prodi ?? '-' }}</span>
             semester ini.
@@ -33,12 +33,12 @@
 @else
     @php
         $colors = [
-            ['top' => 'bg-blue-500',   'badge' => 'bg-blue-50 text-blue-700',   'btn' => 'bg-blue-600 hover:bg-blue-700'],
-            ['top' => 'bg-emerald-500','badge' => 'bg-emerald-50 text-emerald-700','btn' => 'bg-emerald-600 hover:bg-emerald-700'],
-            ['top' => 'bg-violet-500', 'badge' => 'bg-violet-50 text-violet-700', 'btn' => 'bg-violet-600 hover:bg-violet-700'],
-            ['top' => 'bg-amber-500',  'badge' => 'bg-amber-50 text-amber-700',  'btn' => 'bg-amber-600 hover:bg-amber-700'],
-            ['top' => 'bg-rose-500',   'badge' => 'bg-rose-50 text-rose-700',    'btn' => 'bg-rose-600 hover:bg-rose-700'],
-            ['top' => 'bg-cyan-500',   'badge' => 'bg-cyan-50 text-cyan-700',    'btn' => 'bg-cyan-600 hover:bg-cyan-700'],
+            ['top' => 'bg-[#002B6B]', 'badge' => 'bg-blue-50 text-[#002B6B] border border-blue-200/60', 'btn' => 'bg-[#002B6B] hover:bg-blue-900'],
+            ['top' => 'bg-blue-600',   'badge' => 'bg-sky-50 text-blue-700 border border-sky-200/60',     'btn' => 'bg-blue-600 hover:bg-blue-700'],
+            ['top' => 'bg-sky-500',    'badge' => 'bg-sky-100 text-sky-800 border border-sky-200/80',     'btn' => 'bg-sky-600 hover:bg-sky-700'],
+            ['top' => 'bg-indigo-600', 'badge' => 'bg-indigo-50 text-indigo-700 border border-indigo-200/60', 'btn' => 'bg-indigo-600 hover:bg-indigo-700'],
+            ['top' => 'bg-cyan-600',   'badge' => 'bg-cyan-50 text-cyan-800 border border-cyan-200/60',   'btn' => 'bg-cyan-600 hover:bg-cyan-700'],
+            ['top' => 'bg-blue-700',   'badge' => 'bg-blue-100 text-blue-800 border border-blue-200/80',   'btn' => 'bg-blue-700 hover:bg-blue-800'],
         ];
     @endphp
 
