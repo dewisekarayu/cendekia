@@ -321,7 +321,7 @@
                                     <div class="flex items-center gap-2">
                                         <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         <template x-if="event.is_all_day">
-                                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>
+                                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400">Sepanjang Hari</span>
                                         </template>
                                         <template x-if="!event.is_all_day">
                                             <span class="font-semibold" x-text="event.waktu_formatted || 'Waktu belum ditentukan'"></span>
@@ -393,7 +393,7 @@
                                 <span class="px-2.5 py-1 rounded-lg text-xs font-bold"
                                       :style="'background-color: ' + (selectedEvent.warna || '#002B6B') + '15; color: ' + (selectedEvent.warna || '#002B6B')"
                                       x-text="selectedEvent.jenis_kegiatan_label || 'Kegiatan'"></span>
-                                <span x-show="selectedEvent.is_all_day" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">Sepanjang Hari</span>
+                                <span x-show="selectedEvent.is_all_day" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400">Sepanjang Hari</span>
                             </div>
 
                             <div class="bg-slate-50 dark:bg-slate-900/50 border border-gray-100 dark:border-none rounded-2xl p-4 text-xs space-y-1">

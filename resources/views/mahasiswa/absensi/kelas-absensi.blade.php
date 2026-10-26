@@ -6,7 +6,7 @@
 <div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto p-3 sm:p-4 overflow-x-hidden">
 
     {{-- ===== HEADER BANNER ===== --}}
-    <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] dark:from-indigo-950 dark:to-purple-900 p-4 sm:p-7 shadow-lg shadow-blue-950/15 relative transition-all">
+    <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] to-[#0044a8] dark:from-[#071324] dark:to-[#002B6B] p-4 sm:p-7 shadow-lg shadow-blue-950/15 relative transition-all">
         <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/5"></div>
         <div class="pointer-events-none absolute right-16 bottom-0 h-20 w-20 rounded-full bg-white/5"></div>
         <div class="relative z-10 flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -36,10 +36,10 @@
     <div class="grid grid-cols-2 gap-2.5 sm:gap-3 sm:grid-cols-4">
         @php
             $infoCards = [
-                ['icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'label' => 'Dosen', 'value' => $kelas->dosen?->name ?? '-', 'color' => 'text-blue-600 bg-blue-50 dark:text-purple-400 dark:bg-purple-950/40'],
-                ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => $kelas->hari, 'value' => substr($kelas->jam_mulai,0,5).' – '.substr($kelas->jam_selesai,0,5), 'color' => 'text-sky-600 bg-sky-50 dark:text-amber-400 dark:bg-amber-950/40'],
-                ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Ruangan', 'value' => $kelas->ruangan ?? '-', 'color' => 'text-indigo-600 bg-indigo-50 dark:text-rose-400 dark:bg-rose-950/40'],
-                ['icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'label' => 'SKS', 'value' => ($kelas->mataKuliah?->sks ?? 0).' SKS', 'color' => 'text-blue-700 bg-blue-50 dark:text-violet-400 dark:bg-purple-950/35'],
+                ['icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'label' => 'Dosen', 'value' => $kelas->dosen?->name ?? '-', 'color' => 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/40'],
+                ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => $kelas->hari, 'value' => substr($kelas->jam_mulai,0,5).' – '.substr($kelas->jam_selesai,0,5), 'color' => 'text-sky-600 bg-sky-50 dark:text-sky-400 dark:bg-sky-950/40'],
+                ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Ruangan', 'value' => $kelas->ruangan ?? '-', 'color' => 'text-indigo-600 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-950/40'],
+                ['icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'label' => 'SKS', 'value' => ($kelas->mataKuliah?->sks ?? 0).' SKS', 'color' => 'text-blue-700 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/35'],
             ];
         @endphp
         @foreach ($infoCards as $card)
@@ -70,8 +70,8 @@
             <a href="{{ $tabLinks[$key] }}"
                class="shrink-0 whitespace-nowrap rounded-full px-4 sm:px-5 py-2 text-xs font-bold transition-all duration-200
                    {{ $key === 'absensi'
-                       ? 'bg-[#002B6B] dark:bg-purple-650 text-white shadow-sm shadow-blue-900/20 shadow-purple-900/20'
-                       : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-[#002B6B] dark:hover:border-purple-500 hover:text-[#002B6B] dark:hover:text-purple-400' }}">
+                       ? 'bg-[#002B6B] dark:bg-blue-600 text-white shadow-sm shadow-blue-900/20'
+                       : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-[#002B6B] dark:hover:border-blue-500 hover:text-[#002B6B] dark:hover:text-blue-400' }}">
                 {{ $label }}
             </a>
         @endforeach
@@ -329,10 +329,10 @@
                     <div class="min-w-0">
                         <h4 class="font-bold text-blue-900 text-sm mb-2">Tips Presensi</h4>
                         <ul class="text-xs text-blue-800/90 space-y-1.5">
-                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Presensi hanya saat sesi terbuka</li>
-                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Satu kali presensi per sesi</li>
-                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Cantumkan alasan jika izin/sakit</li>
-                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-emerald-600" aria-hidden="true"></i> Cek riwayat secara berkala</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-blue-600" aria-hidden="true"></i> Presensi hanya saat sesi terbuka</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-blue-600" aria-hidden="true"></i> Satu kali presensi per sesi</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-blue-600" aria-hidden="true"></i> Cantumkan alasan jika izin/sakit</li>
+                            <li class="flex items-start gap-1.5"><i class="bi bi-check-circle-fill text-blue-600" aria-hidden="true"></i> Cek riwayat secara berkala</li>
                         </ul>
                     </div>
                 </div>
@@ -362,7 +362,7 @@ html.dark .bg-white.rounded-2xl.shadow-sm {
 
 /* --- Gradient Header (Sesi Presensi Aktif) --- */
 html.dark .bg-gradient-to-r.from-emerald-500 {
-    background-image: linear-gradient(to right, #047857, #059669, #0d9488) !important;
+    background-image: linear-gradient(to right, #002B6B, #0052cc, #0284c7) !important;
 }
 
 /* --- Session Info Cards (Pertemuan, Tanggal, Mulai, Selesai) --- */
@@ -511,8 +511,8 @@ html.dark .bg-gradient-to-r.from-slate-50.to-slate-100.hover\:from-slate-100.hov
 
 /* --- Status Badges (Hadir, Izin, Sakit, Alpha) --- */
 html.dark .bg-green-100.text-green-800 {
-    background-color: rgba(6, 78, 59, 0.5) !important;
-    color: #6ee7b7 !important;
+    background-color: rgba(0, 43, 107, 0.5) !important;
+    color: #93c5fd !important;
 }
 html.dark .bg-blue-100.text-blue-800 {
     background-color: rgba(30, 27, 75, 0.5) !important;
@@ -547,8 +547,8 @@ html.dark .text-indigo-700 {
 
 /* --- Ringkasan Sidebar --- */
 html.dark .bg-gradient-to-r.from-emerald-50.to-teal-50 {
-    background-image: linear-gradient(to right, #022c22, #0f172a) !important;
-    border-color: #047857 !important;
+    background-image: linear-gradient(to right, #002B6B, #071324) !important;
+    border-color: #1d4ed8 !important;
 }
 html.dark .bg-gradient-to-r.from-emerald-50.to-teal-50 .text-gray-900 {
     color: #f1f5f9 !important;
@@ -556,14 +556,14 @@ html.dark .bg-gradient-to-r.from-emerald-50.to-teal-50 .text-gray-900 {
 
 /* --- Alert Success/Warning Messages --- */
 html.dark .bg-gradient-to-r.from-green-50.to-emerald-50.border {
-    background-image: linear-gradient(to right, #064e3b, #022c22) !important;
-    border-color: #047857 !important;
+    background-image: linear-gradient(to right, #002B6B, #071324) !important;
+    border-color: #1d4ed8 !important;
 }
 html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 .text-green-900 {
-    color: #6ee7b7 !important;
+    color: #93c5fd !important;
 }
 html.dark .bg-gradient-to-r.from-green-50.to-emerald-50 .text-green-700 {
-    color: #6ee7b7 !important;
+    color: #93c5fd !important;
 }
 
 html.dark .bg-gradient-to-r.from-yellow-50.to-amber-50.border {

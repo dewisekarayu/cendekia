@@ -83,10 +83,10 @@
             @else
                 @php
                     $cardColors = [
-                        ['top' => 'bg-blue-600', 'icon_bg' => 'bg-blue-50 dark:bg-blue-950/60', 'icon_text' => 'text-blue-600 dark:text-blue-300', 'bar' => 'bg-blue-600 dark:bg-blue-500'],
+                        ['top' => 'bg-[#002B6B]', 'icon_bg' => 'bg-blue-50 dark:bg-blue-950/60', 'icon_text' => 'text-[#002B6B] dark:text-blue-300', 'bar' => 'bg-[#002B6B] dark:bg-blue-500'],
+                        ['top' => 'bg-blue-600',   'icon_bg' => 'bg-blue-50 dark:bg-blue-950/60', 'icon_text' => 'text-blue-600 dark:text-blue-300', 'bar' => 'bg-blue-600 dark:bg-blue-500'],
+                        ['top' => 'bg-sky-500',    'icon_bg' => 'bg-sky-50 dark:bg-sky-950/60',   'icon_text' => 'text-sky-600 dark:text-sky-300',   'bar' => 'bg-sky-500 dark:bg-sky-500'],
                         ['top' => 'bg-indigo-600', 'icon_bg' => 'bg-indigo-50 dark:bg-indigo-950/60', 'icon_text' => 'text-indigo-600 dark:text-indigo-300', 'bar' => 'bg-indigo-600 dark:bg-indigo-500'],
-                        ['top' => 'bg-emerald-600', 'icon_bg' => 'bg-emerald-50 dark:bg-emerald-950/60', 'icon_text' => 'text-emerald-600 dark:text-emerald-300', 'bar' => 'bg-emerald-600 dark:bg-emerald-500'],
-                        ['top' => 'bg-amber-500', 'icon_bg' => 'bg-amber-50 dark:bg-amber-950/60', 'icon_text' => 'text-amber-600 dark:text-amber-300', 'bar' => 'bg-amber-500 dark:bg-amber-500'],
                     ];
                 @endphp
                 <div class="grid grid-cols-1 gap-3.5 sm:gap-4 sm:grid-cols-2">
@@ -99,8 +99,8 @@
                                     <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $cc['icon_bg'] }} {{ $cc['icon_text'] }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                                     </div>
-                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
-                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-950/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-blue-500 inline-block"></span>
                                         Aktif
                                     </span>
                                 </div>
@@ -184,7 +184,7 @@
 
             @if ($deadlines->isEmpty())
                 <div class="py-7 text-center">
-                    <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 dark:text-emerald-300">
+                    <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </div>
                     <p class="text-sm font-bold text-slate-700 dark:text-slate-200">Semua Beres!</p>

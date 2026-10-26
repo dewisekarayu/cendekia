@@ -49,12 +49,12 @@
     @else
         @php
             $colors = [
-                ['bg' => 'bg-blue-500',   'light' => 'bg-blue-50',   'text' => 'text-blue-700',   'bar' => 'bg-blue-500'],
-                ['bg' => 'bg-violet-500', 'light' => 'bg-violet-50', 'text' => 'text-violet-700', 'bar' => 'bg-violet-500'],
-                ['bg' => 'bg-emerald-500','light' => 'bg-emerald-50','text' => 'text-emerald-700','bar' => 'bg-emerald-500'],
-                ['bg' => 'bg-amber-500',  'light' => 'bg-amber-50',  'text' => 'text-amber-700',  'bar' => 'bg-amber-500'],
-                ['bg' => 'bg-rose-500',   'light' => 'bg-rose-50',   'text' => 'text-rose-700',   'bar' => 'bg-rose-500'],
-                ['bg' => 'bg-cyan-500',   'light' => 'bg-cyan-50',   'text' => 'text-cyan-700',   'bar' => 'bg-cyan-500'],
+                ['bg' => 'bg-[#002B6B]', 'light' => 'bg-blue-50',   'text' => 'text-[#002B6B]', 'bar' => 'bg-[#002B6B]'],
+                ['bg' => 'bg-blue-600',   'light' => 'bg-blue-50',   'text' => 'text-blue-700',   'bar' => 'bg-blue-600'],
+                ['bg' => 'bg-sky-500',    'light' => 'bg-sky-50',    'text' => 'text-sky-700',    'bar' => 'bg-sky-500'],
+                ['bg' => 'bg-indigo-600', 'light' => 'bg-indigo-50', 'text' => 'text-indigo-700', 'bar' => 'bg-indigo-600'],
+                ['bg' => 'bg-cyan-600',   'light' => 'bg-cyan-50',   'text' => 'text-cyan-700',   'bar' => 'bg-cyan-600'],
+                ['bg' => 'bg-blue-700',   'light' => 'bg-sky-100',   'text' => 'text-blue-800',   'bar' => 'bg-blue-700'],
             ];
         @endphp
 
@@ -74,8 +74,8 @@
                             <span class="inline-block max-w-[75%] truncate rounded-md {{ $c['light'] }} {{ $c['text'] }} px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
                                 {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Umum' }}
                             </span>
-                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-600">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block"></span>
                                 Aktif
                             </span>
                         </div>

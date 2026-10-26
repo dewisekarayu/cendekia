@@ -3,12 +3,12 @@
 @section('title', 'Self-Analytics & EWS')
 
 @section('content')
-<div class="mb-6 rounded-2xl bg-gradient-to-r from-blue-700 to-indigo-800 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+<div class="mb-6 rounded-2xl bg-gradient-to-r from-[#002B6B] via-[#0044a8] to-blue-600 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-blue-200/70">Early Warning System Mahasiswa</p>
+            <p class="text-xs font-bold uppercase tracking-wide text-[#c0e6ff]">Early Warning System Mahasiswa</p>
             <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Self-Analytics EWS</h1>
-            <p class="mt-2 text-sm text-blue-100/70">Pantau performa akademik Anda secara mandiri agar terhindar dari risiko gagal mata kuliah.</p>
+            <p class="mt-2 text-sm text-blue-100/90">Pantau performa akademik Anda secara mandiri agar terhindar dari risiko gagal mata kuliah.</p>
         </div>
     </div>
     <div class="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-white/5 pointer-events-none"></div>
@@ -18,7 +18,7 @@
 {{-- Global Status Cards --}}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/80 p-5 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full flex items-center justify-center {{ $globalAttendance < 75 ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600' }}">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center {{ $globalAttendance < 75 ? 'bg-rose-100 text-rose-600' : 'bg-blue-100 text-blue-600' }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -88,7 +88,7 @@
                 <div class="flex items-center gap-6 md:w-auto w-full md:border-l border-gray-200 md:pl-6">
                     <div class="text-center">
                         <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Kehadiran</p>
-                        <p class="font-black text-lg {{ $data->attendance_rate < 75 ? 'text-rose-600' : 'text-emerald-600' }}">{{ $data->attendance_rate }}%</p>
+                        <p class="font-black text-lg {{ $data->attendance_rate < 75 ? 'text-rose-600' : 'text-blue-600' }}">{{ $data->attendance_rate }}%</p>
                     </div>
                     <div class="text-center">
                         <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Rata Nilai</p>
