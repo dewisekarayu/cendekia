@@ -663,3 +663,82 @@ body.role-mahasiswa :is([class~="focus:ring-[#002B6B]"]):focus {
 body.role-mahasiswa :is([class~="focus:border-[#002B6B]"]):focus {
     border-color: #002B6B !important;
 }
+
+/* Keep green success accents within the student portal's blue palette. */
+body.role-mahasiswa :is([class*="bg-green-50"], [class*="bg-green-100"], [class*="bg-green-200"], [class*="bg-green-300"], [class*="bg-emerald-50"], [class*="bg-emerald-100"], [class*="bg-emerald-200"], [class*="bg-emerald-300"], [class*="bg-teal-50"], [class*="bg-teal-100"], [class*="bg-teal-200"], [class*="bg-teal-300"]) {
+    background-color: #eff6ff !important;
+}
+body.role-mahasiswa :is([class*="bg-green-400"], [class*="bg-green-500"], [class*="bg-green-600"], [class*="bg-emerald-400"], [class*="bg-emerald-500"], [class*="bg-emerald-600"], [class*="bg-teal-400"], [class*="bg-teal-500"], [class*="bg-teal-600"]) {
+    background-color: #2563eb !important;
+}
+body.role-mahasiswa :is([class*="bg-green-700"], [class*="bg-green-800"], [class*="bg-green-900"], [class*="bg-emerald-700"], [class*="bg-emerald-800"], [class*="bg-emerald-900"], [class*="bg-teal-700"], [class*="bg-teal-800"], [class*="bg-teal-900"]) {
+    background-color: #1e3a8a !important;
+}
+body.role-mahasiswa :is([class*="text-green-"], [class*="text-emerald-"], [class*="text-teal-"]) {
+    color: #1d4ed8 !important;
+}
+body.role-mahasiswa :is([class*="border-green-"], [class*="border-emerald-"], [class*="border-teal-"]) {
+    border-color: #93c5fd !important;
+}
+body.role-mahasiswa :is([class*="from-green-"], [class*="from-emerald-"], [class*="from-teal-"]) {
+    --tw-gradient-from: #dbeafe var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgb(219 234 254 / 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+body.role-mahasiswa :is([class*="via-green-"], [class*="via-emerald-"], [class*="via-teal-"]) {
+    --tw-gradient-via: #bfdbfe var(--tw-gradient-via-position) !important;
+}
+body.role-mahasiswa :is([class*="to-green-"], [class*="to-emerald-"], [class*="to-teal-"]) {
+    --tw-gradient-to: #dbeafe var(--tw-gradient-to-position) !important;
+}
+body.role-mahasiswa :is([class*="hover:bg-green-"], [class*="hover:bg-emerald-"], [class*="hover:bg-teal-"]):hover {
+    background-color: #dbeafe !important;
+}
+body.role-mahasiswa :is([class*="hover:text-green-"], [class*="hover:text-emerald-"], [class*="hover:text-teal-"]):hover {
+    color: #1d4ed8 !important;
+}
+body.role-mahasiswa :is([class*="peer-checked:text-green-"], [class*="peer-checked:text-emerald-"], [class*="peer-checked:text-teal-"]) {
+    color: #1d4ed8 !important;
+}
+body.role-mahasiswa :is([class*="peer-checked:border-green-"], [class*="peer-checked:border-emerald-"], [class*="peer-checked:border-teal-"]) {
+    border-color: #2563eb !important;
+}
+body.role-mahasiswa .semester-pill {
+    background-color: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+html.dark body.role-mahasiswa :is([class*="bg-green-"], [class*="bg-emerald-"], [class*="bg-teal-"]) {
+    background-color: #1e3a8a !important;
+}
+html.dark body.role-mahasiswa :is([class*="text-green-"], [class*="text-emerald-"], [class*="text-teal-"]) {
+    color: #93c5fd !important;
+}
+html.dark body.role-mahasiswa :is([class*="border-green-"], [class*="border-emerald-"], [class*="border-teal-"]) {
+    border-color: #1d4ed8 !important;
+}
+html.dark body.role-mahasiswa :is([class*="from-green-"], [class*="from-emerald-"], [class*="from-teal-"]) {
+    --tw-gradient-from: #1e3a8a var(--tw-gradient-from-position) !important;
+    --tw-gradient-to: rgb(30 58 138 / 0) var(--tw-gradient-to-position) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+html.dark body.role-mahasiswa :is([class*="via-green-"], [class*="via-emerald-"], [class*="via-teal-"]) {
+    --tw-gradient-via: #1e40af var(--tw-gradient-via-position) !important;
+}
+html.dark body.role-mahasiswa :is([class*="to-green-"], [class*="to-emerald-"], [class*="to-teal-"]) {
+    --tw-gradient-to: #1e3a8a var(--tw-gradient-to-position) !important;
+}
+html.dark body.role-mahasiswa :is([class*="hover:bg-green-"], [class*="hover:bg-emerald-"], [class*="hover:bg-teal-"]):hover {
+    background-color: #1e40af !important;
+}
+html.dark body.role-mahasiswa :is([class*="hover:text-green-"], [class*="hover:text-emerald-"], [class*="hover:text-teal-"]):hover,
+html.dark body.role-mahasiswa :is([class*="peer-checked:text-green-"], [class*="peer-checked:text-emerald-"], [class*="peer-checked:text-teal-"]) {
+    color: #93c5fd !important;
+}
+html.dark body.role-mahasiswa :is([class*="peer-checked:border-green-"], [class*="peer-checked:border-emerald-"], [class*="peer-checked:border-teal-"]) {
+    border-color: #3b82f6 !important;
+}
+html.dark body.role-mahasiswa .semester-pill {
+    background-color: #1e3a8a !important;
+    color: #bfdbfe !important;
+}
