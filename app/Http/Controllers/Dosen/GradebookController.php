@@ -103,9 +103,9 @@ class GradebookController extends Controller
             ->each(function (NilaiAkhir $record) use ($kelas) {
                 [$record->nilai_akhir, $record->grade] = $this->hitungNilai(
                     $kelas,
-                    $record->nilai_tugas ?? 0,
-                    $record->nilai_uts ?? 0,
-                    $record->nilai_uas ?? 0
+                    $record->nilai_tugas,
+                    $record->nilai_uts,
+                    $record->nilai_uas
                 );
                 $record->save();
             });
@@ -115,15 +115,47 @@ class GradebookController extends Controller
 
     /**
      * Rumus tunggal nilai akhir & grade berdasarkan bobot kelas.
+     * Menggunakan bobot proporsional untuk komponen yang sudah dinilai,
+     * sehingga sebelum seluruh ujian (UTS/UAS) selesai diadakan, nilai tidak langsung anjlok ke 0 (Grade E).
      */
     protected function hitungNilai(KelasPerkuliahan $kelas, $tugas, $uts, $uas): array
     {
-        $nilai = round(
-            ($tugas * ($kelas->bobot_tugas ?? 30) / 100)
-            + ($uts * ($kelas->bobot_uts ?? 30) / 100)
-            + ($uas * ($kelas->bobot_uas ?? 40) / 100),
-            2
-        );
+        $hasTugas = $tugas !== null && $tugas !== '';
+        $hasUts   = $uts !== null && $uts !== '';
+        $hasUas   = $uas !== null && $uas !== '';
+
+        if (!$hasTugas && !$hasUts && !$hasUas) {
+            return [null, null];
+        }
+
+        $bobotTugas = (float) ($kelas->bobot_tugas ?? 30);
+        $bobotUts   = (float) ($kelas->bobot_uts ?? 30);
+        $bobotUas   = (float) ($kelas->bobot_uas ?? 40);
+
+        $totalBobotTerisi = 0;
+        $totalNilaiBobot  = 0;
+
+        if ($hasTugas) {
+            $totalNilaiBobot  += ((float) $tugas) * $bobotTugas;
+            $totalBobotTerisi += $bobotTugas;
+        }
+
+        if ($hasUts) {
+            $totalNilaiBobot  += ((float) $uts) * $bobotUts;
+            $totalBobotTerisi += $bobotUts;
+        }
+
+        if ($hasUas) {
+            $totalNilaiBobot  += ((float) $uas) * $bobotUas;
+            $totalBobotTerisi += $bobotUas;
+        }
+
+        if ($totalBobotTerisi <= 0) {
+            return [null, null];
+        }
+
+        // Nilai proporsional dari komponen yang telah dinilai
+        $nilai = round($totalNilaiBobot / $totalBobotTerisi, 2);
 
         $grade = match (true) {
             $nilai >= 90 => 'A',
@@ -157,12 +189,32 @@ class GradebookController extends Controller
             })->firstOrFail();
 
         foreach ($request->students as $studentData) {
-            $kehadiran = $studentData['nilai_kehadiran'] ?? 0;
-            $tugas = $studentData['nilai_tugas'] ?? 0;
-            $uts = $studentData['nilai_uts'] ?? 0;
-            $uas = $studentData['nilai_uas'] ?? 0;
+            $hasKehadiran = isset($studentData['nilai_kehadiran']) && $studentData['nilai_kehadiran'] !== '' && $studentData['nilai_kehadiran'] !== null;
+            $hasTugas = isset($studentData['nilai_tugas']) && $studentData['nilai_tugas'] !== '' && $studentData['nilai_tugas'] !== null;
+            $hasUts = isset($studentData['nilai_uts']) && $studentData['nilai_uts'] !== '' && $studentData['nilai_uts'] !== null;
+            $hasUas = isset($studentData['nilai_uas']) && $studentData['nilai_uas'] !== '' && $studentData['nilai_uas'] !== null;
 
-            [$nilai_akhir, $grade] = $this->hitungNilai($kelas, $tugas, $uts, $uas);
+            $existing = NilaiAkhir::where('kelas_perkuliahan_id', $kelas->id)
+                ->where('mahasiswa_id', $studentData['mahasiswa_id'])
+                ->first();
+
+            // Jika tidak ada input dan belum ada record di DB, lewati pembuatan data kosong
+            if (!$hasKehadiran && !$hasTugas && !$hasUts && !$hasUas && !$existing) {
+                continue;
+            }
+
+            $kehadiran = $hasKehadiran ? (float) $studentData['nilai_kehadiran'] : ($existing?->nilai_kehadiran);
+            $tugas = $hasTugas ? (float) $studentData['nilai_tugas'] : null;
+            $uts = $hasUts ? (float) $studentData['nilai_uts'] : null;
+            $uas = $hasUas ? (float) $studentData['nilai_uas'] : null;
+
+            // Hitung nilai akhir & grade jika ada nilai tugas/uts/uas yang diisi
+            if ($hasTugas || $hasUts || $hasUas) {
+                [$nilai_akhir, $grade] = $this->hitungNilai($kelas, $tugas, $uts, $uas);
+            } else {
+                $nilai_akhir = null;
+                $grade = null;
+            }
 
             NilaiAkhir::updateOrCreate(
                 [
@@ -208,7 +260,7 @@ class GradebookController extends Controller
                 }
             }
             
-            $nilaiHadir = ($hadirCount / $totalPertemuan) * 100;
+            $nilaiHadir = round(($hadirCount / $totalPertemuan) * 100, 2);
 
             $nilaiAkhirRecord = NilaiAkhir::firstOrNew([
                 'kelas_perkuliahan_id' => $kelas->id,
@@ -217,15 +269,20 @@ class GradebookController extends Controller
 
             $nilaiAkhirRecord->nilai_kehadiran = $nilaiHadir;
             
-            [$nilai_akhir, $grade] = $this->hitungNilai(
-                $kelas,
-                $nilaiAkhirRecord->nilai_tugas ?? 0,
-                $nilaiAkhirRecord->nilai_uts ?? 0,
-                $nilaiAkhirRecord->nilai_uas ?? 0
-            );
+            if ($nilaiAkhirRecord->nilai_tugas !== null || $nilaiAkhirRecord->nilai_uts !== null || $nilaiAkhirRecord->nilai_uas !== null) {
+                [$nilai_akhir, $grade] = $this->hitungNilai(
+                    $kelas,
+                    $nilaiAkhirRecord->nilai_tugas,
+                    $nilaiAkhirRecord->nilai_uts,
+                    $nilaiAkhirRecord->nilai_uas
+                );
+                $nilaiAkhirRecord->nilai_akhir = $nilai_akhir;
+                $nilaiAkhirRecord->grade = $grade;
+            } else {
+                $nilaiAkhirRecord->nilai_akhir = null;
+                $nilaiAkhirRecord->grade = null;
+            }
 
-            $nilaiAkhirRecord->nilai_akhir = $nilai_akhir;
-            $nilaiAkhirRecord->grade = $grade;
             $nilaiAkhirRecord->save();
         }
 

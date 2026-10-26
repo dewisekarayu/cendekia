@@ -3,11 +3,11 @@
 @section('title', 'Bimbingan KRS')
 
 @section('content')
-<div class="mb-6 rounded-2xl bg-[#321270] dark:bg-gradient-to-r dark:from-indigo-950 dark:to-purple-900 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+<div class="mb-6 rounded-2xl bg-[#720c16] dark:bg-gradient-to-r dark:from-[#1b0305] dark:to-[#2f0509] px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
     <div class="relative z-10">
-        <p class="text-xs font-bold uppercase tracking-wide text-purple-200/70">Dosen Pembimbing Akademik</p>
+        <p class="text-xs font-bold uppercase tracking-wide text-[#fecaca]/70">Dosen Pembimbing Akademik</p>
         <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Bimbingan KRS Mahasiswa</h1>
-        <p class="mt-2 text-sm text-purple-100/70">Kelola dan setujui Kartu Rencana Studi (KRS) mahasiswa bimbingan Anda.</p>
+        <p class="mt-2 text-sm text-[#fee2e2]/70">Kelola dan setujui Kartu Rencana Studi (KRS) mahasiswa bimbingan Anda.</p>
     </div>
     <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/5 pointer-events-none"></div>
 </div>

@@ -6,9 +6,9 @@
 @section('content')
 
     {{-- HERO HEADER BANNER --}}
-    <div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#260c5a] via-[#3a1480] to-[#511da8] dark:from-slate-900 dark:via-indigo-950 dark:to-purple-950 px-6 py-7 sm:px-8 shadow-md relative text-white">
+    <div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#4c0810] via-[#720c16] to-[#9a1622] dark:from-slate-900 dark:via-[#1b0305] dark:to-[#1b0305] px-6 py-7 sm:px-8 shadow-md relative text-white">
         <div class="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/10 blur-2xl"></div>
-        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-purple-400/10 blur-xl"></div>
+        <div class="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-[#f87171]/10 blur-xl"></div>
         
         <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div class="min-w-0 flex-1">
@@ -19,10 +19,10 @@
                         </svg>
                         {{ $kelas->mataKuliah?->kode_mk ?? '-' }}
                     </span>
-                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-purple-100 backdrop-blur-sm">
+                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-[#fee2e2] backdrop-blur-sm">
                         {{ $kelas->semester?->nama_semester ?? 'Semester Aktif' }}
                     </span>
-                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-purple-100 backdrop-blur-sm">
+                    <span class="rounded-lg border border-white/10 bg-black/20 px-2.5 py-1 text-xs font-medium text-[#fee2e2] backdrop-blur-sm">
                         {{ $kelas->mataKuliah?->programStudi?->nama_prodi ?? 'Program Studi' }}
                     </span>
                 </div>
@@ -31,21 +31,21 @@
                     {{ $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas' }}
                 </h1>
 
-                <div class="mt-3 flex flex-wrap items-center gap-y-2 gap-x-5 text-xs sm:text-sm text-purple-100/90 font-medium">
+                <div class="mt-3 flex flex-wrap items-center gap-y-2 gap-x-5 text-xs sm:text-sm text-[#fee2e2]/90 font-medium">
                     <span class="inline-flex items-center gap-1.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         {{ $kelas->hari }}, {{ substr($kelas->jam_mulai,0,5) }} – {{ substr($kelas->jam_selesai,0,5) }} WIB
                     </span>
                     <span class="inline-flex items-center gap-1.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         </svg>
                         Ruang: {{ $kelas->ruangan ?? '-' }}
                     </span>
                     <span class="inline-flex items-center gap-1.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#fca5a5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
                         {{ $kelas->mataKuliah?->sks ?? 0 }} SKS
@@ -56,7 +56,7 @@
             {{-- Right Side / Actions --}}
             <div class="flex flex-col sm:flex-row gap-3 shrink-0">
                 <div class="flex flex-col items-center justify-center rounded-xl bg-white/10 px-5 py-3 border border-white/20 backdrop-blur-sm">
-                    <span class="text-[10px] font-bold text-purple-200 uppercase tracking-wider mb-0.5">Mahasiswa</span>
+                    <span class="text-[10px] font-bold text-[#fecaca] uppercase tracking-wider mb-0.5">Mahasiswa</span>
                     <span class="text-xl font-black text-white leading-none">{{ $kelas->mahasiswa->count() }}</span>
                 </div>
             </div>
@@ -87,13 +87,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             <input id="searchMateri" type="text" placeholder="Cari materi..."
-                                class="w-full h-10 pl-9 pr-3 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition">
+                                class="w-full h-10 pl-9 pr-3 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#a92a35] focus:ring-2 focus:ring-[#a92a35]/20 outline-none transition">
                         </label>
 
                         {{-- Filter Pertemuan (Custom Dropdown) --}}
                         <div class="relative w-full xs:w-auto sm:w-44">
                             <button type="button" onclick="toggleMateriDropdown('dropdownPertemuan')"
-                                class="w-full h-10 flex items-center justify-between px-3 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition">
+                                class="w-full h-10 flex items-center justify-between px-3 text-sm border border-gray-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 focus:border-[#a92a35] focus:ring-2 focus:ring-[#a92a35]/20 outline-none transition">
                                 <span id="pertemuanLabel" class="truncate">Semua Pertemuan</span>
                                 <svg class="fill-current h-3.5 w-3.5 text-gray-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
@@ -120,7 +120,7 @@
 
                         {{-- Tombol Aksi --}}
                         <button type="button" onclick="toggleMateriModal('modalMateri')"
-                            class="h-10 shrink-0 text-xs font-bold bg-[#321270] dark:bg-[#6c2bd9] text-white px-4 rounded-lg hover:bg-[#321270]/90 dark:hover:bg-[#5b21b6] transition flex items-center justify-center gap-1.5 whitespace-nowrap w-full xs:w-auto">
+                            class="h-10 shrink-0 text-xs font-bold bg-[#720c16] dark:bg-[#9a1622] text-white px-4 rounded-lg hover:bg-[#720c16]/90 dark:hover:bg-[#5c0912] transition flex items-center justify-center gap-1.5 whitespace-nowrap w-full xs:w-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
@@ -140,7 +140,7 @@
                 @else
                     <div id="materiListWrapper" class="space-y-4">
                         @foreach($materiList as $m)
-                            <div class="materi-card p-5 border border-gray-100 dark:border-slate-700/60 bg-slate-50/30 dark:bg-slate-900/10 rounded-xl hover:shadow-md hover:border-purple-200 dark:hover:border-purple-900/50 transition-all duration-200"
+                            <div class="materi-card p-5 border border-gray-100 dark:border-slate-700/60 bg-slate-50/30 dark:bg-slate-900/10 rounded-xl hover:shadow-md hover:border-[#fecaca] dark:hover:border-[#2f0509]/50 transition-all duration-200"
                                 data-search="{{ strtolower($m->judul . ' ' . ($m->deskripsi ?? '') . ' ' . ($m->kategori ?? '') . ' pertemuan ' . $m->pertemuan_ke) }}"
                                 data-pertemuan="{{ $m->pertemuan_ke }}">
                                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -148,7 +148,7 @@
                                     {{-- Info Kiri: Detail Pertemuan & Judul --}}
                                     <div class="min-w-0 flex-1 space-y-2">
                                         <div class="flex flex-wrap items-center gap-2">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#fdf2f2] dark:bg-[#1b0305]/60 text-[#5c0912] dark:text-[#fca5a5] border border-[#fee2e2] dark:border-[#2f0509]/30">
                                                 Pertemuan {{ $m->pertemuan_ke }}
                                             </span>
                                             @if(isset($m->kategori))
@@ -176,9 +176,9 @@
                                         <div class="flex flex-col gap-1.5 min-w-[150px] max-w-[200px]">
                                             @forelse($m->files as $file)
                                                 <a href="{{ route('dosen.materi.buka', [$kelas->id, $m->id, $file->id]) }}"
-                                                class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-purple-500 dark:hover:border-purple-500 hover:text-purple-700 dark:hover:text-purple-300 transition duration-150 shadow-sm"
+                                                class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-[#a92a35] dark:hover:border-[#a92a35] hover:text-[#5c0912] dark:hover:text-[#fca5a5] transition duration-150 shadow-sm"
                                                 title="{{ $file->nama_asli }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-gray-400 group-hover:text-purple-500 flex-shrink-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-gray-400 group-hover:text-[#a92a35] flex-shrink-0">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                     </svg>
                                                     <span class="truncate text-[11px] font-semibold">{{ $file->nama_asli ?? 'Unduh File' }}</span>
@@ -244,7 +244,7 @@
                         <div class="relative bg-white dark:bg-slate-800 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
 
                             <div class="px-8 py-5 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
-                                <div class="bg-[#1e293b] dark:bg-purple-650 p-2 rounded-lg text-white">
+                                <div class="bg-[#1e293b] dark:bg-[#720c16] p-2 rounded-lg text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
@@ -259,13 +259,13 @@
                                     <div class="space-y-1.5">
                                         <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Judul Materi</label>
                                         <input type="text" name="judul" value="{{ $m->judul }}" required maxlength="255"
-                                            class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition text-gray-800 dark:text-gray-100 font-medium">
+                                            class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none transition text-gray-800 dark:text-gray-100 font-medium">
                                     </div>
 
                                     <div class="space-y-1.5">
                                         <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Pertemuan Ke-</label>
                                         <div class="relative">
-                                            <select name="pertemuan_ke" required class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
+                                            <select name="pertemuan_ke" required class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
                                                 @for ($i = 1; $i <= 16; $i++)
                                                     <option value="{{ $i }}" @selected($m->pertemuan_ke === $i) class="dark:bg-slate-900">Minggu Ke-{{ $i }}</option>
                                                 @endfor
@@ -279,7 +279,7 @@
                                     <div class="space-y-1.5">
                                         <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
                                         <textarea name="deskripsi" rows="4" maxlength="5000"
-                                            class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none resize-none transition text-gray-800 dark:text-gray-100">{{ $m->deskripsi }}</textarea>
+                                            class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none resize-none transition text-gray-800 dark:text-gray-100">{{ $m->deskripsi }}</textarea>
                                     </div>
 
                                     <div class="space-y-1.5">
@@ -309,7 +309,7 @@
                                     <button type="button" onclick="toggleMateriModal('modalEditMateri{{ $m->id }}')" class="px-5 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition">
                                         Batal
                                     </button>
-                                    <button type="submit" class="px-5 py-2 rounded-lg bg-[#0f172a] dark:bg-[#6c2bd9] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
+                                    <button type="submit" class="px-5 py-2 rounded-lg bg-[#0f172a] dark:bg-[#9a1622] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5c0912] transition">
                                         Simpan Perubahan
                                     </button>
                                 </div>
@@ -348,7 +348,7 @@
             <div class="relative bg-white dark:bg-slate-800 w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
 
                 <div class="px-8 py-5 bg-gray-50/50 dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center gap-3">
-                    <div class="bg-[#1e293b] dark:bg-purple-650 p-2 rounded-lg text-white">
+                    <div class="bg-[#1e293b] dark:bg-[#720c16] p-2 rounded-lg text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -362,14 +362,14 @@
 
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Judul Materi</label>
-                            <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="255" placeholder="Contoh: Pengenalan Struktur Data Lanjut" class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100 font-medium">
+                            <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="255" placeholder="Contoh: Pengenalan Struktur Data Lanjut" class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100 font-medium">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div class="space-y-1.5">
                                 <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Kategori</label>
                                 <div class="relative">
-                                    <select name="kategori" class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
+                                    <select name="kategori" class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
                                         <option value="" class="dark:bg-slate-900">Pilih Kategori</option>
                                         <option value="Teori" class="dark:bg-slate-900">Teori</option>
                                         <option value="Praktikum" class="dark:bg-slate-900">Praktikum</option>
@@ -382,7 +382,7 @@
                             <div class="space-y-1.5">
                                 <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Pertemuan Ke-</label>
                                 <div class="relative">
-                                    <select name="pertemuan_ke" required class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
+                                    <select name="pertemuan_ke" required class="w-full px-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none transition text-gray-500 dark:text-gray-300 bg-white dark:bg-slate-900 font-semibold">
                                         <option value="" class="dark:bg-slate-900">Pilih Minggu</option>
                                         @for ($i = 1; $i <= 16; $i++)
                                             <option value="{{ $i }}" @selected((int) old('pertemuan_ke') === $i) class="dark:bg-slate-900">Minggu Ke-{{ $i }}</option>
@@ -399,14 +399,14 @@
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                                 <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Deskripsi Materi</label>
                                 <div class="flex flex-wrap items-center gap-2">
-                                    <input type="number" id="ai_jumlah_soal" class="w-16 text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Jml" value="5" min="1" max="50" title="Jumlah Soal (jika generate soal)">
-                                    <select id="ai_tipe_soal" class="text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <input type="number" id="ai_jumlah_soal" class="w-16 text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#a92a35]" placeholder="Jml" value="5" min="1" max="50" title="Jumlah Soal (jika generate soal)">
+                                    <select id="ai_tipe_soal" class="text-xs border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#a92a35]">
                                         <option value="Ringkasan Materi">Ringkasan Materi</option>
                                         <option value="Soal Essay">Soal Essay</option>
                                         <option value="Soal Pilihan Ganda">Soal Pilihan Ganda</option>
                                         <option value="Soal Pilihan Ganda Kompleks (Lebih dari 1 Jawaban Benar)">Soal Pilihan Ganda Kompleks</option>
                                     </select>
-                                    <button type="button" onclick="generateAiDescription(this)" class="text-xs flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
+                                    <button type="button" onclick="generateAiDescription(this)" class="text-xs flex items-center gap-1 bg-[#fee2e2] text-[#5c0912] hover:bg-[#fecaca] px-2.5 py-1.5 rounded-md font-bold transition-all shadow-sm">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                         Deskripsi AI
                                     </button>
@@ -415,13 +415,13 @@
                                     </button>
                                 </div>
                             </div>
-                            <textarea id="deskripsi_materi" name="deskripsi" rows="4" maxlength="5000" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-purple-500 focus:outline-none resize-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100">{{ old('deskripsi') }}</textarea>
+                            <textarea id="deskripsi_materi" name="deskripsi" rows="4" maxlength="5000" placeholder="Berikan penjelasan singkat mengenai materi ini..." class="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-[#a92a35] focus:outline-none resize-none transition placeholder-gray-300 dark:placeholder-gray-600 text-gray-800 dark:text-gray-100">{{ old('deskripsi') }}</textarea>
                         </div>
 
                         <div class="space-y-1.5">
                             <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Unggah File</label>
-                            <label class="block w-full border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-purple-500 transition cursor-pointer bg-slate-50/50 dark:bg-slate-900">
-                                <div class="bg-blue-50 dark:bg-purple-950/40 p-3 rounded-xl mb-3 text-[#321270] dark:text-purple-300">
+                            <label class="block w-full border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:border-blue-400 dark:hover:border-[#a92a35] transition cursor-pointer bg-slate-50/50 dark:bg-slate-900">
+                                <div class="bg-blue-50 dark:bg-[#1b0305]/40 p-3 rounded-xl mb-3 text-[#720c16] dark:text-[#fca5a5]">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                     </svg>
@@ -429,7 +429,7 @@
                                 <p class="text-sm font-bold text-slate-800 dark:text-slate-200">Klik atau seret file ke area ini untuk memilih</p>
                                 <p class="text-xs text-gray-400 dark:text-slate-500 mt-1">Sistem mendukung banyak file sekaligus</p>
                                 <input id="materiFileInput" type="file" name="file_materi[]" multiple class="hidden" onchange="updateFileLabel(this)">
-                                <div id="selectedFilesContainer" class="mt-3 text-xs font-semibold text-purple-700 dark:text-purple-300"></div>
+                                <div id="selectedFilesContainer" class="mt-3 text-xs font-semibold text-[#5c0912] dark:text-[#fca5a5]"></div>
                             </label>
                         </div>
                     </div>
@@ -438,7 +438,7 @@
                         <button type="button" onclick="toggleMateriModal('modalMateri')" class="px-5 py-2 rounded-lg border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition">
                             Batal
                         </button>
-                        <button type="submit" class="px-5 py-2 rounded-lg bg-[#321270] dark:bg-[#6c2bd9] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5b21b6] transition">
+                        <button type="submit" class="px-5 py-2 rounded-lg bg-[#720c16] dark:bg-[#9a1622] text-sm font-semibold text-white hover:bg-opacity-90 dark:hover:bg-[#5c0912] transition">
                             Unggah Materi
                         </button>
                     </div>

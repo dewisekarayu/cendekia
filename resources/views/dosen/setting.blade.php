@@ -71,7 +71,7 @@
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         {{ $isEn ? 'Select Language' : 'Pilih Bahasa' }}
                     </label>
-                    <select name="language" class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 focus:border-[#321270] focus:outline-none focus:ring-2 focus:ring-[#321270]/10 transition">
+                    <select name="language" class="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-gray-800 dark:text-gray-100 focus:border-[#720c16] focus:outline-none focus:ring-2 focus:ring-[#720c16]/10 transition">
                         <option value="id" {{ $activeLang === 'id' ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-gray-100">Bahasa Indonesia</option>
                         <option value="en" {{ $activeLang === 'en' ? 'selected' : '' }} class="dark:bg-slate-900 dark:text-gray-100">English</option>
                     </select>
@@ -81,7 +81,7 @@
                     <a href="{{ route('dosen.setting') }}" class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
                         {{ $isEn ? 'Cancel' : 'Batal' }}
                     </a>
-                    <button type="submit" class="rounded-lg bg-[#321270] dark:bg-[#6c2bd9] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5b21b6] hover:bg-[#321270]/90 transition">
+                    <button type="submit" class="rounded-lg bg-[#720c16] dark:bg-[#9a1622] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5c0912] hover:bg-[#720c16]/90 transition">
                         {{ $isEn ? 'Save' : 'Simpan' }}
                     </button>
                 </div>
@@ -104,19 +104,19 @@
                     </label>
                     <div class="grid grid-cols-3 gap-4">
                         <label class="theme-card flex items-center gap-3 cursor-pointer p-4 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150">
-                            <input type="radio" name="theme" value="light" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'light' ? 'checked' : '' }} class="w-4 h-4 text-[#321270] focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700">
+                            <input type="radio" name="theme" value="light" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'light' ? 'checked' : '' }} class="w-4 h-4 text-[#720c16] focus:ring-[#720c16] dark:bg-slate-900 dark:border-slate-700">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 <i class="bi bi-sun me-1" aria-hidden="true"></i>{{ $isEn ? 'Light' : 'Terang' }}
                             </span>
                         </label>
                         <label class="theme-card flex items-center gap-3 cursor-pointer p-4 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150">
-                            <input type="radio" name="theme" value="dark" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'dark' ? 'checked' : '' }} class="w-4 h-4 text-[#321270] focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700">
+                            <input type="radio" name="theme" value="dark" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'dark' ? 'checked' : '' }} class="w-4 h-4 text-[#720c16] focus:ring-[#720c16] dark:bg-slate-900 dark:border-slate-700">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 <i class="bi bi-moon-stars me-1" aria-hidden="true"></i>{{ $isEn ? 'Dark' : 'Gelap' }}
                             </span>
                         </label>
                         <label class="theme-card flex items-center gap-3 cursor-pointer p-4 border border-gray-200 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition duration-150">
-                            <input type="radio" name="theme" value="auto" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'auto' ? 'checked' : '' }} class="w-4 h-4 text-[#321270] focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700">
+                            <input type="radio" name="theme" value="auto" onclick="highlightThemeCards()" {{ ($user->theme ?? 'light') === 'auto' ? 'checked' : '' }} class="w-4 h-4 text-[#720c16] focus:ring-[#720c16] dark:bg-slate-900 dark:border-slate-700">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 <i class="bi bi-display me-1" aria-hidden="true"></i>{{ $isEn ? 'Auto' : 'Otomatis' }}
                             </span>
@@ -128,7 +128,7 @@
                     <a href="{{ route('dosen.setting') }}" class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
                         {{ $isEn ? 'Cancel' : 'Batal' }}
                     </a>
-                    <button type="submit" class="rounded-lg bg-[#321270] dark:bg-[#6c2bd9] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5b21b6] hover:bg-[#321270]/90 transition">
+                    <button type="submit" class="rounded-lg bg-[#720c16] dark:bg-[#9a1622] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5c0912] hover:bg-[#720c16]/90 transition">
                         {{ $isEn ? 'Save' : 'Simpan' }}
                     </button>
                 </div>
@@ -173,7 +173,7 @@
                         </div>
                         <div class="flex gap-3 ml-4">
                             <label class="flex items-center gap-2 cursor-pointer text-xs">
-                                <input type="checkbox" name="{{ $notif['key'] }}" value="1" {{ $preferences->isEnabled($notif['key']) ? 'checked' : '' }} class="w-4 h-4 rounded border-gray-300 dark:border-slate-700 dark:bg-slate-900 text-[#321270] dark:text-purple-600 focus:ring-[#321270] dark:focus:ring-offset-slate-800">
+                                <input type="checkbox" name="{{ $notif['key'] }}" value="1" {{ $preferences->isEnabled($notif['key']) ? 'checked' : '' }} class="w-4 h-4 rounded border-gray-300 dark:border-slate-700 dark:bg-slate-900 text-[#720c16] dark:text-[#720c16] focus:ring-[#720c16] dark:focus:ring-offset-slate-800">
                                 <span class="text-gray-600 dark:text-gray-300 font-medium">
                                     {{ $isEn ? 'Enabled' : 'Aktif' }}
                                 </span>
@@ -186,7 +186,7 @@
                     <a href="{{ route('dosen.setting') }}" class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
                         {{ $isEn ? 'Cancel' : 'Batal' }}
                     </a>
-                    <button type="submit" class="rounded-lg bg-[#321270] dark:bg-[#6c2bd9] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5b21b6] hover:bg-[#321270]/90 transition">
+                    <button type="submit" class="rounded-lg bg-[#720c16] dark:bg-[#9a1622] px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-[#5c0912] hover:bg-[#720c16]/90 transition">
                         {{ $isEn ? 'Save' : 'Simpan' }}
                     </button>
                 </div>
@@ -203,11 +203,11 @@
             document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
             document.getElementById(tabId + '-content').classList.remove('hidden');
             document.querySelectorAll('.active-tab').forEach(t => {
-                t.classList.remove('border-[#321270]', 'text-slate-800', 'dark:text-white', 'border-b-2');
+                t.classList.remove('border-[#720c16]', 'text-slate-800', 'dark:text-white', 'border-b-2');
                 t.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
             });
             this.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-            this.classList.add('border-[#321270]', 'text-slate-800', 'dark:text-white', 'border-b-2');
+            this.classList.add('border-[#720c16]', 'text-slate-800', 'dark:text-white', 'border-b-2');
         });
     });
 
@@ -225,9 +225,9 @@
             const radio = card.querySelector('input[type="radio"]');
             if (radio && radio.checked) {
                 card.classList.remove('border-gray-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800');
-                card.classList.add('border-[#321270]', 'dark:border-[#9061f9]', 'bg-[#321270]/5', 'dark:bg-[#9061f9]/10');
+                card.classList.add('border-[#720c16]', 'dark:border-[#a92a35]', 'bg-[#720c16]/5', 'dark:bg-[#a92a35]/10');
             } else {
-                card.classList.remove('border-[#321270]', 'dark:border-[#9061f9]', 'bg-[#321270]/5', 'dark:bg-[#9061f9]/10');
+                card.classList.remove('border-[#720c16]', 'dark:border-[#a92a35]', 'bg-[#720c16]/5', 'dark:bg-[#a92a35]/10');
                 card.classList.add('border-gray-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800');
             }
         });
@@ -244,7 +244,7 @@
             icon: 'success',
             title: "{{ app()->getLocale() === 'en' ? 'Success' : 'Berhasil' }}",
             text: "{{ session('success') }}",
-            confirmButtonColor: '#047857',
+            confirmButtonColor: '#720c16',
         });
     });
 </script>

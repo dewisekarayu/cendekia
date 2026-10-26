@@ -6,7 +6,7 @@
 @section('content')
 
 <!-- Page Header -->
-<div class="bg-gradient-to-r from-[#321270] to-[#4c19a0] dark:from-indigo-950 dark:to-purple-900 rounded-xl px-8 py-6 relative overflow-hidden mb-8 shadow-sm">
+<div class="bg-gradient-to-r from-[#720c16] to-[#9a1622] dark:from-[#1b0305] dark:to-[#2f0509] rounded-xl px-8 py-6 relative overflow-hidden mb-8 shadow-sm">
     <div class="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/5"></div>
     <div class="mb-6 relative z-10">
         <h1 class="text-xl font-bold text-white">My Classes</h1>
@@ -16,7 +16,7 @@
 
 <!-- Filter Row -->
 <div class="flex flex-col sm:flex-row gap-3 mb-6">
-    <select class="text-sm border-gray-200 dark:border-slate-700 rounded-lg focus:border-[#321270] focus:ring-[#321270] bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 py-2.5">
+    <select class="text-sm border-gray-200 dark:border-slate-700 rounded-lg focus:border-[#720c16] focus:ring-[#720c16] bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 py-2.5">
         <option class="dark:bg-slate-800">Semester Ganjil 2025/2026</option>
     </select>
     <form id="kelas-search-form" class="relative flex-1 max-w-sm">
@@ -25,7 +25,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
         </div>
-        <input id="kelas-search-input" type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama kelas..." autocomplete="off" class="w-full pl-9 text-sm border-gray-200 dark:border-slate-700 rounded-lg focus:border-[#321270] dark:focus:border-purple-500 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 focus:ring-[#321270] dark:focus:ring-purple-500 py-2.5">
+        <input id="kelas-search-input" type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama kelas..." autocomplete="off" class="w-full pl-9 text-sm border-gray-200 dark:border-slate-700 rounded-lg focus:border-[#720c16] dark:focus:border-[#a92a35] bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 focus:ring-[#720c16] dark:focus:ring-[#a92a35] py-2.5">
     </form>
 </div>
 
@@ -46,12 +46,12 @@
 @else
 <div id="kelas-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     @php
-    $topColors = ['bg-blue-900', 'bg-amber-400', 'bg-emerald-500', 'bg-indigo-500'];
+    $topColors = ['bg-blue-900', 'bg-amber-400', 'bg-emerald-500', 'bg-[#a92a35]'];
     $tagColors = [
         'text-blue-900 bg-blue-50 dark:text-blue-300 dark:bg-blue-950/40 dark:border dark:border-blue-900/30',
         'text-amber-700 bg-amber-50 dark:text-amber-300 dark:bg-amber-950/40 dark:border dark:border-amber-900/30',
         'text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 dark:border dark:border-emerald-900/30',
-        'text-indigo-700 bg-indigo-50 dark:text-indigo-300 dark:bg-indigo-950/40 dark:border dark:border-indigo-900/30'
+        'text-[#5c0912] bg-[#fdf2f2] dark:text-[#fca5a5] dark:bg-[#1b0305]/40 dark:border dark:border-[#2f0509]/30'
     ];
     @endphp
 
@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <a href="{{ route('dosen.kelas-detail', $kelas->id) }}" class="mt-4 block text-center bg-[#321270] dark:bg-[#6c2bd9] hover:bg-[#250d54] dark:hover:bg-[#5b21b6] text-white text-sm font-bold py-2 rounded-lg transition duration-150">
+            <a href="{{ route('dosen.kelas-detail', $kelas->id) }}" class="mt-4 block text-center bg-[#720c16] dark:bg-[#9a1622] hover:bg-[#4c0810] dark:hover:bg-[#5c0912] text-white text-sm font-bold py-2 rounded-lg transition duration-150">
                 Manage Class
             </a>
         </div>

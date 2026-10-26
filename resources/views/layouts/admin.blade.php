@@ -7,8 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', $title ?? 'Admin Dashboard') - Cendekia</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('images/logo.png') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.jpg') }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -192,8 +192,13 @@
             color: #e5f5ed !important;
         }
         aside nav {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(167, 243, 208, 0.35) transparent;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        aside nav::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         html.dark .bg-white {
@@ -1211,7 +1216,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <a href="/" class="flex min-w-0 items-center gap-2 text-decoration-none" style="gap: 0.5rem;">
                         <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
-                            <img src="{{ asset('images/logo.png') }}" alt="Cendekia" class="" />
+                            <img src="{{ asset('images/logo.jpg') }}" alt="Cendekia" class="rounded-full object-cover" />
                         </div>
                         <div class="min-w-0">
                             <div class="text-base font-bold leading-tight truncate notranslate" translate="no" style="color: {{ $sidebarTitle }};">Cendekia</div>

@@ -7,7 +7,7 @@
 
     {{-- NAVBAR TABS SINKRONISASI --}}
     <div class="flex items-center gap-0 mb-6 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors duration-200">
-        <a href="{{ route('dosen.kelas-pengumuman.index') }}" class="px-5 py-3.5 text-sm font-semibold text-[#002B6B] dark:text-purple-400 border-b-2 border-[#002B6B] dark:border-purple-500 transition-all duration-200 text-decoration-none flex items-center gap-2 white-space-nowrap">
+        <a href="{{ route('dosen.kelas-pengumuman.index') }}" class="px-5 py-3.5 text-sm font-semibold text-[#002B6B] dark:text-[#f87171] border-b-2 border-[#002B6B] dark:border-[#a92a35] transition-all duration-200 text-decoration-none flex items-center gap-2 white-space-nowrap">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
             </svg>
@@ -21,7 +21,7 @@
             <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tight">Pengumuman Kelas</h1>
             <p class="text-sm font-medium text-slate-400 dark:text-slate-500 mt-0.5">Semua pengumuman dari kelas-kelas aktif yang Anda ampu.</p>
         </div>
-        <button onclick="toggleAnnouncementModal('modalAnnouncement')" class="shrink-0 bg-[#321270] dark:bg-[#6c2bd9] hover:bg-[#230c50] dark:hover:bg-[#5b21b6] text-white text-xs font-bold px-5 py-2.5 rounded-xl transition duration-150 flex items-center gap-2 shadow-sm">
+        <button onclick="toggleAnnouncementModal('modalAnnouncement')" class="shrink-0 bg-[#720c16] dark:bg-[#9a1622] hover:bg-[#4c0810] dark:hover:bg-[#5c0912] text-white text-xs font-bold px-5 py-2.5 rounded-xl transition duration-150 flex items-center gap-2 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
@@ -43,7 +43,7 @@
                             <span class="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 border border-amber-200/40 dark:border-amber-900/30 text-amber-600 dark:text-amber-300 px-2.5 py-0.5 rounded-md">Penting</span>
                         @endif
                         @if($p->kelasPerkuliahan)
-                            <span class="text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/30 text-[#321270] dark:text-purple-300 px-2.5 py-0.5 rounded-md">
+                            <span class="text-[10px] font-bold bg-[#fdf2f2] dark:bg-[#1b0305]/40 border border-[#fee2e2] dark:border-[#2f0509]/30 text-[#720c16] dark:text-[#fca5a5] px-2.5 py-0.5 rounded-md">
                                 {{ $p->kelasPerkuliahan->kode_kelas }}
                             </span>
                         @endif
@@ -52,7 +52,7 @@
                         <div class="flex items-center gap-2">
                             <button type="button"
                                 onclick="openEditModal({{ $p->id }}, @js($p->judul), @js($p->isi), {{ $p->untuk_semua ? 'true' : 'false' }})"
-                                class="text-slate-400 dark:text-slate-500 hover:text-[#321270] dark:hover:text-purple-400 transition duration-150" title="Edit Pengumuman">
+                                class="text-slate-400 dark:text-slate-500 hover:text-[#720c16] dark:hover:text-[#f87171] transition duration-150" title="Edit Pengumuman">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </button>
                         </div>
@@ -65,7 +65,7 @@
                         {{ $p->isi }}
                     </div>
                     @if(strlen($p->isi) > 200)
-                        <button @click="expanded = !expanded" class="text-[#321270] dark:text-purple-400 font-bold mt-2 hover:underline text-xs flex items-center gap-1 focus:outline-none">
+                        <button @click="expanded = !expanded" class="text-[#720c16] dark:text-[#f87171] font-bold mt-2 hover:underline text-xs flex items-center gap-1 focus:outline-none">
                             <span x-text="expanded ? 'Tampilkan lebih sedikit' : 'Baca selengkapnya'"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" :class="expanded ? 'rotate-180' : ''" class="h-3 w-3 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -116,7 +116,7 @@
         <div class="relative min-h-screen flex items-center justify-center p-4">
             <div class="relative bg-white dark:bg-slate-850 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
                 <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                    <div class="bg-[#321270] dark:bg-purple-600 p-1.5 rounded-lg text-white">
+                    <div class="bg-[#720c16] dark:bg-[#720c16] p-1.5 rounded-lg text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                         </svg>
@@ -129,12 +129,12 @@
                     <div class="px-6 py-5 space-y-4">
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Judul Pengumuman</label>
-                            <input type="text" name="judul" required placeholder="Contoh: Pergeseran Jam Kuliah Pengganti" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-purple-500/10 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none transition placeholder-gray-300 dark:placeholder-gray-600 text-slate-700 dark:text-gray-100 font-medium">
+                            <input type="text" name="judul" required placeholder="Contoh: Pergeseran Jam Kuliah Pengganti" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-[#a92a35]/10 focus:border-[#720c16] dark:focus:border-[#a92a35] focus:outline-none transition placeholder-gray-300 dark:placeholder-gray-600 text-slate-700 dark:text-gray-100 font-medium">
                         </div>
 
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Target Kelas Kuliah</label>
-                            <select name="kelas_perkuliahan_id" id="create_kelas_id" required class="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-purple-500/10 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none transition text-slate-700 dark:text-gray-100 bg-white dark:bg-slate-900 font-semibold">
+                            <select name="kelas_perkuliahan_id" id="create_kelas_id" required class="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-[#a92a35]/10 focus:border-[#720c16] dark:focus:border-[#a92a35] focus:outline-none transition text-slate-700 dark:text-gray-100 bg-white dark:bg-slate-900 font-semibold">
                                 <option value="" disabled selected class="dark:bg-slate-900 dark:text-gray-400">Pilih target kelas mengajar...</option>
                                 @foreach($kelasList as $kelas)
                                     <option value="{{ $kelas->id }}" class="dark:bg-slate-900 dark:text-gray-100">{{ $kelas->kode_kelas }} - {{ $kelas->mataKuliah?->nama_mk ?? 'Mata Kuliah' }}</option>
@@ -143,19 +143,19 @@
                         </div>
 
                         <div class="flex items-center gap-2 pt-1">
-                            <input type="checkbox" name="untuk_semua" id="untuk_semua" value="1" class="rounded text-[#321270] dark:text-purple-600 focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700 w-4 h-4 border-slate-300">
+                            <input type="checkbox" name="untuk_semua" id="untuk_semua" value="1" class="rounded text-[#720c16] dark:text-[#720c16] focus:ring-[#720c16] dark:bg-slate-900 dark:border-slate-700 w-4 h-4 border-slate-300">
                             <label for="untuk_semua" class="text-xs text-slate-600 dark:text-slate-400 font-bold select-none cursor-pointer">Tandai sebagai informasi penting (Important Badge)</label>
                         </div>
 
                         <div class="space-y-1">
                             <div class="flex justify-between items-center">
                                 <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Isi Pesan Pengumuman</label>
-                                <button type="button" onclick="generateAiPengumuman(this, '')" class="text-[10px] flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2 py-1 rounded-md font-bold transition-all shadow-sm">
+                                <button type="button" onclick="generateAiPengumuman(this, '')" class="text-[10px] flex items-center gap-1 bg-[#fee2e2] text-[#5c0912] hover:bg-[#fecaca] px-2 py-1 rounded-md font-bold transition-all shadow-sm">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                     Draf AI
                                 </button>
                             </div>
-                            <textarea name="isi" rows="5" required placeholder="Tulis rincian info instruksi kuliah di sini..." class="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-purple-500/10 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none transition resize-none placeholder-gray-300 dark:placeholder-gray-600 text-slate-700 dark:text-gray-100"></textarea>
+                            <textarea name="isi" rows="5" required placeholder="Tulis rincian info instruksi kuliah di sini..." class="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-[#a92a35]/10 focus:border-[#720c16] dark:focus:border-[#a92a35] focus:outline-none transition resize-none placeholder-gray-300 dark:placeholder-gray-600 text-slate-700 dark:text-gray-100"></textarea>
                         </div>
                     </div>
 
@@ -163,7 +163,7 @@
                         <button type="button" onclick="toggleAnnouncementModal('modalAnnouncement')" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition duration-150">
                             Batal
                         </button>
-                        <button type="submit" class="px-4 py-2 rounded-xl bg-[#321270] dark:bg-[#6c2bd9] text-xs font-bold text-white hover:bg-[#220b4d] dark:hover:bg-[#5b21b6] transition duration-150 shadow-sm">
+                        <button type="submit" class="px-4 py-2 rounded-xl bg-[#720c16] dark:bg-[#9a1622] text-xs font-bold text-white hover:bg-[#4c0810] dark:hover:bg-[#5c0912] transition duration-150 shadow-sm">
                             Terbitkan Pengumuman
                         </button>
                     </div>
@@ -179,7 +179,7 @@
         <div class="relative min-h-screen flex items-center justify-center p-4">
             <div class="relative bg-white dark:bg-slate-850 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
                 <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                    <div class="bg-[#321270] dark:bg-purple-600 p-1.5 rounded-lg text-white">
+                    <div class="bg-[#720c16] dark:bg-[#720c16] p-1.5 rounded-lg text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
@@ -193,23 +193,23 @@
                     <div class="px-6 py-5 space-y-4">
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Judul Pengumuman</label>
-                            <input type="text" name="judul" id="edit_judul" required class="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-purple-500/10 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none transition font-medium text-slate-700 dark:text-gray-100">
+                            <input type="text" name="judul" id="edit_judul" required class="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-[#a92a35]/10 focus:border-[#720c16] dark:focus:border-[#a92a35] focus:outline-none transition font-medium text-slate-700 dark:text-gray-100">
                         </div>
 
                         <div class="flex items-center gap-2 pt-1">
-                            <input type="checkbox" name="untuk_semua" id="edit_untuk_semua" value="1" class="rounded text-[#321270] dark:text-purple-600 focus:ring-[#321270] dark:bg-slate-900 dark:border-slate-700 w-4 h-4 border-slate-300">
+                            <input type="checkbox" name="untuk_semua" id="edit_untuk_semua" value="1" class="rounded text-[#720c16] dark:text-[#720c16] focus:ring-[#720c16] dark:bg-slate-900 dark:border-slate-700 w-4 h-4 border-slate-300">
                             <label for="edit_untuk_semua" class="text-xs text-slate-600 dark:text-slate-400 font-bold select-none cursor-pointer">Tandai sebagai informasi penting (Important Badge)</label>
                         </div>
 
                         <div class="space-y-1">
                             <div class="flex justify-between items-center">
                                 <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Isi Pesan Pengumuman</label>
-                                <button type="button" onclick="generateAiPengumuman(this, 'edit_')" class="text-[10px] flex items-center gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 px-2 py-1 rounded-md font-bold transition-all shadow-sm">
+                                <button type="button" onclick="generateAiPengumuman(this, 'edit_')" class="text-[10px] flex items-center gap-1 bg-[#fee2e2] text-[#5c0912] hover:bg-[#fecaca] px-2 py-1 rounded-md font-bold transition-all shadow-sm">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                     Draf AI
                                 </button>
                             </div>
-                            <textarea name="isi" id="edit_isi" rows="5" required class="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-purple-500/10 focus:border-[#321270] dark:focus:border-purple-500 focus:outline-none transition resize-none text-slate-700 dark:text-gray-100"></textarea>
+                            <textarea name="isi" id="edit_isi" rows="5" required class="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-sm focus:ring-2 focus:ring-[#a92a35]/10 focus:border-[#720c16] dark:focus:border-[#a92a35] focus:outline-none transition resize-none text-slate-700 dark:text-gray-100"></textarea>
                         </div>
                     </div>
 
@@ -217,7 +217,7 @@
                         <button type="button" onclick="toggleAnnouncementModal('modalEditAnnouncement')" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition duration-150">
                             Batal
                         </button>
-                        <button type="submit" class="px-4 py-2 rounded-xl bg-[#0f172a] dark:bg-[#6c2bd9] text-xs font-bold text-white hover:bg-slate-800 dark:hover:bg-[#5b21b6] transition duration-150 shadow-sm">
+                        <button type="submit" class="px-4 py-2 rounded-xl bg-[#0f172a] dark:bg-[#9a1622] text-xs font-bold text-white hover:bg-slate-800 dark:hover:bg-[#5c0912] transition duration-150 shadow-sm">
                             Simpan Perubahan
                         </button>
                     </div>
