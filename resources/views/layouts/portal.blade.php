@@ -1008,6 +1008,13 @@
             border-color: #9f1239 !important;
         }
         /* Keep student dark mode on the blue palette with readable controls. */
+        html.dark body.role-mahasiswa [class~="bg-[#c0e6ff]"] {
+            background-color: #c0e6ff !important;
+        }
+        html.dark body.role-mahasiswa [class~="bg-[#c0e6ff]"] [class~="text-[#002B6B]"],
+        html.dark body.role-mahasiswa [class~="bg-[#c0e6ff]"][class~="text-[#002B6B]"] {
+            color: #002B6B !important;
+        }
         html.dark body.role-mahasiswa :is(a, button)[class~="bg-[#c0e6ff]"][class~="text-[#002B6B]"] {
             color: #002B6B !important;
         }
