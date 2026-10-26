@@ -1,0 +1,61 @@
+services:
+  9router:
+    image: decolua/9router:latest
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /app/data
+    ports:
+      - "127.0.0.1:20128:20128"
+    volumes:
+      - 9router-data:/app/data
+
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${COMPOSE_DB_DATABASE:-cendekia}
+      MYSQL_USER: ${COMPOSE_DB_USER:-cendekia}
+      MYSQL_PASSWORD: ${COMPOSE_DB_PASSWORD:-local-cendekia-password}
+      MYSQL_ROOT_PASSWORD: ${COMPOSE_DB_ROOT_PASSWORD:-local-root-password}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${COMPOSE_DB_ROOT_PASSWORD:-local-root-password}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      9router:
+        condition: service_started
+    ports:
+      - "${APP_PORT:-8080}:80"
+    environment:
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_KEY: ${APP_KEY:?Set APP_KEY in your .env file}
+      APP_URL: http://localhost:${APP_PORT:-8080}
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${COMPOSE_DB_DATABASE:-cendekia}
+      DB_USERNAME: ${COMPOSE_DB_USER:-cendekia}
+      DB_PASSWORD: ${COMPOSE_DB_PASSWORD:-local-cendekia-password}
+      FILESYSTEM_DISK: public
+      AI_ROUTER_BASE_URL: http://9router:20128/v1
+      AI_ROUTER_API_KEY: ${AI_ROUTER_API_KEY:-}
+      AI_ROUTER_MODEL: ${AI_ROUTER_MODEL:-}
+    volumes:
+      - app-storage:/var/www/html/storage
+
+volumes:
+  9router-data:
+  mysql-data:
+  app-storage:

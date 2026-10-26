@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class AiAssistantController extends Controller
 {
@@ -17,61 +20,54 @@ class AiAssistantController extends Controller
     }
 
     /**
-     * Helper: Kirim request ke AI providers dengan fallback.
+     * Send AI requests through the configured 9Router service.
      */
-    private function callAiApi($messages)
+    private function callAiApi(array $messages): string
     {
-        $providers = [
-            [
-                'url' => 'https://api.groq.com/openai/v1/chat/completions',
-                'key' => env('GROQ_API_KEY'),
-                'model' => 'llama3-70b-8192'
-            ],
-            [
-                'url' => 'https://api.groq.com/openai/v1/chat/completions',
-                'key' => env('GROQ_API_KEY'),
-                'model' => 'gemma2-9b-it'
-            ],
-            [
-                'url' => 'https://openrouter.ai/api/v1/chat/completions',
-                'key' => env('OPENROUTER_API_KEY'),
-                'model' => 'meta-llama/llama-3.1-8b-instruct'
-            ]
-        ];
+        $baseUrl = rtrim((string) config('services.ai_router.base_url'), '/');
+        $apiKey = trim((string) config('services.ai_router.api_key'));
+        $model = trim((string) config('services.ai_router.model'));
 
-        $lastError = 'Semua API key tidak valid atau kosong.';
+        if ($baseUrl === '' || $apiKey === '' || $model === '') {
+            throw new RuntimeException('Layanan AI belum dikonfigurasi. Hubungi administrator untuk mengaktifkan 9Router.');
+        }
 
-        // Prevent PHP from timing out when AI takes a long time
         set_time_limit(180);
 
-        foreach ($providers as $provider) {
-            if (empty($provider['key'])) continue;
-
-            try {
-                $response = Http::timeout(120)->withHeaders([
-                    'Authorization' => 'Bearer ' . $provider['key'],
-                    'Content-Type' => 'application/json',
-                    'HTTP-Referer' => url('/'),
-                    'X-Title' => 'Cendekia AI'
-                ])->post($provider['url'], [
-                    'model' => $provider['model'],
+        try {
+            $response = Http::acceptJson()
+                ->withToken($apiKey)
+                ->connectTimeout(10)
+                ->timeout(120)
+                ->post($baseUrl.'/chat/completions', [
+                    'model' => $model,
                     'messages' => $messages,
                     'temperature' => 0.7,
                 ]);
+        } catch (ConnectionException $exception) {
+            Log::warning('Unable to connect to 9Router.', [
+                'exception' => $exception->getMessage(),
+            ]);
 
-                if ($response->successful()) {
-                    $data = $response->json();
-                    return $data['choices'][0]['message']['content'] ?? null;
-                }
-                
-                $lastError = 'Status: ' . $response->status() . '. ' . $response->body();
-            } catch (\Exception $e) {
-                $lastError = $e->getMessage();
-                continue;
-            }
+            throw new RuntimeException('9Router tidak dapat dihubungi. Pastikan service AI sedang aktif.', previous: $exception);
         }
 
-        throw new \Exception('Gagal menghubungi semua API AI fallback. Terakhir: ' . $lastError);
+        if (!$response->successful()) {
+            Log::warning('9Router returned an unsuccessful response.', [
+                'status' => $response->status(),
+            ]);
+
+            throw new RuntimeException('9Router gagal memproses permintaan (HTTP '.$response->status().'). Periksa API key, provider, dan model.');
+        }
+
+        $content = data_get($response->json(), 'choices.0.message.content');
+        if (!is_string($content) || trim($content) === '') {
+            Log::warning('9Router returned an empty or invalid AI response.');
+
+            throw new RuntimeException('9Router mengembalikan jawaban kosong. Periksa model yang dipilih.');
+        }
+
+        return trim($content);
     }
 
     /**
@@ -207,29 +203,38 @@ class AiAssistantController extends Controller
     {
         $user = $request->user();
         $isEn = app()->getLocale() === 'en' || session('locale') === 'en';
-        
+
         $jumlahKelas = $user->kelasDiampu()->count();
         $totalMahasiswa = \App\Models\MahasiswaKelas::whereIn('kelas_perkuliahan_id', $user->kelasDiampu()->pluck('kelas_perkuliahan.id'))->distinct('mahasiswa_id')->count();
         $tugasPerluDinilai = \App\Models\PengumpulanTugas::whereHas('tugas.kelasPerkuliahan', fn ($q) => $q->where('dosen_id', $user->id))
             ->where('status', 'dikumpulkan')
             ->count();
-        
-        if ($isEn) {
-            $msg = "Welcome to the academic portal. You are currently teaching $jumlahKelas active classes with a total of $totalMahasiswa enrolled students. " . 
-                ($tugasPerluDinilai > 0 
-                    ? "There are $tugasPerluDinilai student assignments awaiting your evaluation." 
-                    : "All student assignment evaluations have been completed successfully.");
-        } else {
-            $msg = "Selamat datang di portal akademik. Anda saat ini mengampu $jumlahKelas kelas aktif dengan total $totalMahasiswa mahasiswa terdaftar. " . 
-                ($tugasPerluDinilai > 0 
-                    ? "Terdapat $tugasPerluDinilai tugas mahasiswa yang siap untuk dievaluasi." 
-                    : "Seluruh evaluasi tugas mahasiswa telah terselesaikan dengan baik.");
-        }
 
-        return response()->json([
-            'success' => true,
-            'message' => $msg
-        ]);
+        $languageInstruction = $isEn
+            ? 'Write in professional, concise English.'
+            : 'Tulis dalam bahasa Indonesia yang profesional dan ringkas.';
+        $messages = [
+            [
+                'role' => 'system',
+                'content' => 'You are an academic dashboard assistant. Provide practical, supportive insights based only on the supplied counts. Do not invent facts. '.$languageInstruction,
+            ],
+            [
+                'role' => 'user',
+                'content' => "Create a short dashboard insight for a lecturer using these figures: {$jumlahKelas} classes, {$totalMahasiswa} enrolled students, and {$tugasPerluDinilai} assignments awaiting grading.",
+            ],
+        ];
+
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => $this->callAiApi($messages),
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'error' => $exception->getMessage(),
+            ], 500);
+        }
     }
 
     /**
