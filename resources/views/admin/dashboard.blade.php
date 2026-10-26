@@ -149,7 +149,7 @@
                         <span class="h-2 w-2 rounded-full bg-blue-600"></span>
                         Aktivitas Pengguna
                     </h2>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Grafik interaksi mahasiswa dan dosen berdasarkan data aktivitas portal LMS</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ $activityPeriodLabel }} · grafik interaksi dari data portal LMS</p>
                 </div>
 
                 <div class="dashboard-chart-controls">
@@ -165,8 +165,15 @@
                 </div>
             </div>
 
-            <div class="chart-canvas-wrap" style="height: 320px;">
+            <div class="chart-canvas-wrap relative" style="height: 320px;">
                 <canvas id="aktivitasChart"></canvas>
+                <div id="chartEmptyState" class="absolute inset-0 hidden flex-col items-center justify-center rounded-xl bg-white/90 text-center dark:bg-slate-800/90">
+                    <span class="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+                        <i class="bi bi-bar-chart-line text-xl"></i>
+                    </span>
+                    <p class="text-sm font-bold text-slate-700 dark:text-slate-200">Belum ada aktivitas pada periode ini</p>
+                    <p class="mt-1 max-w-xs text-xs text-slate-500 dark:text-slate-400">Grafik akan menampilkan data setelah aktivitas pengguna tercatat.</p>
+                </div>
             </div>
         </div>
 
@@ -317,6 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const palette = ['#012428', '#0D9488', '#10B981', '#F59E0B', '#EF4444', '#065F46', '#14B8A6'];
     const muted = '#E8EEF8';
     const totalValue = document.getElementById('chartTotalValue');
+    const chartCanvas = document.getElementById('aktivitasChart');
+    const chartEmptyState = document.getElementById('chartEmptyState');
 
     function isEnglishActive() {
         return {{ app()->getLocale() === 'en' ? 'true' : 'false' }} ||
@@ -361,6 +370,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (totalValue) {
             totalValue.textContent = formatNumber(values.reduce((sum, value) => sum + value, 0));
         }
+        const hasActivity = values.some(value => value > 0);
+        if (chartEmptyState) {
+            chartEmptyState.classList.toggle('hidden', hasActivity);
+            chartEmptyState.classList.toggle('flex', !hasActivity);
+        }
+        if (chartCanvas) {
+            chartCanvas.style.visibility = hasActivity ? 'visible' : 'hidden';
+        }
     }
 
     function buildDataset(rows) {
@@ -387,9 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    if (dataBulanan.length > 0) {
-        updateSummary(dataBulanan);
-    }
+    updateSummary(dataBulanan);
 
     const chart = new Chart(ctx, {
         type: 'bar',
