@@ -202,6 +202,44 @@ class DosenController extends Controller
     }
 
     /**
+     * Hapus beberapa data dosen yang dipilih.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'user_ids' => ['required', 'array', 'min:1'],
+            'user_ids.*' => ['required', 'integer', 'distinct', 'exists:users,id'],
+        ]);
+
+        $dosens = User::role('dosen')
+            ->whereIn('id', $validated['user_ids'])
+            ->get();
+
+        if ($dosens->count() !== count($validated['user_ids'])) {
+            return back()->withErrors([
+                'user_ids' => 'Pilihan berisi akun yang bukan dosen atau sudah tidak tersedia. Tidak ada data yang dihapus.',
+            ]);
+        }
+
+        DB::transaction(function () use ($dosens) {
+            foreach ($dosens as $item) {
+                if (!$item->delete()) {
+                    throw new \RuntimeException("Gagal menghapus data dosen {$item->id}.");
+                }
+            }
+        });
+
+        foreach ($dosens->pluck('foto')->filter() as $foto) {
+            if (!Storage::disk('public')->delete($foto)) {
+                Log::warning('Unable to remove lecturer photo after bulk deletion.', ['path' => $foto]);
+            }
+        }
+
+        return redirect()->route('admin.dosen.index')
+            ->with('success', "{$dosens->count()} data dosen berhasil dihapus.");
+    }
+
+    /**
      * Ekspor data dosen ke PDF.
      */
     public function exportPdf(Request $request)
