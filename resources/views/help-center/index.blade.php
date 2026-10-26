@@ -193,7 +193,7 @@
             </div>
 
             {{-- Tips --}}
-            <div class="help-center-surface-secondary rounded-2xl border border-blue-500/10 bg-gradient-to-br from-blue-500/[0.05] to-indigo-500/[0.04] p-5 dark:border-blue-500/20 dark:from-blue-500/[0.08] dark:to-transparent">
+            <div class="rounded-2xl border border-[#720c16]/20 bg-white p-5 shadow-sm dark:border-[#a92a35]/40 dark:bg-slate-900">
                 <p class="mb-3 text-sm font-bold text-slate-900 dark:text-white">{{ $isEn ? 'Usage Tips' : 'Tips Penggunaan' }}</p>
                 <ul class="space-y-2.5 text-xs font-medium text-slate-600 dark:text-slate-400">
                     @php
@@ -211,7 +211,7 @@
                     @endphp
                     @foreach ($tips as $tip)
                         <li class="flex items-start gap-2.5">
-                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#720c16] dark:text-[#f87171]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                             <span class="leading-relaxed">{{ $tip }}</span>
                         </li>
                     @endforeach

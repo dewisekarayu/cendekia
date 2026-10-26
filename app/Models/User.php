@@ -7,6 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -55,6 +57,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getFotoUrlAttribute(): ?string
+    {
+        $foto = trim((string) $this->foto);
+
+        if ($foto === '') {
+            return null;
+        }
+
+        if (Str::startsWith($foto, ['http://', 'https://'])) {
+            return $foto;
+        }
+
+        $path = preg_replace('#^(?:/?storage/|public/)#i', '', $foto);
+
+        if (Str::startsWith($path, 'foto-profil/')) {
+            return route('profile-photos.show', [
+                'filename' => basename($path),
+                'v' => hash('sha256', $path),
+            ], false);
+        }
+
+        return Storage::disk('public')->url(ltrim($path, '/'));
     }
 
     /**

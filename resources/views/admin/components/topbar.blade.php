@@ -10,8 +10,7 @@
 
         <div class="dropdown">
             <div class="admin-topbar-profile" data-bs-toggle="dropdown">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ auth()->user()->name }}"
-                     alt="{{ auth()->user()->name }}">
+                <x-user-avatar :name="auth()->user()->name" :photo-url="auth()->user()->foto_url" :size="40" />
                 <div class="admin-topbar-profile-text d-none d-sm-block">
                     <div class="role text-uppercase">Admin Profile</div>
                     <div class="name">{{ auth()->user()->name }}</div>

@@ -1,5 +1,11 @@
 <?php
 
+$railwayVolumePath = env('RAILWAY_VOLUME_MOUNT_PATH');
+$publicStoragePath = $railwayVolumePath
+    ? rtrim($railwayVolumePath, DIRECTORY_SEPARATOR)
+    : storage_path('app/public');
+$publicStoragePath = env('PUBLIC_STORAGE_PATH', $publicStoragePath);
+
 return [
 
     /*
@@ -40,7 +46,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => $publicStoragePath,
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -74,7 +80,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        public_path('storage') => $publicStoragePath,
     ],
 
 ];
