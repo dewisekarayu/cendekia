@@ -471,9 +471,32 @@
             <span x-text="toast.message"></span>
         </div>
 
-        {{-- Messages Container --}}
-        <div id="chat-messages-container" class="flex-1 overflow-y-auto chat-scrollbar px-3 py-4 sm:px-6 sm:py-6 relative scroll-smooth">
+        {{-- Messages Container with Drag and Drop Support --}}
+        <div id="chat-messages-container"
+             @dragover.prevent="isDragging = true"
+             @dragleave.prevent="isDragging = false"
+             @drop.prevent="handleFileDrop($event)"
+             class="flex-1 overflow-y-auto chat-scrollbar px-3 py-4 sm:px-6 sm:py-6 relative scroll-smooth">
             
+            {{-- Drag & Drop Overlay Animation --}}
+            <div x-show="isDragging"
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="fixed inset-4 sm:inset-10 z-50 rounded-3xl bg-[#720c16]/15 dark:bg-red-950/40 backdrop-blur-sm border-2 border-dashed border-[#720c16] dark:border-red-400 flex flex-col items-center justify-center p-6 text-center pointer-events-none shadow-2xl">
+                <div class="w-18 h-18 rounded-2xl bg-white dark:bg-slate-800 text-[#720c16] dark:text-red-400 flex items-center justify-center text-3xl shadow-xl animate-bounce mb-3 border border-red-200 dark:border-red-900/60">
+                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                </div>
+                <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">Lepaskan Berkas di Sini</h3>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mt-1">
+                    Mendukung dokumen perkuliahan (PDF, DOCX, XLSX, CSV, Teks, Kode) serta foto/gambar untuk dianalisis langsung oleh AI.
+                </p>
+            </div>
+
             {{-- Welcome Screen / Empty State --}}
             <div x-show="messages.length === 0" class="max-w-2xl mx-auto py-6 sm:py-10 text-center flex flex-col items-center justify-center">
                 
@@ -489,11 +512,33 @@
                     Halo, {{ auth()->user()->name }}!
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 max-w-md leading-relaxed">
-                    Asisten cerdas dosen untuk merancang RPS, skenario studi kasus, rubrik penilaian, pembuatan soal ujian, atau draf pengumuman kelas.
+                    Asisten cerdas dosen untuk bedah dokumen, analisis file, pembuatan gambar ilustrasi materi, draf RPS, dan evaluasi perkuliahan.
                 </p>
 
-                {{-- 4 Prompt Suggestion Cards --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5 mt-6 sm:mt-8 w-full text-left">
+                {{-- 6 Prompt Suggestion Cards --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mt-6 sm:mt-8 w-full text-left">
+                    
+                    {{-- 1. Analisis Berkas --}}
+                    <button @click="$refs.fileInput.click()"
+                            class="p-3.5 rounded-2xl border border-dashed border-[#720c16]/40 dark:border-red-500/40 hover:border-[#720c16] dark:hover:border-red-500 hover:bg-red-50/40 dark:hover:bg-red-950/20 shadow-xs hover:shadow-md transition text-left group">
+                        <div class="flex items-center gap-2 mb-1 text-[#720c16] dark:text-red-400 font-bold text-xs">
+                            <i class="bi bi-paperclip text-sm"></i>
+                            <span>Unggah & Analisis File</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">Lampirkan PDF, Word, Excel, Kode, atau Foto untuk dibedah dan dirangkum oleh AI.</p>
+                    </button>
+
+                    {{-- 2. Generate Gambar AI --}}
+                    <button @click="isImageMode = true; setInputText('Diagram alur interaktif sistem perkuliahan terdistribusi modern dengan konsep clean modern vector')"
+                            class="p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-amber-500/50 hover:bg-amber-50/40 dark:hover:bg-amber-950/20 shadow-xs hover:shadow-md transition text-left group">
+                        <div class="flex items-center gap-2 mb-1 text-amber-600 dark:text-amber-400 font-bold text-xs">
+                            <i class="bi bi-palette-fill"></i>
+                            <span>Buat Gambar AI</span>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">Generate ilustrasi visual, diagram konsep, atau infografis materi bahan ajar.</p>
+                    </button>
+
+                    {{-- 3. Draf RPS --}}
                     <button @click="sendSuggestion('Bantu buatkan draf Capaian Pembelajaran Lulusan (CPL) dan rincian mingguan RPS untuk mata kuliah baru.')"
                             class="p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-[#720c16]/50 dark:hover:border-red-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 shadow-xs hover:shadow-md transition text-left group">
                         <div class="flex items-center gap-2 mb-1 text-[#720c16] dark:text-red-400 font-bold text-xs">
@@ -503,6 +548,7 @@
                         <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">Susun silabus, CPL, CPMK, dan matriks 16 pertemuan kuliah.</p>
                     </button>
 
+                    {{-- 4. Ide Studi Kasus --}}
                     <button @click="sendSuggestion('Berikan 3 skenario studi kasus interaktif dan menantang untuk topik diskusi mahasiswa di kelas.')"
                             class="p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-[#720c16]/50 dark:hover:border-red-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 shadow-xs hover:shadow-md transition text-left group">
                         <div class="flex items-center gap-2 mb-1 text-sky-600 dark:text-sky-400 font-bold text-xs">
@@ -512,6 +558,7 @@
                         <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">Skenario nyata industri untuk memicu diskusi aktif mahasiswa.</p>
                     </button>
 
+                    {{-- 5. Soal HOTS --}}
                     <button @click="sendSuggestion('Buatkan 5 soal esai tingkat analisis (HOTS) lengkap beserta panduan rubrik penilaiannya.')"
                             class="p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-[#720c16]/50 dark:hover:border-red-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 shadow-xs hover:shadow-md transition text-left group">
                         <div class="flex items-center gap-2 mb-1 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
@@ -521,6 +568,7 @@
                         <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">Rancang soal evaluasi analitis lengkap dengan skor rubrik.</p>
                     </button>
 
+                    {{-- 6. Contoh Kode --}}
                     <button @click="sendSuggestion('Buatkan contoh kode implementasi bersih (clean code) dan studi kasus pemrograman untuk bahan ajar.')"
                             class="p-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-[#720c16]/50 dark:hover:border-red-500/50 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 shadow-xs hover:shadow-md transition text-left group">
                         <div class="flex items-center gap-2 mb-1 text-purple-600 dark:text-purple-400 font-bold text-xs">
@@ -540,7 +588,44 @@
                         {{-- USER MESSAGE --}}
                         <template x-if="msg.role === 'user'">
                             <div class="flex items-start justify-end gap-2.5">
-                                <div class="group relative flex flex-col items-end max-w-[85%] sm:max-w-[78%]">
+                                <div class="group relative flex flex-col items-end max-w-[88%] sm:max-w-[80%]">
+                                    
+                                    {{-- Attached File inside user bubble if present --}}
+                                    <template x-if="msg.file_info">
+                                        <div class="mb-2">
+                                            {{-- If image attachment --}}
+                                            <template x-if="msg.file_info.is_image">
+                                                <div class="relative group/img rounded-2xl overflow-hidden border border-white/20 bg-black/20 shadow-sm cursor-pointer max-w-[260px] sm:max-w-[320px]"
+                                                     @click="openLightbox(msg.file_info.url, msg.file_info.name)">
+                                                    <img :src="msg.file_info.url" :alt="msg.file_info.name" class="w-full max-h-[220px] object-cover transition duration-200 group-hover/img:scale-105">
+                                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition flex items-center justify-center text-white text-xs font-semibold gap-1.5">
+                                                        <i class="bi bi-arrows-fullscreen"></i>
+                                                        <span>Lihat Penuh</span>
+                                                    </div>
+                                                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-2 text-[10px] text-white flex items-center justify-between">
+                                                        <span class="truncate max-w-[180px]" x-text="msg.file_info.name"></span>
+                                                        <span class="opacity-75" x-text="msg.file_info.size"></span>
+                                                    </div>
+                                                </div>
+                                            </template>
+
+                                            {{-- If document attachment --}}
+                                            <template x-if="!msg.file_info.is_image">
+                                                <a :href="msg.file_info.url" target="_blank"
+                                                   class="flex items-center gap-3 p-2.5 px-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition max-w-[280px] sm:max-w-[340px]">
+                                                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-base shrink-0">
+                                                        <i :class="getFileIconClass(msg.file_info.type, msg.file_info.extension)"></i>
+                                                    </div>
+                                                    <div class="min-w-0 text-left">
+                                                        <p class="text-xs font-bold truncate" x-text="msg.file_info.name"></p>
+                                                        <p class="text-[10px] text-white/70" x-text="msg.file_info.size + ' • ' + (msg.file_info.extension || '').toUpperCase()"></p>
+                                                    </div>
+                                                    <i class="bi bi-box-arrow-up-right text-xs ml-auto text-white/60"></i>
+                                                </a>
+                                            </template>
+                                        </div>
+                                    </template>
+
                                     <div class="px-4 py-2.5 rounded-2xl rounded-tr-xs bg-[#720c16] text-white text-xs sm:text-sm font-medium leading-relaxed shadow-xs break-words">
                                         <p class="whitespace-pre-wrap select-text" x-text="msg.content"></p>
                                     </div>
@@ -576,6 +661,42 @@
                                         <span class="text-xs font-bold text-slate-800 dark:text-white">Cendekia AI</span>
                                         <span class="text-[10px] text-slate-400" x-text="msg.time || ''"></span>
                                     </div>
+
+                                    {{-- Generated Image Showcase Card if present --}}
+                                    <template x-if="msg.image_url">
+                                        <div class="w-full mb-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 shadow-md overflow-hidden">
+                                            <div class="relative group/aigen overflow-hidden bg-slate-900 cursor-pointer"
+                                                 @click="openLightbox(msg.image_url, msg.prompt || 'Gambar AI Cendekia')">
+                                                <img :src="msg.image_url" :alt="msg.prompt || 'Generated AI Image'" class="w-full max-h-[460px] object-contain mx-auto transition duration-300 group-hover/aigen:scale-[1.02]">
+                                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/aigen:opacity-100 transition flex items-center justify-center gap-3">
+                                                    <span class="px-3.5 py-1.5 rounded-full bg-white/90 text-slate-900 text-xs font-bold shadow-lg flex items-center gap-1.5">
+                                                        <i class="bi bi-arrows-fullscreen"></i> Perbesar Layar Penuh
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            {{-- Action Bar under generated image --}}
+                                            <div class="p-3 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
+                                                <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 min-w-0">
+                                                    <i class="bi bi-palette text-amber-500"></i>
+                                                    <span class="truncate max-w-[200px] sm:max-w-xs font-medium italic" x-text="msg.prompt || 'Ilustrasi AI'"></span>
+                                                </div>
+                                                <div class="flex items-center gap-1.5">
+                                                    <button type="button"
+                                                            @click="openLightbox(msg.image_url, msg.prompt || 'Gambar AI')"
+                                                            class="px-2.5 py-1 text-xs rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 transition flex items-center gap-1">
+                                                        <i class="bi bi-arrows-fullscreen text-xs"></i>
+                                                        <span>Layar Penuh</span>
+                                                    </button>
+                                                    <a :href="msg.image_url" download="cendekia_ai_image.jpg" target="_blank"
+                                                       class="px-2.5 py-1 text-xs rounded-lg bg-[#720c16] hover:bg-[#8a1824] text-white font-semibold transition flex items-center gap-1 shadow-xs">
+                                                        <i class="bi bi-download text-xs"></i>
+                                                        <span>Unduh Gambar</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
 
                                     {{-- Rich Formatted Markdown Content --}}
                                     <div class="w-full px-4 py-3.5 sm:px-5 sm:py-4 rounded-2xl rounded-tl-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 text-slate-800 dark:text-slate-100 text-xs sm:text-sm leading-relaxed shadow-xs overflow-hidden">
@@ -642,7 +763,7 @@
                         <span class="w-2 h-2 rounded-full bg-[#720c16] dark:bg-red-400 animate-bounce" style="animation-delay: 0ms"></span>
                         <span class="w-2 h-2 rounded-full bg-[#720c16] dark:bg-red-400 animate-bounce" style="animation-delay: 150ms"></span>
                         <span class="w-2 h-2 rounded-full bg-[#720c16] dark:bg-red-400 animate-bounce" style="animation-delay: 300ms"></span>
-                        <span class="text-xs text-slate-400 ml-1 font-medium">Cendekia AI sedang berpikir...</span>
+                        <span class="text-xs text-slate-400 ml-1 font-medium" x-text="isImageMode ? 'Cendekia AI sedang merancang gambar...' : (attachedFile ? 'Cendekia AI sedang menganalisis berkas...' : 'Cendekia AI sedang berpikir...')"></span>
                     </div>
                 </div>
 
@@ -651,33 +772,132 @@
         </div>
 
         {{-- =========================================================================
-             3. FLOATING INPUT BAR (CHATGPT STYLE)
+             3. FLOATING INPUT BAR (CHATGPT STYLE WITH FILE & IMAGE SUPPORT)
              ========================================================================= --}}
         <div class="p-3 sm:p-4 bg-gradient-to-t from-white via-white/95 to-transparent dark:from-slate-900 dark:via-slate-900/95 shrink-0 z-10">
             <div class="max-w-3xl mx-auto">
                 
-                {{-- Quick Topic Tags --}}
+                {{-- Quick Topic Tags & Action Modes --}}
                 <div x-show="messages.length > 0" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 text-[11px] text-slate-500">
                     <span class="font-semibold text-slate-400 shrink-0">Pintasan:</span>
+                    <button @click="isImageMode = !isImageMode"
+                            :class="isImageMode ? 'bg-amber-500 text-white font-bold' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-amber-600 dark:text-amber-400'"
+                            class="px-2.5 py-1 rounded-full shrink-0 flex items-center gap-1 transition">
+                        <i class="bi bi-palette-fill text-[10px]"></i>
+                        <span>Gambar AI</span>
+                    </button>
+                    <button @click="$refs.fileInput.click()" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shrink-0 flex items-center gap-1">
+                        <i class="bi bi-paperclip text-[11px]"></i>
+                        <span>Analisis File</span>
+                    </button>
                     <button @click="setInputText('Rancang rubrik penilaian untuk tugas akhir kelompok mata kuliah ini.')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shrink-0">📊 Buat Rubrik</button>
                     <button @click="setInputText('Buatkan 3 soal studi kasus analitis berdasarkan materi di atas.')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shrink-0">📝 Soal HOTS</button>
                     <button @click="setInputText('Ringkas pembahasan di atas menjadi 5 poin penting untuk slide presentasi.')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shrink-0">💡 Ringkas Slide</button>
                     <button @click="setInputText('Tulis pengumuman LMS untuk mahasiswa terkait tugas ini.')" class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 shrink-0">📢 Pengumuman</button>
                 </div>
 
+                {{-- Mode Indikator: AI Image Generation Mode --}}
+                <div x-show="isImageMode"
+                     x-cloak
+                     x-transition
+                     class="mb-2 p-2 px-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-transparent border border-amber-500/30 flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-bold">
+                        <i class="bi bi-palette-fill text-amber-500"></i>
+                        <span>Mode Pembuatan Gambar AI Aktif &bull; Tuliskan konsep atau deskripsi visual</span>
+                    </div>
+                    <button type="button" @click="isImageMode = false" class="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                        Matikan <i class="bi bi-x"></i>
+                    </button>
+                </div>
+
+                {{-- Attached File Preview Pill (Pre-send) --}}
+                <div x-show="attachedFile"
+                     x-cloak
+                     x-transition
+                     class="mb-2 p-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 shadow-xs">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        {{-- Thumbnail if image --}}
+                        <template x-if="attachedFile && attachedFile.is_image">
+                            <div class="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-slate-300 dark:border-slate-600 bg-slate-200 cursor-pointer"
+                                 @click="openLightbox(attachedFile.previewUrl, attachedFile.name)">
+                                <img :src="attachedFile.previewUrl" class="w-full h-full object-cover">
+                            </div>
+                        </template>
+
+                        {{-- Icon if doc --}}
+                        <template x-if="attachedFile && !attachedFile.is_image">
+                            <div class="w-10 h-10 rounded-lg shrink-0 flex items-center justify-center text-lg bg-slate-200 dark:bg-slate-700">
+                                <i :class="getFileIconClass(attachedFile.type, attachedFile.extension)"></i>
+                            </div>
+                        </template>
+
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <p class="text-xs font-bold text-slate-800 dark:text-white truncate max-w-[200px] sm:max-w-md" x-text="attachedFile ? attachedFile.name : ''"></p>
+                                <span class="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase tracking-wider bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300" x-text="attachedFile ? attachedFile.extension : ''"></span>
+                            </div>
+                            <div class="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
+                                <span x-text="attachedFile ? attachedFile.sizeFormatted : ''"></span>
+                                <span>&bull;</span>
+                                <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                    <i class="bi bi-shield-check"></i> Siap dianalisis AI
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Remove Attachment Button --}}
+                    <button type="button"
+                            @click="removeAttachedFile()"
+                            title="Batalkan lampiran"
+                            class="w-7 h-7 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center justify-center transition">
+                        <i class="bi bi-x-lg text-xs"></i>
+                    </button>
+                </div>
+
                 {{-- Input Box --}}
-                <div class="flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-md focus-within:ring-2 focus-within:ring-[#720c16]/20 dark:focus-within:ring-red-500/20 focus-within:border-[#720c16] dark:focus-within:border-red-500/70 transition-all overflow-hidden">
+                <div class="flex flex-col bg-white dark:bg-slate-800 border rounded-2xl shadow-md transition-all overflow-hidden"
+                     :class="isImageMode ? 'border-amber-500/50 ring-2 ring-amber-500/20' : (attachedFile ? 'border-emerald-500/50 ring-2 ring-emerald-500/20' : 'border-slate-200 dark:border-slate-700 focus-within:ring-2 focus-within:ring-[#720c16]/20 dark:focus-within:ring-red-500/20 focus-within:border-[#720c16] dark:focus-within:border-red-500/70')">
+                    
                     <textarea x-ref="chatInput"
                               x-model="inputMessage"
                               @input="autoResizeInput()"
                               @keydown.enter="handleEnterKey($event)"
+                              @paste="handlePaste($event)"
                               rows="1"
-                              placeholder="Tanyakan materi, draf RPS, soal ujian, atau studi kasus perkuliahan..."
+                              :placeholder="isImageMode ? 'Deskripsikan gambar perkuliahan yang ingin dibuat AI (mis: diagram arsitektur jaringan komputer modern)...' : (attachedFile ? 'Tulis instruksi khusus untuk analisis berkas di atas (atau tekan Kirim untuk analisis lengkap)...' : 'Tanyakan materi, draf RPS, soal ujian, atau lampirkan berkas...')"
                               class="w-full bg-transparent border-0 focus:ring-0 focus:outline-none resize-none px-4 py-3 text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 max-h-[160px] min-h-[46px]"></textarea>
 
                     {{-- Bottom Controls inside input --}}
                     <div class="flex items-center justify-between px-3 pb-2.5 pt-1 text-slate-400">
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1">
+                            
+                            {{-- Attachment Hidden File Input --}}
+                            <input type="file"
+                                   x-ref="fileInput"
+                                   @change="handleFileSelect($event)"
+                                   accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.json,.sql,.py,.php,.js,.ts,.html,.css,.md"
+                                   class="hidden">
+
+                            {{-- Attachment Button (Paperclip) --}}
+                            <button type="button"
+                                    @click="$refs.fileInput.click()"
+                                    title="Lampirkan File Dokumen atau Foto (PDF, Word, Excel, Gambar, dll)"
+                                    class="p-1.5 px-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-xs font-semibold transition flex items-center gap-1">
+                                <i class="bi bi-paperclip text-sm"></i>
+                                <span class="hidden md:inline">Lampirkan</span>
+                            </button>
+
+                            {{-- AI Image Generation Mode Toggle --}}
+                            <button type="button"
+                                    @click="isImageMode = !isImageMode"
+                                    :class="isImageMode ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold border border-amber-500/30' : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'"
+                                    title="Mode Pembuatan Gambar AI"
+                                    class="p-1.5 px-2 rounded-lg text-xs transition flex items-center gap-1.5">
+                                <i class="bi bi-palette-fill text-amber-500"></i>
+                                <span class="hidden sm:inline">Buat Gambar</span>
+                            </button>
+
                             {{-- Voice Input (Speech Recognition) --}}
                             <button type="button"
                                     x-show="speechRecognitionSupported"
@@ -715,11 +935,11 @@
                             <template x-if="!isLoading">
                                 <button type="button"
                                         @click="sendMessage()"
-                                        :disabled="inputMessage.trim() === ''"
+                                        :disabled="inputMessage.trim() === '' && !attachedFile"
                                         title="Kirim (Enter)"
-                                        class="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-[#720c16] hover:bg-[#8a1824] active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5">
-                                    <span class="hidden sm:inline">Kirim</span>
-                                    <i class="bi bi-arrow-up"></i>
+                                        class="p-2 sm:px-3.5 sm:py-1.5 rounded-xl bg-[#720c16] hover:bg-[#8a1824] active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5">
+                                    <span class="hidden sm:inline" x-text="isImageMode ? 'Buat Gambar' : (attachedFile ? 'Analisis Berkas' : 'Kirim')"></span>
+                                    <i :class="isImageMode ? 'bi bi-palette' : (attachedFile ? 'bi bi-file-earmark-arrow-up' : 'bi bi-arrow-up')"></i>
                                 </button>
                             </template>
                         </div>
@@ -734,6 +954,61 @@
         </div>
 
     </main>
+
+    {{-- Fullscreen Image Lightbox Modal --}}
+    <div x-show="lightbox.show"
+         x-cloak
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @keydown.escape.window="closeLightbox()"
+         class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-between p-3 sm:p-6 select-none"
+         @click.self="closeLightbox()">
+        
+        {{-- Lightbox Header --}}
+        <div class="w-full max-w-5xl flex items-center justify-between text-white pb-3 border-b border-white/10 z-10">
+            <div class="flex items-center gap-2 min-w-0">
+                <i class="bi bi-image text-amber-400"></i>
+                <h3 class="text-xs sm:text-sm font-bold truncate max-w-md" x-text="lightbox.title || 'Tampilan Gambar Penuh'"></h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <button @click="zoomOut()" title="Perkecil" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                    <i class="bi bi-zoom-out text-sm"></i>
+                </button>
+                <button @click="resetZoom()" title="Reset Ukuran (100%)" class="px-2.5 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center transition">
+                    <span x-text="Math.round(lightbox.zoom * 100) + '%'"></span>
+                </button>
+                <button @click="zoomIn()" title="Perbesar" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                    <i class="bi bi-zoom-in text-sm"></i>
+                </button>
+                <a :href="lightbox.url" download="cendekia_preview.jpg" target="_blank"
+                   title="Unduh Gambar Resolusi Penuh"
+                   class="px-3 h-8 rounded-lg bg-[#720c16] hover:bg-[#8a1824] text-white text-xs font-semibold flex items-center gap-1.5 transition ml-2 shadow-sm">
+                    <i class="bi bi-download"></i>
+                    <span class="hidden sm:inline">Unduh</span>
+                </a>
+                <button @click="closeLightbox()" title="Tutup (ESC)" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition ml-1">
+                    <i class="bi bi-x-lg text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        {{-- Lightbox Image Stage --}}
+        <div class="flex-1 w-full max-w-5xl flex items-center justify-center overflow-auto p-2" @click.self="closeLightbox()">
+            <img :src="lightbox.url"
+                 :style="'transform: scale(' + lightbox.zoom + '); transition: transform 0.15s ease-out;'"
+                 class="max-h-[82vh] max-w-full object-contain rounded-xl shadow-2xl"
+                 @click.stop>
+        </div>
+
+        {{-- Lightbox Footer Info --}}
+        <div class="text-[11px] text-white/50 pt-2 text-center">
+            Tekan <kbd class="px-1.5 py-0.5 rounded bg-white/20 text-white font-mono">ESC</kbd> atau klik area luar untuk menutup
+        </div>
+    </div>
 
 </div>
 @endsection
@@ -759,6 +1034,17 @@ function cendekiaGptApp() {
             show: false,
             message: '',
             timer: null
+        },
+
+        // File Attachment & Image Generation State
+        attachedFile: null,
+        isDragging: false,
+        isImageMode: false,
+        lightbox: {
+            show: false,
+            url: '',
+            title: '',
+            zoom: 1
         },
 
         // Storage Key per user
@@ -989,21 +1275,172 @@ function cendekiaGptApp() {
             return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
         },
 
+        // ----------------------------------------------------
+        // FILE & ATTACHMENT HANDLERS
+        // ----------------------------------------------------
+        getFileIconClass(type, ext) {
+            const e = (ext || '').toLowerCase();
+            if (type === 'pdf' || e === 'pdf') return 'bi bi-file-earmark-pdf-fill text-red-500';
+            if (type === 'word' || e === 'doc' || e === 'docx') return 'bi bi-file-earmark-word-fill text-blue-500';
+            if (type === 'excel' || e === 'xls' || e === 'xlsx' || e === 'csv') return 'bi bi-file-earmark-excel-fill text-emerald-500';
+            if (type === 'code' || ['py', 'php', 'js', 'ts', 'html', 'css', 'sql', 'json'].includes(e)) return 'bi bi-file-earmark-code-fill text-purple-500';
+            if (type === 'image' || ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'].includes(e)) return 'bi bi-file-earmark-image-fill text-pink-500';
+            return 'bi bi-file-earmark-text-fill text-amber-500';
+        },
+
+        handleFileSelect(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+                this.processFile(files[0]);
+            }
+        },
+
+        handleFileDrop(e) {
+            this.isDragging = false;
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                this.processFile(e.dataTransfer.files[0]);
+            }
+        },
+
+        handlePaste(e) {
+            if (e.clipboardData && e.clipboardData.items) {
+                for (let i = 0; i < e.clipboardData.items.length; i++) {
+                    const item = e.clipboardData.items[i];
+                    if (item.kind === 'file') {
+                        const file = item.getAsFile();
+                        if (file) {
+                            this.processFile(file);
+                            e.preventDefault();
+                            this.showToast('Berkas dari clipboard berhasil dilampirkan!');
+                            return;
+                        }
+                    }
+                }
+            }
+        },
+
+        processFile(file) {
+            if (file.size > 25 * 1024 * 1024) {
+                this.showToast('Ukuran berkas maksimal 25 MB.');
+                return;
+            }
+
+            const ext = file.name.split('.').pop().toLowerCase();
+            const isImage = file.type.startsWith('image/') || ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'].includes(ext);
+
+            let type = 'document';
+            if (isImage) type = 'image';
+            else if (ext === 'pdf') type = 'pdf';
+            else if (['doc', 'docx'].includes(ext)) type = 'word';
+            else if (['xls', 'xlsx', 'csv'].includes(ext)) type = 'excel';
+            else if (['py', 'php', 'js', 'ts', 'html', 'css', 'sql', 'json'].includes(ext)) type = 'code';
+            else if (['txt', 'md'].includes(ext)) type = 'text';
+
+            let previewUrl = '';
+            if (isImage) {
+                previewUrl = URL.createObjectURL(file);
+            }
+
+            // Format file size
+            let sizeFormatted = '';
+            if (file.size >= 1048576) {
+                sizeFormatted = (file.size / 1048576).toFixed(1) + ' MB';
+            } else if (file.size >= 1024) {
+                sizeFormatted = Math.round(file.size / 1024) + ' KB';
+            } else {
+                sizeFormatted = file.size + ' B';
+            }
+
+            this.attachedFile = {
+                file: file,
+                name: file.name,
+                size: file.size,
+                sizeFormatted: sizeFormatted,
+                extension: ext,
+                type: type,
+                is_image: isImage,
+                previewUrl: previewUrl
+            };
+
+            this.showToast(`Berkas "${file.name}" siap dianalisis!`);
+            this.$nextTick(() => {
+                if (this.$refs.chatInput) this.$refs.chatInput.focus();
+            });
+        },
+
+        removeAttachedFile() {
+            if (this.attachedFile && this.attachedFile.previewUrl && this.attachedFile.is_image) {
+                URL.revokeObjectURL(this.attachedFile.previewUrl);
+            }
+            this.attachedFile = null;
+            if (this.$refs.fileInput) {
+                this.$refs.fileInput.value = '';
+            }
+        },
+
+        // ----------------------------------------------------
+        // LIGHTBOX VIEWER HANDLERS
+        // ----------------------------------------------------
+        openLightbox(url, title) {
+            this.lightbox.url = url;
+            this.lightbox.title = title || 'Tampilan Gambar AI';
+            this.lightbox.zoom = 1;
+            this.lightbox.show = true;
+        },
+
+        closeLightbox() {
+            this.lightbox.show = false;
+            this.lightbox.zoom = 1;
+        },
+
+        zoomIn() {
+            this.lightbox.zoom = Math.min(this.lightbox.zoom + 0.25, 3.0);
+        },
+
+        zoomOut() {
+            this.lightbox.zoom = Math.max(this.lightbox.zoom - 0.25, 0.5);
+        },
+
+        resetZoom() {
+            this.lightbox.zoom = 1;
+        },
+
         async sendMessage() {
             const text = this.inputMessage.trim();
-            if (!text || this.isLoading) return;
+            if ((!text && !this.attachedFile) || this.isLoading) return;
 
             // Stop speech if currently speaking
             this.stopSpeech();
 
+            // Copy attached file info for user bubble
+            let fileInfo = null;
+            let fileToUpload = null;
+            if (this.attachedFile) {
+                fileToUpload = this.attachedFile.file;
+                fileInfo = {
+                    name: this.attachedFile.name,
+                    size: this.attachedFile.sizeFormatted,
+                    extension: this.attachedFile.extension,
+                    type: this.attachedFile.type,
+                    is_image: this.attachedFile.is_image,
+                    url: this.attachedFile.previewUrl || ''
+                };
+            }
+
+            const currentMode = this.isImageMode ? 'image' : null;
+
             // Append User Message
             const userMsg = {
                 role: 'user',
-                content: text,
-                time: this.getCurrentTime()
+                content: text || (fileInfo ? `Analisis berkas: ${fileInfo.name}` : ''),
+                time: this.getCurrentTime(),
+                file_info: fileInfo
             };
             this.messages.push(userMsg);
+
             this.inputMessage = '';
+            this.removeAttachedFile();
+            this.isImageMode = false;
             this.autoResizeInput();
             this.isLoading = true;
             this.scrollToBottom();
@@ -1012,7 +1449,8 @@ function cendekiaGptApp() {
             const currentChat = this.conversations.find(c => c.id === this.activeChatId);
             if (currentChat) {
                 if (currentChat.messages.length === 0 || currentChat.title === 'Obrolan Baru') {
-                    currentChat.title = text.length > 36 ? text.substring(0, 36) + '...' : text;
+                    const promptTitle = text || (fileInfo ? `Analisis ${fileInfo.name}` : 'Obrolan AI');
+                    currentChat.title = promptTitle.length > 36 ? promptTitle.substring(0, 36) + '...' : promptTitle;
                 }
                 currentChat.messages = this.messages;
                 currentChat.updatedAt = Date.now();
@@ -1025,31 +1463,81 @@ function cendekiaGptApp() {
                     content: m.content
                 }));
 
-                const response = await fetch('{{ route('dosen.ai-assistant.chat') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        message: text,
-                        history: historyPayload
-                    })
-                });
+                let response;
+                if (fileToUpload) {
+                    // Gunakan FormData untuk pengiriman berkas
+                    const formData = new FormData();
+                    formData.append('message', text);
+                    formData.append('file', fileToUpload);
+                    formData.append('history', JSON.stringify(historyPayload));
+                    if (currentMode) formData.append('mode', currentMode);
+
+                    response = await fetch('{{ route('dosen.ai-assistant.chat') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: formData
+                    });
+                } else if (currentMode === 'image') {
+                    // Mode eksplisit buat gambar
+                    response = await fetch('{{ route('dosen.ai-assistant.generate-image') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            prompt: text
+                        })
+                    });
+                } else {
+                    // Chat teks standar
+                    response = await fetch('{{ route('dosen.ai-assistant.chat') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            message: text,
+                            history: historyPayload
+                        })
+                    });
+                }
 
                 const data = await response.json();
 
-                if (data.success && data.message) {
-                    this.messages.push({
-                        role: 'assistant',
-                        content: data.message,
-                        time: this.getCurrentTime(),
-                        rating: null
-                    });
+                if (data.success) {
+                    // Update URL berkas di userMsg jika server mengembalikan URL penyimpanan permanen
+                    if (data.file_info && userMsg.file_info) {
+                        userMsg.file_info.url = data.file_info.url;
+                    }
+
+                    if (data.type === 'image' && data.image_url) {
+                        this.messages.push({
+                            role: 'assistant',
+                            type: 'image',
+                            image_url: data.image_url,
+                            prompt: data.prompt || text,
+                            content: data.message,
+                            time: this.getCurrentTime(),
+                            rating: null
+                        });
+                    } else {
+                        this.messages.push({
+                            role: 'assistant',
+                            type: 'text',
+                            content: data.message,
+                            time: this.getCurrentTime(),
+                            rating: null
+                        });
+                    }
                 } else {
                     this.messages.push({
                         role: 'assistant',
-                        content: '⚠️ **Terjadi Kendala:** ' + (data.error || 'Layanan AI sedang tidak dapat dihubungi. Silakan coba lagi.'),
+                        type: 'text',
+                        content: '⚠️ **Terjadi Kendala:** ' + (data.error || 'Layanan AI sedang tidak dapat diproses. Silakan coba lagi.'),
                         time: this.getCurrentTime()
                     });
                 }
@@ -1057,6 +1545,7 @@ function cendekiaGptApp() {
                 console.error('Chat error:', error);
                 this.messages.push({
                     role: 'assistant',
+                    type: 'text',
                     content: '⚠️ **Koneksi Terputus:** Tidak dapat menghubungi server. Periksa jaringan internet atau konfigurasi sistem.',
                     time: this.getCurrentTime()
                 });
