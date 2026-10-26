@@ -23,11 +23,35 @@
             </div>
         @endif
 
+        @if ($errors->any())
+            <div class="alert alert-danger mb-4" role="alert" style="border-radius: 10px;">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+            <label class="d-inline-flex align-items-center gap-2 mb-0 text-secondary small">
+                <input type="checkbox" id="selectAllPengumuman" class="form-check-input m-0">
+                Pilih semua pengumuman di halaman ini
+            </label>
+            <form id="bulkDeletePengumumanForm" action="{{ route('admin.pengumuman.bulk-destroy') }}" method="POST"
+                  onsubmit="return confirm('Hapus semua pengumuman yang dipilih? Tindakan ini tidak dapat dibatalkan.');">
+                @csrf
+                <button type="submit" id="bulkDeletePengumumanButton" class="btn btn-danger btn-sm" disabled>
+                    <i class="bi bi-trash me-1"></i> Hapus yang dipilih (<span id="selectedPengumumanCount">0</span>)
+                </button>
+            </form>
+        </div>
+
         <div class="d-flex flex-column gap-3 mb-4">
             @forelse ($pengumuman as $index => $item)
                 <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 12px;" data-pg-card>
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div class="d-flex align-items-center flex-wrap gap-2">
+                            <input type="checkbox" name="pengumuman_ids[]" value="{{ $item->id }}"
+                                   class="form-check-input m-0 pengumuman-select"
+                                   form="bulkDeletePengumumanForm"
+                                   aria-label="Pilih pengumuman {{ $item->judul }}">
                             <span class="badge bg-light text-dark border font-monospace px-2 py-1" style="font-size: 0.75rem;">
                                 #{{ ($pengumuman->currentPage() - 1) * $pengumuman->perPage() + $index + 1 }}
                             </span>
@@ -165,6 +189,33 @@
             @endif
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectAll = document.getElementById('selectAllPengumuman');
+            const checkboxes = Array.from(document.querySelectorAll('.pengumuman-select'));
+            const deleteButton = document.getElementById('bulkDeletePengumumanButton');
+            const selectedCount = document.getElementById('selectedPengumumanCount');
+
+            function updateBulkDeleteState() {
+                const checkedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+                deleteButton.disabled = checkedCount === 0;
+                selectedCount.textContent = checkedCount;
+                selectAll.checked = checkboxes.length > 0 && checkedCount === checkboxes.length;
+                selectAll.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+            }
+
+            selectAll.addEventListener('change', function () {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAll.checked;
+                });
+                updateBulkDeleteState();
+            });
+
+            checkboxes.forEach(checkbox => checkbox.addEventListener('change', updateBulkDeleteState));
+            updateBulkDeleteState();
+        });
+    </script>
 
     {{-- Modal Buat Pengumuman --}}
     <div class="modal fade" id="createPengumumanModal" tabindex="-1" aria-labelledby="createPengumumanModalLabel" aria-hidden="true">
