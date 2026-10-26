@@ -3,16 +3,16 @@
 @section('title', 'Self-Analytics & EWS')
 
 @section('content')
-<div class="mb-6 rounded-2xl bg-gradient-to-r from-[#002B6B] via-[#0044a8] to-blue-600 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-lg">
+<div class="mb-6 rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 px-6 py-5 sm:px-8 sm:py-6 relative overflow-hidden shadow-sm">
     <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-[#c0e6ff]">Early Warning System Mahasiswa</p>
-            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-white">Self-Analytics EWS</h1>
-            <p class="mt-2 text-sm text-blue-100/90">Pantau performa akademik Anda secara mandiri agar terhindar dari risiko gagal mata kuliah.</p>
+            <p class="text-xs font-bold uppercase tracking-wide text-[#002B6B]/75 dark:text-blue-300">Early Warning System Mahasiswa</p>
+            <h1 class="mt-1 text-xl sm:text-2xl font-extrabold text-[#002B6B] dark:text-white">Self-Analytics EWS</h1>
+            <p class="mt-2 text-sm text-[#003b8e]/80 dark:text-blue-200/80">Pantau performa akademik Anda secara mandiri agar terhindar dari risiko gagal mata kuliah.</p>
         </div>
     </div>
-    <div class="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-white/5 pointer-events-none"></div>
-    <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-black/10 pointer-events-none"></div>
+    <div class="absolute -right-6 -top-6 w-48 h-48 rounded-full bg-white/40 pointer-events-none"></div>
+    <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-white/20 pointer-events-none"></div>
 </div>
 
 {{-- Global Status Cards --}}

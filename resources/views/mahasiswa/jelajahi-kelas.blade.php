@@ -4,14 +4,14 @@
 
 <x-flash-message />
 
-<div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#002B6B] via-[#0052cc] to-[#38bdf8] px-6 py-6 sm:px-8 shadow-lg shadow-blue-950/20 relative">
-    <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10"></div>
+<div class="mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 px-6 py-6 sm:px-8 shadow-sm relative">
+    <div class="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/40"></div>
     <div class="relative z-10">
-        <p class="text-xs font-bold uppercase tracking-widest text-[#c0e6ff]">Bergabung Kelas Baru</p>
-        <h1 class="mt-1 text-xl font-extrabold text-white sm:text-2xl">Jelajahi Kelas</h1>
-        <p class="mt-1 text-sm text-blue-100/90">
+        <p class="text-xs font-bold uppercase tracking-widest text-[#002B6B]/75 dark:text-blue-300">Bergabung Kelas Baru</p>
+        <h1 class="mt-1 text-xl font-extrabold text-[#002B6B] dark:text-white sm:text-2xl">Jelajahi Kelas</h1>
+        <p class="mt-1 text-sm text-[#003b8e]/80 dark:text-blue-200/80">
             Kelas aktif untuk
-            <span class="font-semibold text-white">{{ auth()->user()->programStudi?->nama_prodi ?? '-' }}</span>
+            <span class="font-bold text-[#002B6B] dark:text-white">{{ auth()->user()->programStudi?->nama_prodi ?? '-' }}</span>
             semester ini.
         </p>
     </div>
@@ -26,19 +26,19 @@
         <p class="mt-1 max-w-sm text-xs text-gray-400 leading-relaxed">
             Kamu mungkin sudah bergabung ke semua kelas aktif di prodimu, atau belum ada kelas baru untuk semester ini.
         </p>
-        <a href="{{ route('mahasiswa.kelas-saya') }}" class="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-[#002B6B] px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 transition">
+        <a href="{{ route('mahasiswa.kelas-saya') }}" class="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-[#c0e6ff] px-5 py-2.5 text-sm font-bold text-[#002B6B] border border-[#002B6B]/20 hover:bg-[#a8daf8] transition shadow-xs">
             Lihat Kelas Saya
         </a>
     </div>
 @else
     @php
         $colors = [
-            ['top' => 'bg-[#002B6B]', 'badge' => 'bg-blue-50 text-[#002B6B] border border-blue-200/60', 'btn' => 'bg-[#002B6B] hover:bg-blue-900'],
-            ['top' => 'bg-blue-600',   'badge' => 'bg-sky-50 text-blue-700 border border-sky-200/60',     'btn' => 'bg-blue-600 hover:bg-blue-700'],
-            ['top' => 'bg-sky-500',    'badge' => 'bg-sky-100 text-sky-800 border border-sky-200/80',     'btn' => 'bg-sky-600 hover:bg-sky-700'],
-            ['top' => 'bg-indigo-600', 'badge' => 'bg-indigo-50 text-indigo-700 border border-indigo-200/60', 'btn' => 'bg-indigo-600 hover:bg-indigo-700'],
-            ['top' => 'bg-cyan-600',   'badge' => 'bg-cyan-50 text-cyan-800 border border-cyan-200/60',   'btn' => 'bg-cyan-600 hover:bg-cyan-700'],
-            ['top' => 'bg-blue-700',   'badge' => 'bg-blue-100 text-blue-800 border border-blue-200/80',   'btn' => 'bg-blue-700 hover:bg-blue-800'],
+            ['top' => 'bg-[#c0e6ff]', 'badge' => 'bg-sky-50 text-[#002B6B] border border-[#002B6B]/20', 'btn' => 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 hover:bg-[#a8daf8]'],
+            ['top' => 'bg-blue-600',   'badge' => 'bg-sky-50 text-blue-700 border border-sky-200/60',     'btn' => 'bg-blue-600 text-white hover:bg-blue-700'],
+            ['top' => 'bg-sky-500',    'badge' => 'bg-sky-100 text-sky-800 border border-sky-200/80',     'btn' => 'bg-sky-500 text-white hover:bg-sky-600'],
+            ['top' => 'bg-indigo-600', 'badge' => 'bg-indigo-50 text-indigo-700 border border-indigo-200/60', 'btn' => 'bg-indigo-600 text-white hover:bg-indigo-700'],
+            ['top' => 'bg-cyan-600',   'badge' => 'bg-cyan-50 text-cyan-800 border border-cyan-200/60',   'btn' => 'bg-cyan-600 text-white hover:bg-cyan-700'],
+            ['top' => 'bg-blue-500',   'badge' => 'bg-blue-100 text-blue-800 border border-blue-200/80',   'btn' => 'bg-blue-500 text-white hover:bg-blue-600'],
         ];
     @endphp
 
@@ -78,7 +78,7 @@
                         <form method="POST" action="{{ route('mahasiswa.kelas.join', $kelas->id) }}">
                             @csrf
                             <button type="submit"
-                                    class="w-full rounded-xl {{ $c['btn'] }} py-2.5 text-xs font-bold text-white shadow-sm transition active:scale-95">
+                                    class="w-full rounded-xl {{ $c['btn'] }} py-2.5 text-xs font-bold shadow-sm transition active:scale-95">
                                 + Daftar Kelas Ini
                             </button>
                         </form>
