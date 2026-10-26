@@ -170,7 +170,7 @@
 
             {{-- Table --}}
             <div class="overflow-x-auto">
-                <table class="w-full text-sm">
+                <table id="gradebookTable" class="w-full text-sm">
                     <thead>
                         <tr class="border-b border-gray-100 dark:border-slate-700 bg-gray-50/70 dark:bg-slate-900/30 text-[11px] font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500">
                             <th class="px-3 py-3 text-center w-12">NO</th>
@@ -417,8 +417,25 @@
 
 @endsection
 
+@push('styles')
+<style>
+    #gradebookTable tbody tr {
+        height: 56px;
+    }
+
+    #gradebookTable td {
+        padding-block: 0.5rem;
+        vertical-align: middle;
+    }
+</style>
+@endpush
+
 @push('scripts')
 <script>
+if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'manual';
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('studentSearch');
     const gradeFilter = document.getElementById('gradeFilter');

@@ -52,7 +52,7 @@
             <span class="badge-kode text-xs font-semibold bg-white/15 text-white px-2.5 py-1 rounded">{{ $kelas->mataKuliah->kode_mk ?? '-' }}</span>
         </div>
         <h1 class="text-xl font-bold text-white">Rekap Nilai Tugas — {{ $kelas->kode_kelas }}</h1>
-        <p class="text-sm text-blue-200 dark:text-[#fecaca] mt-1">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</p>
+        <p class="text-sm text-white dark:text-[#fecaca] mt-1">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</p>
     </div>
 
     <x-flash-message />

@@ -1,5 +1,10 @@
 <?php
 
+$railwayVolumePath = env('RAILWAY_VOLUME_MOUNT_PATH');
+$publicStoragePath = $railwayVolumePath
+    ? rtrim($railwayVolumePath, DIRECTORY_SEPARATOR)
+    : storage_path('app/public');
+
 return [
 
     /*
