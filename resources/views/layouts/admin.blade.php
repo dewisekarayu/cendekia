@@ -30,38 +30,39 @@
 
     <style>
         :root {
-            --primary-blue: #012428;
-            --secondary-blue: #012428;
-            --navy-blue: #012428;
-            --light-blue: #e6f4f1;
-            --border-light: rgba(1, 36, 40, 0.08);
-            --primary-green: #012428;
-            --primary-green-hover: #033f46;
-            --light-green: #e6f4f1;
+            --bs-primary-rgb: 4, 120, 87;
+            --primary-blue: #047857;
+            --secondary-blue: #065f46;
+            --navy-blue: #064e3b;
+            --light-blue: #ecfdf5;
+            --border-light: rgba(4, 120, 87, 0.12);
+            --primary-green: #047857;
+            --primary-green-hover: #065f46;
+            --light-green: #ecfdf5;
         }
 
         .text-primary {
-            color: #012428 !important;
+            color: #047857 !important;
         }
         .bg-primary {
-            background-color: #012428 !important;
+            background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
         }
         .border-primary {
-            border-color: #012428 !important;
+            border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity, 1)) !important;
         }
         .btn-outline-primary {
-            color: #012428 !important;
-            border-color: #012428 !important;
+            color: #047857 !important;
+            border-color: #047857 !important;
             background-color: transparent !important;
             border-radius: 0.75rem !important;
             font-weight: 600 !important;
             transition: all 0.2s ease !important;
         }
         .btn-outline-primary:hover {
-            background-color: #012428 !important;
-            border-color: #012428 !important;
+            background-color: #047857 !important;
+            border-color: #047857 !important;
             color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(1, 36, 40, 0.2) !important;
+            box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2) !important;
         }
         .btn-outline-secondary {
             color: #334155 !important;
@@ -76,7 +77,7 @@
             background-color: #f8fafc !important;
             border-color: #cbd5e1 !important;
             color: #0f172a !important;
-            box-shadow: 0 4px 12px rgba(1, 36, 40, 0.06) !important;
+            box-shadow: 0 4px 12px rgba(4, 120, 87, 0.06) !important;
         }
 
         body {
@@ -236,7 +237,7 @@
         }
 
         html.dark .text-primary {
-            color: #60a5fa !important;
+            color: #6ee7b7 !important;
         }
 
         html.dark .bg-blue-900 {
@@ -659,6 +660,7 @@
         .table-responsive {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
         }
 
         .table {
@@ -703,7 +705,7 @@
         .table tbody td {
             padding: 1.1rem 1.25rem;
             font-size: 0.875rem;
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
             vertical-align: middle;
             background-color: transparent !important;
         }
@@ -762,16 +764,16 @@
             transition: all 0.15s ease;
         }
         .action-btn-edit {
-            background-color: #eff6ff;
-            color: #2563eb;
-            border-color: #dbeafe;
+            background-color: #ecfdf5;
+            color: #047857;
+            border-color: #a7f3d0;
         }
         .action-btn-edit:hover {
-            background-color: #2563eb;
+            background-color: #047857;
             color: #ffffff;
-            border-color: #2563eb;
+            border-color: #047857;
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 4px 10px rgba(4, 120, 87, 0.22);
         }
         .action-btn-delete {
             background-color: #fef2f2;
@@ -798,9 +800,9 @@
             box-shadow: 0 4px 10px rgba(51, 65, 85, 0.25);
         }
         html.dark .action-btn-edit {
-            background-color: rgba(37, 99, 235, 0.15);
-            color: #93c5fd;
-            border-color: rgba(37, 99, 235, 0.3);
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+            border-color: rgba(16, 185, 129, 0.3);
         }
         html.dark .action-btn-delete {
             background-color: rgba(220, 38, 38, 0.15);
@@ -1022,18 +1024,19 @@
         html.dark .select2-results__option--highlighted { background-color: #1d4ed8 !important; color: #fff !important; }
 
         .btn-primary {
-            background: #012428 !important;
+            background: #047857 !important;
+            color: #ffffff !important;
             border: none !important;
             font-weight: 700 !important;
             border-radius: 0.75rem !important;
             padding: 0.65rem 1.25rem !important;
-            box-shadow: 0 4px 14px rgba(1, 36, 40, 0.25) !important;
+            box-shadow: 0 4px 14px rgba(4, 120, 87, 0.22) !important;
             transition: all 0.2s ease !important;
         }
         .btn-primary:hover {
             filter: brightness(1.1);
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(1, 36, 40, 0.35) !important;
+            box-shadow: 0 6px 18px rgba(4, 120, 87, 0.3) !important;
         }
 
         /* Modern Pagination */
