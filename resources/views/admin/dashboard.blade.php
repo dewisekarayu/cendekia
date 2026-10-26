@@ -149,7 +149,7 @@
                         <span class="h-2 w-2 rounded-full bg-blue-600"></span>
                         Aktivitas Pengguna
                     </h2>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Grafik interaksi mahasiswa dan dosen berdasarkan data aktivitas portal LMS</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ $activityPeriodLabel }} · grafik interaksi dari data portal LMS</p>
                 </div>
 
                 <div class="dashboard-chart-controls">
@@ -165,8 +165,15 @@
                 </div>
             </div>
 
-            <div class="chart-canvas-wrap" style="height: 320px;">
+            <div class="chart-canvas-wrap relative" style="height: 320px;">
                 <canvas id="aktivitasChart"></canvas>
+                <div id="chartEmptyState" class="absolute inset-0 hidden flex-col items-center justify-center rounded-xl bg-white/90 text-center dark:bg-slate-800/90">
+                    <span class="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+                        <i class="bi bi-bar-chart-line text-xl"></i>
+                    </span>
+                    <p class="text-sm font-bold text-slate-700 dark:text-slate-200">Belum ada aktivitas pada periode ini</p>
+                    <p class="mt-1 max-w-xs text-xs text-slate-500 dark:text-slate-400">Grafik akan menampilkan data setelah aktivitas pengguna tercatat.</p>
+                </div>
             </div>
         </div>
 
@@ -208,6 +215,63 @@
         </div>
 
     </div>
+
+    <section class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div class="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div>
+                <h2 class="text-base font-bold text-slate-800 dark:text-white">Mahasiswa Terbaru</h2>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Lima mahasiswa terakhir yang terdaftar.</p>
+            </div>
+            <a href="{{ route('admin.mahasiswa.index') }}" class="inline-flex items-center gap-2 self-start rounded-lg border border-emerald-200 px-3 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-300 dark:hover:bg-emerald-950/40 sm:self-auto">
+                Lihat Semua <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="table table-hover mb-0 align-middle">
+                <thead>
+                    <tr>
+                        <th class="whitespace-nowrap">NIM</th>
+                        <th class="whitespace-nowrap">Nama Mahasiswa</th>
+                        <th class="whitespace-nowrap">Program Studi</th>
+                        <th class="whitespace-nowrap">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recentMahasiswa as $mahasiswa)
+                        <tr>
+                            <td><span class="badge-code">{{ $mahasiswa->nip_nim }}</span></td>
+                            <td>
+                                <div class="flex min-w-52 items-center gap-3">
+                                    <x-user-avatar :name="$mahasiswa->name" :photo-url="$mahasiswa->foto_url" :size="40" />
+                                    <div class="min-w-0">
+                                        <p class="truncate font-semibold text-slate-800 dark:text-slate-100">{{ $mahasiswa->name }}</p>
+                                        <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ $mahasiswa->email }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-slate-600 dark:text-slate-300">{{ $mahasiswa->programStudi?->nama_prodi ?? 'Belum memilih prodi' }}</td>
+                            <td>
+                                @if($mahasiswa->status === 'aktif')
+                                    <span class="badge-status badge-status-aktif"><span class="status-dot"></span>Aktif</span>
+                                @elseif($mahasiswa->status === 'cuti')
+                                    <span class="badge-status badge-status-cuti"><span class="status-dot"></span>Cuti</span>
+                                @else
+                                    <span class="badge-status badge-status-nonaktif"><span class="status-dot"></span>Nonaktif</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+                                Belum ada data mahasiswa.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </section>
 
 </div>
 
@@ -260,6 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const palette = ['#012428', '#0D9488', '#10B981', '#F59E0B', '#EF4444', '#065F46', '#14B8A6'];
     const muted = '#E8EEF8';
     const totalValue = document.getElementById('chartTotalValue');
+    const chartCanvas = document.getElementById('aktivitasChart');
+    const chartEmptyState = document.getElementById('chartEmptyState');
 
     function isEnglishActive() {
         return {{ app()->getLocale() === 'en' ? 'true' : 'false' }} ||
@@ -304,6 +370,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (totalValue) {
             totalValue.textContent = formatNumber(values.reduce((sum, value) => sum + value, 0));
         }
+        const hasActivity = values.some(value => value > 0);
+        if (chartEmptyState) {
+            chartEmptyState.classList.toggle('hidden', hasActivity);
+            chartEmptyState.classList.toggle('flex', !hasActivity);
+        }
+        if (chartCanvas) {
+            chartCanvas.style.visibility = hasActivity ? 'visible' : 'hidden';
+        }
     }
 
     function buildDataset(rows) {
@@ -330,9 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    if (dataBulanan.length > 0) {
-        updateSummary(dataBulanan);
-    }
+    updateSummary(dataBulanan);
 
     const chart = new Chart(ctx, {
         type: 'bar',

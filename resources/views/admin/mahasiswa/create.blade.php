@@ -21,12 +21,10 @@
                     <div class="mb-4">
                         <label class="form-label">Foto Profil</label>
                         <div style="display: flex; align-items: center; gap: 1rem;">
-                            <img id="photoPreview" 
-                                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=newstudent" 
-                                 style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" alt="Preview">
+                            <x-user-avatar name="Mahasiswa" :size="80" id="photoPreview" />
                             <div>
                                 <input type="file" class="form-control" id="photoInput" name="foto" accept="image/*">
-                                <small class="text-muted d-block mt-2">Format: JPG, PNG (Max 2MB)</small>
+                                <small class="text-muted d-block mt-2">Format gambar (Maksimal 10 MB).</small>
                             </div>
                         </div>
                     </div>
@@ -134,6 +132,7 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     document.getElementById('photoPreview').src = event.target.result;
+                    document.getElementById('photoPreview').dataset.fallback = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }

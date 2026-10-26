@@ -7,7 +7,7 @@
 
     {{-- NAVBAR TABS SINKRONISASI --}}
     <div class="flex items-center gap-0 mb-6 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg transition-colors duration-200">
-        <a href="{{ route('dosen.kelas-pengumuman.index') }}" class="px-5 py-3.5 text-sm font-semibold text-[#002B6B] dark:text-[#f87171] border-b-2 border-[#002B6B] dark:border-[#a92a35] transition-all duration-200 text-decoration-none flex items-center gap-2 white-space-nowrap">
+        <a href="{{ route('dosen.kelas-pengumuman.index') }}" class="px-5 py-3.5 text-sm font-semibold text-[#720c16] dark:text-[#f87171] border-b-2 border-[#720c16] dark:border-[#a92a35] transition-all duration-200 text-decoration-none flex items-center gap-2 white-space-nowrap">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
             </svg>
@@ -38,7 +38,7 @@
                 <div class="flex items-center justify-between gap-2 mb-3">
                     <div class="flex items-center gap-2">
                         @if(is_null($p->kelas_perkuliahan_id))
-                            <span class="text-[10px] font-bold bg-blue-50 dark:bg-blue-950/40 border border-blue-200/40 dark:border-blue-900/30 text-blue-600 dark:text-blue-300 px-2.5 py-0.5 rounded-md">Pengumuman Kampus</span>
+                            <span class="text-[10px] font-bold bg-[#fdf2f2] dark:bg-[#1b0305]/40 border border-[#fee2e2] dark:border-[#2f0509]/30 text-[#720c16] dark:text-[#fca5a5] px-2.5 py-0.5 rounded-md">Pengumuman Kampus</span>
                         @elseif($p->untuk_semua)
                             <span class="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 border border-amber-200/40 dark:border-amber-900/30 text-amber-600 dark:text-amber-300 px-2.5 py-0.5 rounded-md">Penting</span>
                         @endif

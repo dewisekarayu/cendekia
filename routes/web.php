@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DosenController as AdminDosenController;
 use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
 use App\Http\Controllers\Admin\PengumumanController as AdminPengumumanController;
 use App\Http\Controllers\Admin\KalenderAkademikController;
+use App\Http\Controllers\ProfilePhotoController;
 use App\Http\Controllers\Dosen\PengumumanController as DosenPengumumanController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\KelasController;
@@ -41,6 +42,10 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/profile-photos/{filename}', ProfilePhotoController::class)
+    ->where('filename', '[A-Za-z0-9][A-Za-z0-9._-]*')
+    ->name('profile-photos.show');
 
 // Dashboard umum -> redirect otomatis sesuai role
 Route::get('/dashboard', function () {

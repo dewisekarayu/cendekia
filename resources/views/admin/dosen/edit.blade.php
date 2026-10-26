@@ -25,12 +25,10 @@
                     <div class="mb-4">
                         <label class="form-label fw-bold text-muted small text-uppercase">Foto Profil</label>
                         <div style="display: flex; align-items: center; gap: 1.5rem;">
-                            <img id="photoPreview"
-                                src="{{ $dosenMember->foto ? asset('storage/' . $dosenMember->foto) : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . urlencode($dosenMember->name) }}"
-                                style="width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; background-color: #f1f5f9;" alt="Preview">
+                            <x-user-avatar :name="$dosenMember->name" :photo-url="$dosenMember->foto_url" :size="85" id="photoPreview" />
                             <div class="flex-1">
                                 <input type="file" class="form-control @error('foto') is-invalid @enderror" id="photoInput" name="foto" accept="image/*">
-                                <small class="text-muted d-block mt-2">Format: JPG, PNG (Max 2MB). Kosongkan jika tidak ingin mengganti foto profil.</small>
+                                <small class="text-muted d-block mt-2">Format gambar (Maksimal 10 MB). Kosongkan jika tidak ingin mengganti foto profil.</small>
                                 @error('foto') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                             </div>
                         </div>
@@ -112,7 +110,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    document.getElementById('photoPreview').src = event.target.result;
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = event.target.result;
+                    preview.dataset.fallback = preview.src;
                 };
                 reader.readAsDataURL(file);
             }

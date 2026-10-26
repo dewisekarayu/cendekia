@@ -13,7 +13,7 @@
                 <span class="text-xs text-white/80">Semester {{ $kelas->semester->nama_semester ?? '-' }}</span>
             </div>
             <h1 class="text-xl font-bold text-white">{{ $kelas->mataKuliah->nama_mk ?? '-' }}</h1>
-            <p class="text-sm text-blue-200 dark:text-[#fecaca] mt-1">
+            <p class="text-sm text-[#fecaca] mt-1">
                 {{ $kelas->hari }}, {{ $kelas->jam_mulai }} - {{ $kelas->jam_selesai }} • {{ $kelas->ruangan }}
             </p>
         </div>
@@ -128,7 +128,7 @@
                             </td>
                             <td class="px-5 py-3">
                                 <p class="text-gray-500 dark:text-slate-300">{{ $tugas->deadline->format('d M Y, H:i') }}</p>
-                                <p class="text-[11px] font-semibold {{ $isClosed ? 'text-red-500 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400' }}">
+                                <p class="text-[11px] font-semibold {{ $isClosed ? 'text-red-500 dark:text-red-400' : 'text-[#720c16] dark:text-[#fecaca]' }}">
                                     @if ($tugas->is_closed && !$tugas->deadline->isPast())
                                         Ditutup manual
                                     @elseif ($tugas->deadline->isPast())
@@ -148,7 +148,7 @@
                                 @if ($isClosed)
                                     <span class="inline-block text-[10px] font-semibold text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-md">Ditutup</span>
                                 @else
-                                    <span class="inline-block text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-md">Terbuka</span>
+                                    <span class="inline-block text-[10px] font-semibold text-[#720c16] dark:text-[#fecaca] bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 rounded-md">Terbuka</span>
                                 @endif
                             </td>
                             <td class="px-5 py-3 text-right whitespace-nowrap pr-6">
@@ -156,7 +156,7 @@
                                     @if ($isClosed)
                                         <button type="button"
                                                 onclick="openModalBukaTugas({{ $tugas->id }}, '{{ addslashes($tugas->judul) }}', '{{ $tugas->deadline->translatedFormat('d M Y, H:i') }}')"
-                                                class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 px-3 py-1.5 rounded-md transition duration-150">
+                                                class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#720c16] dark:text-[#fecaca] bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/40 px-3 py-1.5 rounded-md transition duration-150">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
@@ -165,7 +165,7 @@
                                     @endif
 
                                     <a href="{{ route('dosen.tugas.submissions', [$kelas->id, $tugas->id]) }}"
-                                    class="inline-block text-xs font-semibold text-blue-900 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-3 py-1.5 rounded-md transition duration-150">
+                                    class="inline-block text-xs font-semibold text-[#720c16] dark:text-[#fecaca] bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/40 px-3 py-1.5 rounded-md transition duration-150">
                                         Lihat Pengumpulan
                                     </a>
 
@@ -184,7 +184,7 @@
                                                 @if ($isClosed)
                                                     <button type="button"
                                                             onclick="toggleDropdown('dropdownTugas{{ $tugas->id }}'); openModalBukaTugas({{ $tugas->id }}, '{{ addslashes($tugas->judul) }}', '{{ $tugas->deadline->translatedFormat('d M Y, H:i') }}')"
-                                                            class="w-full text-left px-4 py-2 text-sm text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition flex items-center gap-2">
+                                                            class="w-full text-left px-4 py-2 text-sm text-[#720c16] dark:text-[#fecaca] hover:bg-rose-50 dark:hover:bg-rose-950/30 transition flex items-center gap-2">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                         </svg>
@@ -478,7 +478,7 @@
                                 <input type="file" id="fileInput" name="template[]" multiple
                                     accept=".pdf,.doc,.docx,.zip,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png"
                                     class="hidden" onchange="updateTugasFileName(this)">
-                                <ul id="tugasFileNameDisplay" class="text-sm text-emerald-600 dark:text-emerald-400 font-semibold mt-2 hidden space-y-0.5"></ul>
+                                <ul id="tugasFileNameDisplay" class="text-sm text-[#720c16] dark:text-[#fecaca] font-semibold mt-2 hidden space-y-0.5"></ul>
                             </label>
                         </div>
                     </div>
@@ -506,7 +506,7 @@
         <div class="relative min-h-screen flex items-center justify-center p-4">
             <div class="relative bg-white dark:bg-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-700">
 
-                <div class="px-6 py-5 bg-gradient-to-r from-emerald-600 to-teal-700 text-white flex items-center justify-between">
+                <div class="px-6 py-5 bg-gradient-to-r from-[#720c16] to-[#9a1622] text-white flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -515,7 +515,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-bold leading-tight">Buka Kembali Tugas</h3>
-                            <p class="text-xs text-emerald-100 mt-0.5">Tentukan batas waktu baru untuk pengumpulan</p>
+                            <p class="text-xs text-white/80 mt-0.5">Tentukan batas waktu baru untuk pengumpulan</p>
                         </div>
                     </div>
                     <button type="button" onclick="closeModalBukaTugas()" class="p-1 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition">
@@ -543,7 +543,7 @@
                                 Batas Waktu Baru (Deadline) <span class="text-rose-500">*</span>
                             </label>
                             <input type="datetime-local" id="bukaTugasDeadlineInput" name="deadline" required
-                                class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none transition text-sm font-medium text-slate-800 dark:text-slate-100">
+                                class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl focus:ring-2 focus:ring-[#a92a35] focus:outline-none transition text-sm font-medium text-slate-800 dark:text-slate-100">
                             <p class="text-[11px] text-slate-400">
                                 Mahasiswa dapat mengumpulkan kembali tugas hingga tanggal dan jam yang Anda tentukan di atas.
                             </p>
@@ -553,10 +553,10 @@
                         <div class="space-y-1.5">
                             <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Pilihan Cepat Perpanjangan:</span>
                             <div class="flex flex-wrap gap-1.5">
-                                <button type="button" onclick="setPresetDeadline(1)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+1 Hari</button>
-                                <button type="button" onclick="setPresetDeadline(3)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+3 Hari</button>
-                                <button type="button" onclick="setPresetDeadline(7)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+1 Minggu</button>
-                                <button type="button" onclick="setPresetDeadline(14)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:border-emerald-300 hover:text-emerald-700 transition font-medium text-slate-600 dark:text-slate-300">+2 Minggu</button>
+                                <button type="button" onclick="setPresetDeadline(1)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:border-rose-300 hover:text-[#720c16] dark:hover:text-[#fecaca] transition font-medium text-slate-600 dark:text-slate-300">+1 Hari</button>
+                                <button type="button" onclick="setPresetDeadline(3)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:border-rose-300 hover:text-[#720c16] dark:hover:text-[#fecaca] transition font-medium text-slate-600 dark:text-slate-300">+3 Hari</button>
+                                <button type="button" onclick="setPresetDeadline(7)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:border-rose-300 hover:text-[#720c16] dark:hover:text-[#fecaca] transition font-medium text-slate-600 dark:text-slate-300">+1 Minggu</button>
+                                <button type="button" onclick="setPresetDeadline(14)" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:border-rose-300 hover:text-[#720c16] dark:hover:text-[#fecaca] transition font-medium text-slate-600 dark:text-slate-300">+2 Minggu</button>
                             </div>
                         </div>
                     </div>
@@ -565,7 +565,7 @@
                         <button type="button" onclick="closeModalBukaTugas()" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                             Batal
                         </button>
-                        <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                        <button type="submit" class="px-5 py-2 rounded-xl bg-[#720c16] hover:bg-[#4c0810] text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                             </svg>
