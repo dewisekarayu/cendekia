@@ -277,51 +277,133 @@ html.dark [class*="empty"] {
     color: #cbd5e1 !important;
 }
 
-/* Shared green theme and resilient content sizing. */
+/* Role-aware theme palette and resilient content sizing. */
 :root {
     color-scheme: light;
+    --brand-blue: #002B6B;
+    --brand-blue-hover: #001d4a;
+    --brand-blue-soft: #c0e6ff;
     --brand-green: #047857;
     --brand-green-dark: #065f46;
     --brand-green-soft: #ecfdf5;
+    --brand-maroon: #720c16;
+    --brand-maroon-dark: #4a070e;
 }
 
 html.dark {
     color-scheme: dark;
 }
 
-.text-primary {
+/* Mahasiswa Role Primary Colors (#002B6B & #c0e6ff) */
+body.role-mahasiswa .text-primary {
+    color: #002B6B !important;
+}
+
+body.role-mahasiswa .bg-primary,
+body.role-mahasiswa .btn-primary {
+    background-color: #002B6B !important;
+    border-color: #002B6B !important;
+    color: #ffffff !important;
+}
+
+body.role-mahasiswa .btn-primary:hover,
+body.role-mahasiswa .bg-primary:hover {
+    background-color: #001d4a !important;
+    border-color: #001d4a !important;
+}
+
+body.role-mahasiswa .border-primary {
+    border-color: #002B6B !important;
+}
+
+body.role-mahasiswa .btn-outline-primary {
+    color: #002B6B !important;
+    border-color: #002B6B !important;
+}
+
+body.role-mahasiswa .btn-outline-primary:hover {
+    background-color: #002B6B !important;
+    color: #ffffff !important;
+}
+
+body.role-mahasiswa input[type="checkbox"],
+body.role-mahasiswa input[type="radio"],
+body.role-mahasiswa progress {
+    accent-color: #002B6B;
+}
+
+/* Dosen Role Primary Colors (#720c16) */
+body.role-dosen .text-primary {
+    color: #720c16 !important;
+}
+
+body.role-dosen .bg-primary,
+body.role-dosen .btn-primary {
+    background-color: #720c16 !important;
+    border-color: #720c16 !important;
+    color: #ffffff !important;
+}
+
+body.role-dosen .btn-primary:hover,
+body.role-dosen .bg-primary:hover {
+    background-color: #4a070e !important;
+    border-color: #4a070e !important;
+}
+
+body.role-dosen .border-primary {
+    border-color: #720c16 !important;
+}
+
+body.role-dosen .btn-outline-primary {
+    color: #720c16 !important;
+    border-color: #720c16 !important;
+}
+
+body.role-dosen .btn-outline-primary:hover {
+    background-color: #720c16 !important;
+    color: #ffffff !important;
+}
+
+body.role-dosen input[type="checkbox"],
+body.role-dosen input[type="radio"],
+body.role-dosen progress {
+    accent-color: #720c16;
+}
+
+/* Admin Role Primary Colors (#047857) */
+body.role-admin .text-primary {
     color: var(--brand-green) !important;
 }
 
-.bg-primary,
-.btn-primary {
+body.role-admin .bg-primary,
+body.role-admin .btn-primary {
     background-color: var(--brand-green) !important;
     border-color: var(--brand-green) !important;
 }
 
-.btn-primary:hover,
-.bg-primary:hover {
+body.role-admin .btn-primary:hover,
+body.role-admin .bg-primary:hover {
     background-color: var(--brand-green-dark) !important;
     border-color: var(--brand-green-dark) !important;
 }
 
-.border-primary {
+body.role-admin .border-primary {
     border-color: var(--brand-green) !important;
 }
 
-.btn-outline-primary {
+body.role-admin .btn-outline-primary {
     color: var(--brand-green) !important;
     border-color: var(--brand-green) !important;
 }
 
-.btn-outline-primary:hover {
+body.role-admin .btn-outline-primary:hover {
     background-color: var(--brand-green) !important;
     color: #fff !important;
 }
 
-input[type="checkbox"],
-input[type="radio"],
-progress {
+body.role-admin input[type="checkbox"],
+body.role-admin input[type="radio"],
+body.role-admin progress {
     accent-color: #059669;
 }
 
@@ -421,143 +503,163 @@ html.dark .calendar-page .semester-pill {
     color: #d1fae5 !important;
 }
 
-/* Recolor solid blue UI utilities without flattening translucent decorations. */
-:is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="bg-blue-300"]) {
+/* Recolor solid blue UI utilities for Admin role only. */
+body.role-admin :is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="bg-blue-300"]) {
     background-color: #ecfdf5 !important;
 }
 
-:is([class~="bg-blue-400"], [class~="bg-blue-500"], [class~="bg-blue-600"]) {
+body.role-admin :is([class~="bg-blue-400"], [class~="bg-blue-500"], [class~="bg-blue-600"]) {
     background-color: #059669 !important;
 }
 
-:is([class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"]) {
+body.role-admin :is([class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"]) {
     background-color: #065f46 !important;
 }
 
-:is([class*="bg-blue-"][class*="/"]) {
+body.role-admin :is([class*="bg-blue-"][class*="/"]) {
     background-color: rgba(16, 185, 129, 0.12) !important;
 }
 
-:is([class~="text-blue-50"], [class~="text-blue-100"]) {
+body.role-admin :is([class~="text-blue-50"], [class~="text-blue-100"]) {
     color: #d1fae5 !important;
 }
 
-:is([class~="text-blue-200"], [class~="text-blue-300"]) {
+body.role-admin :is([class~="text-blue-200"], [class~="text-blue-300"]) {
     color: #6ee7b7 !important;
 }
 
-:is([class~="text-blue-400"], [class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"]) {
+body.role-admin :is([class~="text-blue-400"], [class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"]) {
     color: #047857 !important;
 }
 
-:is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="border-blue-400"], [class~="border-blue-500"], [class~="border-blue-600"], [class~="border-blue-700"]) {
+body.role-admin :is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="border-blue-400"], [class~="border-blue-500"], [class~="border-blue-600"], [class~="border-blue-700"]) {
     border-color: #a7f3d0 !important;
 }
 
-:is([class~="ring-blue-400"], [class~="ring-blue-500"], [class~="ring-blue-600"], [class~="focus:ring-blue-400"], [class~="focus:ring-blue-500"], [class~="focus:ring-blue-600"]) {
+body.role-admin :is([class~="ring-blue-400"], [class~="ring-blue-500"], [class~="ring-blue-600"], [class~="focus:ring-blue-400"], [class~="focus:ring-blue-500"], [class~="focus:ring-blue-600"]) {
     --tw-ring-color: #34d399 !important;
 }
 
-:is([class~="focus:border-blue-400"], [class~="focus:border-blue-500"], [class~="focus:border-blue-600"]):focus {
+body.role-admin :is([class~="focus:border-blue-400"], [class~="focus:border-blue-500"], [class~="focus:border-blue-600"]):focus {
     border-color: #10b981 !important;
 }
 
-html.dark :is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="bg-blue-300"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"]) {
+html.dark body.role-admin :is([class~="bg-blue-50"], [class~="bg-blue-100"], [class~="bg-blue-200"], [class~="bg-blue-300"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"]) {
     background-color: rgba(16, 185, 129, 0.16) !important;
 }
 
-html.dark :is([class~="bg-blue-400"], [class~="bg-blue-500"], [class~="bg-blue-600"], [class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"], [class~="dark:bg-blue-300"], [class~="dark:bg-blue-400"], [class~="dark:bg-blue-500"], [class~="dark:bg-blue-600"], [class~="dark:bg-blue-700"], [class~="dark:bg-blue-800"], [class~="dark:bg-blue-900"]) {
+html.dark body.role-admin :is([class~="bg-blue-400"], [class~="bg-blue-500"], [class~="bg-blue-600"], [class~="bg-blue-700"], [class~="bg-blue-800"], [class~="bg-blue-900"], [class~="dark:bg-blue-50"], [class~="dark:bg-blue-100"], [class~="dark:bg-blue-200"], [class~="dark:bg-blue-300"], [class~="dark:bg-blue-400"], [class~="dark:bg-blue-500"], [class~="dark:bg-blue-600"], [class~="dark:bg-blue-700"], [class~="dark:bg-blue-800"], [class~="dark:bg-blue-900"]) {
     background-color: #145943 !important;
 }
 
-:is([class*="from-blue-"]) {
+body.role-admin :is([class*="from-blue-"]) {
     --tw-gradient-from: #059669 var(--tw-gradient-from-position) !important;
     --tw-gradient-to: rgb(5 150 105 / 0) var(--tw-gradient-to-position) !important;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
 }
 
-:is([class*="to-blue-"]) {
+body.role-admin :is([class*="to-blue-"]) {
     --tw-gradient-to: #047857 var(--tw-gradient-to-position) !important;
 }
 
-:is([class*="via-blue-"]) {
+body.role-admin :is([class*="via-blue-"]) {
     --tw-gradient-via: #10b981 var(--tw-gradient-via-position) !important;
 }
 
-:is([class*="text-blue-"][class*="/"]) {
+body.role-admin :is([class*="text-blue-"][class*="/"]) {
     color: #a7f3d0 !important;
 }
 
-:is([class*="border-blue-"][class*="/"]) {
+body.role-admin :is([class*="border-blue-"][class*="/"]) {
     border-color: rgba(52, 211, 153, 0.3) !important;
 }
 
-html.dark :is([class*="bg-blue-"][class*="/"]) {
+html.dark body.role-admin :is([class*="bg-blue-"][class*="/"]) {
     background-color: rgba(16, 185, 129, 0.16) !important;
 }
 
-html.dark :is([class~="text-blue-400"], [class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"], [class~="dark:text-blue-300"], [class~="dark:text-blue-400"]) {
+html.dark body.role-admin :is([class~="text-blue-400"], [class~="text-blue-500"], [class~="text-blue-600"], [class~="text-blue-700"], [class~="text-blue-800"], [class~="text-blue-900"], [class~="dark:text-blue-300"], [class~="dark:text-blue-400"]) {
     color: #6ee7b7 !important;
 }
 
-html.dark :is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="border-blue-400"], [class~="border-blue-500"], [class~="border-blue-600"], [class~="border-blue-700"], [class~="dark:border-blue-500"], [class~="dark:border-blue-600"], [class~="dark:border-blue-700"]) {
+html.dark body.role-admin :is([class~="border-blue-100"], [class~="border-blue-200"], [class~="border-blue-300"], [class~="border-blue-400"], [class~="border-blue-500"], [class~="border-blue-600"], [class~="border-blue-700"], [class~="dark:border-blue-500"], [class~="dark:border-blue-600"], [class~="dark:border-blue-700"]) {
     border-color: rgba(52, 211, 153, 0.3) !important;
 }
 
-html.dark [class*="from-blue-"] {
+html.dark body.role-admin [class*="from-blue-"] {
     --tw-gradient-from: #047857 var(--tw-gradient-from-position) !important;
     --tw-gradient-to: rgb(4 120 87 / 0) var(--tw-gradient-to-position) !important;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
 }
 
-html.dark [class*="to-blue-"] {
+html.dark body.role-admin [class*="to-blue-"] {
     --tw-gradient-to: #065f46 var(--tw-gradient-to-position) !important;
 }
 
-html.dark [class*="via-blue-"] {
+html.dark body.role-admin [class*="via-blue-"] {
     --tw-gradient-via: #059669 var(--tw-gradient-via-position) !important;
 }
 
-:is([class~="hover:bg-blue-50"], [class~="hover:bg-blue-100"], [class~="hover:bg-blue-200"]):hover {
+body.role-admin :is([class~="hover:bg-blue-50"], [class~="hover:bg-blue-100"], [class~="hover:bg-blue-200"]):hover {
     background-color: #ecfdf5 !important;
 }
 
-:is([class~="hover:bg-blue-500"], [class~="hover:bg-blue-600"], [class~="hover:bg-blue-700"]):hover {
+body.role-admin :is([class~="hover:bg-blue-500"], [class~="hover:bg-blue-600"], [class~="hover:bg-blue-700"]):hover {
     background-color: #047857 !important;
 }
 
-:is([class~="hover:text-blue-500"], [class~="hover:text-blue-600"], [class~="hover:text-blue-700"]):hover {
+body.role-admin :is([class~="hover:text-blue-500"], [class~="hover:text-blue-600"], [class~="hover:text-blue-700"]):hover {
     color: #047857 !important;
 }
 
-:is([class~="bg-[#321270]"], [class~="bg-[#002B6B]"], [class~="bg-[#1E3A8A]"], [class~="hover:bg-[#321270]/90"]:hover, [class~="hover:bg-[#002B6B]/90"]:hover) {
+body.role-admin :is([class~="bg-[#321270]"], [class~="bg-[#1E3A8A]"], [class~="hover:bg-[#321270]/90"]:hover) {
     background-color: #047857 !important;
 }
 
-:is([class~="text-[#321270]"], [class~="text-[#002B6B]"], [class~="text-[#1E3A8A]"]) {
+body.role-admin :is([class~="text-[#321270]"], [class~="text-[#1E3A8A]"]) {
     color: #047857 !important;
 }
 
-:is([class~="border-[#321270]"], [class~="border-[#002B6B]"], [class~="border-[#1E3A8A]"]) {
+body.role-admin :is([class~="border-[#321270]"], [class~="border-[#1E3A8A]"]) {
     border-color: #047857 !important;
 }
 
-:is([class~="focus:ring-[#321270]"], [class~="focus:ring-[#002B6B]"]):focus {
+body.role-admin :is([class~="focus:ring-[#321270]"]):focus {
     --tw-ring-color: #34d399 !important;
 }
 
-:is([class~="focus:border-[#321270]"], [class~="focus:border-[#002B6B]"]):focus {
+body.role-admin :is([class~="focus:border-[#321270]"]):focus {
     border-color: #10b981 !important;
 }
 
-html.dark :is([class~="dark:bg-[#6c2bd9]"], [class~="dark:bg-[#5b21b6]"]) {
+html.dark body.role-admin :is([class~="dark:bg-[#6c2bd9]"], [class~="dark:bg-[#5b21b6]"]) {
     background-color: #145943 !important;
 }
 
-html.dark :is([class~="dark:text-[#6c2bd9]"], [class~="dark:text-purple-600"]) {
+html.dark body.role-admin :is([class~="dark:text-[#6c2bd9]"], [class~="dark:text-purple-600"]) {
     color: #6ee7b7 !important;
 }
 
-html.dark :is([class~="dark:border-[#9061f9]"]) {
+html.dark body.role-admin :is([class~="dark:border-[#9061f9]"]) {
     border-color: #34d399 !important;
+}
+
+/* ===== Mahasiswa Palette Guarantees ===== */
+body.role-mahasiswa :is([class~="bg-[#002B6B]"]) {
+    background-color: #002B6B !important;
+}
+body.role-mahasiswa :is([class~="text-[#002B6B]"]) {
+    color: #002B6B !important;
+}
+body.role-mahasiswa :is([class~="border-[#002B6B]"]) {
+    border-color: #002B6B !important;
+}
+body.role-mahasiswa :is([class~="hover:bg-[#002B6B]/90"]:hover, [class~="hover:bg-[#002B6B]"]:hover) {
+    background-color: #001d4a !important;
+}
+body.role-mahasiswa :is([class~="focus:ring-[#002B6B]"]):focus {
+    --tw-ring-color: #002B6B !important;
+}
+body.role-mahasiswa :is([class~="focus:border-[#002B6B]"]):focus {
+    border-color: #002B6B !important;
 }

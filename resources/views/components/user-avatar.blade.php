@@ -8,9 +8,9 @@
 
 @php
     $avatarColors = [
-        ['#a7f3d0', '#059669', '#047857'],
+        ['#c0e6ff', '#2563eb', '#002B6B'],
         ['#bfdbfe', '#3b82f6', '#1d4ed8'],
-        ['#fde68a', '#f59e0b', '#b45309'],
+        ['#e0f2fe', '#0284c7', '#0369a1'],
         ['#fbcfe8', '#ec4899', '#be185d'],
         ['#ddd6fe', '#8b5cf6', '#6d28d9'],
     ];
@@ -36,5 +36,5 @@
     height="{{ $size }}"
     alt="{{ $name }}"
     loading="lazy"
-    style="width: {{ $size }}px; height: {{ $size }}px; border-radius: 50%; object-fit: cover; background: {{ $avatarColor[0] }}; border: 1.5px solid rgba(5, 150, 105, 0.2); flex-shrink: 0;"
+    style="width: {{ $size }}px; height: {{ $size }}px; border-radius: 50%; object-fit: cover; background: {{ $avatarColor[0] }}; border: 1.5px solid rgba(0, 43, 107, 0.15); flex-shrink: 0;"
 >
