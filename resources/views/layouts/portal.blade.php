@@ -793,7 +793,7 @@
 
                     {{-- User Profile Pill --}}
                     <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-700/80 rounded-xl p-1 sm:pr-3 shrink-0">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg {{ $hasDosen ? 'bg-[#720c16]' : ($hasAdmin ? 'bg-[#012428]' : 'bg-[#002B6B]') }} flex items-center justify-center text-white text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg {{ $hasDosen ? 'bg-[#720c16] text-white' : ($hasAdmin ? 'bg-[#012428] text-white' : 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20') }} flex items-center justify-center text-xs font-bold uppercase shadow-2xs overflow-hidden shrink-0">
                             @if (auth()->user()->foto)
                                 <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Foto profil" class="w-full h-full object-cover">
                             @else

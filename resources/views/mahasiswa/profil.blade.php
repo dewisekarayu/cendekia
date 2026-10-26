@@ -30,7 +30,7 @@
         {{-- PROFILE CARD --}}
         <div class="lg:col-span-1">
             <div class="overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors duration-200">
-                <div class="border-t-4 border-[#002B6B] dark:border-blue-600 px-5 pt-6 pb-5">
+                <div class="border-t-4 border-[#c0e6ff] dark:border-blue-600 px-5 pt-6 pb-5">
                     <div class="space-y-1 text-center">
                         {{-- AVATAR EDITABLE --}}
                         <form action="{{ route('mahasiswa.setting.foto') }}" method="POST" enctype="multipart/form-data" id="formFoto">
@@ -52,7 +52,7 @@
 
                             <div id="fotoActions" class="hidden justify-center gap-2 mb-3">
                                 <button type="submit"
-                                        class="rounded-full bg-[#002B6B] dark:bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#002B6B]/90 dark:hover:bg-blue-700 transition">
+                                        class="rounded-full bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-4 py-1.5 text-xs font-bold hover:bg-[#a8daf8] transition">
                                     Simpan Foto
                                 </button>
                                 <button type="button" onclick="batalFoto()"
@@ -153,7 +153,7 @@
                                     class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-750 transition">
                                 Batal
                             </button>
-                            <button type="submit" class="rounded-lg bg-[#002B6B] dark:bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-blue-700 hover:bg-[#002B6B]/90 transition">
+                            <button type="submit" class="rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-6 py-2.5 text-sm font-bold hover:bg-[#a8daf8] transition shadow-xs">
                                 Simpan Perubahan
                             </button>
                         </div>
@@ -196,7 +196,7 @@
                                     class="rounded-lg border border-gray-200 dark:border-slate-700 px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-750 transition">
                                 Batal
                             </button>
-                            <button type="submit" class="rounded-lg bg-[#002B6B] dark:bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white dark:hover:bg-blue-700 hover:bg-[#002B6B]/90 transition">
+                            <button type="submit" class="rounded-lg bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 px-6 py-2.5 text-sm font-bold hover:bg-[#a8daf8] transition shadow-xs">
                                 Update Password
                             </button>
                         </div>

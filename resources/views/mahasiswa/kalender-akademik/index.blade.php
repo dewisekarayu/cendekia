@@ -21,17 +21,17 @@
                 <span class="text-gray-600 dark:text-slate-300">Kalender Akademik</span>
             </nav>
 
-            <div class="relative bg-gradient-to-r from-[#002B6B] via-[#053d8f] to-[#001f52] rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-xl overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative bg-gradient-to-br from-[#c0e6ff] via-[#d7efff] to-[#e8f5ff] border border-[#a3daf8]/80 dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:border-blue-900/40 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-[#002B6B] dark:text-white shadow-sm overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/40 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -left-10 -top-10 w-40 h-40 bg-white/40 rounded-full blur-2xl pointer-events-none"></div>
 
                 <div class="flex items-center gap-3 sm:gap-4 relative z-10">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center flex-shrink-0 shadow-inner">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/80 border border-[#002B6B]/20 flex items-center justify-center flex-shrink-0 shadow-sm text-[#002B6B]">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
                     </div>
                     <div class="min-w-0">
-                        <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight text-white">Kalender Akademik</h1>
-                        <p class="text-[11px] sm:text-xs text-blue-100/80 mt-0.5 leading-snug">
+                        <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight text-[#002B6B] dark:text-white">Kalender Akademik</h1>
+                        <p class="text-[11px] sm:text-xs text-[#003b8e]/80 dark:text-blue-200 mt-0.5 leading-snug">
                             <span class="sm:hidden">Ketuk tanggal untuk melihat agenda.</span>
                             <span class="hidden sm:inline">Pantau seluruh agenda, batas waktu tugas, serta jadwal ujian semester Anda di sini. Klik tanggal untuk melihat detail agenda.</span>
                         </p>
@@ -97,16 +97,16 @@
                                          role="button" tabindex="0"
                                          @keydown.enter="$dispatch('select-day', { day: day })"
                                          :class="{
-                                             'bg-slate-100/80 dark:bg-slate-900 border-[#002B6B] dark:border-blue-500/80 ring-1 ring-[#002B6B]/20': day.isToday,
+                                             'bg-sky-50/90 dark:bg-slate-900 border-[#a3daf8] dark:border-blue-500/80 ring-1 ring-sky-300': day.isToday,
                                              'bg-rose-50/40 dark:bg-rose-950/10 border-rose-100 dark:border-rose-950/30': day.isWeekend && !day.isToday && day.isCurrentMonth,
                                              'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700/60': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                              'bg-slate-50/50 dark:bg-slate-900/40 border-gray-100 dark:border-slate-800/40 opacity-40': !day.isCurrentMonth,
                                          }"
-                                         class="min-h-[52px] sm:min-h-[105px] p-1 sm:p-2.5 rounded-lg sm:rounded-2xl border transition-all duration-200 sm:hover:shadow-md hover:border-[#002B6B]/40 cursor-pointer flex flex-col items-center sm:items-stretch relative min-w-0 active:scale-95 sm:active:scale-100">
+                                         class="min-h-[52px] sm:min-h-[105px] p-1 sm:p-2.5 rounded-lg sm:rounded-2xl border transition-all duration-200 sm:hover:shadow-md hover:border-sky-300 cursor-pointer flex flex-col items-center sm:items-stretch relative min-w-0 active:scale-95 sm:active:scale-100">
 
                                         <div class="flex items-start justify-center sm:justify-between gap-1 sm:mb-2 w-full">
                                             <span :class="{
-                                                      'bg-[#002B6B] text-white font-extrabold': day.isToday,
+                                                      'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/20 font-extrabold shadow-xs': day.isToday,
                                                       'text-rose-600 dark:text-rose-500 font-bold': day.isWeekend && !day.isToday && day.isCurrentMonth,
                                                       'text-gray-800 dark:text-slate-200 font-bold': day.isCurrentMonth && !day.isToday && !day.isWeekend,
                                                       'text-gray-400 dark:text-slate-600 font-medium': !day.isCurrentMonth,
