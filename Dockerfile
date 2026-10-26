@@ -55,4 +55,7 @@ exec php artisan serve --host=0.0.0.0 --port=${PORT:-80}' > /usr/local/bin/entry
     && chmod +x /usr/local/bin/entrypoint.sh
 
 # Start command
+EXPOSE 80
+
+# 9Router runs as a separate service; see compose.9router.yaml.
 CMD ["/usr/local/bin/entrypoint.sh"]
