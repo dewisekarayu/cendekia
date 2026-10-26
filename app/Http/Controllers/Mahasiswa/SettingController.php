@@ -76,7 +76,7 @@ class SettingController extends Controller
     public function updateFoto(Request $request)
     {
         $request->validate([
-            'foto' => ['required', 'image', 'max:2048', 'mimes:jpeg,png,jpg,gif'],
+            'foto' => ['required', 'image', 'max:10240', 'mimes:jpeg,png,jpg,gif'],
         ]);
 
         $user = $request->user();

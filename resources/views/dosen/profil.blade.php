@@ -57,10 +57,8 @@
                             @csrf
                             @method('PUT')
                             <div class="relative mx-auto mb-3 h-24 w-24 group/avatar">
-                                <img id="avatarPreview"
-                                     src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=321270&color=fff&bold=true' }}"
-                                     alt="Foto Profil"
-                                     class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700">
+                                <x-user-avatar id="avatarPreview" :name="$user->name" :photo-url="$user->foto_url" :size="96"
+                                               class="h-24 w-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md ring-1 ring-slate-100 dark:ring-slate-700" />
 
                                 <label for="fotoInput"
                                        class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer">
@@ -268,6 +266,6 @@
         document.getElementById('fotoInput').value = '';
         document.getElementById('fotoActions').classList.add('hidden');
         document.getElementById('fotoActions').classList.remove('flex');
-        document.getElementById('avatarPreview').src = "{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=321270&color=fff&bold=true' }}";
+        document.getElementById('avatarPreview').src = document.getElementById('avatarPreview').dataset.original;
     }
 </script>

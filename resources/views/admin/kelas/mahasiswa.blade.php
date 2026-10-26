@@ -397,10 +397,7 @@
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-2.5">
-                                <img src="{{ $mhs->foto ? asset('storage/' . $mhs->foto) : 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . urlencode($mhs->name) }}" 
-                                     alt="Avatar" 
-                                     class="rounded-circle border shrink-0" 
-                                     style="width: 36px; height: 36px; object-fit: cover;">
+                                <x-user-avatar :name="$mhs->name" :photo-url="$mhs->foto_url" :size="36" />
                                 <div class="min-w-0">
                                     <div class="fw-bold text-slate-800 text-truncate" style="max-width: 240px; font-size: 0.9rem;" title="{{ $mhs->name }}">{{ $mhs->name }}</div>
                                     <div class="text-muted text-truncate" style="max-width: 240px; font-size: 0.775rem;" title="{{ $mhs->email }}">{{ $mhs->email }}</div>

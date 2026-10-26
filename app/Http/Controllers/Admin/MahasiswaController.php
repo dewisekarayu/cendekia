@@ -100,7 +100,7 @@ class MahasiswaController extends Controller
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', Rule::in(['aktif', 'cuti', 'non_aktif'])],
             'telepon'          => ['nullable', 'string', 'max:20'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ], [
             'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
@@ -175,7 +175,7 @@ class MahasiswaController extends Controller
             'program_studi_id' => ['nullable', 'exists:program_studi,id'],
             'status'           => ['required', Rule::in(['aktif', 'cuti', 'non_aktif'])],
             'telepon'          => ['nullable', 'string', 'max:20'],
-            'foto'             => ['nullable', 'image', 'max:2048'],
+            'foto'             => ['nullable', 'image', 'max:10240'],
         ], [
             'nim.unique'   => 'NIM sudah terdaftar di sistem.',
             'email.unique' => 'Email sudah terdaftar di sistem.',
