@@ -32,6 +32,10 @@ class AiAssistantController extends Controller
             throw new RuntimeException('Layanan AI belum dikonfigurasi. Hubungi administrator untuk mengaktifkan 9Router.');
         }
 
+        if (!str_ends_with(strtolower($baseUrl), '/v1')) {
+            $baseUrl .= '/v1';
+        }
+
         set_time_limit(180);
 
         try {
