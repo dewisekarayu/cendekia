@@ -20,3 +20,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // Dosen
     Route::get('/dosen/dashboard', [MobileApiController::class, 'dashboardDosen']);
 });
+use Illuminate\Support\Facades\Route;
+
+Route::get('/users', function () {
+    return response()->json(['message' => 'API Users aktif']);
+});
+
+Route::get('/students', function () {
+    return response()->json(['message' => 'API Students aktif']);
+});
+
+Route::get('/teachers', function () {
+    return response()->json(['message' => 'API Teachers aktif']);
+});
