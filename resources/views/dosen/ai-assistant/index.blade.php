@@ -543,6 +543,13 @@
                                 <div class="group relative flex flex-col items-end max-w-[85%] sm:max-w-[78%]">
                                     <div class="px-4 py-2.5 rounded-2xl rounded-tr-xs bg-[#720c16] text-white text-xs sm:text-sm font-medium leading-relaxed shadow-xs break-words">
                                         <p class="whitespace-pre-wrap select-text" x-text="msg.content"></p>
+                                        <div x-show="msg.fileName" class="mt-2 flex items-center gap-2 rounded-lg bg-white/10 px-2.5 py-2 text-[11px]">
+                                            <i :class="msg.fileType === 'image' ? 'bi bi-image' : 'bi bi-file-earmark-text'"></i>
+                                            <span class="break-all" x-text="msg.fileName"></span>
+                                        </div>
+                                        <p x-show="msg.fileName && !msg.attachmentContext" class="mt-1 text-[10px] font-normal text-white/70">
+                                            Unggah ulang lampiran ini untuk pertanyaan lanjutan.
+                                        </p>
                                     </div>
                                     <div class="flex items-center gap-2 mt-1 mr-1 text-[10px] text-slate-400">
                                         <span x-text="msg.time || ''"></span>
@@ -667,6 +674,17 @@
 
                 {{-- Input Box --}}
                 <div class="flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-md focus-within:ring-2 focus-within:ring-[#720c16]/20 dark:focus-within:ring-red-500/20 focus-within:border-[#720c16] dark:focus-within:border-red-500/70 transition-all overflow-hidden">
+                    <div x-show="selectedFile" class="mx-3 mt-3 flex items-center justify-between gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/70 px-3 py-2 text-xs">
+                        <div class="flex min-w-0 items-center gap-2 text-slate-700 dark:text-slate-200">
+                            <i class="bi bi-paperclip shrink-0 text-[#720c16] dark:text-red-400"></i>
+                            <span class="truncate" x-text="selectedFile ? selectedFile.name : ''"></span>
+                            <span class="shrink-0 text-slate-400" x-text="selectedFile ? formatFileSize(selectedFile.size) : ''"></span>
+                        </div>
+                        <button type="button" @click="clearSelectedFile()" :disabled="isLoading" title="Hapus lampiran" class="shrink-0 rounded-lg p-1 text-slate-400 hover:bg-slate-200 hover:text-rose-600 disabled:opacity-50 dark:hover:bg-slate-700">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <input x-ref="fileInput" type="file" class="hidden" accept=".pdf,.docx,.txt,.md,.csv,.png,.jpg,.jpeg,.webp" @change="handleFileSelection($event)">
                     <textarea x-ref="chatInput"
                               x-model="inputMessage"
                               @input="autoResizeInput()"
@@ -678,6 +696,13 @@
                     {{-- Bottom Controls inside input --}}
                     <div class="flex items-center justify-between px-3 pb-2.5 pt-1 text-slate-400">
                         <div class="flex items-center gap-1.5">
+                            <button type="button"
+                                    @click="$refs.fileInput.click()"
+                                    :disabled="isLoading"
+                                    title="Lampirkan PDF, DOCX, TXT, MD, CSV, atau gambar (maks. 10 MB)"
+                                    class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 disabled:opacity-50 text-sm transition">
+                                <i class="bi bi-paperclip"></i>
+                            </button>
                             {{-- Voice Input (Speech Recognition) --}}
                             <button type="button"
                                     x-show="speechRecognitionSupported"
@@ -715,7 +740,7 @@
                             <template x-if="!isLoading">
                                 <button type="button"
                                         @click="sendMessage()"
-                                        :disabled="inputMessage.trim() === ''"
+                                        :disabled="inputMessage.trim() === '' && !selectedFile"
                                         title="Kirim (Enter)"
                                         class="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-[#720c16] hover:bg-[#8a1824] active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed text-white text-xs font-bold transition shadow-xs flex items-center gap-1.5">
                                     <span class="hidden sm:inline">Kirim</span>
@@ -727,7 +752,7 @@
                 </div>
 
                 <p class="text-[10px] text-center text-slate-400 dark:text-slate-500 mt-2">
-                    Cendekia AI dapat membuat kekeliruan. Harap periksa kembali informasi penting perkuliahan.
+                    Lampirkan PDF, DOCX, TXT, MD, CSV, atau gambar (maks. 10 MB). PDF hasil pindai perlu di-OCR; analisis gambar memerlukan model vision. Periksa kembali informasi penting.
                 </p>
 
             </div>
@@ -746,7 +771,9 @@ function cendekiaGptApp() {
         sidebarOpen: window.innerWidth >= 1024,
         searchQuery: '',
         inputMessage: '',
+        selectedFile: null,
         isLoading: false,
+        abortController: null,
         activeChatId: null,
         conversations: [],
         messages: [],
@@ -818,7 +845,9 @@ function cendekiaGptApp() {
 
         saveConversations() {
             try {
-                localStorage.setItem(this.storageKey, JSON.stringify(this.conversations));
+                localStorage.setItem(this.storageKey, JSON.stringify(this.conversations, (key, value) => {
+                    return key === 'attachmentContext' ? undefined : value;
+                }));
             } catch (e) {
                 console.error('Failed to save chat history to localStorage', e);
             }
@@ -965,6 +994,35 @@ function cendekiaGptApp() {
             });
         },
 
+        handleFileSelection(event) {
+            const file = event.target.files && event.target.files[0];
+            event.target.value = '';
+            if (!file) return;
+
+            const allowedExtensions = ['pdf', 'docx', 'txt', 'md', 'csv', 'png', 'jpg', 'jpeg', 'webp'];
+            const extension = file.name.split('.').pop().toLowerCase();
+            if (!allowedExtensions.includes(extension)) {
+                this.showToast('Format tidak didukung. Pilih PDF, DOCX, TXT, MD, CSV, PNG, JPG, atau WEBP.');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                this.showToast('Ukuran file maksimal 10 MB.');
+                return;
+            }
+
+            this.selectedFile = file;
+        },
+
+        clearSelectedFile() {
+            if (!this.isLoading) this.selectedFile = null;
+        },
+
+        formatFileSize(bytes) {
+            return bytes < 1024 * 1024
+                ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+                : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+        },
+
         sendSuggestion(promptText) {
             this.inputMessage = promptText;
             this.sendMessage();
@@ -990,8 +1048,11 @@ function cendekiaGptApp() {
         },
 
         async sendMessage() {
-            const text = this.inputMessage.trim();
-            if (!text || this.isLoading) return;
+            const file = this.selectedFile;
+            const text = this.inputMessage.trim() || (file
+                ? 'Analisis dokumen ini secara menyeluruh. Jelaskan pokok bahasan, susunan, temuan penting, hal yang perlu diperbaiki, dan rekomendasi. Jangan mengarang informasi yang tidak ada di dokumen.'
+                : '');
+            if ((!text && !file) || this.isLoading) return;
 
             // Stop speech if currently speaking
             this.stopSpeech();
@@ -1000,6 +1061,8 @@ function cendekiaGptApp() {
             const userMsg = {
                 role: 'user',
                 content: text,
+                fileName: file ? file.name : null,
+                fileType: file && ['png', 'jpg', 'jpeg', 'webp'].includes(file.name.split('.').pop().toLowerCase()) ? 'image' : 'document',
                 time: this.getCurrentTime()
             };
             this.messages.push(userMsg);
@@ -1022,24 +1085,31 @@ function cendekiaGptApp() {
             try {
                 const historyPayload = this.messages.slice(0, -1).map(m => ({
                     role: m.role,
-                    content: m.content
+                    content: m.content,
+                    attachment_context: m.attachmentContext || null
                 }));
 
+                const formData = new FormData();
+                formData.append('message', text);
+                formData.append('history', JSON.stringify(historyPayload));
+                if (file) formData.append('file', file);
+
+                this.abortController = new AbortController();
                 const response = await fetch('{{ route('dosen.ai-assistant.chat') }}', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({
-                        message: text,
-                        history: historyPayload
-                    })
+                    body: formData,
+                    signal: this.abortController.signal
                 });
 
                 const data = await response.json();
 
                 if (data.success && data.message) {
+                    userMsg.attachmentContext = data.attachment_context || null;
+                    userMsg.fileName = data.attachment_name || userMsg.fileName;
+                    this.selectedFile = null;
                     this.messages.push({
                         role: 'assistant',
                         content: data.message,
@@ -1047,13 +1117,17 @@ function cendekiaGptApp() {
                         rating: null
                     });
                 } else {
+                    const validationError = data.errors
+                        ? Object.values(data.errors).flat()[0]
+                        : null;
                     this.messages.push({
                         role: 'assistant',
-                        content: '⚠️ **Terjadi Kendala:** ' + (data.error || 'Layanan AI sedang tidak dapat dihubungi. Silakan coba lagi.'),
+                        content: '⚠️ **Terjadi Kendala:** ' + (data.error || validationError || data.message || 'Layanan AI sedang tidak dapat dihubungi. Silakan coba lagi.'),
                         time: this.getCurrentTime()
                     });
                 }
             } catch (error) {
+                if (error.name === 'AbortError') return;
                 console.error('Chat error:', error);
                 this.messages.push({
                     role: 'assistant',
@@ -1062,6 +1136,7 @@ function cendekiaGptApp() {
                 });
             } finally {
                 this.isLoading = false;
+                this.abortController = null;
                 if (currentChat) {
                     currentChat.messages = this.messages;
                     currentChat.updatedAt = Date.now();
@@ -1089,7 +1164,7 @@ function cendekiaGptApp() {
         },
 
         stopGeneration() {
-            this.isLoading = false;
+            if (this.abortController) this.abortController.abort();
             this.showToast('Pembuatan dihentikan');
         },
 
