@@ -94,7 +94,7 @@
 
             {{-- Tinggi gambar dibatasi di mobile supaya semua muat satu layar --}}
             <div class="w-full max-w-4xl mt-4 md:-mt-2 flex justify-center animate-fade-in-up">
-                <img src="{{ asset('images/belajar3.png') }}" alt="Ilustrasi Edukasi"
+                <img src="{{ asset('images/belajar4.png') }}" alt="Ilustrasi Edukasi"
                      class="w-auto max-w-full h-auto max-h-[30svh] sm:max-h-[36svh] md:max-h-none md:w-full object-contain">
             </div>
 

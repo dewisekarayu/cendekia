@@ -9,7 +9,6 @@ use App\Models\MataKuliah;
 use App\Models\AktivitasPengguna;
 use App\Models\AbsensiMahasiswa;
 use App\Models\PengumpulanTugas;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -55,7 +54,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Use the current year when it has data; otherwise show the latest year with activity.
+        // Keep the chart aligned with the current year, even when it has no activity yet.
         $bulanList = $isEn ? [
             1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
             5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug',
@@ -67,23 +66,10 @@ class DashboardController extends Controller
         ];
 
         $currentYear = now()->year;
-        $latestActivityDate = collect([
-            class_exists(AktivitasPengguna::class) ? AktivitasPengguna::max('terjadi_pada') : null,
-            class_exists(AbsensiMahasiswa::class) ? AbsensiMahasiswa::max('waktu_absensi') : null,
-            class_exists(PengumpulanTugas::class) ? PengumpulanTugas::max('waktu_kumpul') : null,
-        ])->filter()->max();
-        $latestActivityDate = $latestActivityDate ? Carbon::parse($latestActivityDate) : null;
-
-        $currentYearActivityCount =
-            AktivitasPengguna::whereYear('terjadi_pada', $currentYear)->count()
-            + AbsensiMahasiswa::whereYear('waktu_absensi', $currentYear)->count()
-            + PengumpulanTugas::whereYear('waktu_kumpul', $currentYear)->count();
-        $activityYear = $currentYearActivityCount > 0
-            ? $currentYear
-            : ($latestActivityDate?->year ?? $currentYear);
-        $activityPeriodLabel = $activityYear === $currentYear
-            ? ($isEn ? "Activity in {$activityYear}" : "Aktivitas tahun {$activityYear}")
-            : ($isEn ? "Latest activity year: {$activityYear}" : "Periode aktivitas terakhir: {$activityYear}");
+        $activityYear = $currentYear;
+        $activityPeriodLabel = $isEn
+            ? "Activity in {$activityYear}"
+            : "Aktivitas tahun {$activityYear}";
         $aktivitasBulanan = [];
         $totalAktivitas = 0;
 
@@ -113,14 +99,6 @@ class DashboardController extends Controller
         ];
 
         $weekReferenceDate = now();
-        $currentWeekActivityCount =
-            AktivitasPengguna::whereBetween('terjadi_pada', [$weekReferenceDate->copy()->startOfDay()->subDays(6), $weekReferenceDate->copy()->endOfDay()])->count()
-            + AbsensiMahasiswa::whereBetween('waktu_absensi', [$weekReferenceDate->copy()->startOfDay()->subDays(6), $weekReferenceDate->copy()->endOfDay()])->count()
-            + PengumpulanTugas::whereBetween('waktu_kumpul', [$weekReferenceDate->copy()->startOfDay()->subDays(6), $weekReferenceDate->copy()->endOfDay()])->count();
-
-        if ($currentWeekActivityCount === 0 && $latestActivityDate) {
-            $weekReferenceDate = $latestActivityDate->copy();
-        }
 
         $aktivitasMingguan = [];
         for ($i = 6; $i >= 0; $i--) {
