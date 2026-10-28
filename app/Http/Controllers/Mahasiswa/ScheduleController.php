@@ -3,15 +3,37 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
-        $kelasList = $request->user()->kelasDiikuti()->with('mataKuliah')->get();
+        $activeSemesterId = Semester::where('is_active', true)->value('id');
 
-        $kelasIds = $kelasList->pluck('id');
+        $kelasDiikuti = $request->user()->kelasDiikuti()
+            ->with(['mataKuliah', 'dosen', 'jadwals'])
+            ->where('status_kelas', 'aktif')
+            ->where('is_active', true)
+            ->when($activeSemesterId, fn ($query) => $query->where('semester_id', $activeSemesterId))
+            ->get();
+
+        $kelasList = $kelasDiikuti->flatMap(function ($kelas) {
+            return $kelas->jadwals->map(function ($jadwal) use ($kelas) {
+                return (object) [
+                    'id' => $kelas->id,
+                    'mataKuliah' => $kelas->mataKuliah,
+                    'dosen' => $kelas->dosen,
+                    'hari' => ucfirst(mb_strtolower(trim($jadwal->hari))),
+                    'jam_mulai' => $jadwal->jam_mulai,
+                    'jam_selesai' => $jadwal->jam_selesai,
+                    'ruangan' => $jadwal->ruangan,
+                ];
+            });
+        })->values();
+
+        $kelasIds = $kelasDiikuti->pluck('id');
         $nowDate = now()->toDateString();
         $nowTime = now()->toTimeString();
 
