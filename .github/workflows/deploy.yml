@@ -1,0 +1,41 @@
+name: Cendekia - Build & Test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Vite assets
+        run: npm run build
+
+      - name: Verify manifest
+        run: test -f public/build/manifest.json
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cendekia-frontend-build
+          path: public/build/
+          if-no-files-found: error
