@@ -39,6 +39,12 @@ aplikasi menampilkan pesan error yang jelas dan tidak diam-diam mengirim prompt
 ke provider lain. Prediksi EWS yang berbasis aturan/data lokal tidak menggunakan
 model AI eksternal.
 
+PDF teks diekstrak langsung. Halaman PDF yang berisi scan atau hanya sedikit
+teks akan dibaca dengan OCR bahasa Indonesia dan Inggris. Dockerfile aplikasi
+memasang Poppler dan Tesseract beserta data bahasa tersebut. Jika aplikasi
+dijalankan tanpa Docker, pasang `pdftoppm`, Tesseract, dan data bahasa
+`ind`/`eng` pada server agar PDF hasil pindai dapat diproses.
+
 ## Menjalankan lokal dengan Docker
 
 ```sh
