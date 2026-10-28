@@ -81,3 +81,56 @@ jobs:
             -p "$DEPLOY_PORT" \
             "$DEPLOY_USER@$DEPLOY_HOST" \
             'echo "SSH CONNECTION SUCCESS"; pwd'
+
+  preview-deploy:
+    name: Preview Deployment
+    runs-on: ubuntu-latest
+    needs: [build, ssh-test]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Vite build
+        uses: actions/download-artifact@v4
+        with:
+          name: cendekia-frontend-build
+          path: public/build/
+
+      - name: Prepare SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/cendekia_actions
+          chmod 600 ~/.ssh/cendekia_actions
+
+          ssh-keyscan -T 10 -p "$DEPLOY_PORT" -t ed25519 "$DEPLOY_HOST" > ~/.ssh/known_hosts
+          ssh-keygen -lf ~/.ssh/known_hosts -E sha256 | grep -F 'SHA256:oLqanP6CyiCDLLUhwVGVGbL76I1s9A/cPeu6yffigqU'
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Preview file changes
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          set -euo pipefail
+
+          rsync -rltzvn --itemize-changes \
+            -e "ssh -i $HOME/.ssh/cendekia_actions -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -p $DEPLOY_PORT" \
+            --exclude='/.git/' \
+            --exclude='/.github/' \
+            --exclude='/.env*' \
+            --exclude='.htaccess' \
+            --exclude='/storage/' \
+            --exclude='/vendor/' \
+            --exclude='/bootstrap/cache/' \
+            --exclude='/public/storage/' \
+            --exclude='error_log' \
+            --exclude='/public/test.php' \
+            ./ "$DEPLOY_USER@$DEPLOY_HOST:/home/cendeki9/public_html/"
