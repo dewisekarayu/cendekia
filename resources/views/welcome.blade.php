@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Cendekia') }}</title>
+        <title>Cendekia - Platform Edukasi dan Pembelajaran Digital</title>
+        <meta name="description" content="Cendekia adalah platform edukasi digital yang mendukung pembelajaran, pengelolaan akademik, serta kolaborasi mahasiswa dan dosen.">
         <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpg') }}">
         <link rel="shortcut icon" href="{{ asset('images/logo.jpg') }}">
         <link rel="preconnect" href="https://fonts.bunny.net">
