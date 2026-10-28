@@ -486,7 +486,7 @@
         }
 
         /* Table name and sub-text fix */
-        html.dark .table .fw-bold {
+        html.dark .table .fw-bold:not(.kelas-role-badge):not(.kelas-student-badge) {
             color: #f1f5f9 !important;
         }
 
@@ -721,11 +721,11 @@
         }
 
         /* Explicitly force all text inside table cells to be readable in dark mode */
-        html.dark .table tbody td *:not(.badge-status):not(.status-dot):not(.action-btn):not(.badge-code) {
+        html.dark .table tbody td *:not(.badge-status):not(.status-dot):not(.action-btn):not(.badge-code):not(.kelas-role-badge):not(.kelas-student-badge) {
             color: inherit;
         }
 
-        html.dark .table tbody td .fw-bold,
+        html.dark .table tbody td .fw-bold:not(.kelas-role-badge):not(.kelas-student-badge),
         html.dark .table tbody td .fw-semibold {
             color: #f1f5f9 !important;
         }

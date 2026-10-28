@@ -3,6 +3,20 @@
 @section('activeMenu', 'Dashboard')
 @section('content')
 
+@push('styles')
+<style>
+    html.dark body.role-mahasiswa .dashboard-course-link {
+        background-color: #1d4ed8 !important;
+        border-color: #60a5fa !important;
+        color: #ffffff !important;
+    }
+
+    html.dark body.role-mahasiswa .dashboard-course-link:hover {
+        background-color: #1e40af !important;
+    }
+</style>
+@endpush
+
 @php
     $firstName = explode(' ', auth()->user()->name)[0];
     $hour = now()->hour;
@@ -129,8 +143,7 @@
                             </div>
                             <div class="px-4 pb-4 sm:px-5 sm:pb-5">
                                 <a href="{{ route('mahasiswa.kelas-detail', $kelas['id']) }}"
-                                   class="block w-full rounded-xl {{ $cc['btn'] }} py-2.5 text-center text-xs font-bold shadow-2xs hover:opacity-90 active:scale-[0.99] transition"
-                                   style="color: #002B6B !important;">
+                                   class="dashboard-course-link block w-full rounded-xl {{ $cc['btn'] }} py-2.5 text-center text-xs font-bold shadow-2xs hover:opacity-90 active:scale-[0.99] transition">
                                     Masuk Kelas →
                                 </a>
                             </div>
