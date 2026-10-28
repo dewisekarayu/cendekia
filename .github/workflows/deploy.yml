@@ -121,7 +121,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          rsync -rltzvn --itemize-changes \
+          rsync -rlzvnc --itemize-changes \
             -e "ssh -i $HOME/.ssh/cendekia_actions -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -p $DEPLOY_PORT" \
             --exclude='/.git/' \
             --exclude='/.github/' \
