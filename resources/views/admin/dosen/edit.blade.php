@@ -55,6 +55,14 @@
                         @error('email') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                     </div>
 
+                    <!-- No. Telepon / Kontak -->
+                    <div class="mb-4">
+                        <label class="form-label">No. Telepon / Kontak</label>
+                        <input type="tel" class="form-control @error('telepon') is-invalid @enderror" name="telepon" value="{{ old('telepon', $dosenMember->telepon) }}" placeholder="Contoh: 081234567890">
+                        <small class="text-muted d-block mt-1">Nomor kontak aktif dosen (WhatsApp/Telepon). Opsional.</small>
+                        @error('telepon') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
+                    </div>
+
                     <!-- Program Studi -->
                     <div class="mb-4">
                         <label class="form-label">Program Studi <span style="color: #dc2626;">*</span></label>

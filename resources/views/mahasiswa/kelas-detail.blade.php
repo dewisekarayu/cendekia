@@ -2,6 +2,22 @@
 @section('title', $kelas->mataKuliah?->nama_mk ?? 'Detail Kelas')
 @section('content')
 
+@push('styles')
+<style>
+    .kelas-detail-tab-active {
+        background-color: #c0e6ff !important;
+        border: 1px solid rgba(0, 43, 107, 0.3) !important;
+        color: #002b6b !important;
+    }
+
+    html.dark body.role-mahasiswa .kelas-detail-tab-active {
+        background-color: #1d4ed8 !important;
+        border-color: #60a5fa !important;
+        color: #ffffff !important;
+    }
+</style>
+@endpush
+
 @php
     $hariIni  = now()->locale('id')->dayName;
     $sekarang = now()->format('H:i:s');
@@ -97,9 +113,8 @@
             @foreach ($tabs as $key => $t)
                 <button @click="tab = '{{ $key }}'"
                         :class="tab === '{{ $key }}'
-                            ? 'bg-[#c0e6ff] text-[#002B6B] border border-[#002B6B]/30 font-bold shadow-xs'
+                            ? 'kelas-detail-tab-active font-bold shadow-xs'
                             : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-[#002B6B] hover:text-[#002B6B] dark:hover:border-blue-400 dark:hover:text-blue-300'"
-                        :style="tab === '{{ $key }}' ? 'color: #002B6B !important' : ''"
                         class="whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition inline-flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="{{ $t['icon'] }}"/>

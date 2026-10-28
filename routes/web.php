@@ -272,6 +272,7 @@ Route::middleware(['auth', 'role:dosen'])->group(function () {
     
     // Forum Dosen
     Route::get('/dosen/kelas/{id}/forum', [DosenForumController::class, 'index'])->name('dosen.kelas-forum');
+    Route::get('/dosen/kelas/{id}/forum/{forum}/messages', [DosenForumController::class, 'getMessages'])->name('dosen.kelas-forum.messages');
     Route::post('/dosen/kelas/{id}/forum/{forum}/pesan', [DosenForumController::class, 'kirimPesan'])->name('dosen.kelas-forum.pesan');
     
     //Penilaian Tugas oleh Dosen
@@ -373,6 +374,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
 
     // Forum Mahasiswa
     Route::get('/mahasiswa/kelas/{id}/forum', [MahasiswaForumController::class, 'index'])->name('mahasiswa.kelas-forum');
+    Route::get('/mahasiswa/kelas/{id}/forum/{forum}/messages', [MahasiswaForumController::class, 'getMessages'])->name('mahasiswa.kelas-forum.messages');
     Route::post('/mahasiswa/kelas/{id}/forum/{forum}/pesan', [MahasiswaForumController::class, 'kirimPesan'])->name('mahasiswa.kelas-forum.pesan');
 
     Route::get('/mahasiswa/schedule', [MahasiswaScheduleController::class, 'index'])->name('mahasiswa.schedule');

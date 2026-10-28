@@ -23,7 +23,7 @@
                         <span class="text-muted fw-semibold">{{ $ta->tahun_ajaran }}</span>
                     </td>
                     <td>
-                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-2 fw-semibold" style="font-size: 0.75rem;">
+                        <span class="badge semester-kind-badge px-2 py-1 rounded-2 fw-semibold" style="font-size: 0.75rem;">
                             {{ $ta->jenis }}
                         </span>
                     </td>
