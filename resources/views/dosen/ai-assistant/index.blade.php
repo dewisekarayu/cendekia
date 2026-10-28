@@ -494,7 +494,7 @@
                 </div>
                 <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">Lepaskan Berkas di Sini</h3>
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mt-1">
-                    Mendukung dokumen perkuliahan (PDF, DOCX, XLSX, CSV, Teks, Kode) serta foto/gambar untuk dianalisis langsung oleh AI.
+                    Mendukung PDF, DOCX, TXT, MD, CSV, PNG, JPG, dan WEBP (maks. 10 MB).
                 </p>
             </div>
 
@@ -526,7 +526,7 @@
                             <i class="bi bi-paperclip text-sm"></i>
                             <span>Unggah & Analisis File</span>
                         </div>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">Lampirkan PDF, Word, Excel, Kode, atau Foto untuk dibedah dan dirangkum oleh AI.</p>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">Lampirkan PDF, DOCX, TXT, MD, CSV, atau foto untuk dibedah dan dirangkum oleh AI.</p>
                     </button>
 
                     {{-- 2. Generate Gambar AI --}}
@@ -1272,10 +1272,12 @@ function cendekiaGptApp() {
         },
 
         handleFileSelect(e) {
-            const files = e.target.files;
+            const file = e.target.files && e.target.files.length > 0
+                ? e.target.files[0]
+                : null;
             e.target.value = '';
-            if (files && files.length > 0) {
-                this.processFile(files[0]);
+            if (file) {
+                this.processFile(file);
             }
         },
 
@@ -1435,7 +1437,6 @@ function cendekiaGptApp() {
             this.messages.push(userMsg);
 
             this.inputMessage = '';
-            this.removeAttachedFile();
             this.isImageMode = false;
             this.autoResizeInput();
             this.isLoading = true;
@@ -1459,7 +1460,10 @@ function cendekiaGptApp() {
                     content: m.content,
                     attachment_context: m.attachment_context || null
                 }));
-                const headers = { 'X-CSRF-TOKEN': '{{ csrf_token() }}' };
+                const headers = {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                };
                 let response;
 
                 if (currentMode === 'image') {
@@ -1481,9 +1485,25 @@ function cendekiaGptApp() {
                     });
                 }
 
-                const data = await response.json();
+                let data;
+                try {
+                    data = await response.json();
+                } catch (error) {
+                    if (response.status === 413) {
+                        throw new Error('Berkas terlalu besar untuk server. Pilih berkas maksimal 10 MB atau hubungi administrator.');
+                    }
+                    if (response.status === 419) {
+                        throw new Error('Sesi halaman berakhir. Muat ulang halaman, lampirkan kembali berkas, lalu coba lagi.');
+                    }
+                    throw new Error(`Server mengembalikan respons yang tidak dapat dibaca (HTTP ${response.status}).`);
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.message || `Permintaan gagal (HTTP ${response.status}).`);
+                }
 
                 if (data.success && data.message) {
+                    this.removeAttachedFile();
                     userMsg.attachment_context = data.attachment_context || null;
                     this.messages.push({
                         role: 'assistant',
@@ -1497,7 +1517,7 @@ function cendekiaGptApp() {
                 } else {
                     this.messages.push({
                         role: 'assistant',
-                        content: '⚠️ **Terjadi Kendala:** ' + (data.error || 'Layanan AI sedang tidak dapat dihubungi. Silakan coba lagi.'),
+                        content: '⚠️ **Terjadi Kendala:** ' + (data.error || data.message || 'Layanan AI sedang tidak dapat dihubungi. Silakan coba lagi.'),
                         time: this.getCurrentTime()
                     });
                 }
@@ -1507,7 +1527,7 @@ function cendekiaGptApp() {
                 this.messages.push({
                     role: 'assistant',
                     type: 'text',
-                    content: '⚠️ **Koneksi Terputus:** Tidak dapat menghubungi server. Periksa jaringan internet atau konfigurasi sistem.',
+                    content: '⚠️ **Pengiriman Gagal:** ' + (error.message || 'Tidak dapat menghubungi server. Periksa jaringan internet atau konfigurasi sistem.'),
                     time: this.getCurrentTime()
                 });
             } finally {
