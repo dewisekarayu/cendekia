@@ -7,7 +7,6 @@ use App\Models\AbsensiMahasiswa;
 use App\Models\AktivitasPengguna;
 use App\Models\ForumDiskusi;
 use App\Models\JadwalUjian;
-use App\Models\KelasMahasiswa;
 use App\Models\KelasPerkuliahan;
 use App\Models\KomentarDiskusi;
 use App\Models\Materi;
@@ -15,12 +14,13 @@ use App\Models\MataKuliah;
 use App\Models\NilaiAkhir;
 use App\Models\Notifikasi;
 use App\Models\PengumpulanTugas;
-use App\Models\ProgramStudi;
+use App\Models\Semester;
 use App\Models\Tugas;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class ComprehensiveAcademicSeeder extends Seeder
 {
@@ -65,45 +65,22 @@ class ComprehensiveAcademicSeeder extends Seeder
 
     public function run(): void
     {
-        $kelasList = KelasPerkuliahan::with(['mataKuliah.programStudi', 'dosen'])->get();
-        $mahasiswaByProdi = User::role('mahasiswa')->get()->groupBy('program_studi_id');
-        $admin = User::role('admin')->first();
-        $dosen = User::role('dosen')->get();
+        $semester = Semester::where('is_active', true)->first();
+        if (! $semester) {
+            throw new RuntimeException('Seeder data akademik membutuhkan satu semester aktif. Jalankan SemesterSeeder terlebih dahulu.');
+        }
 
-        // Academic calendar
-        $semesterStart = Carbon::parse('2025-09-01');
-        $semesterEnd = Carbon::parse('2026-01-31');
+        $kelasList = KelasPerkuliahan::where('semester_id', $semester->id)
+            ->with(['mataKuliah.programStudi', 'dosen', 'mahasiswa'])
+            ->get();
+        $semesterStart = Carbon::parse($semester->tanggal_mulai);
+        $semesterEnd = Carbon::parse($semester->tanggal_selesai);
 
         foreach ($kelasList as $kelas) {
-            $prodiId = $kelas->mataKuliah?->program_studi_id;
-            $mahasiswaDiKelas = $mahasiswaByProdi->get($prodiId, collect());
-
-            if ($mahasiswaDiKelas->isEmpty()) {
+            $peserta = $kelas->mahasiswa;
+            if ($peserta->isEmpty()) {
                 continue;
             }
-
-            // Distribute mahasiswa ke kelas
-            $sectionLetter = substr($kelas->kode_kelas, -1);
-            $sectionIndex = ord($sectionLetter) - ord('A');
-            $itemsPerSection = ceil($mahasiswaDiKelas->count() / 3);
-            $offset = $sectionIndex * $itemsPerSection;
-
-            $peserta = $mahasiswaDiKelas->slice($offset, $itemsPerSection)->values();
-
-            if ($peserta->isEmpty()) {
-                $peserta = $mahasiswaDiKelas->take(25)->values();
-            }
-
-            // Enroll mahasiswa ke kelas
-            $peserta->each(function (User $mahasiswa) use ($kelas, $semesterStart) {
-                KelasMahasiswa::updateOrCreate(
-                    [
-                        'kelas_perkuliahan_id' => $kelas->id,
-                        'mahasiswa_id' => $mahasiswa->id,
-                    ],
-                    ['tanggal_daftar' => $semesterStart->copy()->subDays(7)]
-                );
-            });
 
             // Seed akademik data
             $this->seedMateri($kelas, $semesterStart);
@@ -142,19 +119,19 @@ class ComprehensiveAcademicSeeder extends Seeder
 
                 // SELALU assign dosen kelas ini ke setiap materi
                 $dosenToAssign = [$kelas->dosen->id];
-                
+
                 // Kadang tambah 1 dosen lain untuk team teaching (30% chance)
                 if (rand(1, 100) <= 30) {
                     $otherDosen = User::role('dosen')
                         ->where('id', '!=', $kelas->dosen->id)
                         ->inRandomOrder()
                         ->first();
-                    
+
                     if ($otherDosen) {
                         $dosenToAssign[] = $otherDosen->id;
                     }
                 }
-                
+
                 // Attach dosen ke materi (many-to-many)
                 $materi->dosen()->sync($dosenToAssign);
             }
@@ -182,7 +159,7 @@ class ComprehensiveAcademicSeeder extends Seeder
             $peserta->each(function (User $mahasiswa, int $index) use ($absensi, $pertemuan) {
                 // Realistic attendance distribution: 80% hadir, 10% izin/sakit, 10% alpha
                 $random = ($index * 7 + $pertemuan * 11) % 100;
-                
+
                 if ($random < 80) {
                     $status = 'hadir';
                 } elseif ($random < 90) {
@@ -242,7 +219,7 @@ class ComprehensiveAcademicSeeder extends Seeder
             foreach ($tugasList as $tugaIdx => $tugas) {
                 // Realistic submission distribution
                 $random = ($mahasiswaIdx * 13 + $tugaIdx * 7) % 100;
-                
+
                 // 85% submit on time, 10% submit late, 5% tidak submit
                 if ($random < 85) {
                     $submitted = true;
@@ -265,7 +242,7 @@ class ComprehensiveAcademicSeeder extends Seeder
                 $penalty = $isLate ? rand(5, 15) : 0;
                 $nilai = max(50, $baseNilai - $penalty);
 
-                $feedback = $nilai >= 85 
+                $feedback = $nilai >= 85
                     ? 'Excellent work! Analisis mendalam dan implementasi rapi. Pertahankan kualitas ini.'
                     : ($nilai >= 75
                         ? 'Baik. Perlu lebih detail dalam analisis dan dokumentasi.'
@@ -463,7 +440,7 @@ class ComprehensiveAcademicSeeder extends Seeder
             for ($i = 0; $i < rand(10, 30); $i++) {
                 $type = $activityTypes[rand(0, count($activityTypes) - 1)];
                 $terjadi = $startDate->copy()->addDays(rand(0, 120))->addHours(rand(6, 22));
-                
+
                 AktivitasPengguna::create([
                     'user_id' => $mahasiswa->id,
                     'kelas_perkuliahan_id' => $kelas->id,
@@ -499,7 +476,7 @@ class ComprehensiveAcademicSeeder extends Seeder
             'submit_tugas' => "Mengumpulkan tugas untuk {$kelas->mataKuliah->nama_mk}",
             'forum_post' => "Memposting komentar di forum kelas",
         ];
-        
+
         return $descriptions[$type] ?? 'Aktivitas di kelas';
     }
 }

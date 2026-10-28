@@ -54,12 +54,6 @@ class EnhancedUserSeeder extends Seeder
 
     public function run(): void
     {
-        // Get all program studi with their fakultas
-        $allProdis = ProgramStudi::with('fakultas')->get();
-
-        // =====================================================
-        // 1. ADMIN ACCOUNT
-        // =====================================================
         $admin = User::updateOrCreate(
             ['nip_nim' => 'ADM0001'],
             [
@@ -72,102 +66,74 @@ class EnhancedUserSeeder extends Seeder
         );
         $admin->syncRoles('admin');
 
+        $programCodes = ['PD', 'KG', 'FAR', 'KEP', 'KEB', 'TI', 'TS', 'TE', 'TIN', 'SI'];
+        $programs = ProgramStudi::whereIn('kode_prodi', $programCodes)->get()->keyBy('kode_prodi');
+        if ($programs->count() !== count($programCodes)) {
+            throw new \RuntimeException('Seeder pengguna membutuhkan 10 program studi. Jalankan ProgramStudiSeeder terlebih dahulu.');
+        }
+
         $dosenPassword = Hash::make('password123');
         $mahasiswaPassword = Hash::make('password123');
-
-        // Main accounts for TI
         $mainAccounts = [
-            '20241001' => [
-                'email' => 'kampuscendekia5@gmail.com',
-                'name' => 'Muhammad Ridho Pratama',
-                'gender' => 'laki-laki',
-            ],
-            '20241002' => [
-                'email' => 'maylusi431@gmail.com',
-                'name' => 'Maylusi Widia Kusumaputri',
-                'gender' => 'perempuan',
-            ],
-            '20241003' => [
-                'email' => 'dewisekarayu56@gmail.com',
-                'name' => 'Dewi Sayu Maharani',
-                'gender' => 'perempuan',
-            ],
+            ['email' => 'kampuscendekia5@gmail.com', 'name' => 'Muhammad Ridho Pratama'],
+            ['email' => 'maylusi431@gmail.com', 'name' => 'Maylusi Widia Kusumaputri'],
+            ['email' => 'dewisekarayu56@gmail.com', 'name' => 'Dewi Sayu Maharani'],
         ];
+        $lecturerIndex = 0;
+        $studentIndex = 0;
 
-        $dosenIndex = 0;
-        $mahasiswaIndex = 0;
+        foreach ($programCodes as $programCode) {
+            $program = $programs->get($programCode);
 
-        foreach ($allProdis as $prodi) {
-            // Generate 2 Dosen per prodi (Total = 50 Dosen across 25 prodi)
-            for ($d = 1; $d <= 2; $d++) {
-                $gelarDepan = $dosenIndex % 5 === 0 ? 'Prof. Dr. ' : ($dosenIndex % 2 === 0 ? 'Dr. ' : '');
-                $gelarBelakang = $dosenIndex % 3 === 0 ? ', M.Kom' : ', S.Kom., M.T';
-                $nidn = '197900' . str_pad((string) ($dosenIndex + 1), 5, '0', STR_PAD_LEFT);
-                
-                // Pick name based on index, loop if out of bounds
-                if ($dosenIndex < count($this->namaLakiLaki)) {
-                    $namaDasar = $this->namaLakiLaki[$dosenIndex];
-                } else {
-                    $namaDasar = $this->namaLakiLaki[$dosenIndex % count($this->namaLakiLaki)] . ' ' . $this->namaBelakang[$dosenIndex % count($this->namaBelakang)];
-                }
-                
-                $nama = $gelarDepan . $namaDasar . $gelarBelakang;
-                $slug = Str::slug($namaDasar, '.');
-
-                $dosen = User::updateOrCreate(
+            for ($lecturerInProgram = 0; $lecturerInProgram < 2; $lecturerInProgram++) {
+                $nameIndex = $lecturerIndex % count($this->namaLakiLaki);
+                $nameBase = $this->namaLakiLaki[$nameIndex].' '.$this->namaBelakang[$lecturerIndex % count($this->namaBelakang)];
+                $nidn = '1980'.str_pad((string) ($lecturerIndex + 1), 6, '0', STR_PAD_LEFT);
+                $lecturer = User::updateOrCreate(
                     ['nip_nim' => $nidn],
                     [
-                        'name' => $nama,
-                        'email' => $slug . '@dosen.cendekia.ac.id',
+                        'name' => $nameBase.($lecturerIndex % 2 === 0 ? ', M.Kom' : ', M.T'),
+                        'email' => Str::slug($nameBase, '.').'@dosen.cendekia.ac.id',
                         'email_verified_at' => now(),
                         'password' => $dosenPassword,
-                        'program_studi_id' => $prodi->id,
+                        'program_studi_id' => $program->id,
                         'status' => 'aktif',
                     ]
                 );
-                $dosen->syncRoles('dosen');
-                $dosenIndex++;
+                $lecturer->syncRoles('dosen');
+                $lecturerIndex++;
             }
 
-            // Generate 4 Mahasiswa per prodi (Total = 100 Mahasiswa across 25 prodi)
-            for ($m = 1; $m <= 4; $m++) {
-                $nim = '2024' . str_pad((string) ($mahasiswaIndex + 1), 4, '0', STR_PAD_LEFT);
-
-                // Check if this NIM is one of our main accounts (ensure they get mapped to TI, or just let them take these NIMs wherever they fall, wait, main accounts are specifically for TI)
-                // Actually, let's inject main accounts into TI directly.
-                if ($prodi->kode_prodi === 'TI' && isset($mainAccounts[$nim])) {
-                    $account = $mainAccounts[$nim];
-                    $mahasiswa = User::updateOrCreate(
-                        ['nip_nim' => $nim],
-                        [
-                            'name' => $account['name'],
-                            'email' => $account['email'],
-                            'email_verified_at' => now(),
-                            'password' => $mahasiswaPassword,
-                            'program_studi_id' => $prodi->id,
-                            'status' => 'aktif',
-                        ]
-                    );
-                } else {
-                    $isLaki = $mahasiswaIndex % 2 === 0;
-                    $namaDepan = $isLaki ? $this->namaLakiLaki[($mahasiswaIndex / 2) % count($this->namaLakiLaki)] : $this->namaPerempuan[floor($mahasiswaIndex / 2) % count($this->namaPerempuan)];
-                    $namaLengkap = $namaDepan . ' ' . $this->namaBelakang[$mahasiswaIndex % count($this->namaBelakang)];
-                    $emailName = Str::slug($namaLengkap, '.');
-                    
-                    $mahasiswa = User::updateOrCreate(
-                        ['nip_nim' => $nim],
-                        [
-                            'name' => $namaLengkap,
-                            'email' => $emailName . '@student.ac.id',
-                            'email_verified_at' => now(),
-                            'password' => $mahasiswaPassword,
-                            'program_studi_id' => $prodi->id,
-                            'status' => 'aktif',
-                        ]
-                    );
+            for ($studentInProgram = 0; $studentInProgram < 30; $studentInProgram++) {
+                $nim = '2024'.str_pad((string) ($studentIndex + 1), 4, '0', STR_PAD_LEFT);
+                $account = $programCode === 'TI' && $studentInProgram < count($mainAccounts)
+                    ? $mainAccounts[$studentInProgram]
+                    : null;
+                if ($account && User::where('email', $account['email'])->where('nip_nim', '!=', $nim)->exists()) {
+                    $account = null;
                 }
-                $mahasiswa->syncRoles('mahasiswa');
-                $mahasiswaIndex++;
+                $isMale = $studentIndex % 2 === 0;
+                $firstNameIndex = intdiv($studentIndex, 2);
+                $firstName = $isMale
+                    ? $this->namaLakiLaki[$firstNameIndex % count($this->namaLakiLaki)]
+                    : $this->namaPerempuan[$firstNameIndex % count($this->namaPerempuan)];
+                $fullName = $account['name'] ?? $firstName.' '.$this->namaBelakang[$studentIndex % count($this->namaBelakang)];
+                $email = $account['email'] ?? Str::slug($fullName, '.').'.'.$nim.'@student.ac.id';
+                $student = User::where('email', $email)->first()
+                    ?? User::where('nip_nim', $nim)->first()
+                    ?? new User();
+                $student->fill([
+                    'name' => $fullName,
+                    'nip_nim' => $nim,
+                    'email' => $email,
+                    'email_verified_at' => now(),
+                    'password' => $mahasiswaPassword,
+                    'program_studi_id' => $program->id,
+                    'status' => 'aktif',
+                ]);
+                $student->save();
+                $student->syncRoles('mahasiswa');
+                $studentIndex++;
             }
         }
     }
