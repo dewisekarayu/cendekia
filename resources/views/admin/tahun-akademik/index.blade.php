@@ -49,6 +49,17 @@
 
 @push('styles')
 <style>
+    .semester-kind-badge {
+        background-color: #dcfce7 !important;
+        border: 1px solid #86efac !important;
+        color: #166534 !important;
+    }
+    html.dark .semester-kind-badge {
+        background-color: rgba(16, 185, 129, 0.18) !important;
+        border-color: rgba(52, 211, 153, 0.4) !important;
+        color: #6ee7b7 !important;
+    }
+
     .badge-status {
         padding: 0.4rem 0.8rem;
         border-radius: 20px;

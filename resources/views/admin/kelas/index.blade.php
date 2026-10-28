@@ -61,6 +61,21 @@
         border-radius: 50%;
         background-color: currentColor;
     }
+    .kelas-role-badge,
+    .kelas-student-badge {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #a7f3d0 !important;
+        background-color: #ecfdf5 !important;
+        color: #065f46 !important;
+        font-weight: 600;
+    }
+    html.dark .kelas-role-badge,
+    html.dark .kelas-student-badge {
+        border-color: rgba(52, 211, 153, 0.4) !important;
+        background-color: rgba(16, 185, 129, 0.18) !important;
+        color: #6ee7b7 !important;
+    }
 
     /* Action Buttons */
     .action-buttons { display: flex; gap: 0.4rem; }
@@ -244,11 +259,11 @@
                                                 </td>
                                                 <td>
                                                     @if($kelas->dosen_id == $dosenId)
-                                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.75rem;">
+                                                        <span class="badge kelas-role-badge px-2 py-1 rounded-pill" style="font-size: 0.75rem;">
                                                             <i class="bi bi-star-fill me-1 small"></i>Dosen Utama
                                                         </span>
                                                     @else
-                                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.75rem;">
+                                                        <span class="badge kelas-role-badge px-2 py-1 rounded-pill" style="font-size: 0.75rem;">
                                                             <i class="bi bi-people-fill me-1 small"></i>Team Teaching
                                                         </span>
                                                     @endif
@@ -270,7 +285,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2.5 py-1.5 fw-bold rounded-pill" style="font-size: 0.8rem;">
+                                                    <span class="badge kelas-student-badge px-2.5 py-1.5 fw-bold rounded-pill" style="font-size: 0.8rem;">
                                                         <i class="bi bi-people-fill me-1"></i> {{ $kelas->mahasiswa->count() }} / {{ $kelas->kuota_mahasiswa }}
                                                     </span>
                                                 </td>

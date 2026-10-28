@@ -50,7 +50,16 @@
                     <!-- Email -->
                     <div class="mb-4">
                         <label class="form-label">Email <span style="color: #dc2626;">*</span></label>
-                        <input type="email" class="form-control" name="email" placeholder="Masukkan email" required>
+                        <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Masukkan email" required>
+                        @error('email') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
+                    </div>
+
+                    <!-- No. Telepon / Kontak -->
+                    <div class="mb-4">
+                        <label class="form-label">No. Telepon / Kontak</label>
+                        <input type="tel" class="form-control @error('telepon') is-invalid @enderror" name="telepon" value="{{ old('telepon') }}" placeholder="Contoh: 081234567890">
+                        <small class="text-muted d-block mt-1">Nomor kontak aktif dosen (WhatsApp/Telepon). Opsional.</small>
+                        @error('telepon') <small class="text-danger d-block mt-1">{{ $message }}</small> @enderror
                     </div>
 
                     <!-- Program Studi -->

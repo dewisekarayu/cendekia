@@ -5,6 +5,37 @@
 
 @section('content')
 
+@push('styles')
+<style>
+    html.dark body.role-mahasiswa .gradebook-table-row {
+        background-color: #1e293b !important;
+    }
+
+    html.dark body.role-mahasiswa .gradebook-table-row:hover {
+        background-color: #273449 !important;
+    }
+
+    html.dark body.role-mahasiswa .gradebook-ungraded-row {
+        background-color: #172554 !important;
+    }
+
+    html.dark body.role-mahasiswa .gradebook-ungraded-row:hover {
+        background-color: #1e3a8a !important;
+    }
+
+    html.dark body.role-mahasiswa .gradebook-pending-badge {
+        background-color: #334155 !important;
+        border-color: #475569 !important;
+        color: #e2e8f0 !important;
+    }
+
+    html.dark body.role-mahasiswa .gradebook-missing-score,
+    html.dark body.role-mahasiswa .gradebook-final-ungraded {
+        color: #cbd5e1 !important;
+    }
+</style>
+@endpush
+
 @php
     $gradeColors = [
         'A'  => ['bg' => 'bg-emerald-100', 'text' => 'text-emerald-700', 'border' => 'border-emerald-200'],
@@ -21,7 +52,7 @@
 
     // Warna angka berdasarkan nilai
     $scoreClass = function ($v) {
-        if ($v === null || $v === '') return 'text-slate-300';
+        if ($v === null || $v === '') return 'gradebook-missing-score text-slate-300';
         $v = (float) $v;
         return $v < 70 ? 'text-rose-600' : ($v < 80 ? 'text-amber-600' : 'text-slate-700');
     };
@@ -136,7 +167,7 @@
                             $gc = $grade ? ($gradeColors[$grade] ?? null) : null;
                             $belum = !$nilai || $nilai->nilai_akhir === null;
                         @endphp
-                        <tr class="hover:bg-slate-50/70 transition-colors {{ $belum ? 'bg-slate-50/40' : '' }}">
+                        <tr class="gradebook-table-row hover:bg-slate-50/70 transition-colors {{ $belum ? 'gradebook-ungraded-row bg-slate-50/40' : '' }}">
                             <td class="px-4 py-3.5 text-center font-medium text-slate-400">{{ $index + 1 }}</td>
                             <td class="px-4 py-3.5">
                                 <div class="flex items-center gap-1.5">
@@ -159,12 +190,12 @@
                             <td class="px-3 py-3.5 text-center font-semibold {{ $scoreClass($nilai?->nilai_project) }}">{{ $fmt($nilai?->nilai_project) }}</td>
                             <td class="px-3 py-3.5 text-center font-semibold {{ $scoreClass($nilai?->nilai_uts) }}">{{ $fmt($nilai?->nilai_uts) }}</td>
                             <td class="px-3 py-3.5 text-center font-semibold {{ $scoreClass($nilai?->nilai_uas) }}">{{ $fmt($nilai?->nilai_uas) }}</td>
-                            <td class="px-4 py-3.5 text-center font-extrabold text-sm {{ $belum ? 'text-slate-300' : 'text-slate-900' }}">{{ $fmt($nilai?->nilai_akhir, 1) }}</td>
+                            <td class="px-4 py-3.5 text-center font-extrabold text-sm {{ $belum ? 'gradebook-final-ungraded text-slate-300' : 'text-slate-900' }}">{{ $fmt($nilai?->nilai_akhir, 1) }}</td>
                             <td class="px-4 py-3.5 text-center">
                                 @if ($gc)
                                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg {{ $gc['bg'] }} {{ $gc['text'] }} {{ $gc['border'] }} border text-xs font-extrabold shadow-sm">{{ $grade }}</span>
                                 @else
-                                    <span class="inline-flex items-center justify-center px-2 py-1 rounded-md bg-gray-100 text-gray-500 border border-gray-200 text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap">Belum Dinilai</span>
+                                    <span class="gradebook-pending-badge inline-flex items-center justify-center px-2 py-1 rounded-md bg-gray-100 text-gray-500 border border-gray-200 text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap">Belum Dinilai</span>
                                 @endif
                             </td>
                         </tr>

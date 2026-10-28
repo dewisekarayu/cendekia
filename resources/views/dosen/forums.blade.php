@@ -423,7 +423,7 @@
             <div class="forum-header-avatar" style="background: linear-gradient(135deg, {{ $hdrClr }} 0%, #001A40 100%)">{{ $mk }}</div>
             <div class="forum-header-text">
                 <p class="forum-header-title">{{ $mn }}</p>
-                <p class="forum-header-sub">{{ $dn }} &bull; {{ $total }} pesan</p>
+                <p class="forum-header-sub"><span id="forumHeaderSub">{{ $dn }} &bull; {{ $total }} pesan</span></p>
             </div>
         </div>
         <a href="{{ route('dosen.kelas-detail', $activeForum->kelas_perkuliahan_id) }}" class="forum-header-btn">
@@ -443,7 +443,7 @@
 
         @forelse ($byDay as $tanggal => $dayMsgs)
 
-            <div class="forum-center-row">
+            <div class="forum-center-row" data-date="{{ $tanggal }}">
                 <span class="forum-date-chip">
                     @php
                         $d = \Carbon\Carbon::parse($tanggal);
@@ -466,7 +466,10 @@
                     $timeStr = $msg->created_at->format('H:i');
                 @endphp
 
-                <div class="forum-msg-row {{ $mine ? 'mine' : '' }} {{ $grouped ? 'grouped' : '' }}">
+                <div class="forum-msg-row {{ $mine ? 'mine' : '' }} {{ $grouped ? 'grouped' : '' }}"
+                     data-id="{{ $msg->id }}"
+                     data-user-id="{{ $msg->user_id }}"
+                     data-time="{{ $msg->created_at->timestamp }}">
 
                     @unless ($mine)
                         <div class="forum-avatar-slot">
@@ -506,7 +509,7 @@
             @endforeach
 
         @empty
-            <div class="forum-empty">
+            <div id="forumEmptyState" class="forum-empty">
                 <div class="forum-empty-icon">
                     <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -564,9 +567,24 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const box = document.getElementById('chatMessages');
-        if (box) box.scrollTop = box.scrollHeight;
-
         const ta = document.getElementById('chatInput');
+        const form = document.getElementById('chatForm');
+        const sendBtn = document.getElementById('sendBtn');
+        const emptyState = document.getElementById('forumEmptyState');
+        const forumHeaderSub = document.getElementById('forumHeaderSub');
+        const dosenName = @json($dn ?? 'Dosen');
+
+        const scrollToBottom = (smooth = false) => {
+            if (!box) return;
+            box.scrollTo({
+                top: box.scrollHeight,
+                behavior: smooth ? 'smooth' : 'auto'
+            });
+        };
+
+        // Scroll to bottom on initial load
+        scrollToBottom(false);
+
         if (ta) {
             const resize = () => {
                 ta.style.height = 'auto';
@@ -577,11 +595,215 @@
             ta.addEventListener('keydown', e => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    if (ta.value.trim()) document.getElementById('chatForm').submit();
+                    if (ta.value.trim() && form) {
+                        form.dispatchEvent(new Event('submit', { cancelable: true }));
+                    }
                 }
             });
             setTimeout(() => ta.focus(), 80);
         }
+
+        @if ($activeForum)
+        const messagesUrl = @json(route('dosen.kelas-forum.messages', [$activeForum->kelas_perkuliahan_id, $activeForum->id]));
+        const sendUrl = @json(route('dosen.kelas-forum.pesan', [$activeForum->kelas_perkuliahan_id, $activeForum->id]));
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+
+        // Cari ID pesan terakhir yang ada di DOM saat ini
+        const getLastMessageId = () => {
+            const rows = document.querySelectorAll('.forum-msg-row[data-id]');
+            if (!rows.length) return 0;
+            const lastRow = rows[rows.length - 1];
+            return parseInt(lastRow.getAttribute('data-id'), 10) || 0;
+        };
+
+        const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+
+        // Render & sisipkan pesan ke chat
+        const appendMessage = (msg) => {
+            // Cek apakah pesan dengan ID ini sudah ada di DOM
+            if (document.querySelector(`.forum-msg-row[data-id="${msg.id}"]`)) {
+                return;
+            }
+
+            if (emptyState) {
+                emptyState.remove();
+            }
+
+            // Cek apakah perlu tanggal header baru
+            let dateRow = document.querySelector(`.forum-center-row[data-date="${msg.date_str}"]`);
+            if (!dateRow) {
+                const dateWrap = document.createElement('div');
+                dateWrap.className = 'forum-center-row';
+                dateWrap.setAttribute('data-date', msg.date_str);
+                dateWrap.innerHTML = `<span class="forum-date-chip">${escapeHtml(msg.date_label)}</span>`;
+                const bottomTarget = document.getElementById('chatBottom');
+                if (bottomTarget) {
+                    box.insertBefore(dateWrap, bottomTarget);
+                } else {
+                    box.appendChild(dateWrap);
+                }
+            }
+
+            // Cek apakah digroup dengan pesan sebelumnya
+            const existingRows = document.querySelectorAll('.forum-msg-row');
+            const prevRow = existingRows.length ? existingRows[existingRows.length - 1] : null;
+            let grouped = false;
+
+            if (prevRow) {
+                const prevUserId = parseInt(prevRow.getAttribute('data-user-id'), 10);
+                const prevTime = parseInt(prevRow.getAttribute('data-time'), 10);
+                if (prevUserId === msg.user_id && msg.created_at_ts && prevTime && (msg.created_at_ts - prevTime < 180)) {
+                    grouped = true;
+                }
+            }
+
+            const row = document.createElement('div');
+            row.className = `forum-msg-row ${msg.mine ? 'mine' : ''} ${grouped ? 'grouped' : ''}`;
+            row.setAttribute('data-id', msg.id);
+            row.setAttribute('data-user-id', msg.user_id);
+            row.setAttribute('data-time', msg.created_at_ts || Math.floor(Date.now() / 1000));
+
+            let avatarHtml = '';
+            if (!msg.mine) {
+                avatarHtml = `
+                    <div class="forum-avatar-slot">
+                        ${!grouped ? `<div class="forum-avatar-sm" style="background:${escapeHtml(msg.avatar_color)}">${escapeHtml(msg.user_first_name.charAt(0).toUpperCase())}</div>` : ''}
+                    </div>
+                `;
+            }
+
+            let senderNameHtml = '';
+            if (!msg.mine && !grouped) {
+                const isDosenClass = msg.is_dosen ? 'dosen' : '';
+                const senderDisplay = msg.is_dosen ? `👨‍🏫 ${escapeHtml(msg.user_name)}` : escapeHtml(msg.user_first_name);
+                senderNameHtml = `<p class="forum-sender-name ${isDosenClass}">${senderDisplay}</p>`;
+            }
+
+            let doubleCheckmark = '';
+            if (msg.mine) {
+                doubleCheckmark = `
+                    <svg width="15" height="10" viewBox="0 0 16 11" fill="none">
+                        <path d="M1 5.5L4.5 9L10 2" stroke="#002B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6 5.5L9.5 9L15 2" stroke="#002B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+            }
+
+            row.innerHTML = `
+                ${avatarHtml}
+                <div class="forum-bubble-col ${msg.mine ? 'mine' : 'theirs'}">
+                    ${senderNameHtml}
+                    <div class="forum-bubble ${msg.mine ? 'mine' : 'theirs'} ${msg.is_dosen ? 'dosen' : ''} ${grouped ? 'grouped' : ''}">
+                        <p class="forum-bubble-text">${escapeHtml(msg.isi)}</p>
+                        <div class="forum-bubble-meta">
+                            <span class="forum-bubble-time">${escapeHtml(msg.time_str)}</span>
+                            ${doubleCheckmark}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const bottomTarget = document.getElementById('chatBottom');
+            if (bottomTarget) {
+                box.insertBefore(row, bottomTarget);
+            } else {
+                box.appendChild(row);
+            }
+
+            // Auto-scroll jika posisi user berada di dekat bagian bawah
+            const isNearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 150;
+            if (msg.mine || isNearBottom) {
+                scrollToBottom(true);
+            }
+        };
+
+        // Real-Time Poller
+        let isPolling = false;
+        const pollNewMessages = async () => {
+            if (isPolling) return;
+            isPolling = true;
+
+            try {
+                const lastId = getLastMessageId();
+                const res = await fetch(`${messagesUrl}?after_id=${lastId}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.messages) && data.messages.length > 0) {
+                        data.messages.forEach(msg => appendMessage(msg));
+                        if (forumHeaderSub && typeof data.total !== 'undefined') {
+                            forumHeaderSub.textContent = `${dosenName} • ${data.total} pesan`;
+                        }
+                    }
+                }
+            } catch (err) {
+                // Ignore silent network errors
+            } finally {
+                isPolling = false;
+            }
+        };
+
+        // Mulai polling setiap 2.5 detik
+        const pollInterval = setInterval(pollNewMessages, 2500);
+
+        // Pengiriman pesan via AJAX (seamless tanpa reload)
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const text = ta.value.trim();
+                if (!text) return;
+
+                sendBtn.disabled = true;
+                sendBtn.style.opacity = '0.6';
+
+                try {
+                    const res = await fetch(sendUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ isi: text })
+                    });
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.success && data.message) {
+                            appendMessage(data.message);
+                            ta.value = '';
+                            ta.style.height = 'auto';
+                            scrollToBottom(true);
+                        }
+                    } else {
+                        // Fallback jika respons bukan JSON
+                        form.submit();
+                    }
+                } catch (err) {
+                    form.submit();
+                } finally {
+                    sendBtn.disabled = false;
+                    sendBtn.style.opacity = '1';
+                    ta.focus();
+                }
+            });
+        }
+
+        // Cleanup interval saat pengguna pindah halaman
+        window.addEventListener('beforeunload', () => {
+            clearInterval(pollInterval);
+        });
+        @endif
     });
 </script>
 @endpush

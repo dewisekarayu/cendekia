@@ -471,7 +471,7 @@ class NotificationService
                     'judul' => 'Tugas Dikumpulkan: ' . ($mahasiswa->name ?? 'Mahasiswa'),
                     'pesan' => ($mahasiswa->name ?? 'Mahasiswa') . ' telah mengumpulkan tugas "' . Str::limit($tugas->judul, 30) . '" di kelas ' . $namaMk . '.',
                     'tipe' => 'tugas',
-                    'url' => route('dosen.tugas.detail', ['id' => $tugas->kelas_perkuliahan_id, 'tugasId' => $tugas->id]),
+                    'url' => route('dosen.tugas.submissions', ['kelas' => $tugas->kelas_perkuliahan_id, 'tugas' => $tugas->id]),
                 ]);
             } catch (\Throwable $e) {
                 Log::error("Failed to create pengumpulan notif for dosen {$dosen->id}: " . $e->getMessage());
@@ -495,6 +495,11 @@ class NotificationService
     public static function notifyPesanBaru(ForumDiskusi $forum, User $recipient, User $sender)
     {
         try {
+            // Tentukan URL tujuan berdasarkan role penerima
+            $forumUrl = $recipient->hasRole('dosen')
+                ? route('dosen.kelas-forum', ['id' => $forum->kelas_perkuliahan_id, 'forum' => $forum->id])
+                : route('mahasiswa.kelas-forum', ['id' => $forum->kelas_perkuliahan_id, 'forum' => $forum->id]);
+
             // Buat notifikasi in-app
             try {
                 \App\Models\Notifikasi::create([
@@ -503,7 +508,7 @@ class NotificationService
                     'judul' => 'Pesan Baru di Forum Diskusi',
                     'pesan' => ($sender->name ?? 'Pengguna') . ' mengirim pesan di forum: "' . Str::limit($forum->judul, 40) . '".',
                     'tipe' => 'informasi',
-                    'url' => route('forum-diskusi.show', $forum->id),
+                    'url' => $forumUrl,
                 ]);
             } catch (\Throwable $e) {
                 Log::error("Failed to create forum notif for user {$recipient->id}: " . $e->getMessage());
