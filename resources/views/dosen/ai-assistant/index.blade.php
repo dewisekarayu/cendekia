@@ -871,13 +871,21 @@
 
                     {{-- Bottom Controls inside input --}}
                     <div class="flex items-center justify-between px-3 pb-2.5 pt-1 text-slate-400">
-                        <div class="flex items-center gap-1.5">
-                            {{-- Voice Input (Speech Recognition) --}}
+                        <div class="flex items-center gap-1">
+                            {{-- File Attachment Button (+ icon) --}}
                             <button type="button"
-                                    x-show="speechRecognitionSupported"
+                                    @click="$refs.fileInput.click()"
+                                    :class="attachedFile ? 'text-[#720c16] dark:text-red-400 bg-red-50 dark:bg-red-950/40' : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'"
+                                    title="Lampirkan file (PDF, DOCX, TXT, Gambar)"
+                                    class="p-1.5 rounded-lg text-sm transition">
+                                <i class="bi" :class="attachedFile ? 'bi-check-circle-fill' : 'bi-plus-circle'"></i>
+                            </button>
+
+                            {{-- Voice Input (Speech Recognition / VN) --}}
+                            <button type="button"
                                     @click="toggleVoiceInput()"
-                                    :class="isListening ? 'bg-red-500 text-white animate-pulse' : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'"
-                                    title="Dikte Suara (Bicara langsung)"
+                                    :class="isListening ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30' : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400'"
+                                    :title="isListening ? 'Berhenti mendengarkan' : 'Dikte Suara / Voice Note (Bicara langsung)'"
                                     class="p-1.5 rounded-lg text-sm transition">
                                 <i :class="isListening ? 'bi bi-mic-fill' : 'bi bi-mic'"></i>
                             </button>
@@ -1683,44 +1691,107 @@ function cendekiaGptApp() {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (SpeechRec) {
                 this.speechRecognitionSupported = true;
-                const rec = new SpeechRec();
-                rec.lang = 'id-ID';
-                rec.continuous = false;
-                rec.interimResults = false;
+                try {
+                    const rec = new SpeechRec();
+                    rec.lang = 'id-ID';
+                    rec.continuous = true;
+                    rec.interimResults = true;
+                    rec.maxAlternatives = 1;
 
-                rec.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript;
-                    this.inputMessage = (this.inputMessage ? this.inputMessage + ' ' : '') + transcript;
-                    this.autoResizeInput();
-                    this.isListening = false;
-                    this.showToast('Suara berhasil diubah ke teks');
-                };
+                    let finalTranscript = '';
 
-                rec.onerror = () => {
-                    this.isListening = false;
-                };
+                    rec.onresult = (event) => {
+                        let interim = '';
+                        finalTranscript = '';
+                        for (let i = 0; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                finalTranscript += event.results[i][0].transcript;
+                            } else {
+                                interim += event.results[i][0].transcript;
+                            }
+                        }
+                        // Show real-time interim text while speaking
+                        const baseText = this._voiceBaseText || '';
+                        if (finalTranscript) {
+                            this.inputMessage = (baseText ? baseText + ' ' : '') + finalTranscript + (interim ? ' ' + interim : '');
+                        } else if (interim) {
+                            this.inputMessage = (baseText ? baseText + ' ' : '') + interim;
+                        }
+                        this.autoResizeInput();
+                    };
 
-                rec.onend = () => {
-                    this.isListening = false;
-                };
+                    rec.onerror = (event) => {
+                        this.isListening = false;
+                        const errorMessages = {
+                            'not-allowed': 'Izin mikrofon ditolak. Aktifkan izin mikrofon di pengaturan browser Anda.',
+                            'no-speech': 'Tidak ada suara terdeteksi. Coba bicara lebih dekat ke mikrofon.',
+                            'audio-capture': 'Mikrofon tidak ditemukan. Pastikan perangkat memiliki mikrofon yang aktif.',
+                            'network': 'Koneksi internet diperlukan untuk dikte suara.',
+                            'aborted': 'Dikte suara dibatalkan.',
+                            'service-not-allowed': 'Layanan dikte suara tidak tersedia. Coba gunakan browser Chrome.',
+                        };
+                        const msg = errorMessages[event.error] || 'Dikte suara gagal. Pastikan mikrofon aktif dan izin diberikan.';
+                        this.showToast(msg);
+                    };
 
-                this.speechRecognition = rec;
+                    rec.onend = () => {
+                        if (this.isListening) {
+                            // Auto-stopped (e.g., silence timeout on mobile)
+                            this.isListening = false;
+                            if (this.inputMessage.trim() !== (this._voiceBaseText || '').trim()) {
+                                this.showToast('Suara berhasil diubah ke teks');
+                            }
+                        }
+                    };
+
+                    this.speechRecognition = rec;
+                } catch (e) {
+                    this.speechRecognitionSupported = false;
+                }
             }
         },
 
         toggleVoiceInput() {
-            if (!this.speechRecognition) return;
+            if (!this.speechRecognitionSupported || !this.speechRecognition) {
+                this.showToast('Fitur dikte suara tidak didukung di browser ini. Gunakan Chrome atau Edge terbaru.');
+                return;
+            }
 
             if (this.isListening) {
-                this.speechRecognition.stop();
+                try {
+                    this.speechRecognition.stop();
+                } catch (e) { /* ignore */ }
                 this.isListening = false;
+                if (this.inputMessage.trim() !== (this._voiceBaseText || '').trim()) {
+                    this.showToast('Suara berhasil diubah ke teks');
+                }
             } else {
                 try {
+                    // Store current text as base before voice starts
+                    this._voiceBaseText = this.inputMessage;
                     this.speechRecognition.start();
                     this.isListening = true;
-                    this.showToast('Mendengarkan suara Anda...');
+                    this.showToast('Mendengarkan... Bicara sekarang 🎙️');
                 } catch (e) {
                     this.isListening = false;
+                    if (e.message && e.message.includes('already started')) {
+                        try {
+                            this.speechRecognition.stop();
+                        } catch (e2) { /* ignore */ }
+                        setTimeout(() => {
+                            try {
+                                this._voiceBaseText = this.inputMessage;
+                                this.speechRecognition.start();
+                                this.isListening = true;
+                                this.showToast('Mendengarkan... Bicara sekarang 🎙️');
+                            } catch (e3) {
+                                this.isListening = false;
+                                this.showToast('Gagal memulai dikte suara. Muat ulang halaman lalu coba lagi.');
+                            }
+                        }, 300);
+                    } else {
+                        this.showToast('Gagal memulai dikte suara. Pastikan izin mikrofon sudah diberikan.');
+                    }
                 }
             }
         },
