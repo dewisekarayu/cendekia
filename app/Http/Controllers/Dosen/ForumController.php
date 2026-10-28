@@ -89,6 +89,63 @@ class ForumController extends Controller
     }
 
     /**
+     * Polling pesan baru secara real-time.
+     */
+    public function getMessages(Request $request, $id, ForumDiskusi $forum)
+    {
+        $user = $request->user();
+
+        if (!$user || !$user->isDosen()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        if ($forum->kelas_perkuliahan_id != $id) {
+            return response()->json(['error' => 'Forum tidak ditemukan di kelas ini.'], 404);
+        }
+
+        if (!Gate::allows('view', $forum)) {
+            return response()->json(['error' => 'Akses ditolak.'], 403);
+        }
+
+        $afterId = (int) $request->query('after_id', 0);
+
+        $messages = KomentarDiskusi::where('forum_diskusi_id', $forum->id)
+            ->when($afterId > 0, fn($q) => $q->where('id', '>', $afterId))
+            ->with('user')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $palette = ['#720c16','#0C4A6E','#1E3A8A','#164E63','#1C3144','#0F172A','#1F2937'];
+
+        $formatted = $messages->map(function ($msg) use ($user, $palette) {
+            $sName = $msg->user?->name ?? 'Anonim';
+            $sFirst = explode(' ', $sName)[0];
+            $sClr = $palette[abs(crc32($sName)) % count($palette)];
+            $createdAt = $msg->created_at;
+
+            return [
+                'id' => $msg->id,
+                'isi' => $msg->isi,
+                'mine' => $msg->user_id === $user->id,
+                'is_dosen' => (bool) $msg->user?->hasRole('dosen'),
+                'user_id' => $msg->user_id,
+                'user_name' => $sName,
+                'user_first_name' => $sFirst,
+                'avatar_color' => $sClr,
+                'time_str' => $createdAt->format('H:i'),
+                'date_str' => $createdAt->format('Y-m-d'),
+                'date_label' => $createdAt->isToday() ? 'Hari Ini' : ($createdAt->isYesterday() ? 'Kemarin' : $createdAt->translatedFormat('l, d F Y')),
+                'created_at_ts' => $createdAt->timestamp,
+            ];
+        });
+
+        return response()->json([
+            'messages' => $formatted,
+            'total' => KomentarDiskusi::where('forum_diskusi_id', $forum->id)->count(),
+        ]);
+    }
+
+    /**
      * Kirim pesan ke forum kelas yang diampu dosen.
      */
     public function kirimPesan(Request $request, $id, ForumDiskusi $forum)
@@ -100,6 +157,9 @@ class ForumController extends Controller
                 'path' => $request->path(),
                 'forum_id' => $forum->id,
             ]);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Anda harus login terlebih dahulu.'], 401);
+            }
             abort(403, 'Anda harus login terlebih dahulu.');
         }
 
@@ -109,11 +169,17 @@ class ForumController extends Controller
                 'user_roles' => $user->getRoleNames()->toArray(),
                 'forum_id' => $forum->id,
             ]);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Anda harus login sebagai Dosen untuk mengirim pesan forum.'], 403);
+            }
             abort(403, 'Anda harus login sebagai Dosen untuk mengirim pesan forum.');
         }
 
         // Verify forum belongs to this class
         if ($forum->kelas_perkuliahan_id != $id) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Forum tidak ada di kelas ini.'], 404);
+            }
             abort(403, 'Forum tidak ada di kelas ini.');
         }
 
@@ -126,6 +192,9 @@ class ForumController extends Controller
                 'forum_kelas_id' => $forum->kelas_perkuliahan_id,
                 'policy_reason' => $policyInspection->message(),
             ]);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Anda tidak dapat mengirim pesan di forum ini. Pastikan Anda mengajar kelas ini.'], 403);
+            }
             abort(403, 'Anda tidak dapat mengirim pesan di forum ini. Pastikan Anda mengajar kelas ini.');
         }
 
@@ -153,6 +222,32 @@ class ForumController extends Controller
                 'message_length' => strlen($validated['isi']),
             ]);
 
+            if ($request->expectsJson()) {
+                $palette = ['#720c16','#0C4A6E','#1E3A8A','#164E63','#1C3144','#0F172A','#1F2937'];
+                $sName = $user->name;
+                $sFirst = explode(' ', $sName)[0];
+                $sClr = $palette[abs(crc32($sName)) % count($palette)];
+                $createdAt = $komentar->created_at;
+
+                return response()->json([
+                    'success' => true,
+                    'message' => [
+                        'id' => $komentar->id,
+                        'isi' => $komentar->isi,
+                        'mine' => true,
+                        'is_dosen' => true,
+                        'user_id' => $user->id,
+                        'user_name' => $sName,
+                        'user_first_name' => $sFirst,
+                        'avatar_color' => $sClr,
+                        'time_str' => $createdAt->format('H:i'),
+                        'date_str' => $createdAt->format('Y-m-d'),
+                        'date_label' => $createdAt->isToday() ? 'Hari Ini' : ($createdAt->isYesterday() ? 'Kemarin' : $createdAt->translatedFormat('l, d F Y')),
+                        'created_at_ts' => $createdAt->timestamp,
+                    ],
+                ]);
+            }
+
             return redirect()
                 ->route('dosen.kelas-forum', ['id' => $id, 'forum' => $forum->id])
                 ->with('success', 'Pesan berhasil dikirim!')
@@ -165,6 +260,10 @@ class ForumController extends Controller
                 'error' => $e->getMessage(),
                 'exception' => get_class($e),
             ]);
+
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Gagal mengirim pesan. Silakan coba lagi.'], 500);
+            }
 
             return redirect()
                 ->route('dosen.kelas-forum', ['id' => $id, 'forum' => $forum->id])

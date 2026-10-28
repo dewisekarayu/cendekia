@@ -3,6 +3,49 @@
 @section('title', 'Riwayat Presensi - ' . $kelas->mataKuliah->nama_mk)
 
 @section('content')
+@push('styles')
+<style>
+    html.dark body.role-mahasiswa .attendance-stat-card {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+    }
+
+    html.dark body.role-mahasiswa .attendance-stat-total .attendance-stat-label,
+    html.dark body.role-mahasiswa .attendance-stat-total .attendance-stat-value {
+        color: #f1f5f9 !important;
+    }
+
+    html.dark body.role-mahasiswa .attendance-stat-hadir .attendance-stat-label,
+    html.dark body.role-mahasiswa .attendance-stat-hadir .attendance-stat-value {
+        color: #93c5fd !important;
+    }
+
+    html.dark body.role-mahasiswa .attendance-stat-izin .attendance-stat-label,
+    html.dark body.role-mahasiswa .attendance-stat-izin .attendance-stat-value {
+        color: #7dd3fc !important;
+    }
+
+    html.dark body.role-mahasiswa .attendance-stat-sakit .attendance-stat-label,
+    html.dark body.role-mahasiswa .attendance-stat-sakit .attendance-stat-value {
+        color: #fcd34d !important;
+    }
+
+    html.dark body.role-mahasiswa .attendance-stat-alpha .attendance-stat-label,
+    html.dark body.role-mahasiswa .attendance-stat-alpha .attendance-stat-value {
+        color: #cbd5e1 !important;
+    }
+
+    html.dark body.role-mahasiswa .attendance-status-alpha {
+        background-color: #334155 !important;
+        color: #e2e8f0 !important;
+    }
+
+    html.dark body.role-mahasiswa .attendance-history-row:hover {
+        background-color: #273449 !important;
+    }
+</style>
+@endpush
+
 <div class="space-y-6 max-w-7xl mx-auto p-3 sm:p-4">
 
     {{-- ===== HEADER SECTION ===== --}}
@@ -55,25 +98,25 @@
     @endphp
 
     <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Sesi</p>
-            <p class="text-2xl font-black text-slate-800 font-mono">{{ $stats['totalPertemuan'] }}</p>
+        <div class="attendance-stat-card attendance-stat-total bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+            <p class="attendance-stat-label text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Sesi</p>
+            <p class="attendance-stat-value text-2xl font-black text-slate-800 font-mono">{{ $stats['totalPertemuan'] }}</p>
         </div>
-        <div class="bg-blue-50/60 rounded-2xl border border-blue-100 p-4 shadow-sm">
-            <p class="text-[11px] font-bold text-blue-500 uppercase tracking-wider mb-1">Hadir</p>
-            <p class="text-2xl font-black text-blue-800 font-mono">{{ $stats['hadir'] }}</p>
+        <div class="attendance-stat-card attendance-stat-hadir bg-blue-50/60 rounded-2xl border border-blue-100 p-4 shadow-sm">
+            <p class="attendance-stat-label text-[11px] font-bold text-blue-500 uppercase tracking-wider mb-1">Hadir</p>
+            <p class="attendance-stat-value text-2xl font-black text-blue-800 font-mono">{{ $stats['hadir'] }}</p>
         </div>
-        <div class="bg-sky-50/60 rounded-2xl border border-sky-100 p-4 shadow-sm">
-            <p class="text-[11px] font-bold text-sky-600 uppercase tracking-wider mb-1">Izin</p>
-            <p class="text-2xl font-black text-sky-800 font-mono">{{ $stats['izin'] }}</p>
+        <div class="attendance-stat-card attendance-stat-izin bg-sky-50/60 rounded-2xl border border-sky-100 p-4 shadow-sm">
+            <p class="attendance-stat-label text-[11px] font-bold text-sky-600 uppercase tracking-wider mb-1">Izin</p>
+            <p class="attendance-stat-value text-2xl font-black text-sky-800 font-mono">{{ $stats['izin'] }}</p>
         </div>
-        <div class="bg-amber-50/60 rounded-2xl border border-amber-100 p-4 shadow-sm">
-            <p class="text-[11px] font-bold text-amber-500 uppercase tracking-wider mb-1">Sakit</p>
-            <p class="text-2xl font-black text-amber-800 font-mono">{{ $stats['sakit'] }}</p>
+        <div class="attendance-stat-card attendance-stat-sakit bg-amber-50/60 rounded-2xl border border-amber-100 p-4 shadow-sm">
+            <p class="attendance-stat-label text-[11px] font-bold text-amber-500 uppercase tracking-wider mb-1">Sakit</p>
+            <p class="attendance-stat-value text-2xl font-black text-amber-800 font-mono">{{ $stats['sakit'] }}</p>
         </div>
-        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4 shadow-sm col-span-2 sm:col-span-1">
-            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Alpha</p>
-            <p class="text-2xl font-black text-slate-700 font-mono">{{ $stats['alpha'] }}</p>
+        <div class="attendance-stat-card attendance-stat-alpha bg-slate-50 rounded-2xl border border-slate-200 p-4 shadow-sm col-span-2 sm:col-span-1">
+            <p class="attendance-stat-label text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Alpha</p>
+            <p class="attendance-stat-value text-2xl font-black text-slate-700 font-mono">{{ $stats['alpha'] }}</p>
         </div>
     </div>
 
@@ -115,11 +158,11 @@
                             'hadir' => ['icon' => 'bg-blue-50 text-blue-600', 'badge' => 'bg-blue-100 text-blue-700', 'path' => 'M5 13l4 4L19 7'],
                             'izin'  => ['icon' => 'bg-sky-50 text-sky-600', 'badge' => 'bg-sky-100 text-sky-700', 'path' => 'M9 12h6m2 7H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V17a2 2 0 01-2 2z'],
                             'sakit' => ['icon' => 'bg-amber-50 text-amber-600', 'badge' => 'bg-amber-100 text-amber-700', 'path' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                            default => ['icon' => 'bg-slate-100 text-slate-500', 'badge' => 'bg-slate-200 text-slate-700', 'path' => 'M6 18L18 6M6 6l12 12'],
+                            default => ['icon' => 'bg-slate-100 text-slate-500', 'badge' => 'bg-slate-200 text-slate-700 attendance-status-alpha', 'path' => 'M6 18L18 6M6 6l12 12'],
                         };
                         $rowLabel = $attendance?->getStatusLabel() ?? 'Alpha';
                     @endphp
-                    <div class="flex items-center justify-between gap-3 px-5 py-4 hover:bg-slate-50/70 transition">
+                    <div class="attendance-history-row flex items-center justify-between gap-3 px-5 py-4 hover:bg-slate-50/70 transition">
                         <div class="flex items-center gap-3.5 min-w-0">
                             <div class="w-9 h-9 rounded-xl {{ $rowStyle['icon'] }} flex items-center justify-center flex-shrink-0">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="{{ $rowStyle['path'] }}"/></svg>
