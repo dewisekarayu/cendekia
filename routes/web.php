@@ -442,7 +442,9 @@ Route::prefix('help-center')->name('help-center.')->group(function () {
     Route::post('/faq/feedback', [HelpCenterController::class, 'faqFeedback'])->name('faq-feedback');
     Route::get('/guides', [HelpCenterController::class, 'guides'])->name('guides');
     Route::get('/guides/{id}', [HelpCenterController::class, 'guideDetail'])->name('guide-detail');
-    Route::post('/ticket', [HelpCenterController::class, 'storeTicket'])->name('store-ticket');
+    Route::post('/ticket', [HelpCenterController::class, 'storeTicket'])
+        ->middleware('throttle:5,1')
+        ->name('store-ticket');
 
     // Riwayat & Detail Tiket untuk Pengguna Login (Dosen & Mahasiswa)
     Route::middleware('auth')->group(function () {
