@@ -80,10 +80,7 @@ class RoleMiddleware
             ]);
             
             return response()->json([
-                'message' => 'User does not have the required role(s).',
-                'required' => $requiredRoles,
-                'current' => $user->getRoleNames()->toArray(),
-                'user_id' => $user->id,
+                'message' => 'Akses ditolak.',
             ], 403);
         }
 
