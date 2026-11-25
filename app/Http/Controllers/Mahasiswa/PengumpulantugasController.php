@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\KelasMahasiswa;
 use App\Models\PengumpulanTugas;
 use App\Models\PengumpulanTugasFile;
 use App\Models\Tugas;
@@ -19,7 +20,9 @@ class PengumpulantugasController extends Controller
      */
     public function show(Tugas $tugas)
     {
-        $mahasiswaId = Auth::id();
+        $mahasiswaId = (int) Auth::id();
+        $this->ensureEnrolled($tugas, $mahasiswaId);
+
         $pengumpulan = PengumpulanTugas::with(['tugas', 'files'])
             ->where('tugas_id', $tugas->id)
             ->where('mahasiswa_id', $mahasiswaId)
@@ -35,6 +38,9 @@ class PengumpulantugasController extends Controller
 
     public function store(Request $request, Tugas $tugas)
     {
+        $mahasiswaId = (int) Auth::id();
+        $this->ensureEnrolled($tugas, $mahasiswaId);
+
         if ($tugas->isTutup()) {
             return redirect()
                 ->route('mahasiswa.pengumpulan-tugas.show', $tugas->id)
@@ -60,7 +66,6 @@ class PengumpulantugasController extends Controller
             'catatan.max' => 'Catatan tambahan tidak boleh lebih dari 1.000 karakter.',
         ]);
         
-        $mahasiswaId = Auth::id();
         $isLate = now()->gt($tugas->deadline);
 
         $existing = PengumpulanTugas::where('tugas_id', $tugas->id)
@@ -156,5 +161,14 @@ class PengumpulantugasController extends Controller
         return redirect()
             ->route('mahasiswa.pengumpulan-tugas.show', $tugas->id)
             ->with('success', 'Pengumpulan tugas dibatalkan.');
+    }
+
+    private function ensureEnrolled(Tugas $tugas, int $mahasiswaId): void
+    {
+        $enrolled = KelasMahasiswa::where('kelas_perkuliahan_id', $tugas->kelas_perkuliahan_id)
+            ->where('mahasiswa_id', $mahasiswaId)
+            ->exists();
+
+        abort_unless($enrolled, 403, 'Kamu tidak terdaftar di kelas tugas ini.');
     }
 }
