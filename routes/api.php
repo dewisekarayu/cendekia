@@ -1,5 +1,3 @@
-    
-
 <?php
 
 use Illuminate\Http\Request;
@@ -25,16 +23,4 @@ Route::middleware('auth:sanctum')->group(function () {
         MobileApiController::class,
         'dashboardDosen'
     ]);
-});
-
-Route::get('/users', function () {
-    return response()->json(['message' => 'API Users aktif']);
-});
-
-Route::get('/students', function () {
-    return response()->json(['message' => 'API Students aktif']);
-});
-
-Route::get('/teachers', function () {
-    return response()->json(['message' => 'API Teachers aktif']);
 });
