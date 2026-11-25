@@ -6,6 +6,7 @@ use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class EnhancedUserSeeder extends Seeder
@@ -75,15 +76,25 @@ class EnhancedUserSeeder extends Seeder
         $dosenPassword = Hash::make('password123');
         $mahasiswaPassword = Hash::make('password123');
         $mainAccounts = [
-            ['email' => 'kampuscendekia5@gmail.com', 'name' => 'Muhammad Ridho Pratama'],
-            ['email' => 'maylusi431@gmail.com', 'name' => 'Maylusi Widia Kusumaputri'],
-            ['email' => 'dewisekarayu56@gmail.com', 'name' => 'Dewi Sayu Maharani'],
+            ['email' => 'dewisekarayu56@gmail.com', 'name' => 'Dewi Sekar Ayu', 'telepon' => '081234567801'],
+            ['email' => 'maylusi431@gmail.com', 'name' => 'Maylusi Rahmawati', 'telepon' => '081234567802'],
+            ['email' => 'marfatriasa@gmail.com', 'name' => 'Marfa Triasa', 'telepon' => '081234567803'],
         ];
+        foreach ($mainAccounts as $index => $account) {
+            $nim = '2024'.str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT);
+            $existingAccount = User::where('email', $account['email'])->first();
+            if ($existingAccount && $existingAccount->nip_nim !== $nim) {
+                $existingAccount->email = "seeded-replaced-{$existingAccount->id}@invalid.example";
+                $existingAccount->save();
+            }
+        }
+        $hasDosenPaColumn = Schema::hasColumn('users', 'dosen_pa_id');
         $lecturerIndex = 0;
         $studentIndex = 0;
 
         foreach ($programCodes as $programCode) {
             $program = $programs->get($programCode);
+            $programLecturers = [];
 
             for ($lecturerInProgram = 0; $lecturerInProgram < 2; $lecturerInProgram++) {
                 $nameIndex = $lecturerIndex % count($this->namaLakiLaki);
@@ -101,17 +112,15 @@ class EnhancedUserSeeder extends Seeder
                     ]
                 );
                 $lecturer->syncRoles('dosen');
+                $programLecturers[] = $lecturer;
                 $lecturerIndex++;
             }
 
             for ($studentInProgram = 0; $studentInProgram < 30; $studentInProgram++) {
                 $nim = '2024'.str_pad((string) ($studentIndex + 1), 4, '0', STR_PAD_LEFT);
-                $account = $programCode === 'TI' && $studentInProgram < count($mainAccounts)
+                $account = $programCode === 'PD' && $studentInProgram < count($mainAccounts)
                     ? $mainAccounts[$studentInProgram]
                     : null;
-                if ($account && User::where('email', $account['email'])->where('nip_nim', '!=', $nim)->exists()) {
-                    $account = null;
-                }
                 $isMale = $studentIndex % 2 === 0;
                 $firstNameIndex = intdiv($studentIndex, 2);
                 $firstName = $isMale
@@ -122,15 +131,23 @@ class EnhancedUserSeeder extends Seeder
                 $student = User::where('email', $email)->first()
                     ?? User::where('nip_nim', $nim)->first()
                     ?? new User();
-                $student->fill([
+                $attributes = [
                     'name' => $fullName,
                     'nip_nim' => $nim,
                     'email' => $email,
                     'email_verified_at' => now(),
                     'password' => $mahasiswaPassword,
                     'program_studi_id' => $program->id,
+                    'dosen_wali_id' => $programLecturers[0]->id,
                     'status' => 'aktif',
-                ]);
+                ];
+                if ($account) {
+                    $attributes['telepon'] = $account['telepon'];
+                }
+                $student->fill($attributes);
+                if ($hasDosenPaColumn) {
+                    $student->setAttribute('dosen_pa_id', $programLecturers[0]->id);
+                }
                 $student->save();
                 $student->syncRoles('mahasiswa');
                 $studentIndex++;

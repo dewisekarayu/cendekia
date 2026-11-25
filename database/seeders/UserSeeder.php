@@ -31,8 +31,8 @@ class UserSeeder extends Seeder
         // Login -> NIM/NIP: ADM0001 | Password: admin123
         // =====================================================
         $adminPassword = Hash::make('admin123');
-        $dosenPassword = Hash::make('dosen123');
-        $mahasiswaPassword = Hash::make('mahasiswa123');
+        $dosenPassword = Hash::make('password123');
+        $mahasiswaPassword = Hash::make('password123');
 
         $admin = User::updateOrCreate(
             ['nip_nim' => 'ADM0001'],

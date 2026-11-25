@@ -14,7 +14,6 @@
 /node_modules
 /public/build
 
-
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
@@ -25,3 +24,24 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Windows & OS shortcuts/temporary files
+*.lnk
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+desktop.ini
+$RECYCLE.BIN/
+
+# Local database files
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+database/*.sqlite
+database/*.sqlite-journal
+
+# Local / development temporary notes & summaries
+PROJECT_COMPLETION_SUMMARY.txt
