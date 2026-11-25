@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class HelpCenterController extends Controller
 {
@@ -468,7 +469,13 @@ class HelpCenterController extends Controller
             'subject'    => ['required', 'string', 'max:255'],
             'category'   => ['required', 'string'],
             'message'    => ['required', 'string', 'max:5000'],
-            'attachment' => ['nullable', 'file', 'max:5120'],
+            'attachment' => [
+                'nullable',
+                // Enforce both MIME content inspection and client extension to block executable or active files like PHP/SVG.
+                File::types(['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'txt'])
+                    ->extensions(['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'txt'])
+                    ->max(5120),
+            ],
         ]);
 
         if ($validator->fails()) {
