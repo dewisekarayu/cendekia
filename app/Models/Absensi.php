@@ -79,8 +79,8 @@ class Absensi extends Model
         $this->session_status = 'buka';
         $this->waktu_buka = now();
         
-        if (empty($this->qr_token)) {
-            $this->qr_token = \Illuminate\Support\Str::random(40);
+        if (empty($this->qr_token) || strlen($this->qr_token) < 64) {
+            $this->qr_token = bin2hex(random_bytes(32));
         }
         
         return $this->save();
@@ -93,6 +93,8 @@ class Absensi extends Model
     {
         $this->session_status = 'tutup';
         $this->waktu_tutup = now();
+        // Invalidate the QR token once closed so stale links cannot be reused.
+        $this->qr_token = null;
         return $this->save();
     }
 

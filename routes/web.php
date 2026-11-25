@@ -400,7 +400,9 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     // Absensi Mahasiswa (Terintegrasi penuh dengan tombol absen masuk)
     Route::prefix('mahasiswa/absensi')->name('mahasiswa.absensi.')->group(function () {
         Route::get('/', [MahasiswaAbsensiController::class, 'index'])->name('index');
-        Route::get('/scan/{token}', [MahasiswaAbsensiController::class, 'scanQr'])->name('scan');
+        Route::get('/scan/{token}', [MahasiswaAbsensiController::class, 'scanQr'])
+            ->middleware('throttle:10,1')
+            ->name('scan');
         Route::get('/kelas/{kelasId}/masuk', [MahasiswaAbsensiController::class, 'kelasAbsensi'])->name('kelas');
         Route::post('/kelas/{kelasId}/masuk/{absensiId}', [MahasiswaAbsensiController::class, 'absenMasuk'])->name('masuk');
         Route::get('/{kelasId}', [MahasiswaAbsensiController::class, 'show'])->name('show');
