@@ -180,12 +180,12 @@ class HelpCenterController extends Controller
 
     /**
      * Cek apakah ada admin yang aktif dalam N menit terakhir (berdasarkan tabel sessions).
-     * N diatur lewat ADMIN_ONLINE_MINUTES di .env (default 5).
+     * N diatur lewat config('app.admin_online_minutes', 5) (default 5).
      */
     protected function isAdminOnline(): bool
     {
         try {
-            $minutes = (int) env('ADMIN_ONLINE_MINUTES', 5);
+            $minutes = (int) config('app.admin_online_minutes', 5);
             $userIds = \Illuminate\Support\Facades\DB::table('sessions')
                 ->whereNotNull('user_id')
                 ->where('last_activity', '>=', now()->subMinutes($minutes)->getTimestamp())

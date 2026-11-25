@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // Minutes an admin session remains marked online in the help center.
+    'admin_online_minutes' => (int) env('ADMIN_ONLINE_MINUTES', 5),
+
 ];
