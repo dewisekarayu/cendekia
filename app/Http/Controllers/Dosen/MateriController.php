@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dosen;
 
+use App\Http\Controllers\Controller;
 use App\Models\Materi;
 use App\Models\KelasPerkuliahan;
 use App\Services\NotificationService;
